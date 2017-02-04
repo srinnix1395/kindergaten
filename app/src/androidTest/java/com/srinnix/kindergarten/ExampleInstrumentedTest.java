@@ -1,4 +1,4 @@
-package com.srinnix.kindergaten;
+package com.srinnix.kindergarten;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
