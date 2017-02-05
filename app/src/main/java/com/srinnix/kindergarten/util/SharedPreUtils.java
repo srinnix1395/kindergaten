@@ -64,4 +64,7 @@ public class SharedPreUtils {
 		editor.apply();
 	}
 	
+	public boolean isUserSignedIn(){
+		return sharedPreferences.getBoolean(AppConstant.IS_USER_SIGNED_IN, false);
+	}
 }

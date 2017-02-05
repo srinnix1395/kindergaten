@@ -18,12 +18,12 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 public abstract class BaseFragment extends Fragment implements BaseDelegate {
 	protected Context mContext;
 	protected View mView;
-	protected BasePresenter mPresenter;
+	protected BasePresenter mBasePresenter;
 	
 	public BaseFragment() {
-		mPresenter = initPresenter();
-		if (mPresenter == null) {
-			mPresenter = new BasePresenter(this);
+		mBasePresenter = initPresenter();
+		if (mBasePresenter == null) {
+			mBasePresenter = new BasePresenter(this);
 		}
 	}
 	
@@ -44,8 +44,8 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		mContext = context;
-		if (mPresenter != null) {
-			mPresenter.setContext(mContext);
+		if (mBasePresenter != null) {
+			mBasePresenter.setContext(mContext);
 		}
 	}
 	
@@ -57,7 +57,7 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 		if (getArguments() != null) {
 			getData();
 			Bundle bundle = getArguments();
-			mPresenter.getData(bundle);
+			mBasePresenter.getData(bundle);
 		}
 
 		initChildView();

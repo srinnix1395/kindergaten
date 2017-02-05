@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * Created by DELL on 2/3/2017.
  */
@@ -65,6 +68,25 @@ public class UiUtils {
 				getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.toggleSoftInputFromWindow(view.getApplicationWindowToken(),
 				InputMethodManager.SHOW_FORCED, 0);
+		
+		Observable.from(new Integer[]{1,2,3})
+				.map(integer -> String.valueOf(integer))
+				.subscribe(new Subscriber<String>() {
+					@Override
+					public void onCompleted() {
+						
+					}
+					
+					@Override
+					public void onError(Throwable e) {
+						
+					}
+					
+					@Override
+					public void onNext(String o) {
+						
+					}
+				});
 	}
 	
 }

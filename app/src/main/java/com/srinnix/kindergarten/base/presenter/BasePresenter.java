@@ -10,8 +10,8 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
  */
 
 public class BasePresenter {
-	private Context mContext;
-	private BaseDelegate mDelegate;
+	protected Context mContext;
+	protected BaseDelegate mDelegate;
 	
 	public BasePresenter(BaseDelegate mDelegate) {
 		this.mDelegate = mDelegate;
