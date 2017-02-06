@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by DELL on 2/3/2017.
  */
@@ -52,7 +54,10 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
+		
+		//bind
+		ButterKnife.bind(this, view);
+		
 		// get data transfer
 		if (getArguments() != null) {
 			getData();

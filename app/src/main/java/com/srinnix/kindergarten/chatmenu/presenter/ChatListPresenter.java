@@ -12,4 +12,8 @@ public class ChatListPresenter extends BasePresenter {
 	public ChatListPresenter(BaseDelegate mDelegate) {
 		super(mDelegate);
 	}
+	
+	public void onClickItemChat(Object o) {
+		
+	}
 }
