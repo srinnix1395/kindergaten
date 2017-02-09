@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.chatmenu.fragment;
+package com.srinnix.kindergarten.chat.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.chatmenu.adapter.ChatListAdapter;
-import com.srinnix.kindergarten.chatmenu.presenter.ChatListPresenter;
+import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
+import com.srinnix.kindergarten.chat.presenter.ChatListPresenter;
 import com.srinnix.kindergarten.model.ChatMember;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import butterknife.BindView;
  */
 
 public class ChatListFragment extends BaseFragment {
-	@BindView(R.id.recycler_view_chat_list)
+	@BindView(R.id.recyclerview_chat_list)
 	RecyclerView recyclerView;
 	
 	private ArrayList<ChatMember> arrayList;

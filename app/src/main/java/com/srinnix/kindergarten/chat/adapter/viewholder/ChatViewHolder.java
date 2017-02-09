@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.chatmenu.adapter.viewholder;
+package com.srinnix.kindergarten.chat.adapter.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.chatmenu.adapter.ChatListAdapter;
+import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.model.ChatMember;
 
 import butterknife.BindView;

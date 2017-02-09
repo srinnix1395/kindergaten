@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_height">44dp</dimen>
+    <dimen name="margin_left_item">16dp</dimen>
+    <dimen name="margin_right_item">16dp</dimen>
+
+    <dimen name="radius_normal">20dp</dimen>
+    <dimen name="radius_special">5dp</dimen>
+    <dimen name="size_item_chat">33dp</dimen>
+    <dimen name="padding_horizontal_item_chat">10dp</dimen>
+    <dimen name="padding_vertical_item_chat">8dp</dimen>
+    <dimen name="margin_top_item_chat">2dp</dimen>
+    <dimen name="margin_horizontal_icon_itemchat">10dp</dimen>
+    <dimen name="margin_bottom_item_time_chat">2dp</dimen>
+    <dimen name="widthScrollbarDetailChat">3dp</dimen>
+    <dimen name="height_edittext_chat">44dp</dimen>
+    <dimen name="padding_horizontal_edittext_chat">10dp</dimen>
+    <dimen name="textSizeItemTimeChat">12sp</dimen>
+</resources>

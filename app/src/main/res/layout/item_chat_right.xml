@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_item_chat"
+        android:layout_marginTop="@dimen/margin_top_item_chat">
+
+    <TextView
+            android:id="@+id/textview_itemchatright_message"
+            style="@style/TextViewItemChatRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_horizontal_icon_itemchat"
+            android:background="@drawable/background_itemchatright_first"
+            android:paddingBottom="@dimen/padding_vertical_item_chat"
+            android:paddingLeft="@dimen/padding_horizontal_item_chat"
+            android:paddingRight="@dimen/padding_horizontal_item_chat"
+            android:paddingTop="@dimen/padding_vertical_item_chat"
+            tools:text="xin chaof" />
+
+</RelativeLayout>

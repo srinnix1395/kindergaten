@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.chatmenu.adapter;
+package com.srinnix.kindergarten.chat.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.chatmenu.adapter.viewholder.ChatViewHolder;
+import com.srinnix.kindergarten.chat.adapter.viewholder.ChatViewHolder;
 import com.srinnix.kindergarten.model.ChatMember;
 
 import java.util.ArrayList;

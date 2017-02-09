@@ -67,4 +67,8 @@ public class SharedPreUtils {
 	public boolean isUserSignedIn(){
 		return sharedPreferences.getBoolean(AppConstant.IS_USER_SIGNED_IN, false);
 	}
+	
+	public int getCurrentUserID() {
+		return sharedPreferences.getInt(AppConstant.USER_ID, -1);
+	}
 }

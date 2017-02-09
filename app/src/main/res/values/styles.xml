@@ -6,9 +6,29 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
     <style name="StyleEditText">
         <item name="android:textSize">16sp</item>
     </style>
+
+    <!--chat -->
+    <style name="TextViewItemChat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxWidth">280dp</item>
+    </style>
+
+    <style name="TextViewItemChatLeft" parent="TextViewItemChat">
+        <item name="android:textColor">@color/colorBlack</item>
+
+    </style>
+
+    <style name="TextViewItemChatRight" parent="TextViewItemChat">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <!--chat-->
+
+
 </resources>

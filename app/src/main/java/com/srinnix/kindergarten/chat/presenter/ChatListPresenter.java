@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.chatmenu.presenter;
+package com.srinnix.kindergarten.chat.presenter;
 
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;

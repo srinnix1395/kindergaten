@@ -24,4 +24,6 @@ public class AppConstant {
 	};
 	public static final String IS_USER_SIGNED_IN = "IS_USER_SIGNED_IN";
 	
+	public static final String USER_ID = "USER_ID";
+	public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
 }

@@ -5,4 +5,6 @@
     <string name="setting">Cài đặt</string>
     <string name="about">Thông tin</string>
     <string name="sign_out">Thoát</string>
+    <string name="writeMessage">Viết tin nhắn...</string>
+    <string name="info">Thông tin</string>
 </resources>
