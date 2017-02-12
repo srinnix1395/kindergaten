@@ -7,12 +7,13 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#313f4f</color>
     <color name="colorGreenActive">#44b81e</color>
+    <color name="colorGray">#BFBFBF</color>
 
     <!--<color name="colorPrimaryLight">#B3E5FC</color>-->
 
     <!--<color name="colorBlackText">#212121</color>-->
     <!--<color name="colorSecondaryText">#757575</color>-->
-    <!--<color name="colorDividerColor">#BDBDBD</color>-->
+    <color name="colorDividerColor">#BDBDBD</color>
 
 
     <color name="colorPrimary">#6580d4</color>6580d4
@@ -30,6 +31,8 @@
     <color name="colorBackgroundItemChatLeftOn">#BBBBBB</color>
     <color name="colorBackgroundItemChatRight">@color/colorPrimary</color>
     <color name="colorBackgroundItemChatRightOn">@color/colorPrimaryDark</color>
-    <color name="colorGray">#BFBFBF</color>
+    <color name="colorBackgroundChatList">#EAEAEA</color>
+    <color name="colorWhiteFade">#ccffffff</color>
+    <color name="colorWhiteFadeFade">#8cffffff</color>
 
 </resources>

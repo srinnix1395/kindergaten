@@ -15,4 +15,10 @@ public class ModelConstant {
 	public static final int MIDDLE = 2;
 	public static final int LAST = 3;
 	
+	//account type
+	public static final int GUESTS = 0;
+	public static final int PARENTS = 1;
+	public static final int TEACHERS = 2;
+	public static final int MANAGERS = 3;
+	
 }

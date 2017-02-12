@@ -13,7 +13,7 @@
             android:layout_marginBottom="@dimen/margin_bottom_item_time_chat"
             android:textColor="@color/colorSecondaryText"
             android:textSize="@dimen/textSizeItemTimeChat"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:text="28 Jan at 16:26" />
 
     <ImageView

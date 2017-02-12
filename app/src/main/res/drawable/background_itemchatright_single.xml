@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/image_itemchatright_single_on" android:state_pressed="true" />
-    <item android:drawable="@drawable/image_itemchatright_single" />
-</selector>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/image_itemchatright_single"
+        android:maxLevel="1" />
+    <item
+        android:drawable="@drawable/image_itemchatright_single_on"
+        android:maxLevel="2" />
+</level-list>

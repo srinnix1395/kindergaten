@@ -12,4 +12,8 @@ public class SchoolBoardPresenter extends BasePresenter {
 	public SchoolBoardPresenter(BaseDelegate mDelegate) {
 		super(mDelegate);
 	}
+
+	public void onLoadMore(int page, int totalItemCount) {
+
+	}
 }

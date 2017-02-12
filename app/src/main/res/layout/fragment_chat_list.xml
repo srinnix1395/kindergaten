@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackgroundChatList"
+        android:descendantFocusability="beforeDescendants"
         android:orientation="vertical">
 
     <EditText
             android:id="@+id/edittext_chatlist_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/item_height"
+            android:background="@null"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="@dimen/paddingDrawableEditText"
+            android:hint="@string/className"
+            android:paddingLeft="@dimen/padding_horizontal_edittext" />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_chat_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_chat_list" />
 </LinearLayout>

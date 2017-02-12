@@ -75,4 +75,8 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 	protected void getData() {
 		
 	}
+
+	public void onBackPressed() {
+
+	}
 }

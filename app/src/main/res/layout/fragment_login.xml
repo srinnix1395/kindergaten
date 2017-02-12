@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_fragment_login"
+    android:descendantFocusability="beforeDescendants">
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edittext_email"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/margin_vertical_high_fragment_login"
+        android:text="@string/login"
+        android:textAllCaps="true"
+        android:textColor="@color/colorWhiteFade" />
+
+    <EditText
+        android:id="@+id/edittext_email"
+        style="@style/StyleEditTextFragmentLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edittext_email"
+        android:textColorHint="@color/colorWhiteFadeFade"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/colorWhiteFade">
+
+        <EditText
+            android:id="@+id/edittext_password"
+            style="@style/StyleEditTextFragmentLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/button_login"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_input_layout_password"
+        android:layout_marginLeft="@dimen/marginHorizontalFragmentLogin"
+        android:layout_marginRight="@dimen/marginHorizontalFragmentLogin"
+        android:layout_marginTop="@dimen/margin_vertical"
+        android:background="@drawable/background_button_login"
+        android:text="@string/login"
+        android:textColor="@color/colorWhiteFade"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textview_forgetpassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_login"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/margin_vertical"
+        android:text="@string/forgetPassword"
+        android:textColor="@color/colorWhiteFade" />
+
+    <ProgressBar
+        android:id="@+id/progressbar_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_forgetpassword"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/margin_vertical_high_fragment_login" />
+</RelativeLayout>

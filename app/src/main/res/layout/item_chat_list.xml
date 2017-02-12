@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-
-              android:gravity="center_vertical"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/item_height">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:background="?selectableItemBackground">
 
     <TextView
-            android:layout_marginLeft="@dimen/margin_left_item"
-            tools:text="Võ Thị Huệ"
-            android:lines="1"
-            android:ellipsize="end"
-            style="@style/StyleEditText"
             android:id="@+id/text_view_name"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+            style="@style/StyleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_left_item"
+            android:layout_toLeftOf="@+id/image_view_status"
+            android:ellipsize="end"
+            android:lines="1"
+            tools:text="Võ Thị Huệ" />
 
     <ImageView
-            android:layout_marginRight="@dimen/margin_right_item"
-            android:layout_marginLeft="@dimen/margin_left_item"
-            tools:src="@drawable/ic_state_online"
             android:id="@+id/image_view_status"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-</LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_left_item"
+            android:layout_marginRight="@dimen/margin_right_item"
+            tools:src="@drawable/ic_state_online" />
+
+    <View
+            android:id="@+id/view_divider_chatlist"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorDividerColor" />
+</RelativeLayout>

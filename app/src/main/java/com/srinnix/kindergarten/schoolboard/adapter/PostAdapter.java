@@ -1,0 +1,69 @@
+package com.srinnix.kindergarten.schoolboard.adapter;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.schoolboard.adapter.viewholder.LoadingViewHolder;
+import com.srinnix.kindergarten.schoolboard.adapter.viewholder.PostViewHolder;
+import com.srinnix.kindergarten.schoolboard.adapter.viewholder.PostedViewHolder;
+import com.srinnix.kindergarten.util.SharedPreUtils;
+
+import java.util.ArrayList;
+
+/**
+ * Created by DELL on 2/11/2017.
+ */
+
+public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static final int VIEW_TYPE_POST = 0;
+    public static final int VIEW_TYPE_POSTED = 1;
+    public static final int VIEW_TYPE_LOADING = 2;
+
+    private ArrayList<Post> arrPost;
+    private int accountType;
+
+    public PostAdapter(Context context, ArrayList<Post> arrPost) {
+        this.arrPost = arrPost;
+        accountType = SharedPreUtils.getInstance(context).getCurrentAccountType();
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_POST: {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
+                return new PostViewHolder(view);
+            }
+            case VIEW_TYPE_POSTED: {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted, parent, false);
+                return new PostedViewHolder(view);
+            }
+            case VIEW_TYPE_LOADING: {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
+                return new LoadingViewHolder(view);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return arrPost.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        return super.getItemViewType(position);
+    }
+}

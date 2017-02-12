@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.main.fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,10 @@ public class MainFragment extends BaseFragment {
 	
 	@BindView(R.id.view_pager_main)
 	ViewPager viewPager;
-	
+
+	@BindView(R.id.drawer_layout)
+	DrawerLayout drawerLayout;
+
 	private SchoolBoardFragment schoolBoardFragment;
 	private MainAdapter adapter;
 	private ArrayList<Fragment> arrayList;
@@ -115,5 +119,10 @@ public class MainFragment extends BaseFragment {
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onBackPressed() {
+
 	}
 }

@@ -28,6 +28,16 @@
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
+    <style name="StyleEditTextFragmentLogin">
+        <item name="android:textColorHint">@color/colorWhiteFadeFade</item>
+        <item name="android:layout_marginLeft">@dimen/marginHorizontalFragmentLogin</item>
+        <item name="android:layout_marginRight">@dimen/marginHorizontalFragmentLogin</item>
+        <item name="android:background">@drawable/background_edit_text_fragment_login</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/colorWhiteFade</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <!--chat-->
 
 

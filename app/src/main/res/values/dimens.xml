@@ -14,6 +14,15 @@
     <dimen name="margin_bottom_item_time_chat">2dp</dimen>
     <dimen name="widthScrollbarDetailChat">3dp</dimen>
     <dimen name="height_edittext_chat">44dp</dimen>
-    <dimen name="padding_horizontal_edittext_chat">10dp</dimen>
+    <dimen name="padding_horizontal_edittext">10dp</dimen>
     <dimen name="textSizeItemTimeChat">12sp</dimen>
+    <dimen name="paddingDrawableEditText">4dp</dimen>
+    <dimen name="margin_vertical">16dp</dimen>
+    <dimen name="marginBottomItemLoading">2dp</dimen>
+    <dimen name="marginImageLoading">6dp</dimen>
+    <dimen name="marginHorizontal">16dp</dimen>
+    <dimen name="padding_edit_text_fragment_login">12dp</dimen>
+    <dimen name="marginHorizontalFragmentLogin">32dp</dimen>
+    <dimen name="radius_component_fragment_login">3dp</dimen>
+    <dimen name="margin_vertical_high_fragment_login">24dp</dimen>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.constant.ModelConstant;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -70,5 +71,17 @@ public class SharedPreUtils {
 	
 	public int getCurrentUserID() {
 		return sharedPreferences.getInt(AppConstant.USER_ID, -1);
+	}
+	
+	public int getCurrentAccountType() {
+		return sharedPreferences.getInt(AppConstant.ACCOUNT_TYPE, ModelConstant.GUESTS);
+	}
+
+	public void setLastEmailFragmentLogin(String email) {
+		putString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, email);
+	}
+
+	public String getLastEmailFragmentLogin() {
+		return sharedPreferences.getString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, "");
 	}
 }

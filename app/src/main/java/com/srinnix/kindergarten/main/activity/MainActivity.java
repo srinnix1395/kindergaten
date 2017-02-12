@@ -14,16 +14,24 @@ import com.srinnix.kindergarten.main.fragment.MainFragment;
  */
 
 public class MainActivity extends AppCompatActivity implements MainDelegate{
+	private MainFragment mainFragment;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initChildViews();
 	}
-	
+
 	private void initChildViews() {
+		mainFragment = MainFragment.newInstance();
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.add(R.id.relative_layout_container, MainFragment.newInstance());
+		fragmentTransaction.add(R.id.relative_layout_container, mainFragment);
 		fragmentTransaction.commit();
+	}
+
+	@Override
+	public void onBackPressed() {
+		mainFragment.onBackPress();
 	}
 }

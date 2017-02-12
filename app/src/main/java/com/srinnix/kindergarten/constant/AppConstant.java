@@ -26,4 +26,6 @@ public class AppConstant {
 	
 	public static final String USER_ID = "USER_ID";
 	public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
+	public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
+	public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 }
