@@ -9,13 +9,15 @@ import android.widget.ProgressBar;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.request.LoginService;
+import com.srinnix.kindergarten.request.service.ApiService;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
-import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anhtu on 2/11/2017.
@@ -23,13 +25,14 @@ import io.reactivex.Observable;
 
 public class LoginPresenter extends BasePresenter {
 
-    private LoginService loginService;
+    private ApiService mApi;
 
     public LoginPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
     }
 
-    public void login(FragmentActivity activity, String email, String password, ProgressBar pbLoading, Button btnLogin) {
+    public void login(FragmentActivity activity, String email, String password, ProgressBar pbLoading,
+                      Button btnLogin, Disposable disposable) {
         if (ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInteretConnection);
             return;
@@ -44,11 +47,16 @@ public class LoginPresenter extends BasePresenter {
         UiUtils.showProgressBar(pbLoading);
         btnLogin.setEnabled(false);
 
+        disposable = mApi.login()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> {
 
-    }
+                }, throwable -> {
 
-    private Observable<Object> login(){
-        return loginService.login();
+                }, () -> {
+
+                });
     }
 
     public void handleForgetPassword() {

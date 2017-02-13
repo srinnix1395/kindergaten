@@ -15,6 +15,7 @@ import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by anhtu on 2/11/2017.
@@ -37,6 +38,7 @@ public class LoginFragment extends BaseFragment {
     ProgressBar pbLoading;
 
     private LoginPresenter mPresenter;
+    private Disposable mDisposable;
 
     @Override
     protected int getLayoutId() {
@@ -77,6 +79,7 @@ public class LoginFragment extends BaseFragment {
         return mPresenter;
     }
 
+
     @OnClick(R.id.textview_forgetpassword)
     void onClickForgetPassword() {
         mPresenter.handleForgetPassword();
@@ -87,18 +90,21 @@ public class LoginFragment extends BaseFragment {
         mPresenter.login(getActivity(), etEmail.getText().toString(),
                 etPassword.getText().toString(),
                 pbLoading,
-                btnLogin);
+                btnLogin,
+                mDisposable);
     }
 
     @Override
     public void onDestroy() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
         mPresenter.handleDestroy(etEmail.getText().toString());
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
-
 
     }
 }

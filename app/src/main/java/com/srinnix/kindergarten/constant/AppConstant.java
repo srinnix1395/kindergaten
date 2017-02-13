@@ -7,7 +7,14 @@ import com.srinnix.kindergarten.R;
  */
 
 public class AppConstant {
-	public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";
+    //API START
+    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+
+    public static final String API_LOGIN = "/user/login";
+
+    //API END
+
+    public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";
 	public static final int[] ICON_TAB_SELECTED = {
 			R.drawable.ic_newfeed_selected,
 			R.drawable.ic_class_selected,
