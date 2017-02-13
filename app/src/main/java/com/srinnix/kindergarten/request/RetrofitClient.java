@@ -1,6 +1,7 @@
-package com.srinnix.kindergarten.request.service;
+package com.srinnix.kindergarten.request;
 
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.request.remote.ApiService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

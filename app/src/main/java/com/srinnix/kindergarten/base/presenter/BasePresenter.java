@@ -24,4 +24,6 @@ public class BasePresenter {
 	public void getData(Bundle bundle) {
 		
 	}
+
+
 }

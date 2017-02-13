@@ -32,7 +32,10 @@ public class AppConstant {
 	public static final String IS_USER_SIGNED_IN = "IS_USER_SIGNED_IN";
 	
 	public static final String USER_ID = "USER_ID";
+    public static final String EMAIL = "EMAIL";
+    public static final String USER_TYPE = "USER_TYPE";
+    public static final String TOKEN = "TOKEN";
+
 	public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
-	public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
 	public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 }

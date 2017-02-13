@@ -4,8 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.srinnix.kindergarten.R;
@@ -15,6 +14,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.adapter.MainAdapter;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.schoolboard.fragment.SchoolBoardFragment;
+import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
 
@@ -25,104 +25,113 @@ import butterknife.BindView;
  */
 
 public class MainFragment extends BaseFragment {
-	@BindView(R.id.tablayout_main)
-	TabLayout tabLayout;
-	
-	@BindView(R.id.view_pager_main)
-	ViewPager viewPager;
+    @BindView(R.id.toolbar_main)
+    Toolbar toolbar;
 
-	@BindView(R.id.drawer_layout)
-	DrawerLayout drawerLayout;
+    @BindView(R.id.tablayout_main)
+    TabLayout tabLayout;
 
-	private SchoolBoardFragment schoolBoardFragment;
-	private MainAdapter adapter;
-	private ArrayList<Fragment> arrayList;
+    @BindView(R.id.view_pager_main)
+    ViewPager viewPager;
 
-	private MainPresenter mPresenter;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
 
-	public static MainFragment newInstance() {
-		return new MainFragment();
-	}
+    private SchoolBoardFragment schoolBoardFragment;
+    private MainAdapter adapter;
+    private ArrayList<Fragment> arrayList;
 
-	@Override
-	protected int getLayoutId() {
-		return R.layout.fragment_main;
-	}
+    private MainPresenter mPresenter;
 
-	@Override
-	protected void initChildView() {
-		arrayList = new ArrayList<>();
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
 
-		adapter = new MainAdapter(getChildFragmentManager(), arrayList);
-		viewPager.setAdapter(adapter);
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_main;
+    }
 
-		tabLayout.setupWithViewPager(viewPager);
-		tabLayout.addTab(tabLayout.newTab().setIcon(AppConstant.ICON_TAB_SELECTED[0]));
-		tabLayout.addTab(tabLayout.newTab().setIcon(AppConstant.ICON_TAB_UNSELECTED[1]));
-		tabLayout.addTab(tabLayout.newTab().setIcon(AppConstant.ICON_TAB_UNSELECTED[2]));
-		tabLayout.addTab(tabLayout.newTab().setIcon(AppConstant.ICON_TAB_UNSELECTED[3]));
+    @Override
+    protected void initChildView() {
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            toolbar.inflateMenu(R.menu.main_menu_signed_in);
+        } else {
+            toolbar.inflateMenu(R.menu.main_menu_unsigned_in);
+        }
+        toolbar.setOnMenuItemClickListener(item -> {
+            onMenuItemItemSelected(item);
+            return false;
+        });
 
-		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        arrayList = new ArrayList<>();
+        arrayList.add(SchoolBoardFragment.newInstance());
+        arrayList.add(SchoolBoardFragment.newInstance());
+        arrayList.add(SchoolBoardFragment.newInstance());
+        arrayList.add(SchoolBoardFragment.newInstance());
 
-			}
+        adapter = new MainAdapter(getChildFragmentManager(), arrayList);
+        viewPager.setAdapter(adapter);
 
-			@Override
-			public void onPageSelected(int position) {
-				mPresenter.changeTabIcon(tabLayout, position);
-			}
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(AppConstant.ICON_TAB_SELECTED[0]);
+        tabLayout.getTabAt(1).setIcon(AppConstant.ICON_TAB_UNSELECTED[1]);
+        tabLayout.getTabAt(2).setIcon(AppConstant.ICON_TAB_UNSELECTED[2]);
+        tabLayout.getTabAt(3).setIcon(AppConstant.ICON_TAB_UNSELECTED[3]);
 
-			@Override
-			public void onPageScrollStateChanged(int state) {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-			}
-		});
-	}
+            }
 
-	@Override
-	protected BasePresenter initPresenter() {
-		mPresenter = new MainPresenter(this);
-		return mPresenter;
-	}
+            @Override
+            public void onPageSelected(int position) {
+                mPresenter.changeTabIcon(tabLayout, position);
+            }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		mPresenter.createOptionMenu(menu, inflater);
-	}
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_item_sign_in: {
+            }
+        });
+    }
 
-				break;
-			}
-			case R.id.menu_item_sign_out:{
+    private void onMenuItemItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_sign_in: {
 
-				break;
-			}
-			case R.id.menu_item_about: {
+                break;
+            }
+            case R.id.menu_item_sign_out: {
 
-				break;
-			}
-			case R.id.menu_item_chat: {
+                break;
+            }
+            case R.id.menu_item_about: {
 
-				break;
-			}
-			case R.id.menu_item_setting: {
+                break;
+            }
+            case R.id.menu_item_chat: {
+                mPresenter.onClickMenuItemChat(drawerLayout);
+                break;
+            }
+            case R.id.menu_item_setting: {
 
-				break;
-			}
-			default:
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+                break;
+            }
+            default:
+                break;
+        }
+    }
 
-	@Override
-	public void onBackPressed() {
+    @Override
+    protected BasePresenter initPresenter() {
+        mPresenter = new MainPresenter(this);
+        return mPresenter;
+    }
 
-	}
+    @Override
+    public void onBackPressed() {
+
+    }
 }

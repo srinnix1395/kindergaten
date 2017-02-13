@@ -15,4 +15,5 @@
     <string name="forgetPassword">Quên mật khẩu?</string>
     <string name="emptyEmailOrPassword">Hãy nhập email và password</string>
     <string name="noInteretConnection">Không có kết nối Internet</string>
+    <string name="commonError">Đã có lỗi xảy ra trong quá trình xử lý, xin thử lại!</string>
 </resources>

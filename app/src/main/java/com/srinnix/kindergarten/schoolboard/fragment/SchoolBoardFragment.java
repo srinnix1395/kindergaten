@@ -27,6 +27,10 @@ public class SchoolBoardFragment extends BaseFragment {
     private PostAdapter postAdapter;
     private ArrayList<Post> arrPost;
 
+    public static SchoolBoardFragment newInstance() {
+        return new SchoolBoardFragment();
+    }
+
 	@Override
 	protected int getLayoutId() {
 		return R.layout.fragment_school_board;
@@ -43,8 +47,8 @@ public class SchoolBoardFragment extends BaseFragment {
             }
         });
 
-        postAdapter = new PostAdapter(mContext, arrPost);
-        rvListPost.setAdapter(postAdapter);
+//        postAdapter = new PostAdapter(mContext, arrPost);
+//        rvListPost.setAdapter(postAdapter);
     }
 
     @Override

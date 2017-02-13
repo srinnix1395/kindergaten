@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 
 public class MainAdapter extends FragmentPagerAdapter {
-	private static final int PAGE_COUNT = 5;
+	private static final int PAGE_COUNT = 4;
 	
 	private ArrayList<Fragment> arrayList;
 	
@@ -22,7 +22,7 @@ public class MainAdapter extends FragmentPagerAdapter {
 	
 	@Override
 	public Fragment getItem(int position) {
-		return null;
+		return arrayList.get(position);
 	}
 	
 	@Override

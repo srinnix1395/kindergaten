@@ -15,13 +15,13 @@ import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by anhtu on 2/11/2017.
  */
 
-public class LoginFragment extends BaseFragment {
+public class LoginFragment extends BaseFragment implements LoginDelegate {
     @BindView(R.id.edittext_email)
     EditText etEmail;
 
@@ -38,7 +38,7 @@ public class LoginFragment extends BaseFragment {
     ProgressBar pbLoading;
 
     private LoginPresenter mPresenter;
-    private Disposable mDisposable;
+    private CompositeDisposable mDisposable;
 
     @Override
     protected int getLayoutId() {
@@ -95,9 +95,14 @@ public class LoginFragment extends BaseFragment {
     }
 
     @Override
+    public void loginSuccessfully() {
+
+    }
+
+    @Override
     public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
+        if (mDisposable != null && mDisposable.size() > 0) {
+            mDisposable.clear();
         }
         mPresenter.handleDestroy(etEmail.getText().toString());
         super.onDestroy();
@@ -107,4 +112,6 @@ public class LoginFragment extends BaseFragment {
     public void onBackPressed() {
 
     }
+
+
 }
