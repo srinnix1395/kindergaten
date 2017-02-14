@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ModelConstant;
-import com.srinnix.kindergarten.request.model.LoginResponse;
+import com.srinnix.kindergarten.request.model.User;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -86,12 +86,14 @@ public class SharedPreUtils {
 		return sharedPreferences.getString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, "");
 	}
 
-    public void saveUserData(LoginResponse response) {
+    public void saveUserData(User user) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(AppConstant.USER_ID, response.getId());
-        editor.putString(AppConstant.EMAIL, response.getEmail());
-        editor.putInt(AppConstant.USER_TYPE, response.getUserType());
-        editor.putString(AppConstant.TOKEN, response.getToken());
+        editor.putInt(AppConstant.USER_ID, user.getId());
+        editor.putString(AppConstant.EMAIL, user.getEmail());
+        editor.putString(AppConstant.USERNAME, user.getUserName());
+        editor.putInt(AppConstant.USER_TYPE, user.getUserType());
+        editor.putString(AppConstant.TOKEN, user.getToken());
+        editor.putLong(AppConstant.CREATED_AT, user.getCreatedAt());
         editor.apply();
     }
 
@@ -99,7 +101,10 @@ public class SharedPreUtils {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(AppConstant.USER_ID);
         editor.remove(AppConstant.EMAIL);
+        editor.remove(AppConstant.USERNAME);
         editor.remove(AppConstant.USER_TYPE);
+        editor.remove(AppConstant.TOKEN);
+        editor.remove(AppConstant.CREATED_AT);
         editor.apply();
     }
 }

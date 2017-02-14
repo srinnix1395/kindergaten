@@ -72,7 +72,7 @@ public class LoginPresenter extends BasePresenter {
         }
 
         if (loginResponse.result == BaseResponse.RESULT_OK) {
-            SharedPreUtils.getInstance(mContext).saveUserData(loginResponse);
+            SharedPreUtils.getInstance(mContext).saveUserData(loginResponse.getUser());
             loginDelegate.loginSuccessfully();
         } else {
             handleError(loginResponse.error);

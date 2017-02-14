@@ -33,9 +33,11 @@ public class AppConstant {
 	
 	public static final String USER_ID = "USER_ID";
     public static final String EMAIL = "EMAIL";
+    public static final String USERNAME = "USERNAME";
     public static final String USER_TYPE = "USER_TYPE";
     public static final String TOKEN = "TOKEN";
+    public static final String CREATED_AT = "CREATED_AT";
 
-	public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
+    public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
 	public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 }
