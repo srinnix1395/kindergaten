@@ -16,4 +16,8 @@
     <string name="emptyEmailOrPassword">Hãy nhập email và password</string>
     <string name="noInteretConnection">Không có kết nối Internet</string>
     <string name="commonError">Đã có lỗi xảy ra trong quá trình xử lý, xin thử lại!</string>
+    <string name="newFeed">Bảng tin</string>
+    <string name="clazz">Lớp học</string>
+    <string name="camera">Camera</string>
+    <string name="children">Con trẻ</string>
 </resources>

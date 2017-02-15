@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.main.presenter;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
@@ -19,13 +20,15 @@ public class MainPresenter extends BasePresenter {
 		super(mDelegate);
 	}
 	
-	public void changeTabIcon(TabLayout tabLayout, int position) {
+	public void changeTabIcon(Toolbar toolbar, TabLayout tabLayout, int position) {
 		if (tabLayout == null || tabLayout.getTabAt(position) == null
 				|| tabLayout.getTabAt(currentPosition) == null) {
 			return;
 		}
-		
-		tabLayout.getTabAt(position).setIcon(AppConstant.ICON_TAB_SELECTED[position]);
+
+        toolbar.setTitle(AppConstant.TITLE_TAB[position]);
+
+        tabLayout.getTabAt(position).setIcon(AppConstant.ICON_TAB_SELECTED[position]);
 		tabLayout.getTabAt(currentPosition).setIcon(AppConstant.ICON_TAB_UNSELECTED[currentPosition]);
 		currentPosition = position;
 	}

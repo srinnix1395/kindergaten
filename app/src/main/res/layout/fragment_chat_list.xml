@@ -13,7 +13,7 @@
             android:layout_height="@dimen/item_height"
             android:background="@null"
             android:drawableLeft="@drawable/ic_search"
-            android:drawablePadding="@dimen/paddingDrawableEditText"
+            android:drawablePadding="@dimen/padding_drawable"
             android:hint="@string/className"
             android:paddingLeft="@dimen/padding_horizontal_edittext" />
 

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ModelConstant;
-import com.srinnix.kindergarten.request.model.User;
+import com.srinnix.kindergarten.model.User;
 
 /**
  * Created by DELL on 2/3/2017.

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorGrayIcon"
+              android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_schoolboard"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarThumbVertical="@color/colorGray"
-            android:scrollbarTrackVertical="@color/colorWhite"
-            android:scrollbars="vertical" />
+        android:id="@+id/recyclerview_schoolboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarSize="@dimen/scroll_bar_size"
+        android:scrollbarThumbVertical="@color/colorThumbScrollbar"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_post"/>
 </LinearLayout>

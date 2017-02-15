@@ -6,6 +6,7 @@ import com.srinnix.kindergarten.request.model.LoginResponse;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 /**
@@ -13,9 +14,12 @@ import retrofit2.http.POST;
  */
 
 public interface ApiService {
-
     @POST(AppConstant.API_LOGIN)
     @FormUrlEncoded
     Observable<LoginResponse> login(@Field("email") String email,
                                     @Field("password") String password);
+
+    @POST(AppConstant.API_GET_POST)
+    @FormUrlEncoded
+    Observable<Object> getListPost(@Header("token") String token);
 }

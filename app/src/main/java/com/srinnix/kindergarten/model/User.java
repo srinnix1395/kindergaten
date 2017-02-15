@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.request.model;
+package com.srinnix.kindergarten.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,17 +28,12 @@ public class User {
     @Expose
     private String token;
 
-    @SerializedName("created_at")
-    @Expose
-    private long createdAt;
-
-    public User(int id, String email, String userName, int userType, String token, long createdAt) {
+    public User(int id, String email, String userName, int userType, String token) {
         this.id = id;
         this.email = email;
         this.userName = userName;
         this.userType = userType;
         this.token = token;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -71,14 +66,6 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getUserName() {

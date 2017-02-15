@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.main.fragment;
 
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -54,6 +55,8 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(AppConstant.TITLE_TAB[0]);
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             toolbar.inflateMenu(R.menu.main_menu_signed_in);
         } else {
@@ -87,7 +90,7 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                mPresenter.changeTabIcon(tabLayout, position);
+                mPresenter.changeTabIcon(toolbar, tabLayout, position);
             }
 
             @Override

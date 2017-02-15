@@ -11,15 +11,15 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/item_height"
             android:background="@color/colorPrimary" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/item_height"
             android:layout_below="@+id/toolbar_main"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorWhite"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:tabIndicatorColor="@color/colorWhite"
             app:tabIndicatorHeight="1dp"
@@ -28,7 +28,7 @@
         <View
             android:id="@+id/view_shadow"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:layout_below="@+id/tablayout_main"
             android:background="@drawable/shadow" />
 
