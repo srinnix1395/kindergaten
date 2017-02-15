@@ -9,23 +9,26 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.schoolboard.adapter.EndlessScrollListener;
 import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
+import com.srinnix.kindergarten.schoolboard.delegate.SchoolBoardDelegate;
 import com.srinnix.kindergarten.schoolboard.presenter.SchoolBoardPresenter;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by DELL on 2/3/2017.
  */
 
-public class SchoolBoardFragment extends BaseFragment {
+public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDelegate{
 	@BindView(R.id.recyclerview_schoolboard)
 	RecyclerView rvListPost;
 	
 	private SchoolBoardPresenter mPresenter;
     private PostAdapter postAdapter;
     private ArrayList<Post> arrPost;
+    private CompositeDisposable mDisposable;
 
     public static SchoolBoardFragment newInstance() {
         return new SchoolBoardFragment();
@@ -38,22 +41,40 @@ public class SchoolBoardFragment extends BaseFragment {
 	
 	@Override
 	protected void initChildView() {
+        mDisposable = new CompositeDisposable();
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvListPost.setLayoutManager(linearLayoutManager);
 		rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemCount) {
-                mPresenter.onLoadMore(page, totalItemCount);
+                mPresenter.onLoadMore(mDisposable, page, totalItemCount);
             }
         });
 
-//        postAdapter = new PostAdapter(mContext, arrPost);
-//        rvListPost.setAdapter(postAdapter);
+        arrPost = new ArrayList<>();
+        postAdapter = new PostAdapter(mContext, arrPost);
+        rvListPost.setAdapter(postAdapter);
     }
 
     @Override
     protected BasePresenter initPresenter() {
         mPresenter = new SchoolBoardPresenter(this);
         return mPresenter;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null && mDisposable.size() == 0) {
+            mDisposable.clear();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void updateSchoolBoard(ArrayList<Post> arrayList) {
+        int size = arrPost.size();
+        arrPost.addAll(arrayList);
+        postAdapter.notifyItemRangeInserted(size, arrayList.size());
     }
 }

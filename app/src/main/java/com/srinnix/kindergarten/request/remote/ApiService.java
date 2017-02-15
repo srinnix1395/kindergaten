@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.request.remote;
 
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.request.model.LoginResponse;
+import com.srinnix.kindergarten.request.model.PostResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -21,5 +22,6 @@ public interface ApiService {
 
     @POST(AppConstant.API_GET_POST)
     @FormUrlEncoded
-    Observable<Object> getListPost(@Header("token") String token);
+    Observable<PostResponse> getListPost(@Header("token") String token,
+                                         @Field("page") int page);
 }

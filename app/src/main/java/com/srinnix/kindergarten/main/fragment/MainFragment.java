@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.clazz.fragment.ClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.adapter.MainAdapter;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
@@ -69,7 +70,7 @@ public class MainFragment extends BaseFragment {
 
         arrayList = new ArrayList<>();
         arrayList.add(SchoolBoardFragment.newInstance());
-        arrayList.add(SchoolBoardFragment.newInstance());
+        arrayList.add(ClassFragment.newInstance());
         arrayList.add(SchoolBoardFragment.newInstance());
         arrayList.add(SchoolBoardFragment.newInstance());
 

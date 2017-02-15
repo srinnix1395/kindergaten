@@ -47,6 +47,8 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     @Override
     protected void initChildView() {
+        mDisposable = new CompositeDisposable();
+
         etEmail.setText(SharedPreUtils.getInstance(mContext).getLastEmailFragmentLogin());
 
         tvForgetPassword.setOnTouchListener((v, event) -> {

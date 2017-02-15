@@ -62,6 +62,7 @@ public class LoginPresenter extends BasePresenter {
     }
 
     private void handleException(Throwable throwable) {
+        AlertUtils.showToast(mContext, R.string.commonError);
         DebugLog.e(throwable.getMessage());
     }
 

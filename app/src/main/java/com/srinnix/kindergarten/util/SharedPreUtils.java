@@ -93,7 +93,6 @@ public class SharedPreUtils {
         editor.putString(AppConstant.USERNAME, user.getUserName());
         editor.putInt(AppConstant.USER_TYPE, user.getUserType());
         editor.putString(AppConstant.TOKEN, user.getToken());
-        editor.putLong(AppConstant.CREATED_AT, user.getCreatedAt());
         editor.apply();
     }
 
@@ -104,7 +103,10 @@ public class SharedPreUtils {
         editor.remove(AppConstant.USERNAME);
         editor.remove(AppConstant.USER_TYPE);
         editor.remove(AppConstant.TOKEN);
-        editor.remove(AppConstant.CREATED_AT);
         editor.apply();
+    }
+
+    public String getToken() {
+        return sharedPreferences.getString(AppConstant.TOKEN, "");
     }
 }
