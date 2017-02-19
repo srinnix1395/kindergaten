@@ -10,7 +10,7 @@
     <EditText
             android:id="@+id/edittext_chatlist_search"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height"
+            android:layout_height="@dimen/item_size"
             android:background="@null"
             android:drawableLeft="@drawable/ic_search"
             android:drawablePadding="@dimen/padding_drawable"

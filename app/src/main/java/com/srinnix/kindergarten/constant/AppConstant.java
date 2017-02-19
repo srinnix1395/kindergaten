@@ -16,6 +16,12 @@ public class AppConstant {
     public static final String API_GET_POST = "/post/getNews";
     //API END
 
+    //Chat START
+//    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+    public static final String SERVER_URL = "http://localhost/";
+
+    //Chat END
+
     public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";
     public static final int[] ICON_TAB_SELECTED = {
             R.drawable.ic_newfeed_selected,

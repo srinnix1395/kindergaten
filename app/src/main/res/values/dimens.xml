@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_height">44dp</dimen>
+    <dimen name="item_size">44dp</dimen>
     <dimen name="margin_left_item">16dp</dimen>
     <dimen name="margin_right_item">16dp</dimen>
 
@@ -32,5 +32,8 @@
     <dimen name="margin_vertical_post">6dp</dimen>
     <dimen name="margin_vertical_divider_post">8dp</dimen>
     <dimen name="scroll_bar_size">4dp</dimen>
-    <dimen name="elevation_card_view">2dp</dimen>
+    <dimen name="elevation_card_view">3dp</dimen>
+    <dimen name="margin_icon_fragment_class">10dp</dimen>
+    <dimen name="radius_card_view_fragment_class">0dp</dimen>
+    <dimen name="height_item_fragment_class">65dp</dimen>
 </resources>

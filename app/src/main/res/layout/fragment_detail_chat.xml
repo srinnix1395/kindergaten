@@ -43,7 +43,7 @@
 
         <ImageView
                 android:id="@+id/imageview_send"
-                android:layout_width="@dimen/item_height"
+                android:layout_width="@dimen/item_size"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:background="?selectableItemBackground"

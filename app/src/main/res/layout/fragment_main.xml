@@ -11,13 +11,13 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height"
+            android:layout_height="@dimen/item_size"
             android:background="@color/colorPrimary" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout_main"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height"
+            android:layout_height="@dimen/item_size"
             android:layout_below="@+id/toolbar_main"
             android:background="@color/colorWhite"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -28,15 +28,15 @@
         <View
             android:id="@+id/view_shadow"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="3dp"
             android:layout_below="@+id/tablayout_main"
-            android:background="@drawable/shadow" />
+            android:background="@drawable/image_shadow" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/view_shadow" />
+            android:layout_below="@+id/tablayout_main" />
     </RelativeLayout>
 
     <fragment
