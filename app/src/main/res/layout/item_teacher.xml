@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/height_item_fragment_class"
+    android:layout_height="@dimen/height_item_high"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     android:paddingBottom="@dimen/padding_post"

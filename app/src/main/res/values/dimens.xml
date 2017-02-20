@@ -35,5 +35,5 @@
     <dimen name="elevation_card_view">3dp</dimen>
     <dimen name="margin_icon_fragment_class">10dp</dimen>
     <dimen name="radius_card_view_fragment_class">0dp</dimen>
-    <dimen name="height_item_fragment_class">65dp</dimen>
+    <dimen name="height_item_high">65dp</dimen>
 </resources>
