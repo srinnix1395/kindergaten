@@ -20,4 +20,6 @@
     <string name="clazz">Lớp học</string>
     <string name="camera">Camera</string>
     <string name="children">Con trẻ</string>
+    <string name="teacher">Giáo viên</string>
+    <string name="image_class">Hình ảnh của lớp</string>
 </resources>
