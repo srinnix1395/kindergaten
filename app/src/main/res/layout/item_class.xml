@@ -18,12 +18,12 @@
         android:layout_centerVertical="true"/>
 
     <TextView
-        android:id="@+id/textview_teacher_name"
+        android:id="@+id/textview_class_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/margin_icon_fragment_class"
         android:layout_toRightOf="@+id/imageview_icon"
         android:textSize="16sp"
-        tools:text="Phạm thanh thủy"/>
+        tools:text="Chồi 4"/>
 </RelativeLayout>

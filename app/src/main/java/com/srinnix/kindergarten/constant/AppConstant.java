@@ -14,6 +14,8 @@ public class AppConstant {
 
 
     public static final String API_GET_POST = "/post/getNews";
+
+    public static final String API_GET_LIST_CLASS = "/class/getListClass";
     //API END
 
     //Chat START

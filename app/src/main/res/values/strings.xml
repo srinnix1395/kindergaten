@@ -17,7 +17,7 @@
     <string name="noInteretConnection">Không có kết nối Internet</string>
     <string name="commonError">Đã có lỗi xảy ra trong quá trình xử lý, xin thử lại!</string>
     <string name="newFeed">Bảng tin</string>
-    <string name="clazz">Lớp học</string>
+    <string name="aClass">Lớp học</string>
     <string name="camera">Camera</string>
     <string name="children">Con trẻ</string>
     <string name="teacher">Giáo viên</string>

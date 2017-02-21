@@ -24,4 +24,7 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<PostResponse> getListPost(@Header("token") String token,
                                          @Field("page") int page);
+
+//    @GET(AppConstant.API_GET_LIST_CLASS)
+//    Observable<ListClassResponse> getListClass(@P)
 }
