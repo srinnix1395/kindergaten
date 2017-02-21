@@ -1,12 +1,15 @@
 package com.srinnix.kindergarten.request.remote;
 
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.request.model.DetailClassResponse;
+import com.srinnix.kindergarten.request.model.ListClassResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -25,6 +28,9 @@ public interface ApiService {
     Observable<PostResponse> getListPost(@Header("token") String token,
                                          @Field("page") int page);
 
-//    @GET(AppConstant.API_GET_LIST_CLASS)
-//    Observable<ListClassResponse> getListClass(@P)
+    @GET(AppConstant.API_GET_LIST_CLASS)
+    Observable<ListClassResponse> getListClass();
+
+    @GET(AppConstant.API_GET_DETAIL_CLASS)
+    Observable<DetailClassResponse> getDetailClass();
 }

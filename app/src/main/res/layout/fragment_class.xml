@@ -12,12 +12,9 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardview_class"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_item_high"
             android:layout_marginBottom="@dimen/margin_vertical_post"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
             app:cardCornerRadius="@dimen/radius_card_view_fragment_class"
             app:cardElevation="@dimen/elevation_card_view">
 
@@ -29,7 +26,7 @@
                 android:paddingRight="@dimen/margin_horizontal"
                 android:paddingTop="@dimen/padding_post">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageview_icon"
                     android:layout_width="@dimen/item_size"
                     android:layout_height="@dimen/item_size"
@@ -41,9 +38,23 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="@dimen/margin_icon_fragment_class"
+                    android:layout_marginRight="@dimen/margin_icon_fragment_class"
+                    android:layout_toLeftOf="@+id/imageview_chat"
                     android:layout_toRightOf="@id/imageview_icon"
+                    android:ellipsize="end"
+                    android:lines="1"
                     android:textSize="16sp"
                     tools:text="Lớp chồi 4"/>
+
+                <ImageView
+                    android:id="@+id/imageview_chat"
+                    android:layout_width="@dimen/item_size"
+                    android:layout_height="@dimen/item_size"
+                    android:layout_alignParentRight="true"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/ic_message"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
@@ -82,6 +93,50 @@
                     android:id="@+id/rel_teacher_3"
                     layout="@layout/item_teacher"/>
 
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_member_class"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_vertical_post"
+            android:layout_marginTop="@dimen/margin_vertical_post"
+            app:cardCornerRadius="@dimen/radius_card_view_fragment_class"
+            app:cardElevation="@dimen/elevation_card_view">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_size"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/margin_horizontal"
+                    android:text="@string/class_member"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_member_class"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/textview_see_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_size"
+                    android:background="?selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/ic_next"
+                    android:drawablePadding="@dimen/padding_drawable"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/margin_horizontal"
+                    android:text="@string/see_all"
+                    android:textAllCaps="true"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

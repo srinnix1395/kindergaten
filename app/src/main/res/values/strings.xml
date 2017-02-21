@@ -22,4 +22,8 @@
     <string name="children">Con trẻ</string>
     <string name="teacher">Giáo viên</string>
     <string name="image_class">Hình ảnh của lớp</string>
+    <string name="class_member">Danh sách lớp</string>
+    <string name="see_all">Xem tất cả thành viên</string>
+    <string name="hobby">Sở thích:</string>
+    <string name="characteristic">Đặc điểm khác:</string>
 </resources>
