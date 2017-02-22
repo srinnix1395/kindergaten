@@ -20,12 +20,6 @@ public class AppConstant {
     public static final String API_GET_INFO_TEACHER = "/class/getInfoTeacher";
     //API END
 
-    //Chat START
-//    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String SERVER_URL = "http://127.0.0.1";
-
-    //Chat END
-
     public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";
     public static final int[] ICON_TAB_SELECTED = {
             R.drawable.ic_newfeed_selected,
@@ -60,4 +54,6 @@ public class AppConstant {
 
     public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
     public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
+
+
 }

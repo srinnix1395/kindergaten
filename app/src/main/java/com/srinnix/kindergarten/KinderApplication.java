@@ -1,11 +1,10 @@
 package com.srinnix.kindergarten;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.SocketUtil;
 
 import java.net.URISyntaxException;
 
@@ -35,20 +34,19 @@ public class KinderApplication extends Application {
     private void connect() {
         if (!SharedPreUtils.getInstance(this).isUserSignedIn()) {
             try {
-                mSocket = IO.socket(AppConstant.SERVER_URL);
-                Log.i(TAG, "connect: " + mSocket.id());
+                mSocket = IO.socket(ChatConstant.SERVER_URL);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-            mSocket.on(Socket.EVENT_CONNECT, args -> {
-                DebugLog.i("Connected");
-            }).on(Socket.EVENT_DISCONNECT, args -> {
-                DebugLog.i("Disconnected");
-            }).on(Socket.EVENT_RECONNECT, args -> {
-                DebugLog.i("Reconnect");
-            });
+            mSocket.on(Socket.EVENT_CONNECT, args -> SocketUtil.onConnected(this, mSocket))
+                    .on(Socket.EVENT_DISCONNECT, args -> SocketUtil.onDisconnect(mSocket))
+                    .on(Socket.EVENT_RECONNECT, args -> SocketUtil.onReconnect(mSocket));
             mSocket.connect();
         }
+    }
+
+    private void handleConnected() {
+
     }
 
     public Socket getSocket() {
