@@ -3,14 +3,17 @@ package com.srinnix.kindergarten.schoolboard.presenter;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.request.model.BaseResponse;
+import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.request.RetrofitClient;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.Error;
-import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.schoolboard.delegate.SchoolBoardDelegate;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,6 +33,7 @@ public class SchoolBoardPresenter extends BasePresenter {
         super(delegate);
         mDelegate = (SchoolBoardDelegate) delegate;
         token = SharedPreUtils.getInstance(mContext).getToken();
+        apiService = RetrofitClient.getApiService();
     }
 
     public void onLoadMore(CompositeDisposable mDisposable, int page, int totalItemCount) {
@@ -41,12 +45,12 @@ public class SchoolBoardPresenter extends BasePresenter {
         );
     }
 
-    private void handleSuccessResponse(PostResponse response) {
+    private void handleSuccessResponse(ApiResponse<ArrayList<Post>> response) {
         if (response == null) {
             AlertUtils.showToast(mContext, R.string.commonError);
-        } else if (response.result == BaseResponse.RESULT_OK) {
+        } else if (response.result == ApiResponse.RESULT_OK) {
             if (mDelegate != null) {
-                mDelegate.updateSchoolBoard(response.getPostArrayList());
+                mDelegate.updateSchoolBoard(response.getData());
             }
         } else {
             handleError(response.error);

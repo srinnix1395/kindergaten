@@ -76,6 +76,7 @@ public class MainFragment extends BaseFragment {
 
         adapter = new MainAdapter(getChildFragmentManager(), arrayList);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(4);
 
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(AppConstant.ICON_TAB_SELECTED[0]);
@@ -136,6 +137,6 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onBackPressed() {
-
+        mPresenter.onBackPressed(this, drawerLayout, viewPager);
     }
 }

@@ -7,7 +7,7 @@ package com.srinnix.kindergarten.constant;
 public class ChatConstant {
 
     public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    //    public static final String SERVER_URL = "http://127.0.0.1";
+//        public static final String SERVER_URL = "http://192.168.0.102";
 
     //Event START
     public static final String EVENT_SETUP_ID = "setup_id";

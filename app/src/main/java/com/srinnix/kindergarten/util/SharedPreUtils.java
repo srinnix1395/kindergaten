@@ -88,10 +88,10 @@ public class SharedPreUtils {
 
     public void saveUserData(User user) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(AppConstant.USER_ID, user.getId());
+        editor.putString(AppConstant.USER_ID, user.getId());
         editor.putString(AppConstant.EMAIL, user.getEmail());
-        editor.putString(AppConstant.USERNAME, user.getUserName());
-        editor.putInt(AppConstant.USER_TYPE, user.getUserType());
+        editor.putString(AppConstant.NAME, user.getName());
+        editor.putInt(AppConstant.USER_TYPE, user.getAccountType());
         editor.putString(AppConstant.TOKEN, user.getToken());
         editor.apply();
     }
@@ -100,7 +100,7 @@ public class SharedPreUtils {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(AppConstant.USER_ID);
         editor.remove(AppConstant.EMAIL);
-        editor.remove(AppConstant.USERNAME);
+        editor.remove(AppConstant.NAME);
         editor.remove(AppConstant.USER_TYPE);
         editor.remove(AppConstant.TOKEN);
         editor.apply();

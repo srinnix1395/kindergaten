@@ -32,6 +32,6 @@ public class MainActivity extends AppCompatActivity implements MainDelegate{
 
 	@Override
 	public void onBackPressed() {
-
+        mainFragment.onBackPressed();
 	}
 }

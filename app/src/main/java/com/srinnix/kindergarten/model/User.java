@@ -8,39 +8,44 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class User {
-    @SerializedName("_id")
+    @SerializedName("_id_user")
     @Expose
-    private int id;
+    private String id;
 
     @SerializedName("email")
     @Expose
     private String email;
 
-    @SerializedName("username")
+    @SerializedName("name")
     @Expose
-    private String userName;
+    private String name;
 
-    @SerializedName("user_type")
+    @SerializedName("account_type")
     @Expose
-    private int userType;
+    private int accountType;
+
+    @SerializedName("_id_school")
+    @Expose
+    private String idSchool;
 
     @SerializedName("token")
     @Expose
     private String token;
 
-    public User(int id, String email, String userName, int userType, String token) {
+    public User(String id, String email, String name, int accountType, String idSchool, String token) {
         this.id = id;
         this.email = email;
-        this.userName = userName;
-        this.userType = userType;
+        this.name = name;
+        this.accountType = accountType;
+        this.idSchool = idSchool;
         this.token = token;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -52,12 +57,28 @@ public class User {
         this.email = email;
     }
 
-    public int getUserType() {
-        return userType;
+    public String getName() {
+        return name;
     }
 
-    public void setUserType(int userType) {
-        this.userType = userType;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getIdSchool() {
+        return idSchool;
+    }
+
+    public void setIdSchool(String idSchool) {
+        this.idSchool = idSchool;
     }
 
     public String getToken() {
@@ -66,13 +87,5 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 }

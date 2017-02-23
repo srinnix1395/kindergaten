@@ -45,10 +45,6 @@ public class KinderApplication extends Application {
         }
     }
 
-    private void handleConnected() {
-
-    }
-
     public Socket getSocket() {
         return mSocket;
     }

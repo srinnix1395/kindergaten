@@ -4,6 +4,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -18,6 +19,7 @@ public class RetrofitClient {
             sRetrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return sRetrofit;

@@ -10,9 +10,9 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
-import com.srinnix.kindergarten.request.model.BaseResponse;
+import com.srinnix.kindergarten.model.DataLogin;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.Error;
-import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
@@ -66,14 +66,14 @@ public class LoginPresenter extends BasePresenter {
         DebugLog.e(throwable.getMessage());
     }
 
-    private void handleResponse(LoginResponse loginResponse) {
+    private void handleResponse(ApiResponse<DataLogin> loginResponse) {
         if (loginResponse == null) {
             DebugLog.e(ErrorConstant.RESPONSE_NULL);
             return;
         }
 
-        if (loginResponse.result == BaseResponse.RESULT_OK) {
-            SharedPreUtils.getInstance(mContext).saveUserData(loginResponse.getUser());
+        if (loginResponse.result == ApiResponse.RESULT_OK) {
+            SharedPreUtils.getInstance(mContext).saveUserData(loginResponse.getData().getUser());
             loginDelegate.loginSuccessfully();
         } else {
             handleError(loginResponse.error);
