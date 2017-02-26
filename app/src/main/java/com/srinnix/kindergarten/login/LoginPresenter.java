@@ -10,8 +10,9 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
-import com.srinnix.kindergarten.model.DataLogin;
+import com.srinnix.kindergarten.database.RealmDatabase;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.DataLogin;
 import com.srinnix.kindergarten.request.model.Error;
 import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.AlertUtils;
@@ -23,6 +24,7 @@ import com.srinnix.kindergarten.util.UiUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 
 /**
  * Created by anhtu on 2/11/2017.
@@ -39,7 +41,7 @@ public class LoginPresenter extends BasePresenter {
     }
 
     public void login(FragmentActivity activity, String email, String password, ProgressBar pbLoading,
-                      Button btnLogin, CompositeDisposable disposable) {
+                      Button btnLogin, CompositeDisposable disposable, Realm realm) {
         if (ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInteretConnection);
             return;
@@ -57,7 +59,8 @@ public class LoginPresenter extends BasePresenter {
         disposable.add(mApi.login(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleResponse, this::handleException));
+                .subscribe(dataLoginApiResponse -> handleResponse(dataLoginApiResponse, realm),
+                        this::handleException));
 
     }
 
@@ -66,18 +69,19 @@ public class LoginPresenter extends BasePresenter {
         DebugLog.e(throwable.getMessage());
     }
 
-    private void handleResponse(ApiResponse<DataLogin> loginResponse) {
+    private void handleResponse(ApiResponse<DataLogin> loginResponse, Realm realm) {
         if (loginResponse == null) {
-            DebugLog.e(ErrorConstant.RESPONSE_NULL);
+            DebugLog.i(ErrorConstant.RESPONSE_NULL);
             return;
         }
 
-        if (loginResponse.result == ApiResponse.RESULT_OK) {
-            SharedPreUtils.getInstance(mContext).saveUserData(loginResponse.getData().getUser());
-            loginDelegate.loginSuccessfully();
-        } else {
+        if (loginResponse.result == ApiResponse.RESULT_NG) {
             handleError(loginResponse.error);
+            return;
         }
+
+        SharedPreUtils.getInstance(mContext).saveUserData(loginResponse.getData().getUser());
+        RealmDatabase.insertContact(realm, loginResponse.getData().getContacts(), loginDelegate);
     }
 
     private void handleError(Error error) {

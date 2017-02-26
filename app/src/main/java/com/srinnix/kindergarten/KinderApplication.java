@@ -2,14 +2,10 @@ package com.srinnix.kindergarten;
 
 import android.app.Application;
 
-import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 
-import java.net.URISyntaxException;
-
-import io.socket.client.IO;
-import io.socket.client.Socket;
+import io.realm.Realm;
 
 
 /**
@@ -21,8 +17,8 @@ public class KinderApplication extends Application {
     public static final String TAG = "KinderApplication";
 
     private static KinderApplication mInstance;
-
-    private Socket mSocket;
+    private SocketUtil socketUtil;
+    private Realm realm;
 
     @Override
     public void onCreate() {
@@ -33,19 +29,25 @@ public class KinderApplication extends Application {
 
     private void connect() {
         if (!SharedPreUtils.getInstance(this).isUserSignedIn()) {
-            try {
-                mSocket = IO.socket(ChatConstant.SERVER_URL);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            mSocket.on(Socket.EVENT_CONNECT, args -> SocketUtil.onConnected(this, mSocket))
-                    .on(Socket.EVENT_DISCONNECT, args -> SocketUtil.onDisconnect(mSocket))
-                    .on(Socket.EVENT_RECONNECT, args -> SocketUtil.onReconnect(mSocket));
-            mSocket.connect();
+            getSocketUtil().connect(this);
         }
     }
 
-    public Socket getSocket() {
-        return mSocket;
+    public static synchronized KinderApplication getInstance() {
+        return mInstance;
+    }
+
+    public SocketUtil getSocketUtil(){
+        if (socketUtil == null) {
+            socketUtil = new SocketUtil();
+        }
+        return socketUtil;
+    }
+
+    public Realm getRealm(){
+        if (realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+        return realm;
     }
 }

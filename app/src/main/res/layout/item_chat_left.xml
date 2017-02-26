@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_top_item_chat">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top_item_chat">
 
     <TextView
-            android:id="@+id/textview_chatleft_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_bottom_item_time_chat"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="@dimen/text_size_item_time_chat"
-            android:visibility="visible"
-            tools:text="28 Jan at 16:26" />
+        android:id="@+id/textview_chatleft_time"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_bottom_item_time_chat"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/text_size_item_time_chat"
+        tools:text="28 Jan at 16:26"/>
 
     <ImageView
-            android:id="@+id/imageview_chatleft_icon"
-            android:layout_width="@dimen/size_item_chat"
-            android:layout_height="@dimen/size_item_chat"
-            android:layout_below="@+id/textview_chatleft_time"
-            android:layout_marginLeft="@dimen/margin_horizontal_icon_itemchat"
-            android:layout_marginRight="@dimen/margin_horizontal_icon_itemchat" />
+        android:id="@+id/imageview_chatleft_icon"
+        android:layout_width="@dimen/size_item_chat"
+        android:layout_height="@dimen/size_item_chat"
+        android:layout_below="@+id/textview_chatleft_time"
+        android:layout_marginLeft="@dimen/margin_horizontal_icon_itemchat"
+        android:layout_marginRight="@dimen/margin_horizontal_icon_itemchat"/>
 
     <TextView
-            android:id="@+id/textview_itemchatleft_message"
-            style="@style/TextViewItemChatLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textview_chatleft_time"
-            android:layout_toRightOf="@+id/imageview_chatleft_icon"
-            android:background="@drawable/background_itemchatleft_first"
-            android:paddingBottom="@dimen/padding_vertical_item_chat"
-            android:paddingLeft="@dimen/padding_horizontal_item_chat"
-            android:paddingRight="@dimen/padding_horizontal_item_chat"
-            android:paddingTop="@dimen/padding_vertical_item_chat"
-            tools:text="xin chaof" />
+        android:id="@+id/textview_itemchatleft_message"
+        style="@style/TextViewItemChatLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_chatleft_time"
+        android:layout_toRightOf="@+id/imageview_chatleft_icon"
+        android:background="@drawable/background_itemchatleft_first"
+        android:paddingBottom="@dimen/padding_vertical_item_chat"
+        android:paddingLeft="@dimen/padding_horizontal_item_chat"
+        android:paddingRight="@dimen/padding_horizontal_item_chat"
+        android:paddingTop="@dimen/padding_vertical_item_chat"
+        tools:text="xin chaof"/>
 
 </RelativeLayout>

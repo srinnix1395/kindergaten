@@ -12,79 +12,79 @@ import com.srinnix.kindergarten.model.User;
  */
 
 public class SharedPreUtils {
-	private static SharedPreUtils mInstance = null;
-	private SharedPreferences sharedPreferences;
-	
-	private SharedPreUtils(Context context) {
-		sharedPreferences = context.getSharedPreferences(AppConstant.KINDERGARTEN_SHARED_PREFERENCES, Context.MODE_APPEND);
-	}
-	
-	public static SharedPreUtils getInstance(Context context) {
-		if (mInstance == null) {
-			synchronized (SharedPreUtils.class) {
-				if (mInstance == null) {
-					mInstance = new SharedPreUtils(context.getApplicationContext());
-				}
-			}
-		}
-		return mInstance;
-	}
-	
-	public void putInt(String key, int vaue) {
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putInt(key, vaue);
-		editor.apply();
-	}
-	
-	public int getInt(String key, int defVal) {
-		return sharedPreferences.getInt(key, defVal);
-	}
-	
-	public void putString(String key, String value) {
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(key, value);
-		editor.apply();
-	}
-	
-	public String getString(String key, String defVal) {
-		return sharedPreferences.getString(key, defVal);
-	}
-	
-	public void putBoolean(String key, boolean value) {
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putBoolean(key, value);
-		editor.apply();
-	}
-	
-	public boolean getBoolean(String key, boolean defValue) {
-		return sharedPreferences.getBoolean(key, defValue);
-	}
-	
-	public void remove(String key) {
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.remove(key);
-		editor.apply();
-	}
-	
-	public boolean isUserSignedIn(){
-		return sharedPreferences.getBoolean(AppConstant.IS_USER_SIGNED_IN, false);
-	}
-	
-	public int getCurrentUserID() {
-		return sharedPreferences.getInt(AppConstant.USER_ID, -1);
-	}
-	
-	public int getCurrentAccountType() {
-		return sharedPreferences.getInt(AppConstant.USER_TYPE, ModelConstant.GUESTS);
-	}
+    private static SharedPreUtils mInstance = null;
+    private SharedPreferences sharedPreferences;
 
-	public void setLastEmailFragmentLogin(String email) {
-		putString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, email);
-	}
+    private SharedPreUtils(Context context) {
+        sharedPreferences = context.getSharedPreferences(AppConstant.KINDERGARTEN_SHARED_PREFERENCES, Context.MODE_APPEND);
+    }
 
-	public String getLastEmailFragmentLogin() {
-		return sharedPreferences.getString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, "");
-	}
+    public static SharedPreUtils getInstance(Context context) {
+        if (mInstance == null) {
+            synchronized (SharedPreUtils.class) {
+                if (mInstance == null) {
+                    mInstance = new SharedPreUtils(context.getApplicationContext());
+                }
+            }
+        }
+        return mInstance;
+    }
+
+    public void putInt(String key, int vaue) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, vaue);
+        editor.apply();
+    }
+
+    public int getInt(String key, int defVal) {
+        return sharedPreferences.getInt(key, defVal);
+    }
+
+    public void putString(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public String getString(String key, String defVal) {
+        return sharedPreferences.getString(key, defVal);
+    }
+
+    public void putBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public boolean getBoolean(String key, boolean defValue) {
+        return sharedPreferences.getBoolean(key, defValue);
+    }
+
+    public void remove(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key);
+        editor.apply();
+    }
+
+    public boolean isUserSignedIn() {
+        return sharedPreferences.getBoolean(AppConstant.IS_USER_SIGNED_IN, false);
+    }
+
+    public String getCurrentUserID() {
+        return sharedPreferences.getString(AppConstant.USER_ID, "-1");
+    }
+
+    public int getCurrentAccountType() {
+        return sharedPreferences.getInt(AppConstant.USER_TYPE, ModelConstant.GUESTS);
+    }
+
+    public void setLastEmailFragmentLogin(String email) {
+        putString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, email);
+    }
+
+    public String getLastEmailFragmentLogin() {
+        return sharedPreferences.getString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, "");
+    }
 
     public void saveUserData(User user) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -96,7 +96,7 @@ public class SharedPreUtils {
         editor.apply();
     }
 
-    public void clearUserData(){
+    public void clearUserData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(AppConstant.USER_ID);
         editor.remove(AppConstant.EMAIL);

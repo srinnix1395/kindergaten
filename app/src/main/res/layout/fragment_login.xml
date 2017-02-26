@@ -45,7 +45,6 @@
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
-
     <Button
         android:id="@+id/button_login"
         style="@style/Widget.AppCompat.Button.Borderless"

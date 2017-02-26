@@ -6,8 +6,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.constant.ModelConstant;
-import com.srinnix.kindergarten.model.ChatItem;
+import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.model.Message;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +19,10 @@ import butterknife.ButterKnife;
 public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 	@BindView(R.id.imageview_chatleft_icon)
 	ImageView imvIcon;
-	
+
+    @BindView(R.id.textview_chatleft_time)
+    TextView tvTime;
+
 	@BindView(R.id.textview_itemchatleft_message)
 	TextView tvMessage;
 	
@@ -28,23 +31,24 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 		ButterKnife.bind(this, itemView);
 	}
 	
-	public void bindData(ChatItem chatItem) {
-		
-		tvMessage.setText(chatItem.getMessage());
-		switch (chatItem.getLayoutType()) {
-			case ModelConstant.FIRST: {
+	public void bindData(Message message) {
+        tvMessage.setText(message.getMessage());
+        tvTime.setText(String.valueOf(message.getCreatedAt()));
+
+        switch (message.getLayoutType()) {
+			case ChatConstant.FIRST: {
 				tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_first);
 				break;
 			}
-			case ModelConstant.MIDDLE: {
+			case ChatConstant.MIDDLE: {
 				tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_middle);
 				break;
 			}
-			case ModelConstant.LAST: {
+			case ChatConstant.LAST: {
 				tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_last);
 				break;
 			}
-			case ModelConstant.SINGLE: {
+			case ChatConstant.SINGLE: {
 				tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_single);
 				break;
 			}

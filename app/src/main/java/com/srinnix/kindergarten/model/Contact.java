@@ -2,13 +2,19 @@ package com.srinnix.kindergarten.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.srinnix.kindergarten.constant.ChatConstant;
+
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by anhtu on 2/23/2017.
  */
 
-public class Contact {
+public class Contact extends RealmObject {
 
+    @PrimaryKey
     @SerializedName("_id")
     @Expose
     private String id;
@@ -17,43 +23,27 @@ public class Contact {
     @Expose
     private String name;
 
-    @SerializedName("_id_class")
-    @Expose
-    private String idClass;
+    @Ignore
+    private int status = ChatConstant.UNDEFINED;
 
-    @SerializedName("class_name")
-    @Expose
-    private String className;
+    public Contact(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getStatus() {
+        return status;
     }
 
-    public String getIdClass() {
-        return idClass;
-    }
-
-    public void setIdClass(String idClass) {
-        this.idClass = idClass;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_size"
+                android:background="?selectableItemBackground">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageview_icon"
+        android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
-        android:background="?selectableItemBackground">
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:scaleType="center"/>
 
     <TextView
-            android:id="@+id/text_view_name"
-            style="@style/StyleEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_left_item"
-            android:layout_toLeftOf="@+id/image_view_status"
-            android:ellipsize="end"
-            android:lines="1"
-            tools:text="Võ Thị Huệ" />
+        android:id="@+id/text_view_name"
+        style="@style/StyleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_left_item"
+        android:layout_toLeftOf="@+id/image_view_status"
+        android:layout_toRightOf="@+id/imageview_icon"
+        android:ellipsize="end"
+        android:lines="1"
+        tools:text="Võ Thị Huệ"/>
 
     <ImageView
-            android:id="@+id/image_view_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_left_item"
-            android:layout_marginRight="@dimen/margin_right_item"
-            tools:src="@drawable/ic_state_online" />
+        android:id="@+id/image_view_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_left_item"
+        android:layout_marginRight="@dimen/margin_right_item"
+        tools:src="@drawable/ic_state_online"/>
 
     <View
-            android:id="@+id/view_divider_chatlist"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorDividerColor" />
+        android:id="@+id/view_divider_chatlist"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorDividerColor"/>
 </RelativeLayout>

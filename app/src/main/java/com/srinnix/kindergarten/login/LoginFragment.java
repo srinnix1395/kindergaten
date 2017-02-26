@@ -16,6 +16,7 @@ import com.srinnix.kindergarten.util.UiUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
+import io.realm.Realm;
 
 /**
  * Created by anhtu on 2/11/2017.
@@ -39,6 +40,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     private LoginPresenter mPresenter;
     private CompositeDisposable mDisposable;
+    private Realm realm;
 
     @Override
     protected int getLayoutId() {
@@ -47,6 +49,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     @Override
     protected void initChildView() {
+        realm = Realm.getDefaultInstance();
         mDisposable = new CompositeDisposable();
 
         etEmail.setText(SharedPreUtils.getInstance(mContext).getLastEmailFragmentLogin());
@@ -93,7 +96,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
                 etPassword.getText().toString(),
                 pbLoading,
                 btnLogin,
-                mDisposable);
+                mDisposable, realm);
     }
 
     @Override

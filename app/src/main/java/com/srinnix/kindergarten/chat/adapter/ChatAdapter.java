@@ -10,7 +10,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatLeftViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatRightViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatTimeViewHolder;
-import com.srinnix.kindergarten.model.ChatItem;
+import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private static final int ITEM_RIGHT = 2;
 	private static final int ITEM_TIME = 3;
 	
-	private ArrayList<Object> arrayList;
-	private int currentUserID;
+	private ArrayList<Message> arrayList;
+	private String currentUserID;
 	
-	public ChatAdapter(Context context, ArrayList<Object> arrayList) {
+	public ChatAdapter(Context context, ArrayList<Message> arrayList) {
 		this.arrayList = arrayList;
 		currentUserID = SharedPreUtils.getInstance(context).getCurrentUserID();
 	}
@@ -64,11 +64,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 		
 		switch (getItemViewType(position)) {
 			case ITEM_LEFT: {
-				((ItemChatLeftViewHolder) holder).bindData(((ChatItem) arrayList.get(position)));
+				((ItemChatLeftViewHolder) holder).bindData(arrayList.get(position));
 				break;
 			}
 			case ITEM_RIGHT: {
-				((ItemChatRightViewHolder) holder).bindData(((ChatItem) arrayList.get(position)));
+				((ItemChatRightViewHolder) holder).bindData(arrayList.get(position));
 				break;
 			}
 			case ITEM_TIME: {
@@ -85,12 +85,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	@Override
 	public int getItemViewType(int position) {
 		Object object = arrayList.get(position);
-		if (object instanceof ChatItem) {
-			if (((ChatItem) object).getIdSender() == currentUserID) {
-				return ITEM_LEFT;
-			}
-			
-			return ITEM_RIGHT;
+		if (object instanceof Message) {
+            if (((Message) object).getIdSender().equals(currentUserID)) {
+                return ITEM_RIGHT;
+            }
+
+            return ITEM_LEFT;
 		}
 		
 		return ITEM_TIME;

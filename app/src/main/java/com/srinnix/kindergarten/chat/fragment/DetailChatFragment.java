@@ -17,82 +17,116 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.messageeventbus.MessageChat;
+import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
+import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.UiUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
+import io.realm.Realm;
 
 /**
  * Created by DELL on 2/9/2017.
  */
 
 public class DetailChatFragment extends BaseFragment {
-	@BindView(R.id.recyclerview_detailchat)
-	RecyclerView rvChat;
-	
-	@BindView(R.id.toolbar_detail_chat)
-	Toolbar toolbar;
-	
-	@BindView(R.id.edittext_message)
-	EditText etMessage;
-	
-	@BindView(R.id.imageview_send)
-	ImageView imvSend;
-	
-	private DetailChatPresenter mPresenter;
-	private ChatAdapter adapter;
-	private ArrayList<Object> listItemChat;
-	private String nameConversation;
-	
-	@Override
-	protected int getLayoutId() {
-		return R.layout.fragment_detail_chat;
-	}
-	
-	@Override
-	protected void getData() {
-		super.getData();
-		Bundle bundle = getArguments();
-		nameConversation = bundle.getString(AppConstant.KEY_NAME_CONVERSATION, "");
-	}
-	
-	@Override
-	protected void initChildView() {
-		toolbar.setTitleTextColor(Color.WHITE);
-		toolbar.setTitle(nameConversation);
-		toolbar.setNavigationIcon(R.drawable.ic_back);
-		toolbar.setNavigationOnClickListener(view -> {
-			// TODO: 2/9/2017 back
-		});
-		
-		listItemChat = new ArrayList<>();
-		adapter = new ChatAdapter(mContext, listItemChat);
-		rvChat.setLayoutManager(new LinearLayoutManager(mContext));
-		rvChat.setAdapter(adapter);
-	}
-	
-	@Override
-	protected BasePresenter initPresenter() {
-		mPresenter = new DetailChatPresenter(this);
-		return mPresenter;
-	}
-	
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_detail_chat, menu);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		//item info
-		mPresenter.onClickMenuItemInfo();
-		return true;
-	}
-	
-	@OnClick(R.id.imageview_send)
-	void onClickSend() {
-		mPresenter.onClickSend(etMessage.getText().toString());
-	}
+    @BindView(R.id.recyclerview_detailchat)
+    RecyclerView rvChat;
+
+    @BindView(R.id.toolbar_detail_chat)
+    Toolbar toolbar;
+
+    @BindView(R.id.edittext_message)
+    EditText etMessage;
+
+    @BindView(R.id.imageview_send)
+    ImageView imvSend;
+
+    private DetailChatPresenter mPresenter;
+    private ChatAdapter adapter;
+    private ArrayList<Message> listMessage;
+    private String nameConversation;
+
+    private Realm realm;
+    private String idReceiver;
+    private String idSender;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_detail_chat;
+    }
+
+    @Override
+    protected void getData() {
+        super.getData();
+        Bundle bundle = getArguments();
+        nameConversation = bundle.getString(AppConstant.KEY_NAME_CONVERSATION, "");
+        idReceiver = bundle.getString(ChatConstant._ID);
+        idSender = SharedPreUtils.getInstance(mContext).getCurrentUserID();
+    }
+
+    @Override
+    protected void initChildView() {
+        realm = Realm.getDefaultInstance();
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(nameConversation);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(view -> {
+            // TODO: 2/9/2017 back
+            UiUtils.hideKeyboard(getActivity());
+        });
+
+        listMessage = new ArrayList<>();
+        adapter = new ChatAdapter(mContext, listMessage);
+        rvChat.setLayoutManager(new LinearLayoutManager(mContext));
+        rvChat.setAdapter(adapter);
+    }
+
+    @Override
+    protected BasePresenter initPresenter() {
+        mPresenter = new DetailChatPresenter(this);
+        return mPresenter;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_detail_chat, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mPresenter.onClickMenuItemInfo();
+        return true;
+    }
+
+    @OnClick(R.id.imageview_send)
+    void onClickSend() {
+        mPresenter.onClickSend(etMessage.getText().toString(),
+                realm, listMessage, adapter, idSender, idReceiver);
+    }
+
+    @OnTextChanged(R.id.edittext_message)
+    void onMessageTextChanged(CharSequence s, int start, int before, int count) {
+        mPresenter.onMessageTextChanged(s, imvSend);
+    }
+
+    @Subscribe
+    void onServerReceiedMessage(MessageServerReceived message) {
+        mPresenter.onServerReceived(message.data, message.id, listMessage, adapter);
+    }
+
+    @Subscribe
+    void onMessage(MessageChat message) {
+        mPresenter.onMessage(message.message, listMessage, adapter);
+    }
 }

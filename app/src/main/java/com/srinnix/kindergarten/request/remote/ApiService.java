@@ -2,9 +2,9 @@ package com.srinnix.kindergarten.request.remote;
 
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Class;
-import com.srinnix.kindergarten.model.DataLogin;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.DataLogin;
 
 import java.util.ArrayList;
 

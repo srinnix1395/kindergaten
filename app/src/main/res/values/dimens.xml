@@ -41,4 +41,6 @@
     <dimen name="width_item_children_grid">72dp</dimen>
     <dimen name="size_image_view_info_children">65dp</dimen>
     <dimen name="margin_info_children">8dp</dimen>
+    <dimen name="margin_horizontal_chat_item">8dp</dimen>
+    <dimen name="size_item_seen">10dp</dimen>
 </resources>

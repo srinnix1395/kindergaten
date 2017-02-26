@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ChatViewHolder;
-import com.srinnix.kindergarten.model.ChatMember;
+import com.srinnix.kindergarten.model.Contact;
 
 import java.util.ArrayList;
 
@@ -16,10 +16,10 @@ import java.util.ArrayList;
  */
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatViewHolder> {
-	private ArrayList<ChatMember> arrayList;
+	private ArrayList<Contact> arrayList;
 	private OnClickItemChatListener onClickItemChatListener;
 	
-	public ChatListAdapter(ArrayList<ChatMember> arrayList, OnClickItemChatListener onClickItemChatListener) {
+	public ChatListAdapter(ArrayList<Contact> arrayList, OnClickItemChatListener onClickItemChatListener) {
 		this.arrayList = arrayList;
 		this.onClickItemChatListener = onClickItemChatListener;
 	}
@@ -30,13 +30,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 				, false);
 		return new ChatViewHolder(view, onClickItemChatListener);
 	}
-	
-	@Override
-	public void onBindViewHolder(ChatViewHolder holder, int position) {
-		holder.bindData(arrayList.get(position), position);
-	}
-	
-	@Override
+
+    @Override
+    public void onBindViewHolder(ChatViewHolder holder, int position) {
+        holder.bindData(arrayList.get(position), position);
+    }
+
+    @Override
 	public int getItemCount() {
 		return arrayList.size();
 	}
