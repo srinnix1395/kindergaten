@@ -47,7 +47,7 @@ public class SocketUtil {
         mSocket.on(Socket.EVENT_CONNECT, args -> onConnected(context, mSocket))
                 .on(Socket.EVENT_DISCONNECT, args -> onDisconnect())
                 .on(Socket.EVENT_MESSAGE, this::onMessage)
-                .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onFriendReceived);
+                .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully);
         mSocket.connect();
     }
 
@@ -114,11 +114,12 @@ public class SocketUtil {
 
             if (results != null && results.size() == 1) {
                 Message message = results.get(0);
-
-                realm.beginTransaction();
                 message.setId(data.getString(ChatConstant._ID));
                 message.setCreatedAt(data.getLong(ChatConstant.CREATED_AT));
                 message.setStatus(ChatConstant.SERVER_RECEIVED);
+
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(message);
                 realm.commitTransaction();
                 return message;
             }
@@ -130,11 +131,36 @@ public class SocketUtil {
 
     }
 
-    private void onFriendReceived(Object[] args) {
-        EventBus.getDefault().post(new MessageFriendReceived(args[0]));
+    private void onSendSuccessfully(Object[] args) {
+        JSONObject ack = (JSONObject) args[0];
+
+        Single.fromCallable(() -> {
+            Realm realm = KinderApplication.getInstance().getRealm();
+
+            RealmResults<Message> results = realm.where(Message.class)
+                    .equalTo("id", ack.getString(ChatConstant._ID))
+                    .findAll();
+
+            if (results != null && results.size() == 1) {
+                Message message = results.get(0);
+                message.setId(ack.getString(ChatConstant._ID));
+                message.setStatus(ChatConstant.FRIEND_RECEIVED);
+
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(message);
+                realm.commitTransaction();
+                return message;
+            }
+            return null;
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(message -> EventBus.getDefault().post(new MessageFriendReceived(message)));
     }
 
     private void onMessage(Object[] args) {
+        Ack ack = (Ack) args[0];
+        ack.call();
+
         JSONObject jsonObject = (JSONObject) args[0];
 
         Single.fromCallable(() -> {

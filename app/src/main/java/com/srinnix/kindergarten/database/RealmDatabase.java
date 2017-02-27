@@ -5,6 +5,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageListContact;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
+import com.srinnix.kindergarten.model.Message;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -37,5 +38,10 @@ public class RealmDatabase {
             EventBus.getDefault().post(new MessageListContact(arrayList));
             loginDelegate.loginSuccessfully();
         });
+    }
+
+    public static ArrayList<Message> getPreviousMessage(Realm realm, int page) {
+
+
     }
 }

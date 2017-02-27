@@ -19,6 +19,7 @@ import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
+import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -121,12 +122,17 @@ public class DetailChatFragment extends BaseFragment {
     }
 
     @Subscribe
-    void onServerReceiedMessage(MessageServerReceived message) {
+    void onMessageIncoming(MessageChat message) {
+        mPresenter.onMessage(message.message, listMessage, adapter);
+    }
+
+    @Subscribe
+    void onServerReceied(MessageServerReceived message) {
         mPresenter.onServerReceived(message.data, message.id, listMessage, adapter);
     }
 
     @Subscribe
-    void onMessage(MessageChat message) {
-        mPresenter.onMessage(message.message, listMessage, adapter);
+    void onFriendReceived(MessageFriendReceived message) {
+        mPresenter.onFriendReceived(message.data, listMessage, adapter);
     }
 }

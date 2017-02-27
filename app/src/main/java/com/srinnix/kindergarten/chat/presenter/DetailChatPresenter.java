@@ -39,7 +39,6 @@ public class DetailChatPresenter extends BasePresenter {
 
     public void onClickSend(String message, Realm realm, ArrayList<Message> listMessage
             , ChatAdapter adapter, String idSender, String idReceiver) {
-        int size = listMessage.size();
 
         realm.beginTransaction();
         Message chatItem = realm.createObject(Message.class);
@@ -51,26 +50,19 @@ public class DetailChatPresenter extends BasePresenter {
         chatItem.setCreatedAt(System.currentTimeMillis());
         realm.commitTransaction();
 
-        if (size == 0) {
-            chatItem.setLayoutType(ChatConstant.SINGLE);
-        } else {
-            Message prevMessage = listMessage.get(size - 1);
-            if (!prevMessage.getIdSender().equals(idSender)) {
-                chatItem.setLayoutType(ChatConstant.SINGLE);
-            } else if (prevMessage.getLayoutType() == ChatConstant.SINGLE) {
-                prevMessage.setLayoutType(ChatConstant.FIRST);
-                chatItem.setLayoutType(ChatConstant.LAST);
-            } else {
-                prevMessage.setLayoutType(ChatConstant.MIDDLE);
-                chatItem.setLayoutType(ChatConstant.LAST);
-            }
-        }
+        chatItem.setLayoutType(getLayoutType(listMessage, idSender));
         listMessage.add(chatItem);
-        adapter.notifyItemInserted(size);
+        adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
 
         KinderApplication.getInstance().getSocketUtil().sendMessage(chatItem);
     }
 
+    public void onMessage(Message message, ArrayList<Message> listMessage, ChatAdapter adapter) {
+        message.setLayoutType(getLayoutType(listMessage, message.getIdSender()));
+
+        listMessage.add(message);
+        adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
+    }
 
     public void onServerReceived(Message data, String id, ArrayList<Message> listMessage
             , ChatAdapter adapter) {
@@ -87,24 +79,35 @@ public class DetailChatPresenter extends BasePresenter {
         adapter.notifyItemChanged(i);
     }
 
-    public void onMessage(Message message, ArrayList<Message> listMessage, ChatAdapter adapter) {
-        int size = listMessage.size();
-        if (size == 0) {
-            message.setLayoutType(ChatConstant.SINGLE);
-        } else {
-            Message prevMessage = listMessage.get(size - 1);
-            if (!prevMessage.getIdSender().equals(idSender)) {
-                message.setLayoutType(ChatConstant.SINGLE);
-            } else if (prevMessage.getLayoutType() == ChatConstant.SINGLE) {
-                prevMessage.setLayoutType(ChatConstant.FIRST);
-                message.setLayoutType(ChatConstant.LAST);
-            } else {
-                prevMessage.setLayoutType(ChatConstant.MIDDLE);
-                message.setLayoutType(ChatConstant.LAST);
+    public void onFriendReceived(Message data, ArrayList<Message> listMessage, ChatAdapter adapter) {
+        int i;
+        for (i = listMessage.size() - 1; i >= 0; i--) {
+            if (listMessage.get(i).getId().equals(data.getId())) {
+                listMessage.get(i).setStatus(data.getStatus());
+                break;
             }
         }
 
-        listMessage.add(message.message);
-        adapter.notifyItemInserted(listMessage.size() - 1);
+        adapter.notifyItemChanged(i);
+    }
+
+    private int getLayoutType(ArrayList<Message> listMessage, String idSender) {
+        int size = listMessage.size();
+
+        if (size == 0) {
+            return ChatConstant.SINGLE;
+        }
+
+        Message prevMessage = listMessage.get(size - 1);
+        if (!prevMessage.getIdSender().equals(idSender)) {
+            return ChatConstant.SINGLE;
+        } else {
+            if (prevMessage.getLayoutType() == ChatConstant.SINGLE) {
+                prevMessage.setLayoutType(ChatConstant.FIRST);
+            } else {
+                prevMessage.setLayoutType(ChatConstant.MIDDLE);
+            }
+            return ChatConstant.LAST;
+        }
     }
 }
