@@ -24,10 +24,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private static final int ITEM_RIGHT = 2;
 	private static final int ITEM_TIME = 3;
 	
-	private ArrayList<Message> arrayList;
+	private ArrayList<Object> arrayList;
 	private String currentUserID;
 	
-	public ChatAdapter(Context context, ArrayList<Message> arrayList) {
+	public ChatAdapter(Context context, ArrayList<Object> arrayList) {
 		this.arrayList = arrayList;
 		currentUserID = SharedPreUtils.getInstance(context).getCurrentUserID();
 	}
@@ -64,11 +64,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 		
 		switch (getItemViewType(position)) {
 			case ITEM_LEFT: {
-				((ItemChatLeftViewHolder) holder).bindData(arrayList.get(position));
+				((ItemChatLeftViewHolder) holder).bindData((Message) arrayList.get(position));
 				break;
 			}
 			case ITEM_RIGHT: {
-				((ItemChatRightViewHolder) holder).bindData(arrayList.get(position));
+				((ItemChatRightViewHolder) holder).bindData((Message) arrayList.get(position));
 				break;
 			}
 			case ITEM_TIME: {

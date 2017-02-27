@@ -13,7 +13,7 @@ public class AppConstant {
     public static final String API_LOGIN = "/user/login";
 
 
-    public static final String API_GET_POST = "/post/getNews";
+    public static final String API_GET_POST = "/post/get";
 
     public static final String API_GET_LIST_CLASS = "/class/getListClass";
     public static final String API_GET_DETAIL_CLASS = "/class/getDetailClass";
@@ -43,7 +43,6 @@ public class AppConstant {
             R.string.children
     };
 
-
     public static final String IS_USER_SIGNED_IN = "IS_USER_SIGNED_IN";
 
     public static final String USER_ID = "USER_ID";
@@ -55,5 +54,11 @@ public class AppConstant {
     public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
     public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 
+    //account type
+    public static final int GUESTS = 0;
+    public static final int PARENTS = 1;
+    public static final int TEACHERS = 2;
+    public static final int MANAGERS = 3;
 
+    public static final String KEY_INFO = "INFO";
 }

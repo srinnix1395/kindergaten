@@ -42,4 +42,5 @@ public class ChatConstant {
     public static final int LAST = 3;
 
     public static final int ITEM_MESSAGE_PER_PAGE = 30;
+    public static final long TIME_DISTANCE = 300000;
 }

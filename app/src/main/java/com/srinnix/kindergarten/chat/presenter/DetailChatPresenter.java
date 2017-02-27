@@ -1,7 +1,5 @@
 package com.srinnix.kindergarten.chat.presenter;
 
-import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -12,12 +10,16 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 
 /**
@@ -29,19 +31,18 @@ public class DetailChatPresenter extends BasePresenter {
     private static final long DELAY_TIME = 5000;
 
     private boolean isUserTyping;
-    private Handler handlerEditText;
+    private Disposable disposable;
     private SocketUtil mSocketUtil;
     private String idSender;
     private String idReceiver;
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-        handlerEditText = new Handler();
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
     }
 
-    public void setupDataPresenter(Bundle bundle) {
-        idReceiver = bundle.getString(ChatConstant._ID);
+    public void setupDataPresenter(Contact contact) {
+        idReceiver = contact.getId();
         idSender = SharedPreUtils.getInstance(mContext).getCurrentUserID();
     }
 
@@ -68,22 +69,19 @@ public class DetailChatPresenter extends BasePresenter {
                     isUserTyping = true;
                     mSocketUtil.sendStatusTyping(true, idSender, idReceiver);
                 }
-                handlerEditText.removeCallbacks(runnableIsTyping);
-                handlerEditText.postDelayed(runnableIsTyping, DELAY_TIME);
+                if (disposable != null && !disposable.isDisposed()) {
+                    disposable.dispose();
+                }
+                disposable = Observable.timer(DELAY_TIME, TimeUnit.MILLISECONDS)
+                        .subscribe(aLong -> {
+                            isUserTyping = false;
+                            mSocketUtil.sendStatusTyping(false, idSender, idReceiver);
+                        });
             }
         });
     }
 
-    private Runnable runnableIsTyping = new Runnable() {
-        @Override
-        public void run() {
-            isUserTyping = false;
-            mSocketUtil.sendStatusTyping(false, idSender, idReceiver);
-        }
-    };
-
-
-    public void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
+    private void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
         if (message.length() > 0) {
             if (!imvSend.isEnabled()) {
                 imvSend.setEnabled(true);
@@ -93,7 +91,7 @@ public class DetailChatPresenter extends BasePresenter {
         }
     }
 
-    public void onClickSend(String message, Realm realm, ArrayList<Message> listMessage
+    public void onClickSend(String message, Realm realm, ArrayList<Object> listMessage
             , ChatAdapter adapter) {
 
         realm.beginTransaction();
@@ -106,40 +104,44 @@ public class DetailChatPresenter extends BasePresenter {
         chatItem.setCreatedAt(System.currentTimeMillis());
         realm.commitTransaction();
 
-        chatItem.setLayoutType(getLayoutType(listMessage, idSender));
+        chatItem.setLayoutType(getLayoutType(listMessage, idSender, chatItem.getCreatedAt()));
         listMessage.add(chatItem);
         adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
 
         KinderApplication.getInstance().getSocketUtil().sendMessage(chatItem);
     }
 
-    public void onMessage(Message message, ArrayList<Message> listMessage, ChatAdapter adapter) {
-        message.setLayoutType(getLayoutType(listMessage, message.getIdSender()));
+    public void onMessage(Message message, ArrayList<Object> listMessage, ChatAdapter adapter) {
+        message.setLayoutType(getLayoutType(listMessage, message.getIdSender(), message.getCreatedAt()));
 
         listMessage.add(message);
         adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
     }
 
-    public void onServerReceived(Message data, String id, ArrayList<Message> listMessage
+    public void onServerReceived(Message data, String id, ArrayList<Object> listMessage
             , ChatAdapter adapter) {
 
         int i;
         for (i = listMessage.size() - 1; i >= 0; i--) {
-            if (listMessage.get(i).getId().equals(id)) {
-                listMessage.get(i).setId(data.getId());
-                listMessage.get(i).setCreatedAt(data.getCreatedAt());
-                listMessage.get(i).setStatus(data.getStatus());
+            if (listMessage.get(i) instanceof Message
+                    && ((Message) listMessage.get(i)).getId().equals(id)) {
+                Message message = (Message) listMessage.get(i);
+
+                message.setId(data.getId());
+                message.setCreatedAt(data.getCreatedAt());
+                message.setStatus(data.getStatus());
                 break;
             }
         }
         adapter.notifyItemChanged(i);
     }
 
-    public void onFriendReceived(Message data, ArrayList<Message> listMessage, ChatAdapter adapter) {
+    public void onFriendReceived(Message data, ArrayList<Object> listMessage, ChatAdapter adapter) {
         int i;
         for (i = listMessage.size() - 1; i >= 0; i--) {
-            if (listMessage.get(i).getId().equals(data.getId())) {
-                listMessage.get(i).setStatus(data.getStatus());
+            if (listMessage.get(i) instanceof Message
+                    && ((Message) listMessage.get(i)).getId().equals(data.getId())) {
+                ((Message) listMessage.get(i)).setStatus(data.getStatus());
                 break;
             }
         }
@@ -147,23 +149,37 @@ public class DetailChatPresenter extends BasePresenter {
         adapter.notifyItemChanged(i);
     }
 
-    private int getLayoutType(ArrayList<Message> listMessage, String idSender) {
+    private int getLayoutType(ArrayList<Object> listMessage, String idSender, long createdAt) {
         int size = listMessage.size();
 
         if (size == 0) {
             return ChatConstant.SINGLE;
         }
 
-        Message prevMessage = listMessage.get(size - 1);
+        if (!(listMessage.get(size - 1) instanceof Message)) {
+            return ChatConstant.SINGLE;
+        }
+
+        Message prevMessage = (Message) listMessage.get(size - 1);
         if (!prevMessage.getIdSender().equals(idSender)) {
             return ChatConstant.SINGLE;
+        }
+
+        if (createdAt - prevMessage.getCreatedAt() > ChatConstant.TIME_DISTANCE) {
+            return ChatConstant.SINGLE;
+        }
+
+        if (prevMessage.getLayoutType() == ChatConstant.SINGLE) {
+            prevMessage.setLayoutType(ChatConstant.FIRST);
         } else {
-            if (prevMessage.getLayoutType() == ChatConstant.SINGLE) {
-                prevMessage.setLayoutType(ChatConstant.FIRST);
-            } else {
-                prevMessage.setLayoutType(ChatConstant.MIDDLE);
-            }
-            return ChatConstant.LAST;
+            prevMessage.setLayoutType(ChatConstant.MIDDLE);
+        }
+        return ChatConstant.LAST;
+    }
+
+    public void onDestroy() {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
         }
     }
 }

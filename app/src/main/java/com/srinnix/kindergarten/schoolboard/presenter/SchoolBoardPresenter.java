@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.schoolboard.presenter;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -36,9 +37,15 @@ public class SchoolBoardPresenter extends BasePresenter {
         apiService = RetrofitClient.getApiService();
     }
 
-    public void onLoadMore(CompositeDisposable mDisposable, int page, int totalItemCount) {
+    public void onLoadMore(CompositeDisposable mDisposable, ArrayList<Object> arrayList, int totalItemCount) {
+        long timePrevPost;
+        if (arrayList.isEmpty()) {
+            timePrevPost = System.currentTimeMillis();
+        } else {
+            timePrevPost = ((Post) arrayList.get(totalItemCount - 2)).getCreatedAt();
+        }
         mDisposable.add(
-                apiService.getListPost(token, page)
+                apiService.getListPost(token, timePrevPost)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::handleSuccessResponse, this::handleException)
@@ -47,6 +54,7 @@ public class SchoolBoardPresenter extends BasePresenter {
 
     private void handleSuccessResponse(ApiResponse<ArrayList<Post>> response) {
         if (response == null) {
+            DebugLog.i(ErrorConstant.RESPONSE_NULL);
             AlertUtils.showToast(mContext, R.string.commonError);
         } else if (response.result == ApiResponse.RESULT_OK) {
             if (mDelegate != null) {
@@ -58,7 +66,7 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     private void handleError(Error error) {
-
+        //// TODO: 2/28/2017 handle error
     }
 
     private void handleException(Throwable throwable) {

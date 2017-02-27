@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.constant.ModelConstant;
 import com.srinnix.kindergarten.model.User;
 
 /**
@@ -74,8 +73,8 @@ public class SharedPreUtils {
         return sharedPreferences.getString(AppConstant.USER_ID, "-1");
     }
 
-    public int getCurrentAccountType() {
-        return sharedPreferences.getInt(AppConstant.USER_TYPE, ModelConstant.GUESTS);
+    public int getAccountType() {
+        return sharedPreferences.getInt(AppConstant.USER_TYPE, AppConstant.GUESTS);
     }
 
     public void setLastEmailFragmentLogin(String email) {

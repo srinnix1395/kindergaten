@@ -10,4 +10,8 @@ public class ContactParent extends Contact{
         this.id = id;
         this.name = name;
     }
+
+    public ContactParent() {
+
+    }
 }

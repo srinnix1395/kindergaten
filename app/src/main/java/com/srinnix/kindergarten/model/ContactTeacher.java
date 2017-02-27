@@ -24,6 +24,10 @@ public class ContactTeacher extends Contact {
         this.className = className;
     }
 
+    public ContactTeacher() {
+        //do nothing
+    }
+
 
     public String getImage() {
         return image;
@@ -33,4 +37,11 @@ public class ContactTeacher extends Contact {
         return className;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 }

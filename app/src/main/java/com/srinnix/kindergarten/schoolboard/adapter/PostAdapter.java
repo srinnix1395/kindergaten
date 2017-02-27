@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.schoolboard.adapter.viewholder.LoadingViewHolder;
 import com.srinnix.kindergarten.schoolboard.adapter.viewholder.PostViewHolder;
@@ -24,12 +25,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int VIEW_TYPE_POSTED = 1;
     public static final int VIEW_TYPE_LOADING = 2;
 
-    private ArrayList<Post> arrPost;
+    private ArrayList<Object> arrPost;
     private int accountType;
 
-    public PostAdapter(Context context, ArrayList<Post> arrPost) {
+    public PostAdapter(Context context, ArrayList<Object> arrPost) {
         this.arrPost = arrPost;
-        accountType = SharedPreUtils.getInstance(context).getCurrentAccountType();
+        accountType = SharedPreUtils.getInstance(context).getAccountType();
     }
 
     @Override
@@ -53,7 +54,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        if (position == arrPost.size() - 1) {
+            ((LoadingViewHolder) holder).bindData(((LoadingItem) arrPost.get(position)));
+        } else {
+            ((PostedViewHolder) holder).bindData(((Post) arrPost.get(position)));
+        }
     }
 
     @Override
@@ -63,7 +68,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-
-        return super.getItemViewType(position);
+        if (position == arrPost.size() - 1) {
+            return VIEW_TYPE_LOADING;
+        }
+        return VIEW_TYPE_POSTED;
     }
 }

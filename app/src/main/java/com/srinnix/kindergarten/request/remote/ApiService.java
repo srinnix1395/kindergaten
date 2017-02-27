@@ -29,7 +29,7 @@ public interface ApiService {
     @POST(AppConstant.API_GET_POST)
     @FormUrlEncoded
     Observable<ApiResponse<ArrayList<Post>>> getListPost(@Header("token") String token,
-                                                         @Field("page") int page);
+                                                         @Field("time_prev_post") long time);
 
     @GET(AppConstant.API_GET_LIST_CLASS)
     Observable<ApiResponse<ArrayList<Class>>> getListClass();

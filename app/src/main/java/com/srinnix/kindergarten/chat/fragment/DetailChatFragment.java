@@ -20,10 +20,11 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
-import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -50,10 +51,10 @@ public class DetailChatFragment extends BaseFragment {
 
     private DetailChatPresenter mPresenter;
     private ChatAdapter adapter;
-    private ArrayList<Message> listMessage;
-    private String nameConversation;
+    private ArrayList<Object> listMessage;
 
     private Realm realm;
+    private Contact contact;
 
     @Override
     protected int getLayoutId() {
@@ -64,8 +65,8 @@ public class DetailChatFragment extends BaseFragment {
     protected void getData() {
         super.getData();
         Bundle bundle = getArguments();
-        nameConversation = bundle.getString(AppConstant.KEY_NAME_CONVERSATION, "");
-        mPresenter.setupDataPresenter(bundle);
+        contact = Parcels.unwrap(bundle.getParcelable(AppConstant.KEY_INFO));
+        mPresenter.setupDataPresenter(contact);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class DetailChatFragment extends BaseFragment {
         realm = Realm.getDefaultInstance();
 
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle(nameConversation);
+        toolbar.setTitle(contact != null ? contact.getName() : "");
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> {
             // TODO: 2/9/2017 back
@@ -125,5 +126,11 @@ public class DetailChatFragment extends BaseFragment {
     @Subscribe
     void onFriendReceived(MessageFriendReceived message) {
         mPresenter.onFriendReceived(message.data, listMessage, adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        mPresenter.onDestroy();
+        super.onDestroy();
     }
 }

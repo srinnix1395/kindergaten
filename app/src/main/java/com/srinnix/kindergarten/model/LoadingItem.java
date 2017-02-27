@@ -10,6 +10,7 @@ public class LoadingItem {
 
     private int loadingState = STATE_IDLE_AND_LOADING;
 
+
     public int getLoadingState() {
         return loadingState;
     }

@@ -8,7 +8,7 @@ import com.srinnix.kindergarten.constant.ChatConstant;
  * Created by anhtu on 2/23/2017.
  */
 
-public abstract class Contact {
+public class Contact {
 
     @SerializedName("_id")
     @Expose
@@ -34,5 +34,13 @@ public abstract class Contact {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

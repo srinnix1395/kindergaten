@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.schoolboard.adapter.EndlessScrollListener;
 import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
@@ -27,7 +28,7 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
 	
 	private SchoolBoardPresenter mPresenter;
     private PostAdapter postAdapter;
-    private ArrayList<Post> arrPost;
+    private ArrayList<Object> arrPost;
     private CompositeDisposable mDisposable;
 
     public static SchoolBoardFragment newInstance() {
@@ -47,12 +48,14 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
         rvListPost.setLayoutManager(linearLayoutManager);
 		rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
-            public void onLoadMore(int page, int totalItemCount) {
-                mPresenter.onLoadMore(mDisposable, page, totalItemCount);
+            public void onLoadMore(int totalItemCount) {
+                mPresenter.onLoadMore(mDisposable, arrPost, totalItemCount);
             }
         });
 
         arrPost = new ArrayList<>();
+        arrPost.add(new LoadingItem());
+
         postAdapter = new PostAdapter(mContext, arrPost);
         rvListPost.setAdapter(postAdapter);
     }
