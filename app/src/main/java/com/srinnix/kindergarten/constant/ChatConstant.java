@@ -29,10 +29,11 @@ public class ChatConstant {
     public static final int OFFLINE = 2;
     public static final int UNDEFINED = 3;
 
-    public static final int PENDING = 0;
-    public static final int SERVER_RECEIVED = 1;
-    public static final int FRIEND_RECEIVED = 2;
-    public static final int HANDLE_COMPLETE = 3;
+    public static final int TYPING = 0;
+    public static final int PENDING = 1;
+    public static final int SERVER_RECEIVED = 2;
+    public static final int FRIEND_RECEIVED = 3;
+    public static final int HANDLE_COMPLETE = 4;
 
     //chat item
     public static final int SINGLE = 0;
@@ -40,4 +41,5 @@ public class ChatConstant {
     public static final int MIDDLE = 2;
     public static final int LAST = 3;
 
+    public static final int ITEM_MESSAGE_PER_PAGE = 30;
 }

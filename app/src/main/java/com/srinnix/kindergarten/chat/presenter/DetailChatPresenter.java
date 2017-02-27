@@ -1,5 +1,10 @@
 package com.srinnix.kindergarten.chat.presenter;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.srinnix.kindergarten.KinderApplication;
@@ -8,6 +13,8 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.SocketUtil;
 
 import java.util.ArrayList;
 
@@ -19,15 +26,64 @@ import io.realm.Realm;
 
 public class DetailChatPresenter extends BasePresenter {
 
+    private static final long DELAY_TIME = 5000;
+
+    private boolean isUserTyping;
+    private Handler handlerEditText;
+    private SocketUtil mSocketUtil;
+    private String idSender;
+    private String idReceiver;
+
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
+        handlerEditText = new Handler();
+        mSocketUtil = KinderApplication.getInstance().getSocketUtil();
+    }
+
+    public void setupDataPresenter(Bundle bundle) {
+        idReceiver = bundle.getString(ChatConstant._ID);
+        idSender = SharedPreUtils.getInstance(mContext).getCurrentUserID();
     }
 
     public void onClickMenuItemInfo() {
         //// TODO: 2/10/2017 menu item info on click
     }
 
-    public void onMessageTextChanged(CharSequence message, ImageView imvSend) {
+
+    public void setupTextChange(EditText etMessage, ImageView imvSend) {
+        etMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                enableOrDisableBtnSend(charSequence, imvSend);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!isUserTyping) {
+                    isUserTyping = true;
+                    mSocketUtil.sendStatusTyping(true, idSender, idReceiver);
+                }
+                handlerEditText.removeCallbacks(runnableIsTyping);
+                handlerEditText.postDelayed(runnableIsTyping, DELAY_TIME);
+            }
+        });
+    }
+
+    private Runnable runnableIsTyping = new Runnable() {
+        @Override
+        public void run() {
+            isUserTyping = false;
+            mSocketUtil.sendStatusTyping(false, idSender, idReceiver);
+        }
+    };
+
+
+    public void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
         if (message.length() > 0) {
             if (!imvSend.isEnabled()) {
                 imvSend.setEnabled(true);
@@ -38,7 +94,7 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onClickSend(String message, Realm realm, ArrayList<Message> listMessage
-            , ChatAdapter adapter, String idSender, String idReceiver) {
+            , ChatAdapter adapter) {
 
         realm.beginTransaction();
         Message chatItem = realm.createObject(Message.class);

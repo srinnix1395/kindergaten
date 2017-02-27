@@ -184,4 +184,8 @@ public class SocketUtil {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(message -> EventBus.getDefault().post(new MessageChat(message)));
     }
+
+    public void sendStatusTyping(boolean isTyping, String idSender, String idReceiver) {
+
+    }
 }

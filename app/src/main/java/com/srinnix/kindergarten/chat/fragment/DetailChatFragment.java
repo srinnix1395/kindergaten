@@ -17,12 +17,10 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.model.Message;
-import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import io.realm.Realm;
 
 /**
@@ -57,8 +54,6 @@ public class DetailChatFragment extends BaseFragment {
     private String nameConversation;
 
     private Realm realm;
-    private String idReceiver;
-    private String idSender;
 
     @Override
     protected int getLayoutId() {
@@ -70,8 +65,7 @@ public class DetailChatFragment extends BaseFragment {
         super.getData();
         Bundle bundle = getArguments();
         nameConversation = bundle.getString(AppConstant.KEY_NAME_CONVERSATION, "");
-        idReceiver = bundle.getString(ChatConstant._ID);
-        idSender = SharedPreUtils.getInstance(mContext).getCurrentUserID();
+        mPresenter.setupDataPresenter(bundle);
     }
 
     @Override
@@ -90,6 +84,8 @@ public class DetailChatFragment extends BaseFragment {
         adapter = new ChatAdapter(mContext, listMessage);
         rvChat.setLayoutManager(new LinearLayoutManager(mContext));
         rvChat.setAdapter(adapter);
+
+        mPresenter.setupTextChange(etMessage, imvSend);
     }
 
     @Override
@@ -113,12 +109,7 @@ public class DetailChatFragment extends BaseFragment {
     @OnClick(R.id.imageview_send)
     void onClickSend() {
         mPresenter.onClickSend(etMessage.getText().toString(),
-                realm, listMessage, adapter, idSender, idReceiver);
-    }
-
-    @OnTextChanged(R.id.edittext_message)
-    void onMessageTextChanged(CharSequence s, int start, int before, int count) {
-        mPresenter.onMessageTextChanged(s, imvSend);
+                realm, listMessage, adapter);
     }
 
     @Subscribe

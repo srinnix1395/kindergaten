@@ -18,10 +18,12 @@ public class ContactTeacher extends Contact {
     private String className;
 
     public ContactTeacher(String id, String name, String image, String className) {
-        super(id, name);
+        this.id = id;
+        this.name = name;
         this.image = image;
         this.className = className;
     }
+
 
     public String getImage() {
         return image;

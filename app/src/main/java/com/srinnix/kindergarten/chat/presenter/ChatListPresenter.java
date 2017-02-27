@@ -69,7 +69,13 @@ public class ChatListPresenter extends BasePresenter {
 
     public void getContactFromDatabase(Realm realm, ArrayList<Contact> contacts, ChatListAdapter adapter) {
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            Single.fromCallable((Callable<RealmResults>) () -> realm.where(Contact.class).findAll())
+            Single.fromCallable(new Callable<ArrayList<Contact>>() {
+                @Override
+                public ArrayList<Contact> call() throws Exception {
+                    realm.where(Contact.class).findAll()
+                    return null;
+                }
+            })
                     .map((Function<RealmResults, ArrayList<Contact>>) ArrayList::new)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
