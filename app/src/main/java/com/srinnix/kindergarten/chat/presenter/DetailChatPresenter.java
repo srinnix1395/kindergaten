@@ -43,7 +43,7 @@ public class DetailChatPresenter extends BasePresenter {
 
     public void setupDataPresenter(Contact contact) {
         idReceiver = contact.getId();
-        idSender = SharedPreUtils.getInstance(mContext).getCurrentUserID();
+        idSender = SharedPreUtils.getInstance(mContext).getUserID();
     }
 
     public void onClickMenuItemInfo() {
@@ -175,6 +175,10 @@ public class DetailChatPresenter extends BasePresenter {
             prevMessage.setLayoutType(ChatConstant.MIDDLE);
         }
         return ChatConstant.LAST;
+    }
+
+    public void onLoadMore(ArrayList<Object> listMessage, ChatAdapter adapter) {
+        // TODO: 3/1/2017 load message
     }
 
     public void onDestroy() {

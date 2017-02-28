@@ -46,6 +46,7 @@ public class KinderApplication extends Application {
 
     public Realm getRealm(){
         if (realm == null) {
+            Realm.init(this);
             realm = Realm.getDefaultInstance();
         }
         return realm;

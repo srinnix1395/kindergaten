@@ -13,7 +13,9 @@ public class AppConstant {
     public static final String API_LOGIN = "/user/login";
 
 
-    public static final String API_GET_POST = "/post/get";
+    public static final String API_GET_POST_MEMBER = "/post/get/member";
+
+    public static final String API_GET_POST_GUEST = "/post/get/guest";
 
     public static final String API_GET_LIST_CLASS = "/class/getListClass";
     public static final String API_GET_DETAIL_CLASS = "/class/getDetailClass";
@@ -54,6 +56,10 @@ public class AppConstant {
     public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
     public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 
+    //post type
+    public static final int POST_NORMAL = 1;
+    public static final int POST_IMPORTANT = 2;
+
     //account type
     public static final int GUESTS = 0;
     public static final int PARENTS = 1;
@@ -61,4 +67,5 @@ public class AppConstant {
     public static final int MANAGERS = 3;
 
     public static final String KEY_INFO = "INFO";
+
 }

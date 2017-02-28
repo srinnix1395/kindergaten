@@ -12,6 +12,7 @@ import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatRightViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatTimeViewHolder;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.schoolboard.adapter.viewholder.LoadingViewHolder;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
@@ -30,10 +31,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Object> arrayList;
     private String currentUserID;
+    private PostAdapter.RetryListener mRetryListener;
 
-    public ChatAdapter(Context context, ArrayList<Object> arrayList) {
+    public ChatAdapter(Context context, ArrayList<Object> arrayList, PostAdapter.RetryListener mRetryListener) {
         this.arrayList = arrayList;
-        currentUserID = SharedPreUtils.getInstance(context).getCurrentUserID();
+        currentUserID = SharedPreUtils.getInstance(context).getUserID();
+        this.mRetryListener = mRetryListener;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case ITEM_LOADING: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_loading, parent, false);
-                return new LoadingViewHolder(view, mMRetryListener);
+                return new LoadingViewHolder(view, mRetryListener);
             }
             default: {
                 return null;

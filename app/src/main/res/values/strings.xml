@@ -27,4 +27,5 @@
     <string name="hobby">Sở thích:</string>
     <string name="characteristic">Đặc điểm khác:</string>
     <string name="errorPost">Không thể làm mới bảng tin</string>
+    <string name="likes">lượt thích</string>
 </resources>

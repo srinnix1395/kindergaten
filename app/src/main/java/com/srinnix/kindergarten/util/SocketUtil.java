@@ -63,7 +63,7 @@ public class SocketUtil {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put(ChatConstant._ID, SharedPreUtils.getInstance(context).getCurrentUserID());
+            jsonObject.put(ChatConstant._ID, SharedPreUtils.getInstance(context).getUserID());
         } catch (JSONException e) {
             e.printStackTrace();
         }

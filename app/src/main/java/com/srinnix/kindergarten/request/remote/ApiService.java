@@ -6,6 +6,7 @@ import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.DataLogin;
+import com.srinnix.kindergarten.request.model.PostResponse;
 
 import java.util.ArrayList;
 
@@ -27,10 +28,17 @@ public interface ApiService {
     Observable<ApiResponse<DataLogin>> login(@Field("email") String email,
                                              @Field("password") String password);
 
-    @POST(AppConstant.API_GET_POST)
-    @FormUrlEncoded
-    Observable<ApiResponse<ArrayList<Post>>> getListPost(@Header("token") String token,
-                                                         @Field("time_prev_post") long time);
+    //POST START
+    @GET(AppConstant.API_GET_POST_MEMBER)
+    Observable<ApiResponse<PostResponse>> getListPostMember(@Header("x-access-token") String token,
+                                                            @Query("_id_user") String idUser,
+                                                            @Query("time_prev_post") long time);
+
+    @GET(AppConstant.API_GET_POST_GUEST)
+    Observable<ApiResponse<ArrayList<Post>>> getListPostGuest(@Query("time_prev_post") long time);
+
+    @POST
+    //POST END
 
     @GET(AppConstant.API_GET_LIST_CLASS)
     Observable<ApiResponse<ArrayList<Class>>> getListClass();
@@ -38,10 +46,7 @@ public interface ApiService {
     @GET(AppConstant.API_GET_DETAIL_CLASS)
     Observable<ApiResponse> getDetailClass();
 
-    @GET("demo")
-    Observable<Object> demo(@Query("demo") String a);
-
     @GET("chat/message")
-    Observable<ArrayList<Message>> getHistoryMessage(@Header("token") String token,
+    Observable<ArrayList<Message>> getHistoryMessage(@Header("x-access-token") String token,
                                                      @Query("time_first_message") long timeFirstMessage);
 }

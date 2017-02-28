@@ -6,7 +6,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Post;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,6 +19,9 @@ import butterknife.ButterKnife;
  */
 
 public class PostedViewHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.textview_type_noti)
+    TextView tvTitle;
+
     @BindView(R.id.textview_created_at)
     TextView tvCreatedAt;
 
@@ -34,7 +40,20 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindData(Post post) {
+        switch (post.getType()) {
+            case AppConstant.POST_NORMAL: {
+                tvTitle.setText("Thông báo thường");
+                break;
+            }
+            case AppConstant.POST_IMPORTANT: {
+                tvTitle.setText("Thông báo quan trọng");
+                break;
+            }
+        }
         tvContent.setText(post.getContent());
-        //// TODO: 2/28/2017
+        tvNumberLike.setText(String.format(Locale.getDefault(),
+                "%d %s", post.getNumberOfLikes(), itemView.getContext().getString(R.string.likes)));
+
+
     }
 }

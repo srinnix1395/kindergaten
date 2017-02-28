@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Post {
     @SerializedName("_id")
     @Expose
-    private int id;
+    private String id;
 
     @SerializedName("content")
     @Expose
@@ -30,52 +30,52 @@ public class Post {
     @Expose
     private long createdAt;
 
-    public Post(int id, String content, ArrayList<String> listImage, int type, long createdAt) {
+    @SerializedName("number_of_likes")
+    @Expose
+    private int numberOfLikes;
+
+    private boolean isUserLike;
+
+    public Post(String id, String content, ArrayList<String> listImage, int type, long createdAt
+            , int numberOfLikes, boolean isUserLike) {
         this.id = id;
         this.content = content;
         this.listImage = listImage;
         this.type = type;
         this.createdAt = createdAt;
+        this.numberOfLikes = numberOfLikes;
+        this.isUserLike = isUserLike;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public ArrayList<String> getListImage() {
         return listImage;
-    }
-
-    public void setListImage(ArrayList<String> listImage) {
-        this.listImage = listImage;
     }
 
     public int getType() {
         return type;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
+    public int getNumberOfLikes() {
+        return numberOfLikes;
     }
 
+    public boolean isUserLike() {
+        return isUserLike;
+    }
+
+    public void setUserLike(boolean userLike) {
+        isUserLike = userLike;
+    }
 }

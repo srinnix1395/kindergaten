@@ -17,6 +17,8 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.custom.EndlessScrollListener;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
@@ -85,11 +87,18 @@ public class DetailChatFragment extends BaseFragment {
         listMessage = new ArrayList<>();
         listMessage.add(new LoadingItem());
 
-        adapter = new ChatAdapter(mContext, listMessage);
+        adapter = new ChatAdapter(mContext, listMessage, () -> {
+            mPresenter.onLoadMore(listMessage, adapter);
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-
-
+        rvChat.addOnScrollListener(new EndlessScrollListener(layoutManager
+                , EndlessScrollListener.POSITION_UP, ChatConstant.ITEM_MESSAGE_PER_PAGE) {
+            @Override
+            public void onLoadMore() {
+                mPresenter.onLoadMore(listMessage, adapter);
+            }
+        });
         rvChat.setLayoutManager(layoutManager);
         rvChat.setAdapter(adapter);
 

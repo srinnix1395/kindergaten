@@ -3,7 +3,6 @@ package com.srinnix.kindergarten.schoolboard.presenter;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
@@ -19,8 +18,10 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -40,12 +41,14 @@ public class SchoolBoardPresenter extends BasePresenter {
         apiService = RetrofitClient.getApiService();
     }
 
-    public void onLoadMore(CompositeDisposable mDisposable, ArrayList<Object> arrayList, PostAdapter postAdapter, int totalItemCount) {
+    public void onLoadMore(CompositeDisposable mDisposable, ArrayList<Object> arrayList, PostAdapter postAdapter) {
+        int size = arrayList.size();
+
         long timePrevPost;
-        if (arrayList.isEmpty()) {
+        if (arrayList.size() == 1) {
             timePrevPost = System.currentTimeMillis();
         } else {
-            timePrevPost = ((Post) arrayList.get(totalItemCount - 2)).getCreatedAt();
+            timePrevPost = ((Post) arrayList.get(size - 2)).getCreatedAt();
         }
 
         if (ServiceUtils.isNetworkAvailable(mContext)) {
@@ -55,27 +58,81 @@ public class SchoolBoardPresenter extends BasePresenter {
         }
 
         mDisposable.clear();
-        mDisposable.add(
-                apiService.getListPost(token, timePrevPost)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::handleSuccessResponse
-                                , throwable -> handleException(throwable, arrayList, postAdapter))
-        );
-
-
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            String idUser = SharedPreUtils.getInstance(mContext).getUserID();
+            mDisposable.add(
+                    getPostSignIn(arrayList, postAdapter, idUser, timePrevPost)
+            );
+        } else {
+            mDisposable.add(
+                    getPostUnsignIn(arrayList, postAdapter, timePrevPost)
+            );
+        }
     }
 
-    private void handleSuccessResponse(ApiResponse<ArrayList<Post>> response) {
-        if (response == null) {
-            DebugLog.i(ErrorConstant.RESPONSE_NULL);
-            AlertUtils.showToast(mContext, R.string.commonError);
-        } else if (response.result == ApiResponse.RESULT_OK) {
-            if (mDelegate != null) {
-                mDelegate.updateSchoolBoard(response.getData());
-            }
-        } else {
-            handleError(response.error);
+    private Disposable getPostUnsignIn(ArrayList<Object> arrayList, PostAdapter postAdapter, long timePrevPost) {
+        return apiService.getListPostGuest(timePrevPost)
+                .flatMap(response -> {
+                    if (response == null) {
+                        return Observable.error(new NullPointerException());
+                    }
+
+                    if (response.result == ApiResponse.RESULT_OK) {
+                        return Observable.just(response.getData());
+                    }
+
+                    return Observable.just(response.error);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> {
+                    if (o instanceof Error) {
+                        handleError(((Error) o));
+                    } else {
+                        handleSuccessResponse((ArrayList<Post>) o);
+                    }
+                }, throwable -> handleException(throwable, arrayList, postAdapter));
+    }
+
+    private Disposable getPostSignIn(ArrayList<Object> arrayList, PostAdapter postAdapter, String idUser, long timePrevPost) {
+        return apiService.getListPostMember(token, idUser, timePrevPost)
+                .flatMap(response -> {
+                    if (response == null) {
+                        return Observable.error(new NullPointerException());
+                    }
+
+                    if (response.result == ApiResponse.RESULT_OK) {
+                        ArrayList<String> listLikes = response.getData().getListLikes();
+                        ArrayList<Post> listPost = response.getData().getListPost();
+                        for (Post post : listPost) {
+                            for (String id : listLikes) {
+                                if (post.getId().equals(id)) {
+                                    post.setUserLike(true);
+                                    break;
+                                }
+                            }
+                        }
+
+                        return Observable.just(listPost);
+                    }
+
+                    return Observable.just(response.error);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(o -> {
+                            if (o instanceof Error) {
+                                handleError(((Error) o));
+                            } else {
+                                handleSuccessResponse((ArrayList<Post>) o);
+                            }
+                        }
+                        , throwable -> handleException(throwable, arrayList, postAdapter));
+    }
+
+    private void handleSuccessResponse(ArrayList<Post> arrayList) {
+        if (mDelegate != null) {
+            mDelegate.updateSchoolBoard(arrayList);
         }
     }
 

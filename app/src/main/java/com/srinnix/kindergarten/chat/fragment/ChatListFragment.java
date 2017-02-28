@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.chat.fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -47,7 +48,7 @@ public class ChatListFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(adapter);
 
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = KinderApplication.getInstance().getRealm();
         mPresenter.getContactFromDatabase(realm, arrayList, adapter);
     }
 

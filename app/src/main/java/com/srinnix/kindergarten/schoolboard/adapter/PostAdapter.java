@@ -21,9 +21,9 @@ import java.util.ArrayList;
  */
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final int VIEW_TYPE_POST = 0;
-    public static final int VIEW_TYPE_POSTED = 1;
-    public static final int VIEW_TYPE_LOADING = 2;
+    private static final int VIEW_TYPE_POST = 0;
+    private static final int VIEW_TYPE_POSTED = 1;
+    private static final int VIEW_TYPE_LOADING = 2;
 
     private ArrayList<Object> arrPost;
     private int accountType;
