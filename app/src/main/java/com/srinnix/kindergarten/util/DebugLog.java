@@ -30,11 +30,6 @@ public class DebugLog {
         return builder.toString();
     }
 
-    public static void e(String message) {
-        getMethodName(new Throwable().getStackTrace());
-        Log.e(message.getClass().getName(), createLog(message));
-    }
-
     public static void i(String message) {
         getMethodName(new Throwable().getStackTrace());
         Log.i(message.getClass().getName(), createLog(message));

@@ -1,21 +1,28 @@
 package com.srinnix.kindergarten.database;
 
+import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.database.mode.ContactParentRealm;
-import com.srinnix.kindergarten.database.mode.ContactTeacherRealm;
+import com.srinnix.kindergarten.exception.MessageNotFoundException;
+import com.srinnix.kindergarten.database.model.ContactParentRealm;
+import com.srinnix.kindergarten.database.model.ContactTeacherRealm;
 import com.srinnix.kindergarten.login.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageListContact;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
+import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.request.remote.ApiService;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
@@ -47,13 +54,41 @@ public class RealmDatabase {
         });
     }
 
-    public static ArrayList<Message> getPreviousMessage(Realm realm, String conversationID, long timePrevMessage) {
-        List<Message> messages = realm.where(Message.class)
-                .equalTo("conversationID", conversationID)
-                .lessThan("created_at", timePrevMessage)
-                .findAll()
-                .sort("created_at", Sort.DESCENDING)
-                .subList(0, ChatConstant.ITEM_MESSAGE_PER_PAGE);
-        return (ArrayList<Message>) messages;
+    public static void getPreviousMessage(Realm realm, String conversationID
+            , ArrayList<Object> listMessage, ChatAdapter adapter, ApiService mApi, String token) {
+        long timeFirstMessage;
+        if (listMessage.size() == 1) {
+            timeFirstMessage = System.currentTimeMillis();
+        } else {
+            timeFirstMessage = ((Message) listMessage.get(1)).getCreatedAt();
+        }
+
+        Single.fromCallable(() -> {
+            RealmResults<Message> results = realm.where(Message.class)
+                    .equalTo("conversationID", conversationID)
+                    .lessThan("created_at", timeFirstMessage)
+                    .findAllSorted("created_at", Sort.DESCENDING);
+
+            ArrayList<Message> arrayList = new ArrayList<>();
+            int size = results.size() > ChatConstant.ITEM_MESSAGE_PER_PAGE ? ChatConstant.ITEM_MESSAGE_PER_PAGE : results.size();
+            for (int i = 0; i < size; i++) {
+                arrayList.add(0, results.get(i));
+            }
+
+            if (arrayList.size() == 0) {
+                throw new MessageNotFoundException();
+            }
+
+            return arrayList;
+        }).doOnError(throwable -> mApi.getHistoryMessage(token, timeFirstMessage))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(messages -> {
+                    listMessage.addAll(1, messages);
+                    adapter.notifyItemRangeInserted(1, messages.size());
+                }, throwable -> {
+                    ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
+                    adapter.notifyItemChanged(0);
+                });
     }
 }

@@ -66,7 +66,7 @@ public class LoginPresenter extends BasePresenter {
 
     private void handleException(Throwable throwable) {
         AlertUtils.showToast(mContext, R.string.commonError);
-        DebugLog.e(throwable.getMessage());
+        DebugLog.i(throwable.getMessage());
     }
 
     private void handleResponse(ApiResponse<DataLogin> loginResponse, Realm realm) {

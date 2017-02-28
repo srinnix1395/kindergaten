@@ -9,8 +9,8 @@ import com.srinnix.kindergarten.chat.activity.DetailChatActivity;
 import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.database.mode.ContactParentRealm;
-import com.srinnix.kindergarten.database.mode.ContactTeacherRealm;
+import com.srinnix.kindergarten.database.model.ContactParentRealm;
+import com.srinnix.kindergarten.database.model.ContactTeacherRealm;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageListContact;
 import com.srinnix.kindergarten.model.Contact;
@@ -108,7 +108,6 @@ public class ChatListPresenter extends BasePresenter {
                     contacts.addAll(contactParents);
                     adapter.notifyDataSetChanged();
                 });
-
     }
 
     private void getContactTeacher(Realm realm, ArrayList<Contact> contacts, ChatListAdapter adapter) {

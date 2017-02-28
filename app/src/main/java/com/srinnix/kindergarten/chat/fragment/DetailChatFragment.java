@@ -21,6 +21,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.model.Contact;
+import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -77,13 +78,19 @@ public class DetailChatFragment extends BaseFragment {
         toolbar.setTitle(contact != null ? contact.getName() : "");
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> {
-            // TODO: 2/9/2017 back
             UiUtils.hideKeyboard(getActivity());
+            getActivity().finish();
         });
 
         listMessage = new ArrayList<>();
+        listMessage.add(new LoadingItem());
+
         adapter = new ChatAdapter(mContext, listMessage);
-        rvChat.setLayoutManager(new LinearLayoutManager(mContext));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+
+
+        rvChat.setLayoutManager(layoutManager);
         rvChat.setAdapter(adapter);
 
         mPresenter.setupTextChange(etMessage, imvSend);

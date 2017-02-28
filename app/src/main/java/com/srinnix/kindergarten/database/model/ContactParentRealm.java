@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.database.mode;
+package com.srinnix.kindergarten.database.model;
 
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.ContactParent;

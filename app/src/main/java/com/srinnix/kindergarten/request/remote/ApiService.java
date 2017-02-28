@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.request.remote;
 
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Class;
+import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.DataLogin;
@@ -39,4 +40,8 @@ public interface ApiService {
 
     @GET("demo")
     Observable<Object> demo(@Query("demo") String a);
+
+    @GET("chat/message")
+    Observable<ArrayList<Message>> getHistoryMessage(@Header("token") String token,
+                                                     @Query("time_first_message") long timeFirstMessage);
 }

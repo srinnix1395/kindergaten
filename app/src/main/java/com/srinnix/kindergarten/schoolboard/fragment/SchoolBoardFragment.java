@@ -49,14 +49,16 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
 		rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int totalItemCount) {
-                mPresenter.onLoadMore(mDisposable, arrPost, totalItemCount);
+                mPresenter.onLoadMore(mDisposable, arrPost,postAdapter, totalItemCount);
             }
         });
 
         arrPost = new ArrayList<>();
         arrPost.add(new LoadingItem());
 
-        postAdapter = new PostAdapter(mContext, arrPost);
+        postAdapter = new PostAdapter(mContext, arrPost, () -> {
+            mPresenter.onLoadMore(mDisposable, arrPost, postAdapter, arrPost.size());
+        });
         rvListPost.setAdapter(postAdapter);
     }
 

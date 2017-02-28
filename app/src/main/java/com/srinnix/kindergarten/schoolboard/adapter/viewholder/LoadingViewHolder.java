@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.model.LoadingItem;
+import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,9 +26,13 @@ public class LoadingViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_retry)
     ImageView imvRetry;
 
-    public LoadingViewHolder(View itemView) {
+    private PostAdapter.RetryListener mRetryListener;
+
+    public LoadingViewHolder(View itemView, PostAdapter.RetryListener mRetryListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+
+        this.mRetryListener = mRetryListener;
         progressBar.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary),
                 PorterDuff.Mode.SRC_ATOP);
@@ -50,6 +55,8 @@ public class LoadingViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.imageview_retry)
     void onClickRetry() {
-        // TODO: 2/11/2017 retry
+        if (mRetryListener != null) {
+            mRetryListener.onClickRetry();
+        }
     }
 }
