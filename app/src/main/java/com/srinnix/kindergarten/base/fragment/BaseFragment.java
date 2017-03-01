@@ -76,7 +76,9 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 		
 	}
 
-	public void onBackPressed() {
-
-	}
+    @Override
+    public void onDestroy() {
+        mBasePresenter.onDestroy();
+        super.onDestroy();
+    }
 }

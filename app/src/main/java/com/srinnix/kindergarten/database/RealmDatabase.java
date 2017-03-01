@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.database;
 
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.exception.MessageNotFoundException;
 import com.srinnix.kindergarten.database.model.ContactParentRealm;
 import com.srinnix.kindergarten.database.model.ContactTeacherRealm;
 import com.srinnix.kindergarten.login.LoginDelegate;
@@ -17,9 +16,12 @@ import com.srinnix.kindergarten.request.remote.ApiService;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
-import io.reactivex.Single;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -54,7 +56,7 @@ public class RealmDatabase {
         });
     }
 
-    public static void getPreviousMessage(Realm realm, String conversationID
+    public static Disposable getPreviousMessage(Realm realm, String conversationID
             , ArrayList<Object> listMessage, ChatAdapter adapter, ApiService mApi, String token) {
         long timeFirstMessage;
         if (listMessage.size() == 1) {
@@ -63,7 +65,7 @@ public class RealmDatabase {
             timeFirstMessage = ((Message) listMessage.get(1)).getCreatedAt();
         }
 
-        Single.fromCallable(() -> {
+        return Observable.defer((Callable<ObservableSource<?>>) () -> {
             RealmResults<Message> results = realm.where(Message.class)
                     .equalTo("conversationID", conversationID)
                     .lessThan("created_at", timeFirstMessage)
@@ -76,19 +78,19 @@ public class RealmDatabase {
             }
 
             if (arrayList.size() == 0) {
-                throw new MessageNotFoundException();
+                return mApi.getHistoryMessage(token, timeFirstMessage);
             }
 
-            return arrayList;
-        }).doOnError(throwable -> mApi.getHistoryMessage(token, timeFirstMessage))
-                .subscribeOn(Schedulers.io())
+            return Observable.just(arrayList);
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(messages -> {
-                    listMessage.addAll(1, messages);
-                    adapter.notifyItemRangeInserted(1, messages.size());
+                .subscribe(o -> {
+                    listMessage.addAll(1, ((ArrayList) o));
+                    adapter.notifyItemRangeInserted(1, ((ArrayList) o).size());
                 }, throwable -> {
                     ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
                     adapter.notifyItemChanged(0);
                 });
+
     }
 }

@@ -27,12 +27,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Object> arrPost;
     private int accountType;
-    private final RetryListener mRetryListener;
+    private RetryListener mRetryListener;
+    private LikeListener mLikeListener;
 
-    public PostAdapter(Context context, ArrayList<Object> arrPost, RetryListener mRetryListener) {
+    public PostAdapter(Context context, ArrayList<Object> arrPost, RetryListener mRetryListener, LikeListener mLikeListener) {
         this.arrPost = arrPost;
         accountType = SharedPreUtils.getInstance(context).getAccountType();
         this.mRetryListener = mRetryListener;
+        this.mLikeListener = mLikeListener;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             case VIEW_TYPE_POSTED: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted, parent, false);
-                return new PostedViewHolder(view);
+                return new PostedViewHolder(view, mLikeListener);
             }
             case VIEW_TYPE_LOADING: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
@@ -78,5 +80,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface RetryListener {
         void onClickRetry();
+    }
+
+    public interface LikeListener {
+        void onClickLike(String idPost, boolean isLike);
     }
 }

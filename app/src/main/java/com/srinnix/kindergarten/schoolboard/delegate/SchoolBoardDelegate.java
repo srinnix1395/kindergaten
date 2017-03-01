@@ -11,4 +11,8 @@ import java.util.ArrayList;
 
 public interface SchoolBoardDelegate extends BaseDelegate {
     void updateSchoolBoard(ArrayList<Post> arrayList);
+
+    void setErrorItemLoading();
+
+    void handleLikePost(Integer integer);
 }

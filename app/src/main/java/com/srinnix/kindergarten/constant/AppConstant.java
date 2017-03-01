@@ -8,18 +8,20 @@ import com.srinnix.kindergarten.R;
 
 public class AppConstant {
     //API START
-    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com";
+    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
 
-    public static final String API_LOGIN = "/user/login";
+    public static final String API_LOGIN = "user/login";
 
 
-    public static final String API_GET_POST_MEMBER = "/post/get/member";
+    public static final String API_GET_POST_MEMBER = "post/get/member";
+    public static final String API_GET_POST_GUEST = "post/get/guest";
+    public static final String API_LIKE_POST = "post/like";
+    public static final String API_UNLIKE_POST = "post/unlike";
 
-    public static final String API_GET_POST_GUEST = "/post/get/guest";
 
-    public static final String API_GET_LIST_CLASS = "/class/getListClass";
-    public static final String API_GET_DETAIL_CLASS = "/class/getDetailClass";
-    public static final String API_GET_INFO_TEACHER = "/class/getInfoTeacher";
+    public static final String API_GET_LIST_CLASS = "class/getListClass";
+    public static final String API_GET_DETAIL_CLASS = "class/getDetailClass";
+    public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
     //API END
 
     public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";

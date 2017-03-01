@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.chat.adapter.viewholder;
 
-import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,18 +30,26 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_seen)
     ImageView imvSeen;
 
-    private ObjectAnimator animTimeIn;
-    private ObjectAnimator animTimeOut;
+    private ValueAnimator mAnimatorIn;
+    private ValueAnimator mAnimatorOut;
 
     public ItemChatRightViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
-        animTimeIn = ObjectAnimator.ofInt(tvTime, "height", 0, ViewGroup.LayoutParams.WRAP_CONTENT);
-        animTimeIn.setDuration(500);
+        mAnimatorIn = ValueAnimator.ofInt(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mAnimatorIn.addUpdateListener(valueAnimator1 -> {
+            tvTime.getLayoutParams().width = (int) valueAnimator1.getAnimatedValue();
+            tvTime.requestLayout();
+        });
+        mAnimatorIn.setDuration(500);
 
-        animTimeOut = ObjectAnimator.ofInt(tvTime, "height", ViewGroup.LayoutParams.WRAP_CONTENT, 0);
-        animTimeOut.setDuration(500);
+        mAnimatorOut = ValueAnimator.ofInt(ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+        mAnimatorOut.addUpdateListener(valueAnimator1 -> {
+            tvTime.getLayoutParams().width = (int) valueAnimator1.getAnimatedValue();
+            tvTime.requestLayout();
+        });
+        mAnimatorOut.setDuration(500);
     }
 
     public void bindData(Message message) {

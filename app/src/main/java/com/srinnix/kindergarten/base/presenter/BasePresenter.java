@@ -25,5 +25,7 @@ public class BasePresenter {
 		
 	}
 
+    public void onDestroy() {
 
+    }
 }

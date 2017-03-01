@@ -113,10 +113,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
         super.onDestroy();
     }
 
-    @Override
     public void onBackPressed() {
-
+        // TODO: 3/1/2017 back press fragment login
     }
-
-
 }

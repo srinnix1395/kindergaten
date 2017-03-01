@@ -26,6 +26,9 @@
     <string name="see_all">Xem tất cả thành viên</string>
     <string name="hobby">Sở thích:</string>
     <string name="characteristic">Đặc điểm khác:</string>
-    <string name="errorPost">Không thể làm mới bảng tin</string>
+    <string name="error_post">Không thể làm mới bảng tin</string>
     <string name="likes">lượt thích</string>
+    <string name="cancel">Hủy</string>
+    <string name="OK">OK</string>
+    <string name="login_to_like">Hãy đăng nhập để like!</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.chat.presenter;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -10,16 +11,17 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.database.RealmDatabase;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.request.RetrofitClient;
+import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 
 /**
@@ -31,14 +33,20 @@ public class DetailChatPresenter extends BasePresenter {
     private static final long DELAY_TIME = 5000;
 
     private boolean isUserTyping;
-    private Disposable disposable;
+    private CompositeDisposable mDisposable;
     private SocketUtil mSocketUtil;
     private String idSender;
     private String idReceiver;
+    private ApiService mApiService;
+    private String conversationID;
+    private Handler mHandler;
+    //// TODO: 3/1/2017 conversation id
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
+        mApiService = RetrofitClient.getApiService();
+        mDisposable = new CompositeDisposable();
     }
 
     public void setupDataPresenter(Contact contact) {
@@ -69,17 +77,19 @@ public class DetailChatPresenter extends BasePresenter {
                     isUserTyping = true;
                     mSocketUtil.sendStatusTyping(true, idSender, idReceiver);
                 }
-                if (disposable != null && !disposable.isDisposed()) {
-                    disposable.dispose();
-                }
-                disposable = Observable.timer(DELAY_TIME, TimeUnit.MILLISECONDS)
-                        .subscribe(aLong -> {
-                            isUserTyping = false;
-                            mSocketUtil.sendStatusTyping(false, idSender, idReceiver);
-                        });
+                mHandler.removeCallbacks(mRunnableTextChanged);
+                mHandler.postDelayed(mRunnableTextChanged, DELAY_TIME);
             }
         });
     }
+
+    private Runnable mRunnableTextChanged = new Runnable() {
+        @Override
+        public void run() {
+            isUserTyping = false;
+            mSocketUtil.sendStatusTyping(false, idSender, idReceiver);
+        }
+    };
 
     private void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
         if (message.length() > 0) {
@@ -178,12 +188,15 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onLoadMore(ArrayList<Object> listMessage, ChatAdapter adapter) {
-        // TODO: 3/1/2017 load message
+        Realm realm = KinderApplication.getInstance().getRealm();
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+
+        mDisposable.add(RealmDatabase.getPreviousMessage(realm, conversationID, listMessage, adapter, mApiService, token));
     }
 
     public void onDestroy() {
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.clear();
         }
     }
 }

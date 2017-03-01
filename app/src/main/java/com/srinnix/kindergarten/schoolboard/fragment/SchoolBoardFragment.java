@@ -12,14 +12,11 @@ import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.schoolboard.delegate.SchoolBoardDelegate;
 import com.srinnix.kindergarten.schoolboard.presenter.SchoolBoardPresenter;
+import com.srinnix.kindergarten.util.AlertUtils;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 import butterknife.BindView;
-import io.reactivex.Single;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Function;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -32,7 +29,6 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
     private SchoolBoardPresenter mPresenter;
     private PostAdapter postAdapter;
     private ArrayList<Object> arrPost;
-    private CompositeDisposable mDisposable;
 
     public static SchoolBoardFragment newInstance() {
         return new SchoolBoardFragment();
@@ -45,14 +41,12 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
 
     @Override
     protected void initChildView() {
-        mDisposable = new CompositeDisposable();
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvListPost.setLayoutManager(linearLayoutManager);
         rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore() {
-                mPresenter.onLoadMore(mDisposable, arrPost, postAdapter);
+                mPresenter.onLoadMore(arrPost, postAdapter);
             }
         });
 
@@ -60,21 +54,9 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
         arrPost.add(new LoadingItem());
 
         postAdapter = new PostAdapter(mContext, arrPost,
-                () -> mPresenter.onLoadMore(mDisposable, arrPost, postAdapter));
+                () -> mPresenter.onLoadMore(arrPost, postAdapter),
+                (idPost, isLike) -> mPresenter.onClickLike(arrPost, postAdapter, idPost, isLike));
         rvListPost.setAdapter(postAdapter);
-
-        Single.fromCallable(new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                throw new NullPointerException();
-
-            }
-        }).onErrorReturn(new Function<Throwable, Integer>() {
-            @Override
-            public Integer apply(Throwable throwable) throws Exception {
-                return
-            }
-        })
     }
 
     @Override
@@ -84,17 +66,23 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
     }
 
     @Override
-    public void onDestroy() {
-        if (mDisposable != null && mDisposable.size() == 0) {
-            mDisposable.clear();
-        }
-        super.onDestroy();
+    public void updateSchoolBoard(ArrayList<Post> arrayList) {
+        int size = arrPost.size();
+        arrPost.addAll(size - 1, arrayList);
+        postAdapter.notifyItemRangeInserted(size - 1, arrayList.size());
     }
 
     @Override
-    public void updateSchoolBoard(ArrayList<Post> arrayList) {
+    public void setErrorItemLoading() {
         int size = arrPost.size();
-        arrPost.addAll(arrayList);
-        postAdapter.notifyItemRangeInserted(size, arrayList.size());
+        ((LoadingItem) arrPost.get(size - 1)).setLoadingState(LoadingItem.STATE_ERROR);
+        postAdapter.notifyItemChanged(size - 1);
+
+        AlertUtils.showToast(mContext, R.string.error_post);
+    }
+
+    @Override
+    public void handleLikePost(Integer position) {
+        postAdapter.notifyItemChanged(position);
     }
 }
