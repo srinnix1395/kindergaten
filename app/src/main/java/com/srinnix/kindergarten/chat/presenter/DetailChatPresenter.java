@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.chat.presenter;
 
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -20,8 +19,10 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 
 /**
@@ -30,16 +31,15 @@ import io.realm.Realm;
 
 public class DetailChatPresenter extends BasePresenter {
 
-    private static final long DELAY_TIME = 5000;
-
-    private boolean isUserTyping;
     private CompositeDisposable mDisposable;
     private SocketUtil mSocketUtil;
     private String idSender;
     private String idReceiver;
     private ApiService mApiService;
     private String conversationID;
-    private Handler mHandler;
+    private PublishSubject<Boolean> mSubject;
+    private boolean isUserTyping;
+
     //// TODO: 3/1/2017 conversation id
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
@@ -47,6 +47,13 @@ public class DetailChatPresenter extends BasePresenter {
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
         mApiService = RetrofitClient.getApiService();
         mDisposable = new CompositeDisposable();
+
+        mSubject = PublishSubject.create();
+        mDisposable.add(
+                mSubject.doOnNext(aBoolean -> isUserTyping = false)
+                        .debounce(5, TimeUnit.SECONDS)
+                        .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(aBoolean, idSender, idReceiver))
+        );
     }
 
     public void setupDataPresenter(Contact contact) {
@@ -77,19 +84,11 @@ public class DetailChatPresenter extends BasePresenter {
                     isUserTyping = true;
                     mSocketUtil.sendStatusTyping(true, idSender, idReceiver);
                 }
-                mHandler.removeCallbacks(mRunnableTextChanged);
-                mHandler.postDelayed(mRunnableTextChanged, DELAY_TIME);
+                mSubject.onNext(false);
             }
         });
     }
 
-    private Runnable mRunnableTextChanged = new Runnable() {
-        @Override
-        public void run() {
-            isUserTyping = false;
-            mSocketUtil.sendStatusTyping(false, idSender, idReceiver);
-        }
-    };
 
     private void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
         if (message.length() > 0) {

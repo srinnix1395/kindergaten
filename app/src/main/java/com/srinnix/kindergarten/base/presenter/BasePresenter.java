@@ -28,4 +28,12 @@ public class BasePresenter {
     public void onDestroy() {
 
     }
+
+    public void onStart() {
+
+    }
+
+    public void onResume() {
+
+    }
 }

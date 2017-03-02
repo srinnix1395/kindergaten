@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.base.fragment;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,21 +22,37 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 	protected Context mContext;
 	protected View mView;
 	protected BasePresenter mBasePresenter;
-	
-	public BaseFragment() {
+    private boolean isFirst;
+
+    public BaseFragment() {
 		mBasePresenter = initPresenter();
 		if (mBasePresenter == null) {
 			mBasePresenter = new BasePresenter(this);
 		}
 	}
-	
-	@Nullable
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        isFirst = true;
+    }
+
+    @Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		return inflateView(inflater, container);
 	}
-	
-	private View inflateView(LayoutInflater inflater, ViewGroup container) {
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        inflateView(inflater, (ViewGroup) getView());
+    }
+
+    private View inflateView(LayoutInflater inflater, ViewGroup container) {
 		mView = inflater.inflate(getLayoutId(), container, false);
 		return mView;
 	}
@@ -66,6 +83,13 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 		}
 
 		initChildView();
+
+        if (isFirst) {
+            mBasePresenter.onStart();
+            isFirst = false;
+        } else {
+            mBasePresenter.onResume();
+        }
 	}
 	
 	protected abstract void initChildView();
@@ -78,7 +102,7 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 
     @Override
     public void onDestroy() {
-        mBasePresenter.onDestroy();
         super.onDestroy();
+        mBasePresenter.onDestroy();
     }
 }

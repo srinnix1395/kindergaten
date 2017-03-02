@@ -32,6 +32,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Object> arrayList;
     private String currentUserID;
     private PostAdapter.RetryListener mRetryListener;
+    private int positionShowTime = -1;
 
     public ChatAdapter(Context context, ArrayList<Object> arrayList, PostAdapter.RetryListener mRetryListener) {
         this.arrayList = arrayList;
@@ -75,7 +76,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         switch (getItemViewType(position)) {
-            case ITEM_LOADING:{
+            case ITEM_LOADING: {
                 ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
                 break;
             }
