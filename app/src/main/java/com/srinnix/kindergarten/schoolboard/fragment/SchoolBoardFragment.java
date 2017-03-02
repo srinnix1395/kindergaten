@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.schoolboard.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
@@ -46,6 +47,7 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
         rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore() {
+                Log.e("ád", "onLoadMore() called");
                 mPresenter.onLoadMore(arrPost, postAdapter);
             }
         });

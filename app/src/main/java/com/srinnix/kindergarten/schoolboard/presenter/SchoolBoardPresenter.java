@@ -20,6 +20,7 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -187,14 +188,16 @@ public class SchoolBoardPresenter extends BasePresenter {
         }
 
         if (response.result == ApiResponse.RESULT_OK) {
-            mDisposable.add(Observable.fromIterable(arrPost)
-                    .filter(o -> o instanceof Post && ((Post) o).getId().equals(response.getData().getIdPost()))
-                    .map(o -> {
-                        int position = arrPost.indexOf(o);
+            mDisposable.add(Single.fromCallable(() -> {
+                int i = 0;
+                for (Object o : arrPost) {
+                    if (o instanceof Post && ((Post) o).getId().equals(response.getData().getIdPost())) {
                         ((Post) o).setUserLike(response.getData().isLike());
-                        return position;
-                    })
-                    .subscribeOn(Schedulers.io())
+                    }
+                    i++;
+                }
+                return i;
+            }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(integer -> {
                         if (mDelegate != null) {

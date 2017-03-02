@@ -74,7 +74,7 @@ public class SharedPreUtils {
     }
 
     public int getAccountType() {
-        return sharedPreferences.getInt(AppConstant.USER_TYPE, AppConstant.GUESTS);
+        return sharedPreferences.getInt(AppConstant.USER_TYPE, AppConstant.ACCOUNT_GUESTS);
     }
 
     public void setLastEmailFragmentLogin(String email) {

@@ -21,7 +21,7 @@
         android:id="@+id/textview_name"
         android:layout_width="@dimen/width_name_children"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageview_icon1"
+        android:layout_below="@+id/imageview_icon"
         android:layout_centerHorizontal="true"
         android:ellipsize="end"
         android:gravity="center"

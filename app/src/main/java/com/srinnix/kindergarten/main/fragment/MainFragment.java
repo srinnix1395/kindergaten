@@ -135,7 +135,6 @@ public class MainFragment extends BaseFragment {
         return mPresenter;
     }
 
-    @Override
     public void onBackPressed() {
         mPresenter.onBackPressed(this, drawerLayout, viewPager);
     }

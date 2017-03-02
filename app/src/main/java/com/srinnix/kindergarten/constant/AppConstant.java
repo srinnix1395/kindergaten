@@ -20,7 +20,7 @@ public class AppConstant {
 
 
     public static final String API_GET_LIST_CLASS = "class/getListClass";
-    public static final String API_GET_DETAIL_CLASS = "class/getDetailClass";
+    public static final String API_GET_DETAIL_CLASS = "class/getClassInfo";
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
     //API END
 
@@ -63,10 +63,10 @@ public class AppConstant {
     public static final int POST_IMPORTANT = 2;
 
     //account type
-    public static final int GUESTS = 0;
-    public static final int PARENTS = 1;
-    public static final int TEACHERS = 2;
-    public static final int MANAGERS = 3;
+    public static final int ACCOUNT_GUESTS = 0;
+    public static final int ACCOUNT_PARENTS = 1;
+    public static final int ACCOUNT_TEACHERS = 2;
+    public static final int ACCOUNT_MANAGERS = 3;
 
     public static final String KEY_INFO = "INFO";
 

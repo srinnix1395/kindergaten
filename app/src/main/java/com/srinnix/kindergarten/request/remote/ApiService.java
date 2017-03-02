@@ -5,6 +5,7 @@ import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.request.model.DataLogin;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
@@ -55,7 +56,8 @@ public interface ApiService {
     Observable<ApiResponse<ArrayList<Class>>> getListClass();
 
     @GET(AppConstant.API_GET_DETAIL_CLASS)
-    Observable<ApiResponse> getDetailClass();
+    Observable<ApiResponse<ClassResponse>> getClassInfo(@Query("_id_class") String classId,
+                                                        @Query("is_teacher") boolean isTeacher);
 
     @GET("chat/message")
     Observable<ArrayList<Message>> getHistoryMessage(@Header("x-access-token") String token,
