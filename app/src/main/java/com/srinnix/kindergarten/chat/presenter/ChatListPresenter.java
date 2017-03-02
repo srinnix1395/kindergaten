@@ -77,7 +77,7 @@ public class ChatListPresenter extends BasePresenter {
     public void getContactFromDatabase(Realm realm, ArrayList<Contact> contacts, ChatListAdapter adapter) {
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
 
-            if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.PARENTS) {
+            if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_PARENTS) {
                 getContactTeacher(realm, contacts, adapter);
             } else {
                 getContactParent(realm, contacts, adapter);

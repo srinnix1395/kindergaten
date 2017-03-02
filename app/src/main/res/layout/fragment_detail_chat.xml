@@ -1,53 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_detail_chat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary" />
+        android:id="@+id/toolbar_detail_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_detailchat"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbarSize="@dimen/widthScrollbarDetailChat"
-            tools:listitem="@layout/item_chat_left"
-            android:scrollbarThumbVertical="@color/colorGray"
-            android:scrollbarTrackVertical="@color/colorWhite"
-            android:scrollbars="vertical" />
+        android:id="@+id/recyclerview_detailchat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbarSize="@dimen/widthScrollbarDetailChat"
+        android:scrollbarThumbVertical="@color/colorGray"
+        android:scrollbarTrackVertical="@color/colorWhite"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_chat_left"/>
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_edittext_chat"
+        android:background="@color/colorWhite"
+        android:descendantFocusability="beforeDescendants">
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_edittext_chat"
-            android:descendantFocusability="beforeDescendants">
+            android:layout_height="0.5dp"
+            android:background="@color/colorDividerColor"/>
 
         <EditText
-                android:id="@+id/edittext_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:hint="@string/writeMessage"
-                android:paddingLeft="@dimen/padding_horizontal_edittext"
-                android:paddingRight="@dimen/padding_horizontal_edittext"
-                android:textColor="@color/colorBlack"
-                android:textColorHighlight="@color/colorPrimary"
-                android:textColorHint="@color/colorSecondaryText" />
+            android:id="@+id/edittext_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imageview_send"
+            android:background="@null"
+            android:hint="@string/writeMessage"
+            android:paddingLeft="@dimen/padding_horizontal_edittext"
+            android:paddingRight="@dimen/padding_horizontal_edittext"
+            android:textColor="@color/colorBlack"
+            android:textColorHighlight="@color/colorPrimary"
+            android:textColorHint="@color/colorSecondaryText"/>
 
         <ImageView
-                android:id="@+id/imageview_send"
-                android:layout_width="@dimen/item_size"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:background="?selectableItemBackground"
-                android:scaleType="center"
-                app:srcCompat="@drawable/ic_send" />
+            android:id="@+id/imageview_send"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="?selectableItemBackground"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_send"/>
     </RelativeLayout>
 </LinearLayout>

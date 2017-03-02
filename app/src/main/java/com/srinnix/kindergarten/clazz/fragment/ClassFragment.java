@@ -122,12 +122,37 @@ public class ClassFragment extends BaseFragment implements ClassDelegate, View.O
         imvChat3.setOnClickListener(this);
 
         childArrayList = new ArrayList<>();
-        childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID, new ChildrenAdapter.OnClickChildListener() {
-            @Override
-            public void onClick(String id) {
-                mPresenter.onClickChildViewHolder(id);
-            }
-        });
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childArrayList.add(new Child("223", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTM-2rpkbyJ0vLCf3hxFUTUJVeBVG22uNZvQ9KeGRh0ryieDWmejg", "dál", "adslf", "alsdfjk", "ádkfj"));
+        childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID
+                , id -> mPresenter.onClickChildViewHolder(id));
         rvMember.setLayoutManager(new GridLayoutManager(mContext, 4));
         rvMember.setAdapter(childrenAdapter);
 
@@ -215,5 +240,6 @@ public class ClassFragment extends BaseFragment implements ClassDelegate, View.O
         cardViewClassName.setVisibility(View.VISIBLE);
         cardViewTeachers.setVisibility(View.VISIBLE);
         cardViewImage.setVisibility(View.VISIBLE);
+        // TODO: 3/2/2017 animation
     }
 }

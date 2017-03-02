@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
+import com.srinnix.kindergarten.clazz.fragment.ClassFragment;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 
@@ -15,8 +17,9 @@ import com.srinnix.kindergarten.main.fragment.MainFragment;
 
 public class MainActivity extends AppCompatActivity implements MainDelegate{
 	private MainFragment mainFragment;
-
-	@Override
+    private DetailChatFragment detailChatFragment;
+    private ClassFragment classFragment;
+    @Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -24,14 +27,16 @@ public class MainActivity extends AppCompatActivity implements MainDelegate{
 	}
 
 	private void initChildViews() {
-		mainFragment = MainFragment.newInstance();
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.add(R.id.relative_layout_container, mainFragment);
+//		mainFragment = MainFragment.newInstance();
+//        detailChatFragment = new DetailChatFragment();
+        classFragment = new ClassFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+		fragmentTransaction.add(R.id.relative_layout_container, classFragment);
 		fragmentTransaction.commit();
 	}
 
-	@Override
-	public void onBackPressed() {
-        mainFragment.onBackPressed();
-	}
+//	@Override
+//	public void onBackPressed() {
+//        mainFragment.onBackPressed();
+//	}
 }

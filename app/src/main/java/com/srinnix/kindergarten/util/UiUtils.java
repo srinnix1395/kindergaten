@@ -10,21 +10,27 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
+import java.util.Calendar;
+
 /**
  * Created by DELL on 2/3/2017.
  */
 
 public class UiUtils {
-    public static float convertDpToPixel(Context context, float dp) {
+    public static int dpToPixel(Context context, float dp) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+//        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        metrics = context.getResources().getDisplayMetrics();
+        return (int)((dp * metrics.density) + 0.5);
     }
 
-    public static float convertPixelsToDp(Context context, float px) {
+    public static int pixelsToDp(Context context, float px) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+//        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        metrics = context.getResources().getDisplayMetrics();
+        return (int) ((px/metrics.density)+0.5);
     }
 
     // Prevent dialog dismiss when orientation changes
@@ -86,4 +92,10 @@ public class UiUtils {
         progressBar.setEnabled(false);
     }
 
+    public static String convertDateTime(long dateTime) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(dateTime);
+        return c.get(Calendar.DATE) +"/" + (c.get(Calendar.MONTH) + 1) + "/" +c.get(Calendar.YEAR)
+                + " lúc " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+    }
 }

@@ -4,12 +4,12 @@
     <dimen name="margin_left_item">16dp</dimen>
     <dimen name="margin_right_item">16dp</dimen>
 
-    <dimen name="radius_normal">20dp</dimen>
-    <dimen name="radius_special">5dp</dimen>
+    <dimen name="radius_normal">16dp</dimen>
+    <dimen name="radius_special">3dp</dimen>
     <dimen name="size_item_chat">33dp</dimen>
     <dimen name="padding_horizontal_item_chat">10dp</dimen>
     <dimen name="padding_vertical_item_chat">8dp</dimen>
-    <dimen name="margin_top_item_chat">2dp</dimen>
+    <dimen name="margin_top_item_chat">1dp</dimen>
     <dimen name="margin_horizontal_icon_itemchat">10dp</dimen>
     <dimen name="margin_bottom_item_time_chat">2dp</dimen>
     <dimen name="widthScrollbarDetailChat">3dp</dimen>
@@ -41,6 +41,7 @@
     <dimen name="width_item_children_grid">72dp</dimen>
     <dimen name="size_image_view_info_children">65dp</dimen>
     <dimen name="margin_info_children">8dp</dimen>
-    <dimen name="margin_horizontal_chat_item">8dp</dimen>
-    <dimen name="size_item_seen">10dp</dimen>
+    <dimen name="margin_horizontal_left_chat_item">6dp</dimen>
+    <dimen name="size_item_seen">14dp</dimen>
+    <dimen name="margin_horizontal_right_chat_item">6dp</dimen>
 </resources>

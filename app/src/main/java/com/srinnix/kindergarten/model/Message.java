@@ -27,8 +27,20 @@ public class Message extends RealmObject {
     private int layoutType;
 
     @Ignore
-    private boolean displayTime ;
+    private boolean showTime;
 
+    public Message() {
+    }
+
+    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status, int layoutType) {
+        this.id = id;
+        this.idSender = idSender;
+        this.idReceiver = idReceiver;
+        this.message = message;
+        this.createdAt = createdAt;
+        this.status = status;
+        this.layoutType = layoutType;
+    }
 
     public String getId() {
         return id;
@@ -79,19 +91,19 @@ public class Message extends RealmObject {
         this.createdAt = createdAt;
     }
 
-    public boolean isDisplayTime() {
-        return displayTime;
-    }
-
-    public void setDisplayTime(boolean displayTime) {
-        this.displayTime = displayTime;
-    }
-
     public String getIdReceiver() {
         return idReceiver;
     }
 
     public void setIdReceiver(String idReceiver) {
         this.idReceiver = idReceiver;
+    }
+
+    public boolean isShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
     }
 }

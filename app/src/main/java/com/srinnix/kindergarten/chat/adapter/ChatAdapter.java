@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by DELL on 2/9/2017.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ShowTimeListener {
 
     private static final int ITEM_LOADING = 0;
     private static final int ITEM_LEFT = 1;
@@ -46,12 +46,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case ITEM_LEFT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_left, parent, false);
-                return new ItemChatLeftViewHolder(view);
+                return new ItemChatLeftViewHolder(view, this);
             }
             case ITEM_RIGHT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_right, parent, false);
-                return new ItemChatRightViewHolder(view);
+                return new ItemChatRightViewHolder(view, this);
             }
             case ITEM_TIME: {
                 View view = LayoutInflater.from(parent.getContext())
@@ -81,11 +81,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             }
             case ITEM_LEFT: {
-                ((ItemChatLeftViewHolder) holder).bindData((Message) arrayList.get(position));
+                ((ItemChatLeftViewHolder) holder).bindData((Message) arrayList.get(position), position);
                 break;
             }
             case ITEM_RIGHT: {
-                ((ItemChatRightViewHolder) holder).bindData((Message) arrayList.get(position));
+                ((ItemChatRightViewHolder) holder).bindData((Message) arrayList.get(position), position);
                 break;
             }
             case ITEM_TIME: {
@@ -116,4 +116,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         return ITEM_TIME;
     }
+
+    @Override
+    public void onClickMessage(int position) {
+        if (positionShowTime != -1) {
+            ((Message) arrayList.get(positionShowTime)).setShowTime(false);
+            notifyItemChanged(positionShowTime);
+        }
+        ((Message) arrayList.get(position)).setShowTime(true);
+        notifyItemChanged(position);
+
+        positionShowTime = position;
+    }
+
+
 }

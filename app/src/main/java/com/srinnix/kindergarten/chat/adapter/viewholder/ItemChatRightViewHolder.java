@@ -1,15 +1,18 @@
 package com.srinnix.kindergarten.chat.adapter.viewholder;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.chat.adapter.ShowTimeListener;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,34 +35,62 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
 
     private ValueAnimator mAnimatorIn;
     private ValueAnimator mAnimatorOut;
+    private int position;
 
-    public ItemChatRightViewHolder(View itemView) {
+    private int heightTimeExpand;
+    private ShowTimeListener mShowTimeListener;
+
+    public ItemChatRightViewHolder(View itemView, ShowTimeListener mShowTimeListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
-        mAnimatorIn = ValueAnimator.ofInt(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mAnimatorIn.addUpdateListener(valueAnimator1 -> {
-            tvTime.getLayoutParams().width = (int) valueAnimator1.getAnimatedValue();
-            tvTime.requestLayout();
-        });
-        mAnimatorIn.setDuration(500);
+        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 17.5f);
 
-        mAnimatorOut = ValueAnimator.ofInt(ViewGroup.LayoutParams.WRAP_CONTENT, 0);
-        mAnimatorOut.addUpdateListener(valueAnimator1 -> {
-            tvTime.getLayoutParams().width = (int) valueAnimator1.getAnimatedValue();
+        mAnimatorIn = ValueAnimator.ofInt(0, heightTimeExpand);
+        mAnimatorIn.addUpdateListener(valueAnimator1 -> {
+            tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
             tvTime.requestLayout();
         });
-        mAnimatorOut.setDuration(500);
+        mAnimatorIn.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                tvMessage.getBackground().setLevel(2);
+            }
+        });
+        mAnimatorIn.setDuration(300);
+
+        mAnimatorOut = ValueAnimator.ofInt(heightTimeExpand, 0);
+        mAnimatorOut.addUpdateListener(valueAnimator1 -> {
+            tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
+            tvTime.requestLayout();
+        });
+        mAnimatorOut.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                tvMessage.getBackground().setLevel(1);
+            }
+        });
+        mAnimatorOut.setDuration(300);
+
+        this.mShowTimeListener = mShowTimeListener;
     }
 
-    public void bindData(Message message) {
+    public void bindData(Message message, int position) {
+        this.position = position;
+
         tvMessage.setText(message.getMessage());
-        tvTime.setText(String.valueOf(message.getCreatedAt()));
+        tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
-        if (message.isDisplayTime()) {
-
+        if (message.isShowTime()) {
+            if (tvTime.getHeight() == 0) {
+                mAnimatorIn.start();
+            }
         } else {
-
+            if (tvTime.getHeight() == heightTimeExpand) {
+                mAnimatorOut.start();
+            }
         }
         switch (message.getLayoutType()) {
             case ChatConstant.FIRST: {
@@ -104,8 +135,8 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.textview_itemchatright_message)
     void onClickMessage() {
-        if (tvTime.getHeight() == 0) {
-
+        if (mShowTimeListener != null) {
+            mShowTimeListener.onClickMessage(position);
         }
     }
 }

@@ -31,7 +31,7 @@
     <color name="colorBackgroundItemChatLeft">#EAEAEA</color>
     <color name="colorBackgroundItemChatLeftOn">#BBBBBB</color>
     <color name="colorBackgroundItemChatRight">@color/colorPrimary</color>
-    <color name="colorBackgroundItemChatRightOn">@color/colorPrimaryDark</color>
+    <color name="colorBackgroundItemChatRightOn">@color/colorPrimaryDarker</color>
     <color name="colorBackgroundChatList">#EAEAEA</color>
     <!--chat END-->
 

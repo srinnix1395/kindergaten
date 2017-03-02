@@ -38,7 +38,6 @@ public class ClassPresenter extends BasePresenter {
     }
 
     public void getClassInfo(String classId) {
-
         mDisposable.add(
                 mApi.getClassInfo(classId, isTeacher)
                         .subscribeOn(Schedulers.io())
