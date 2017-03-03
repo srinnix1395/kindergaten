@@ -20,6 +20,7 @@ public class ApiResponse<T> {
     public Error error;
 
     @SerializedName("data")
+    @Expose
     private T data;
 
     public T getData() {

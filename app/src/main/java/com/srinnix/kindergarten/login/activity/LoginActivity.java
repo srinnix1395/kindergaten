@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.login;
+package com.srinnix.kindergarten.login.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.login.fragment.LoginFragment;
 
 /**
  * Created by Administrator on 3/1/2017.

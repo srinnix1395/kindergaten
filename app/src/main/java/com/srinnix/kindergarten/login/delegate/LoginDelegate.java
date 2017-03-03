@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.login;
+package com.srinnix.kindergarten.login.delegate;
 
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 

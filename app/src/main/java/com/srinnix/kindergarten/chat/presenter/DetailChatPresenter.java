@@ -9,19 +9,17 @@ import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
+import com.srinnix.kindergarten.chat.helper.DetailChatHelper;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.database.RealmDatabase;
 import com.srinnix.kindergarten.model.Contact;
+import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
-import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 
@@ -31,29 +29,27 @@ import io.realm.Realm;
 
 public class DetailChatPresenter extends BasePresenter {
 
-    private CompositeDisposable mDisposable;
     private SocketUtil mSocketUtil;
     private String idSender;
     private String idReceiver;
-    private ApiService mApiService;
     private String conversationID;
     private PublishSubject<Boolean> mSubject;
     private boolean isUserTyping;
 
-    //// TODO: 3/1/2017 conversation id
+    private DetailChatHelper mHelper;
+    private Realm mRealm;
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
-        mApiService = RetrofitClient.getApiService();
-        mDisposable = new CompositeDisposable();
 
         mSubject = PublishSubject.create();
-        mDisposable.add(
-                mSubject.doOnNext(aBoolean -> isUserTyping = false)
-                        .debounce(5, TimeUnit.SECONDS)
-                        .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(aBoolean, idSender, idReceiver))
-        );
+        mSubject.doOnNext(aBoolean -> isUserTyping = false)
+                .debounce(5, TimeUnit.SECONDS)
+                .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(aBoolean, idSender, idReceiver));
+
+        mHelper = new DetailChatHelper();
+        mRealm = KinderApplication.getInstance().getRealm();
     }
 
     public void setupDataPresenter(Contact contact) {
@@ -100,18 +96,18 @@ public class DetailChatPresenter extends BasePresenter {
         }
     }
 
-    public void onClickSend(String message, Realm realm, ArrayList<Object> listMessage
+    public void onClickSend(String message, ArrayList<Object> listMessage
             , ChatAdapter adapter) {
 
-        realm.beginTransaction();
-        Message chatItem = realm.createObject(Message.class);
+        mRealm.beginTransaction();
+        Message chatItem = mRealm.createObject(Message.class);
         chatItem.setId(String.valueOf(System.currentTimeMillis()));
         chatItem.setIdSender(idSender);
         chatItem.setIdReceiver(idReceiver);
         chatItem.setMessage(message);
         chatItem.setStatus(ChatConstant.PENDING);
         chatItem.setCreatedAt(System.currentTimeMillis());
-        realm.commitTransaction();
+        mRealm.commitTransaction();
 
         chatItem.setLayoutType(getLayoutType(listMessage, idSender, chatItem.getCreatedAt()));
         listMessage.add(chatItem);
@@ -190,12 +186,18 @@ public class DetailChatPresenter extends BasePresenter {
         Realm realm = KinderApplication.getInstance().getRealm();
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mDisposable.add(RealmDatabase.getPreviousMessage(realm, conversationID, listMessage, adapter, mApiService, token));
-    }
+        mHelper.getPreviousMessage(realm, conversationID, listMessage, adapter, token, new DetailChatHelper.DetailChatHelperListener() {
+            @Override
+            public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
+                listMessage.addAll(1, arrayList);
+                adapter.notifyItemRangeInserted(1, arrayList.size());
+            }
 
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
+            @Override
+            public void onLoadMessageFail(Throwable throwable) {
+                ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
+                adapter.notifyItemChanged(0);
+            }
+        });
     }
 }

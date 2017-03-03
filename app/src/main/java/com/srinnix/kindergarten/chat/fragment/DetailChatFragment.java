@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 /**
  * Created by DELL on 2/9/2017.
@@ -58,7 +56,6 @@ public class DetailChatFragment extends BaseFragment {
     private ChatAdapter adapter;
     private ArrayList<Object> listMessage;
 
-    private Realm realm;
     private Contact contact;
 
     @Override
@@ -76,8 +73,6 @@ public class DetailChatFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
-        realm = KinderApplication.getInstance().getRealm();
-
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(contact != null ? contact.getName() : "");
         toolbar.setNavigationIcon(R.drawable.ic_back);
@@ -177,7 +172,7 @@ public class DetailChatFragment extends BaseFragment {
     @OnClick(R.id.imageview_send)
     void onClickSend() {
         mPresenter.onClickSend(etMessage.getText().toString(),
-                realm, listMessage, adapter);
+                listMessage, adapter);
     }
 
     @Subscribe

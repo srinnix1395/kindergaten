@@ -99,10 +99,4 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 	protected void getData() {
 		
 	}
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mBasePresenter.onDestroy();
-    }
 }

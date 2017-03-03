@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements MainDelegate{
 
 	private void initChildViews() {
 //		mainFragment = MainFragment.newInstance();
-//        detailChatFragment = new DetailChatFragment();
-        classFragment = new ClassFragment();
+        detailChatFragment = new DetailChatFragment();
+//        classFragment = new ClassFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.add(R.id.relative_layout_container, classFragment);
+		fragmentTransaction.add(R.id.relative_layout_container, detailChatFragment);
 		fragmentTransaction.commit();
 	}
 

@@ -57,7 +57,7 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
 
         postAdapter = new PostAdapter(mContext, arrPost,
                 () -> mPresenter.onLoadMore(arrPost, postAdapter),
-                (idPost, isLike) -> mPresenter.onClickLike(arrPost, postAdapter, idPost, isLike));
+                (idPost, isLike) -> mPresenter.onClickLike(arrPost, idPost, isLike));
         rvListPost.setAdapter(postAdapter);
     }
 

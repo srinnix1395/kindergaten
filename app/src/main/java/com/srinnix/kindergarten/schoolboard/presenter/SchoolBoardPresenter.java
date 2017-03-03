@@ -5,24 +5,21 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
-import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.request.model.Error;
 import com.srinnix.kindergarten.request.model.LikeResponse;
-import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.schoolboard.delegate.SchoolBoardDelegate;
+import com.srinnix.kindergarten.schoolboard.helper.SchoolBoardHelper;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -31,17 +28,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SchoolBoardPresenter extends BasePresenter {
 
-    private ApiService mApiService;
-    private String token;
     private SchoolBoardDelegate mDelegate;
-    private CompositeDisposable mDisposable;
+    private SchoolBoardHelper mHelper;
 
     public SchoolBoardPresenter(BaseDelegate delegate) {
         super(delegate);
         mDelegate = (SchoolBoardDelegate) delegate;
-        token = SharedPreUtils.getInstance(mContext).getToken();
-        mApiService = RetrofitClient.getApiService();
-        mDisposable = new CompositeDisposable();
+        mHelper = new SchoolBoardHelper();
     }
 
     public void onLoadMore(ArrayList<Object> arrayList, PostAdapter postAdapter) {
@@ -62,77 +55,43 @@ public class SchoolBoardPresenter extends BasePresenter {
 
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             String idUser = SharedPreUtils.getInstance(mContext).getUserID();
-            getPostSignIn(idUser, timePrevPost);
+            String token = SharedPreUtils.getInstance(mContext).getToken();
+            getPostSignIn(token, idUser, timePrevPost);
         } else {
             getPostUnsignIn(timePrevPost);
         }
     }
 
+    private void getPostSignIn(String token, String idUser, long timePrevPost) {
+        mHelper.getPostSignIn(token, idUser, timePrevPost, new SchoolBoardHelper.PostListener() {
+            @Override
+            public void onSuccess(ArrayList<Post> arrayList) {
+                if (mDelegate != null) {
+                    mDelegate.updateSchoolBoard(arrayList);
+                }
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+                handleExceptionPost(throwable);
+            }
+        });
+    }
+
     private void getPostUnsignIn(long timePrevPost) {
-        mDisposable.add(mApiService.getListPostGuest(timePrevPost)
-                .flatMap(response -> {
-                    if (response == null) {
-                        return Observable.error(new NullPointerException());
-                    }
+        mHelper.getPostUnsignIn(timePrevPost, new SchoolBoardHelper.PostListener() {
+            @Override
+            public void onSuccess(ArrayList<Post> arrayList) {
+                if (mDelegate != null) {
+                    mDelegate.updateSchoolBoard(arrayList);
+                }
+            }
 
-                    if (response.result == ApiResponse.RESULT_OK) {
-                        return Observable.just(response.getData());
-                    }
-
-                    return Observable.just(response.error);
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
-                    if (o instanceof Error) {
-                        handleError(((Error) o));
-                    } else {
-                        handleResponsePost((ArrayList<Post>) o);
-                    }
-                }, this::handleExceptionPost));
-    }
-
-    private void getPostSignIn(String idUser, long timePrevPost) {
-        mDisposable.add(mApiService.getListPostMember(token, idUser, timePrevPost)
-                .flatMap(response -> {
-                    if (response == null) {
-                        return Observable.error(new NullPointerException());
-                    }
-
-                    if (response.result == ApiResponse.RESULT_OK) {
-                        ArrayList<String> listLikes = response.getData().getListLikes();
-                        ArrayList<Post> listPost = response.getData().getListPost();
-                        for (Post post : listPost) {
-                            if (listLikes.contains(post.getId())) {
-                                post.setUserLike(true);
-                            }
-                        }
-
-                        return Observable.just(listPost);
-                    }
-
-                    return Observable.just(response.error);
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
-                            if (o instanceof Error) {
-                                handleError(((Error) o));
-                            } else {
-                                handleResponsePost((ArrayList<Post>) o);
-                            }
-                        }
-                        , this::handleExceptionPost));
-    }
-
-    private void handleResponsePost(ArrayList<Post> arrayList) {
-        if (mDelegate != null) {
-            mDelegate.updateSchoolBoard(arrayList);
-        }
-    }
-
-    private void handleError(Error error) {
-        //// TODO: 2/28/2017 handle error
+            @Override
+            public void onFail(Throwable throwable) {
+                handleExceptionPost(throwable);
+            }
+        });
     }
 
     private void handleExceptionPost(Throwable throwable) {
@@ -144,7 +103,7 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
 
-    public void onClickLike(ArrayList<Object> arrPost, PostAdapter postAdapter, String idPost, boolean isLike) {
+    public void onClickLike(ArrayList<Object> arrPost, String idPost, boolean isLike) {
         if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             AlertUtils.showDialogToLogin(mContext, R.string.login_to_like);
             return;
@@ -162,22 +121,31 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
-        mDisposable.add(
-                mApiService.likePost(token, idUser, idPost)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(response -> handleResponseLike(arrPost, response)
-                                , this::handleExceptionLike));
+        mHelper.likePost(token, idUser, idPost, new SchoolBoardHelper.LikeListener() {
+            @Override
+            public void onSuccess(ApiResponse<LikeResponse> response) {
+                handleResponseLike(arrPost, response);
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+                handleExceptionLike(throwable);
+            }
+        });
     }
 
     private void unlikePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
-        mDisposable.add(
-                mApiService.unlikePost(token, idUser, idPost)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(response -> handleResponseLike(arrPost, response),
-                                this::handleExceptionLike)
-        );
+        mHelper.unlikePost(token, idUser, idPost, new SchoolBoardHelper.LikeListener() {
+            @Override
+            public void onSuccess(ApiResponse<LikeResponse> response) {
+                handleResponseLike(arrPost, response);
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+                handleExceptionLike(throwable);
+            }
+        });
     }
 
 
@@ -188,7 +156,7 @@ public class SchoolBoardPresenter extends BasePresenter {
         }
 
         if (response.result == ApiResponse.RESULT_OK) {
-            mDisposable.add(Single.fromCallable(() -> {
+            Single.fromCallable(() -> {
                 int i = 0;
                 for (Object o : arrPost) {
                     if (o instanceof Post && ((Post) o).getId().equals(response.getData().getIdPost())) {
@@ -203,9 +171,9 @@ public class SchoolBoardPresenter extends BasePresenter {
                         if (mDelegate != null) {
                             mDelegate.handleLikePost(integer);
                         }
-                    }));
+                    });
         } else {
-            handleError(response.error);
+            ErrorUtil.handleErrorApi(response.error);
         }
     }
 
@@ -215,10 +183,4 @@ public class SchoolBoardPresenter extends BasePresenter {
         AlertUtils.showToast(mContext, R.string.commonError);
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
 }

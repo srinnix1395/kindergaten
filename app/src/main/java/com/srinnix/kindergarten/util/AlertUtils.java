@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.login.LoginActivity;
+import com.srinnix.kindergarten.login.activity.LoginActivity;
 
 /**
  * Created by DELL on 2/3/2017.
