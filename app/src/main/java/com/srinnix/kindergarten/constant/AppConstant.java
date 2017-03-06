@@ -74,4 +74,5 @@ public class AppConstant {
     public static final String KEY_INFO = "INFO";
 
     public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
+    public static final String URL_CAMERA = "URL_CAMERA";
 }

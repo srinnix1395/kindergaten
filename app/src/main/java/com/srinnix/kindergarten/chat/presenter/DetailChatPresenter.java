@@ -212,7 +212,25 @@ public class DetailChatPresenter extends BasePresenter {
 
     public void onFriendTyping(Message message, ArrayList<Object> listMessage, ChatAdapter adapter) {
         if (message.getIdSender().equals(idReceiver)) {
-
+            if (!listMessage.isEmpty()) {
+                Object o = listMessage.get(listMessage.size() - 1);
+                if (message.isTypingMessage()) {
+                    if (o instanceof Message && !(((Message) o).isTypingMessage())) {
+                        listMessage.add(message);
+                        adapter.notifyItemInserted(listMessage.size() - 1);
+                    }
+                } else {
+                    if (o instanceof Message && ((Message) o).isTypingMessage()) {
+                        listMessage.remove(listMessage.size() - 1);
+                        adapter.notifyItemRemoved(listMessage.size());
+                    }
+                }
+            } else {
+                if (message.isTypingMessage()) {
+                    listMessage.add(message);
+                    adapter.notifyItemInserted(0);
+                }
+            }
         }
     }
 
