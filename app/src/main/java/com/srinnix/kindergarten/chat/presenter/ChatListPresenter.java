@@ -9,13 +9,13 @@ import com.srinnix.kindergarten.chat.activity.DetailChatActivity;
 import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.database.model.ContactParentRealm;
-import com.srinnix.kindergarten.database.model.ContactTeacherRealm;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageListContact;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
+import com.srinnix.kindergarten.model.realm.ContactParentRealm;
+import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.parceler.Parcels;

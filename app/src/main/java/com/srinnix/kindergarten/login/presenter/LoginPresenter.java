@@ -11,7 +11,6 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
-import com.srinnix.kindergarten.database.RealmDatabase;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.login.helper.LoginHelper;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -58,11 +57,11 @@ public class LoginPresenter extends BasePresenter {
         UiUtils.showProgressBar(pbLoading);
         btnLogin.setEnabled(false);
 
-        mLoginHelper.login(email, password, new LoginHelper.LoginHelperListener() {
+        mLoginHelper.login(email, password, new LoginHelper.LoginListener() {
             @Override
             public void onResponseSuccess(ApiResponse<DataLogin> response) {
                 if (response == null) {
-                    DebugLog.i(ErrorConstant.RESPONSE_NULL);
+                    DebugLog.e(ErrorConstant.RESPONSE_NULL);
                     return;
                 }
 
@@ -72,13 +71,13 @@ public class LoginPresenter extends BasePresenter {
                 }
 
                 SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser());
-                RealmDatabase.insertContact(mRealm, response.getData().getContacts(), mLoginDelegate);
+                mLoginHelper.insertContact(mRealm, response.getData().getContacts(), mLoginDelegate);
             }
 
             @Override
             public void onResponseFail(Throwable throwable) {
                 AlertUtils.showToast(mContext, R.string.commonError);
-                DebugLog.i(throwable.getMessage());
+                DebugLog.e(throwable.getMessage());
             }
         });
     }

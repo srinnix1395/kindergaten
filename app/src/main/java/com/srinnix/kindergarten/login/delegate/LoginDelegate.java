@@ -8,4 +8,6 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 
 public interface LoginDelegate extends BaseDelegate{
     void loginSuccessfully();
+
+    void loginFail();
 }

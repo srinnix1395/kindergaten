@@ -189,10 +189,4 @@ public class DetailChatFragment extends BaseFragment {
     void onFriendReceived(MessageFriendReceived message) {
         mPresenter.onFriendReceived(message.data, listMessage, adapter);
     }
-
-    @Override
-    public void onDestroy() {
-        mPresenter.onDestroy();
-        super.onDestroy();
-    }
 }

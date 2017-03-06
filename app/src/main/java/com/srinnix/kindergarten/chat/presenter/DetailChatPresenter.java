@@ -20,6 +20,7 @@ import com.srinnix.kindergarten.util.SocketUtil;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 import io.realm.Realm;
 
@@ -38,6 +39,7 @@ public class DetailChatPresenter extends BasePresenter {
 
     private DetailChatHelper mHelper;
     private Realm mRealm;
+    private CompositeDisposable mDisposable;
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
@@ -48,7 +50,8 @@ public class DetailChatPresenter extends BasePresenter {
                 .debounce(5, TimeUnit.SECONDS)
                 .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(aBoolean, idSender, idReceiver));
 
-        mHelper = new DetailChatHelper();
+        mDisposable = new CompositeDisposable();
+        mHelper = new DetailChatHelper(mDisposable);
         mRealm = KinderApplication.getInstance().getRealm();
     }
 
@@ -186,7 +189,7 @@ public class DetailChatPresenter extends BasePresenter {
         Realm realm = KinderApplication.getInstance().getRealm();
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mHelper.getPreviousMessage(realm, conversationID, listMessage, adapter, token, new DetailChatHelper.DetailChatHelperListener() {
+        mHelper.getPreviousMessage(realm, conversationID, listMessage, token, new DetailChatHelper.DetailChatHelperListener() {
             @Override
             public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
                 listMessage.addAll(1, arrayList);
@@ -199,5 +202,12 @@ public class DetailChatPresenter extends BasePresenter {
                 adapter.notifyItemChanged(0);
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.clear();
+        }
     }
 }

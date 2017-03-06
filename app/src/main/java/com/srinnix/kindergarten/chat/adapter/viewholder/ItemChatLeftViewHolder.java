@@ -43,9 +43,9 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
-        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 17.5f);
+        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
 
-        mAnimatorIn = ValueAnimator.ofInt(0, UiUtils.dpToPixel(itemView.getContext(), 17.5f));
+        mAnimatorIn = ValueAnimator.ofInt(0, heightTimeExpand);
         mAnimatorIn.addUpdateListener(valueAnimator1 -> {
             tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
             tvTime.requestLayout();
@@ -59,7 +59,7 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
         });
         mAnimatorIn.setDuration(300);
 
-        mAnimatorOut = ValueAnimator.ofInt(UiUtils.dpToPixel(itemView.getContext(), 17.5f), 0);
+        mAnimatorOut = ValueAnimator.ofInt(heightTimeExpand, 0);
         mAnimatorOut.addUpdateListener(valueAnimator1 -> {
             tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
             tvTime.requestLayout();
@@ -83,13 +83,9 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
         if (message.isShowTime()) {
-            if (tvTime.getHeight() == 0) {
-                mAnimatorIn.start();
-            }
+            mAnimatorIn.start();
         } else {
-            if (tvTime.getHeight() == heightTimeExpand) {
-                mAnimatorOut.start();
-            }
+            mAnimatorOut.start();
         }
 
         switch (message.getLayoutType()) {

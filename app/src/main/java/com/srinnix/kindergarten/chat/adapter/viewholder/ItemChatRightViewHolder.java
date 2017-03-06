@@ -44,7 +44,7 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
-        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 17.5f);
+        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
 
         mAnimatorIn = ValueAnimator.ofInt(0, heightTimeExpand);
         mAnimatorIn.addUpdateListener(valueAnimator1 -> {
@@ -84,13 +84,9 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
         if (message.isShowTime()) {
-            if (tvTime.getHeight() == 0) {
-                mAnimatorIn.start();
-            }
+            mAnimatorIn.start();
         } else {
-            if (tvTime.getHeight() == heightTimeExpand) {
-                mAnimatorOut.start();
-            }
+            mAnimatorOut.start();
         }
         switch (message.getLayoutType()) {
             case ChatConstant.FIRST: {

@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
-import com.srinnix.kindergarten.clazz.fragment.ClassFragment;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 
@@ -18,7 +17,6 @@ import com.srinnix.kindergarten.main.fragment.MainFragment;
 public class MainActivity extends AppCompatActivity implements MainDelegate{
 	private MainFragment mainFragment;
     private DetailChatFragment detailChatFragment;
-    private ClassFragment classFragment;
     @Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,11 +25,10 @@ public class MainActivity extends AppCompatActivity implements MainDelegate{
 	}
 
 	private void initChildViews() {
-//		mainFragment = MainFragment.newInstance();
-        detailChatFragment = new DetailChatFragment();
-//        classFragment = new ClassFragment();
+		mainFragment = MainFragment.newInstance();
+//        detailChatFragment = new DetailChatFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.add(R.id.relative_layout_container, detailChatFragment);
+		fragmentTransaction.add(R.id.relative_layout_container, mainFragment);
 		fragmentTransaction.commit();
 	}
 

@@ -59,9 +59,14 @@ public interface ApiService {
     Observable<ApiResponse<ClassResponse>> getClassInfo(@Query("_id_class") String classId,
                                                         @Query("is_teacher") boolean isTeacher);
 
-    @GET("chat/message")
-    Observable<ArrayList<Message>> getHistoryMessage(@Header("x-access-token") String token,
+    @GET(AppConstant.API_GET_MESSAGE)
+    Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
+                                                     @Query("conversation_id") String conversationID,
                                                      @Query("time_first_message") long timeFirstMessage);
 
-
+    @POST(AppConstant.API_UPDATE_REG_ID)
+    @FormUrlEncoded
+    Observable<ApiResponse<Boolean>> updateRegId(@Header("x-access-token") String header,
+                                                 @Field("_id") String id,
+                                                 @Field("reg_id") String regId);
 }

@@ -1,20 +1,21 @@
 package com.srinnix.kindergarten.chat.helper;
 
-import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.request.RetrofitClient;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
+import com.srinnix.kindergarten.util.DebugLog;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
@@ -24,13 +25,16 @@ import io.realm.Sort;
 public class DetailChatHelper {
 
     private ApiService mApi;
+    private CompositeDisposable mDisposable;
 
-    public DetailChatHelper() {
+    public DetailChatHelper(CompositeDisposable mDisposable) {
+        this.mDisposable = mDisposable;
         mApi = RetrofitClient.getApiService();
     }
 
     public void getPreviousMessage(Realm realm, String conversationID
-            , ArrayList<Object> listMessage, ChatAdapter adapter, String token, DetailChatHelperListener listener) {
+            , ArrayList<Object> listMessage, String token, DetailChatHelperListener listener) {
+
         long timeFirstMessage;
         if (listMessage.size() == 1) {
             timeFirstMessage = System.currentTimeMillis();
@@ -38,7 +42,53 @@ public class DetailChatHelper {
             timeFirstMessage = ((Message) listMessage.get(1)).getCreatedAt();
         }
 
-        Observable<ArrayList<Message>> messageDB = Observable.fromCallable(() -> realm.where(Message.class)
+        Disposable disposable = Observable.concat(getMessageDB(realm, conversationID, timeFirstMessage),
+                getMessageApi(realm, token, conversationID, timeFirstMessage))
+                .observeOn(AndroidSchedulers.mainThread())
+                .first(new ArrayList<>())
+                .subscribe(o -> {
+                    if (listener != null) {
+                        listener.onLoadMessageSuccessfully(listMessage);
+                    }
+                }, throwable -> {
+                    if (listener != null) {
+                        listener.onLoadMessageFail(throwable);
+                    }
+                });
+        mDisposable.add(disposable);
+    }
+
+    private Observable<ArrayList<Message>> getMessageApi(Realm realm, String token, String conversationID, long timeFirstMessage) {
+        return mApi.getHistoryMessage(token, conversationID, timeFirstMessage)
+                .map(response -> {
+                    if (response == null) {
+                        DebugLog.e(ErrorConstant.RESPONSE_NULL);
+                        return null;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        DebugLog.i(response.error.message);
+                        return null;
+                    }
+
+                    return response.getData();
+                })
+                .doOnNext(messages -> {
+                    if (messages != null) {
+                        saveMessage(realm, messages);
+                    }
+                })
+                .subscribeOn(Schedulers.io());
+    }
+
+    private void saveMessage(Realm realm, ArrayList<Message> messages) {
+        realm.beginTransaction();
+        realm.copyToRealm(messages);
+        realm.commitTransaction();
+    }
+
+    private Observable<ArrayList<Message>> getMessageDB(Realm realm, String conversationID, long timeFirstMessage) {
+        return Observable.fromCallable(() -> realm.where(Message.class)
                 .equalTo("conversationID", conversationID)
                 .lessThan("created_at", timeFirstMessage)
                 .findAllSorted("created_at", Sort.DESCENDING))
@@ -52,54 +102,6 @@ public class DetailChatHelper {
                     return arrayList;
                 })
                 .subscribeOn(Schedulers.io());
-
-        Observable<ArrayList<Message>> messageAPI = mApi.getHistoryMessage(token, timeFirstMessage)
-                .doOnNext(messages -> {
-
-                })
-                .subscribeOn(Schedulers.io());
-
-        Observable.concat(messageDB, messageDB)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
-                    if (listener != null) {
-                        listener.onLoadMessageSuccessfully(listMessage);
-                    }
-                }, throwable -> {
-                    if (listener != null) {
-                        listener.onLoadMessageFail(throwable);
-                    }
-                });
-
-        Observable.defer((Callable<ObservableSource<?>>) () -> {
-            RealmResults<Message> results = realm.where(Message.class)
-                    .equalTo("conversationID", conversationID)
-                    .lessThan("created_at", timeFirstMessage)
-                    .findAllSorted("created_at", Sort.DESCENDING);
-
-            ArrayList<Message> arrayList = new ArrayList<>();
-            int size = results.size() > ChatConstant.ITEM_MESSAGE_PER_PAGE ? ChatConstant.ITEM_MESSAGE_PER_PAGE : results.size();
-            for (int i = 0; i < size; i++) {
-                arrayList.add(0, results.get(i));
-            }
-
-            if (arrayList.size() == 0) {
-                return mApi.getHistoryMessage(token, timeFirstMessage);
-            }
-
-            return Observable.just(arrayList);
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
-                    if (listener != null) {
-                        listener.onLoadMessageSuccessfully(listMessage);
-                    }
-                }, throwable -> {
-                    if (listener != null) {
-                        listener.onLoadMessageFail(throwable);
-                    }
-                });
-
     }
 
     public interface DetailChatHelperListener {

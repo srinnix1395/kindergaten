@@ -11,6 +11,7 @@ public class AppConstant {
     public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
 
     public static final String API_LOGIN = "user/login";
+    public static final String API_UPDATE_REG_ID = "user/updateRegID";
 
 
     public static final String API_GET_POST_MEMBER = "post/get/member";
@@ -22,6 +23,8 @@ public class AppConstant {
     public static final String API_GET_LIST_CLASS = "class/getListClass";
     public static final String API_GET_DETAIL_CLASS = "class/getClassInfo";
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
+
+    public static final String API_GET_MESSAGE = "chat/message";
     //API END
 
     public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";
@@ -70,4 +73,5 @@ public class AppConstant {
 
     public static final String KEY_INFO = "INFO";
 
+    public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
 }

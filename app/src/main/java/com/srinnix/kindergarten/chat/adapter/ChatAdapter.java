@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.chat.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,12 +120,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public void onClickMessage(int position) {
-        if (positionShowTime != -1) {
+        if (positionShowTime == -1) {
+            ((Message) arrayList.get(position)).setShowTime(true);
+            notifyItemChanged(position);
+
+            positionShowTime = position;
+            return;
+        }
+
+        if (positionShowTime == position) {
             ((Message) arrayList.get(positionShowTime)).setShowTime(false);
             notifyItemChanged(positionShowTime);
+
+            positionShowTime = -1;
+            return;
         }
-        ((Message) arrayList.get(position)).setShowTime(true);
-        notifyItemChanged(position);
+
+        ((Message) arrayList.get(positionShowTime)).setShowTime(false);
+        notifyItemChanged(positionShowTime);
+        new Handler().postDelayed(() -> {
+            ((Message) arrayList.get(position)).setShowTime(true);
+            notifyItemChanged(position);
+        }, 300);
 
         positionShowTime = position;
     }

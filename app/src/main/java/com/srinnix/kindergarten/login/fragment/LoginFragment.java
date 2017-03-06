@@ -95,7 +95,12 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     @Override
     public void loginSuccessfully() {
+        //// TODO: 3/3/2017 login successfully
+    }
 
+    @Override
+    public void loginFail() {
+        //// TODO: 3/3/2017 login fail when there's no contacts
     }
 
     @Override

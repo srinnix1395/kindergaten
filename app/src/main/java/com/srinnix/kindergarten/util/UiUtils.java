@@ -10,7 +10,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -93,9 +95,8 @@ public class UiUtils {
     }
 
     public static String convertDateTime(long dateTime) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(dateTime);
-        return c.get(Calendar.DATE) +"/" + (c.get(Calendar.MONTH) + 1) + "/" +c.get(Calendar.YEAR)
-                + " lúc " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault());
+
+        return dateFormat.format(new Date(dateTime));
     }
 }

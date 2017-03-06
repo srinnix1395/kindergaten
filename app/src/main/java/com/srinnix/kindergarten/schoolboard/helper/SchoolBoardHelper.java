@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -19,30 +20,33 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class SchoolBoardHelper {
+    private CompositeDisposable mDisposable;
     private ApiService mApiService;
 
-    public SchoolBoardHelper() {
+    public SchoolBoardHelper(CompositeDisposable disposable) {
+        mDisposable = disposable;
         mApiService = RetrofitClient.getApiService();
     }
 
     public void likePost(String token, String idUser, String idPost, LikeListener listener) {
-        mApiService.likePost(token, idUser, idPost)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                            if (listener != null) {
-                                listener.onSuccess(response);
-                            }
-                        }
-                        , throwable -> {
-                            if (listener != null) {
-                                listener.onFail(throwable);
-                            }
-                        });
+        mDisposable.add(
+                mApiService.likePost(token, idUser, idPost)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(response -> {
+                                    if (listener != null) {
+                                        listener.onSuccess(response);
+                                    }
+                                }
+                                , throwable -> {
+                                    if (listener != null) {
+                                        listener.onFail(throwable);
+                                    }
+                                }));
     }
 
     public void unlikePost(String token, String idUser, String idPost, LikeListener listener) {
-        mApiService.unlikePost(token, idUser, idPost)
+        mDisposable.add(mApiService.unlikePost(token, idUser, idPost)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
@@ -54,11 +58,11 @@ public class SchoolBoardHelper {
                             if (listener != null) {
                                 listener.onFail(throwable);
                             }
-                        });
+                        }));
     }
 
     public void getPostSignIn(String token, String idUser, long timePrevPost, PostListener listener) {
-        mApiService.getListPostMember(token, idUser, timePrevPost)
+        mDisposable.add(mApiService.getListPostMember(token, idUser, timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
                         return Observable.error(new NullPointerException());
@@ -91,11 +95,11 @@ public class SchoolBoardHelper {
                             if (listener != null) {
                                 listener.onFail(throwable);
                             }
-                        });
+                        }));
     }
 
     public void getPostUnsignIn(long timePrevPost, PostListener listener) {
-        mApiService.getListPostGuest(timePrevPost)
+        mDisposable.add(mApiService.getListPostGuest(timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
                         return Observable.error(new NullPointerException());
@@ -119,7 +123,7 @@ public class SchoolBoardHelper {
                     if (listener != null) {
                         listener.onFail(throwable);
                     }
-                });
+                }));
     }
 
     public interface LikeListener {

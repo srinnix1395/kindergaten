@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int TYPE_LINEAR = 0;
-    public static final int TYPE_GRID = 0;
+    public static final int TYPE_GRID = 1;
 
     private static final int SIZE_GRID_LAYOUT = 12;
 

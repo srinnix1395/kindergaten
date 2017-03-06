@@ -32,6 +32,11 @@ public class DebugLog {
 
     public static void i(String message) {
         getMethodName(new Throwable().getStackTrace());
-        Log.i(message.getClass().getName(), createLog(message));
+        Log.i(className, createLog(message));
+    }
+
+    public static void e(String message) {
+        getMethodName(new Throwable().getStackTrace());
+        Log.e(className, createLog(message));
     }
 }

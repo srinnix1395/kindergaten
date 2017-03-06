@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -30,11 +31,13 @@ public class SchoolBoardPresenter extends BasePresenter {
 
     private SchoolBoardDelegate mDelegate;
     private SchoolBoardHelper mHelper;
+    private CompositeDisposable mDisposable;
 
     public SchoolBoardPresenter(BaseDelegate delegate) {
         super(delegate);
         mDelegate = (SchoolBoardDelegate) delegate;
-        mHelper = new SchoolBoardHelper();
+        mDisposable = new CompositeDisposable();
+        mHelper = new SchoolBoardHelper(mDisposable);
     }
 
     public void onLoadMore(ArrayList<Object> arrayList, PostAdapter postAdapter) {
@@ -95,7 +98,7 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     private void handleExceptionPost(Throwable throwable) {
-        DebugLog.i(throwable.getMessage());
+        DebugLog.e(throwable.getMessage());
 
         if (mDelegate != null) {
             mDelegate.setErrorItemLoading();
@@ -178,9 +181,15 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     private void handleExceptionLike(Throwable throwable) {
-        DebugLog.i(throwable.getMessage());
+        DebugLog.e(throwable.getMessage());
 
         AlertUtils.showToast(mContext, R.string.commonError);
     }
 
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.clear();
+        }
+    }
 }

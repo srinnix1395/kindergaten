@@ -108,4 +108,14 @@ public class SharedPreUtils {
     public String getToken() {
         return sharedPreferences.getString(AppConstant.TOKEN, "");
     }
+
+    public void setHasDeviceToken(boolean b) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(AppConstant.HAS_DEVICE_TOKEN, b);
+        editor.apply();
+    }
+
+    public boolean getHasDeviceToken() {
+        return sharedPreferences.getBoolean(AppConstant.HAS_DEVICE_TOKEN, false);
+    }
 }
