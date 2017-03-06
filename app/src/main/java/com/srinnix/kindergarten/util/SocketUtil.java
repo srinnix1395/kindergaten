@@ -47,7 +47,8 @@ public class SocketUtil {
         mSocket.on(Socket.EVENT_CONNECT, args -> onConnected(context, mSocket))
                 .on(Socket.EVENT_DISCONNECT, args -> onDisconnect())
                 .on(Socket.EVENT_MESSAGE, this::onMessage)
-                .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully);
+                .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully)
+                .on(ChatConstant.EVENT_TYPING, args -> onTyping(args[0]));
         mSocket.connect();
     }
 
@@ -185,7 +186,26 @@ public class SocketUtil {
                 .subscribe(message -> EventBus.getDefault().post(new MessageChat(message)));
     }
 
-    public void sendStatusTyping(boolean isTyping, String idSender, String idReceiver) {
+    public void sendStatusTyping(String idSender, String idReceiver, boolean isTyping) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(ChatConstant._ID_SENDER, idSender);
+            jsonObject.put(ChatConstant._ID_RECEIVER, idReceiver);
+            jsonObject.put(ChatConstant.IS_TYPING, isTyping);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        mSocket.emit(ChatConstant.EVENT_TYPING, jsonObject);
+    }
+
+    private void onTyping(Object arg) {
+        JSONObject jsonObject = (JSONObject) arg;
+
+        try {
+            EventBus.getDefault().post(JsonUtil.getMessageTyping(jsonObject));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,11 +31,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textview_chatleft_time"
         android:layout_toRightOf="@+id/imageview_chatleft_icon"
-        android:background="@drawable/background_itemchatleft_first"
         android:paddingBottom="@dimen/padding_vertical_item_chat"
         android:paddingLeft="@dimen/padding_horizontal_item_chat"
         android:paddingRight="@dimen/padding_horizontal_item_chat"
         android:paddingTop="@dimen/padding_vertical_item_chat"
+        android:visibility="invisible"
+        tools:background="@drawable/background_itemchatleft_first"
         tools:text="xin chaof"/>
+
+    <ImageView
+        android:id="@+id/imageview_typing"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_item_chat"
+        android:layout_below="@+id/textview_chatleft_time"
+        android:layout_toRightOf="@+id/imageview_chatleft_icon"
+        android:paddingBottom="@dimen/padding_vertical_item_chat"
+        android:paddingLeft="@dimen/padding_horizontal_item_chat"
+        android:paddingRight="@dimen/padding_horizontal_item_chat"
+        android:paddingTop="@dimen/padding_vertical_item_chat"
+        app:srcCompat="@drawable/ic_dot_horizontal"
+        tools:background="@drawable/background_itemchatleft_first"/>
 
 </RelativeLayout>

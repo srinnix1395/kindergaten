@@ -48,7 +48,8 @@ public class DetailChatPresenter extends BasePresenter {
         mSubject = PublishSubject.create();
         mSubject.doOnNext(aBoolean -> isUserTyping = false)
                 .debounce(5, TimeUnit.SECONDS)
-                .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(aBoolean, idSender, idReceiver));
+                .distinctUntilChanged()
+                .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(idSender, idReceiver, false));
 
         mDisposable = new CompositeDisposable();
         mHelper = new DetailChatHelper(mDisposable);
@@ -81,7 +82,7 @@ public class DetailChatPresenter extends BasePresenter {
             public void afterTextChanged(Editable editable) {
                 if (!isUserTyping) {
                     isUserTyping = true;
-                    mSocketUtil.sendStatusTyping(true, idSender, idReceiver);
+                    mSocketUtil.sendStatusTyping(idSender, idReceiver, true);
                 }
                 mSubject.onNext(false);
             }
@@ -104,7 +105,6 @@ public class DetailChatPresenter extends BasePresenter {
 
         mRealm.beginTransaction();
         Message chatItem = mRealm.createObject(Message.class);
-        chatItem.setId(String.valueOf(System.currentTimeMillis()));
         chatItem.setIdSender(idSender);
         chatItem.setIdReceiver(idReceiver);
         chatItem.setMessage(message);
@@ -120,41 +120,47 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onMessage(Message message, ArrayList<Object> listMessage, ChatAdapter adapter) {
-        message.setLayoutType(getLayoutType(listMessage, message.getIdSender(), message.getCreatedAt()));
+        if (message.getIdSender().equals(idReceiver)) {
+            message.setLayoutType(getLayoutType(listMessage, message.getIdSender(), message.getCreatedAt()));
 
-        listMessage.add(message);
-        adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
+            listMessage.add(message);
+            adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
+        }
     }
 
     public void onServerReceived(Message data, String id, ArrayList<Object> listMessage
             , ChatAdapter adapter) {
 
-        int i;
-        for (i = listMessage.size() - 1; i >= 0; i--) {
-            if (listMessage.get(i) instanceof Message
-                    && ((Message) listMessage.get(i)).getId().equals(id)) {
-                Message message = (Message) listMessage.get(i);
+        if (data.getIdSender().equals(idReceiver)) {
+            int i;
+            for (i = listMessage.size() - 1; i >= 0; i--) {
+                if (listMessage.get(i) instanceof Message
+                        && ((Message) listMessage.get(i)).getId().equals(id)) {
+                    Message message = (Message) listMessage.get(i);
 
-                message.setId(data.getId());
-                message.setCreatedAt(data.getCreatedAt());
-                message.setStatus(data.getStatus());
-                break;
+                    message.setId(data.getId());
+                    message.setCreatedAt(data.getCreatedAt());
+                    message.setStatus(data.getStatus());
+                    break;
+                }
             }
+            adapter.notifyItemChanged(i);
         }
-        adapter.notifyItemChanged(i);
     }
 
     public void onFriendReceived(Message data, ArrayList<Object> listMessage, ChatAdapter adapter) {
-        int i;
-        for (i = listMessage.size() - 1; i >= 0; i--) {
-            if (listMessage.get(i) instanceof Message
-                    && ((Message) listMessage.get(i)).getId().equals(data.getId())) {
-                ((Message) listMessage.get(i)).setStatus(data.getStatus());
-                break;
+        if (data.getIdSender().equals(idReceiver)) {
+            int i;
+            for (i = listMessage.size() - 1; i >= 0; i--) {
+                if (listMessage.get(i) instanceof Message
+                        && ((Message) listMessage.get(i)).getId().equals(data.getId())) {
+                    ((Message) listMessage.get(i)).setStatus(data.getStatus());
+                    break;
+                }
             }
-        }
 
-        adapter.notifyItemChanged(i);
+            adapter.notifyItemChanged(i);
+        }
     }
 
     private int getLayoutType(ArrayList<Object> listMessage, String idSender, long createdAt) {
@@ -202,6 +208,12 @@ public class DetailChatPresenter extends BasePresenter {
                 adapter.notifyItemChanged(0);
             }
         });
+    }
+
+    public void onFriendTyping(Message message, ArrayList<Object> listMessage, ChatAdapter adapter) {
+        if (message.getIdSender().equals(idReceiver)) {
+
+        }
     }
 
     @Override

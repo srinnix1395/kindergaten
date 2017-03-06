@@ -22,6 +22,7 @@ import com.srinnix.kindergarten.custom.EndlessScrollListener;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
+import com.srinnix.kindergarten.messageeventbus.MessageTyping;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
@@ -132,6 +133,7 @@ public class DetailChatFragment extends BaseFragment {
         listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafasd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE));
         listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
         listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafsd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE));
+        listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafsd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE, true));
 
         adapter = new ChatAdapter(mContext, listMessage, () -> {
 //            mPresenter.onLoadMore(listMessage, adapter);
@@ -188,5 +190,10 @@ public class DetailChatFragment extends BaseFragment {
     @Subscribe
     void onFriendReceived(MessageFriendReceived message) {
         mPresenter.onFriendReceived(message.data, listMessage, adapter);
+    }
+
+    @Subscribe
+    void onFriendTyping(MessageTyping message) {
+        mPresenter.onFriendTyping(message.mMessage, listMessage, adapter);
     }
 }

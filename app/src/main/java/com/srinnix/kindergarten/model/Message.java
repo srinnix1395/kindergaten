@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by DELL on 2/9/2017.
@@ -13,7 +12,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Message extends RealmObject {
 
-    @PrimaryKey
     @SerializedName("_id")
     @Expose
     private String id;
@@ -42,7 +40,7 @@ public class Message extends RealmObject {
     private int layoutType;
 
     @Ignore
-    private boolean showTime;
+    private boolean isTypingMessage;
 
     public Message() {
     }
@@ -55,6 +53,17 @@ public class Message extends RealmObject {
         this.createdAt = createdAt;
         this.status = status;
         this.layoutType = layoutType;
+    }
+
+    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status, int layoutType, boolean isTypingMessage) {
+        this.id = id;
+        this.idSender = idSender;
+        this.idReceiver = idReceiver;
+        this.message = message;
+        this.createdAt = createdAt;
+        this.status = status;
+        this.layoutType = layoutType;
+        this.isTypingMessage = isTypingMessage;
     }
 
     public String getId() {
@@ -114,11 +123,12 @@ public class Message extends RealmObject {
         this.idReceiver = idReceiver;
     }
 
-    public boolean isShowTime() {
-        return showTime;
+    public boolean isTypingMessage() {
+        return isTypingMessage;
     }
 
-    public void setShowTime(boolean showTime) {
-        this.showTime = showTime;
+    public void setTypingMessage(boolean typingMessage) {
+        isTypingMessage = typingMessage;
     }
+
 }

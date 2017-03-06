@@ -83,11 +83,11 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
         tvMessage.setText(message.getMessage());
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
-        if (message.isShowTime()) {
-            mAnimatorIn.start();
-        } else {
-            mAnimatorOut.start();
-        }
+//        if (message.isShowTime()) {
+//            mAnimatorIn.start();
+//        } else {
+//            mAnimatorOut.start();
+//        }
         switch (message.getLayoutType()) {
             case ChatConstant.FIRST: {
                 tvMessage.setBackgroundResource(R.drawable.background_itemchatright_first);

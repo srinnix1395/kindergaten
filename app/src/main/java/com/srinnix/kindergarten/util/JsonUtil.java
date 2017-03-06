@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.util;
 
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.messageeventbus.MessageTyping;
 import com.srinnix.kindergarten.model.Message;
 
 import org.json.JSONArray;
@@ -35,5 +36,13 @@ public class JsonUtil {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    public static MessageTyping getMessageTyping(JSONObject jsonObject) throws JSONException {
+        String idSender = jsonObject.getString(ChatConstant._ID_SENDER);
+        String idReceiver = jsonObject.getString(ChatConstant._ID_RECEIVER);
+        boolean isTyping = jsonObject.getBoolean(ChatConstant.IS_TYPING);
+
+        return new MessageTyping(new Message("", idSender, idReceiver, "", System.currentTimeMillis(), ChatConstant.PENDING, ChatConstant.FIRST, isTyping));
     }
 }

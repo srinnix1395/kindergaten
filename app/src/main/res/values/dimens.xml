@@ -5,7 +5,7 @@
     <dimen name="margin_right_item">16dp</dimen>
 
     <dimen name="radius_normal">16dp</dimen>
-    <dimen name="radius_special">3dp</dimen>
+    <dimen name="radius_special">4dp</dimen>
     <dimen name="size_item_chat">33dp</dimen>
     <dimen name="padding_horizontal_item_chat">10dp</dimen>
     <dimen name="padding_vertical_item_chat">8dp</dimen>

@@ -33,6 +33,9 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_itemchatleft_message)
     TextView tvMessage;
 
+    @BindView(R.id.imageview_typing)
+    ImageView imvTyping;
+
     private ValueAnimator mAnimatorIn;
     private ValueAnimator mAnimatorOut;
     private int position;
@@ -79,14 +82,28 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     public void bindData(Message message, int position) {
         this.position = position;
 
+        if (message.isTypingMessage()) {
+            bindDataMessageTyping(message);
+        } else {
+            bindDataMessage(message);
+        }
+
+
+//        if (message.isShowTime()) {
+//            mAnimatorIn.start();
+//        } else {
+//            mAnimatorOut.start();
+//        }
+
+
+    }
+
+    private void bindDataMessage(Message message) {
+        imvTyping.setVisibility(View.GONE);
+        tvMessage.setVisibility(View.VISIBLE);
+
         tvMessage.setText(message.getMessage());
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
-
-        if (message.isShowTime()) {
-            mAnimatorIn.start();
-        } else {
-            mAnimatorOut.start();
-        }
 
         switch (message.getLayoutType()) {
             case ChatConstant.FIRST: {
@@ -103,6 +120,33 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
             }
             case ChatConstant.SINGLE: {
                 tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_single);
+                break;
+            }
+        }
+    }
+
+    private void bindDataMessageTyping(Message message) {
+        imvTyping.setVisibility(View.VISIBLE);
+        tvMessage.setVisibility(View.GONE);
+
+        tvMessage.setText("");
+        tvTime.setText("");
+
+        switch (message.getLayoutType()) {
+            case ChatConstant.FIRST: {
+                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_first);
+                break;
+            }
+            case ChatConstant.MIDDLE: {
+                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_middle);
+                break;
+            }
+            case ChatConstant.LAST: {
+                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_last);
+                break;
+            }
+            case ChatConstant.SINGLE: {
+                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_single);
                 break;
             }
         }

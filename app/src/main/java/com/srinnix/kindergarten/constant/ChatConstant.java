@@ -12,6 +12,7 @@ public class ChatConstant {
     //Event START
     public static final String EVENT_SETUP = "setup";
     public static final String EVENT_SEND_SUCCESSFULLY = "send_successfully";
+    public static final String EVENT_TYPING = "typing";
 
     //Event END
 
@@ -22,6 +23,7 @@ public class ChatConstant {
     public static final String MESSAGE = "message";
     public static final String _ID_MESSAGE_CLIENT = "id_message_client";
     public static final String CREATED_AT = "created_at";
+    public static final String IS_TYPING = "is_typing";
 
     //Key data END
 
