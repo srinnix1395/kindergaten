@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.login.fragment;
 
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -38,6 +39,9 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
 
+    @BindView(R.id.textview_close)
+    TextView tvClose;
+
     private LoginPresenter mPresenter;
 
     @Override
@@ -64,8 +68,30 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
                     break;
                 }
             }
-            return false;
+            return true;
         });
+
+        tvClose.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        tvClose.setTextColor(
+                                ContextCompat.getColor(mContext, R.color.colorWhiteFadeFade)
+                        );
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        tvClose.setTextColor(
+                                ContextCompat.getColor(mContext, R.color.colorWhiteFade)
+                        );
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
+
 
 //        pbLoading.getIndeterminateDrawable().setColorFilter(
 //                ContextCompat.getColor(mContext, R.color.colorWhiteFade),
@@ -93,6 +119,11 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
                 btnLogin);
     }
 
+    @OnClick(R.id.textview_close)
+    void onClickClose(){
+        getActivity().finish();
+    }
+
     @Override
     public void loginSuccessfully() {
         //// TODO: 3/3/2017 login successfully
@@ -107,9 +138,5 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
     public void onDestroy() {
         mPresenter.handleDestroy(etEmail.getText().toString());
         super.onDestroy();
-    }
-
-    public void onBackPressed() {
-        // TODO: 3/1/2017 back press fragment login
     }
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.login.fragment.ForgetPasswordFragment;
 import com.srinnix.kindergarten.login.fragment.LoginFragment;
 
 /**
@@ -13,7 +14,8 @@ import com.srinnix.kindergarten.login.fragment.LoginFragment;
  */
 
 public class LoginActivity extends AppCompatActivity {
-    private LoginFragment mFragment;
+
+    private ForgetPasswordFragment passwordFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,17 +25,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initFragment() {
-        mFragment = new LoginFragment();
+        LoginFragment fragment = new LoginFragment();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.layout_login, mFragment);
+        transaction.add(R.id.layout_login, fragment);
         transaction.commit();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mFragment != null) {
-            mFragment.onBackPressed();
+    public void addOrRemoveFragment(boolean isAdd) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (isAdd) {
+            passwordFragment = new ForgetPasswordFragment();
+            transaction.add(R.id.layout_login, passwordFragment);
+        } else {
+            transaction.remove(passwordFragment);
         }
+        transaction.commit();
     }
 }

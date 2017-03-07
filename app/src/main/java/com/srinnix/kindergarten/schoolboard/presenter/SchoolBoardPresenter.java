@@ -1,5 +1,7 @@
 package com.srinnix.kindergarten.schoolboard.presenter;
 
+import android.support.v7.widget.RecyclerView;
+
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -40,7 +42,7 @@ public class SchoolBoardPresenter extends BasePresenter {
         mHelper = new SchoolBoardHelper(mDisposable);
     }
 
-    public void onLoadMore(ArrayList<Object> arrayList, PostAdapter postAdapter) {
+    public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
         int size = arrayList.size();
 
         long timePrevPost;
@@ -52,7 +54,9 @@ public class SchoolBoardPresenter extends BasePresenter {
 
         if (ServiceUtils.isNetworkAvailable(mContext)) {
             ((LoadingItem) arrayList.get(arrayList.size() - 1)).setLoadingState(LoadingItem.STATE_ERROR);
-            postAdapter.notifyItemChanged(arrayList.size() - 1);
+
+            //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
+            rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
             return;
         }
 

@@ -34,8 +34,6 @@ import io.socket.client.Socket;
  */
 
 public class SocketUtil {
-    private static final String TAG = "SocketUtil";
-
     private Socket mSocket;
 
     public void connect(Context context) {

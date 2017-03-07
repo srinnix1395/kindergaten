@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.schoolboard.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
@@ -14,6 +13,7 @@ import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.schoolboard.delegate.SchoolBoardDelegate;
 import com.srinnix.kindergarten.schoolboard.presenter.SchoolBoardPresenter;
 import com.srinnix.kindergarten.util.AlertUtils;
+import com.srinnix.kindergarten.util.DebugLog;
 
 import java.util.ArrayList;
 
@@ -47,8 +47,8 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
         rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore() {
-                Log.e("ád", "onLoadMore() called");
-                mPresenter.onLoadMore(arrPost, postAdapter);
+                DebugLog.i("onLoadMore() called");
+                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
             }
         });
 
@@ -56,7 +56,7 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
         arrPost.add(new LoadingItem());
 
         postAdapter = new PostAdapter(mContext, arrPost,
-                () -> mPresenter.onLoadMore(arrPost, postAdapter),
+                () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
                 (idPost, isLike) -> mPresenter.onClickLike(arrPost, idPost, isLike));
         rvListPost.setAdapter(postAdapter);
     }

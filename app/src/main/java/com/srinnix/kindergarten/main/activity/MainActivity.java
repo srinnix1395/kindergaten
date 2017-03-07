@@ -18,13 +18,13 @@ public class MainActivity extends AppCompatActivity implements MainDelegate{
 	private MainFragment mainFragment;
     private DetailChatFragment detailChatFragment;
     @Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		initChildViews();
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initChildViews();
 	}
 
-	private void initChildViews() {
+    private void initChildViews() {
 		mainFragment = MainFragment.newInstance();
 //        detailChatFragment = new DetailChatFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -36,4 +36,5 @@ public class MainActivity extends AppCompatActivity implements MainDelegate{
 //	public void onBackPressed() {
 //        mainFragment.onBackPressed();
 //	}
+
 }

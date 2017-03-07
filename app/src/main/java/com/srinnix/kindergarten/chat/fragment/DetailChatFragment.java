@@ -178,22 +178,22 @@ public class DetailChatFragment extends BaseFragment {
     }
 
     @Subscribe
-    void onMessageIncoming(MessageChat message) {
+    public void onMessageIncoming(MessageChat message) {
         mPresenter.onMessage(message.message, listMessage, adapter);
     }
 
     @Subscribe
-    void onServerReceied(MessageServerReceived message) {
+    public void onServerReceied(MessageServerReceived message) {
         mPresenter.onServerReceived(message.data, message.id, listMessage, adapter);
     }
 
     @Subscribe
-    void onFriendReceived(MessageFriendReceived message) {
+    public void onFriendReceived(MessageFriendReceived message) {
         mPresenter.onFriendReceived(message.data, listMessage, adapter);
     }
 
     @Subscribe
-    void onFriendTyping(MessageTyping message) {
+    public void onFriendTyping(MessageTyping message) {
         mPresenter.onFriendTyping(message.mMessage, listMessage, adapter);
     }
 }

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.srinnix.kindergarten.R;
@@ -26,7 +25,6 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import io.reactivex.Observable;
 
 /**
  * Created by DELL on 2/5/2017.
@@ -108,29 +106,6 @@ public class MainFragment extends BaseFragment {
 
             }
         });
-
-        ArrayList<String> arrayList1 = new ArrayList<>();
-        arrayList1.add("1");
-        arrayList1.add("2");
-        arrayList1.add("3");
-
-        Observable<ArrayList<String>> just1 = Observable.just(arrayList1)
-                .doOnNext(strings -> Log.d("just1", "accept: 1"));
-
-        ArrayList<String> arrayList2 = new ArrayList<>();
-        arrayList2.add("4");
-        arrayList2.add("5");
-        arrayList2.add("6");
-        arrayList2.add("7");
-
-        Observable<ArrayList<String>> just2 = Observable.just(arrayList2)
-                .doOnNext(strings -> Log.d("just2", "accept: 2"));
-
-        Observable.concat(just1, just2)
-                .first(new ArrayList<>())
-                .subscribe(strings -> {
-                    Log.d("concat", "initChildView: " + strings.size());
-                });
     }
 
     private void onMenuItemItemSelected(MenuItem item) {

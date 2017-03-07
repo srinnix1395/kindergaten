@@ -44,4 +44,6 @@
     <dimen name="margin_horizontal_left_chat_item">6dp</dimen>
     <dimen name="size_item_seen">14dp</dimen>
     <dimen name="margin_horizontal_right_chat_item">6dp</dimen>
+    <dimen name="margin_top_text_input_layout_frm_login">10dp</dimen>
+    <dimen name="margin_vertical_low">8dp</dimen>
 </resources>

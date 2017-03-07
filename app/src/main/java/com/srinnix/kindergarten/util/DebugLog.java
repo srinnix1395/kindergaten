@@ -20,11 +20,11 @@ public class DebugLog {
     private static String createLog(String log) {
 
         StringBuilder builder = new StringBuilder();
-        builder.append("[");
+        builder.append("[function ");
         builder.append(methodName);
-        builder.append(":");
+        builder.append(" - line ");
         builder.append(lineNumber);
-        builder.append("]");
+        builder.append("] ");
         builder.append(log);
 
         return builder.toString();

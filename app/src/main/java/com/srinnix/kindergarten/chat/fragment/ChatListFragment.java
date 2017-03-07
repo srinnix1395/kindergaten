@@ -71,17 +71,17 @@ public class ChatListFragment extends BaseFragment {
     }
 
     @Subscribe
-    void onDisconnect(MessageDisconnect message) {
+    public void onDisconnect(MessageDisconnect message) {
         mPresenter.onDisconnect(arrayList, adapter);
     }
 
     @Subscribe
-    void onSetupContactList(MessageListContact message) {
+    public void onSetupContactList(MessageListContact message) {
         mPresenter.onSetupContactList(message, arrayList, adapter);
     }
 
     @Subscribe
-    void onSetupContactsStatus(MessageContactStatus message) {
+    public void onSetupContactsStatus(MessageContactStatus message) {
         mPresenter.onSetupContactStatus(message, arrayList, adapter);
     }
 }

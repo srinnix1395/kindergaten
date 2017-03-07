@@ -44,8 +44,9 @@ public class DetailChatHelper {
 
         Disposable disposable = Observable.concat(getMessageDB(realm, conversationID, timeFirstMessage),
                 getMessageApi(realm, token, conversationID, timeFirstMessage))
-                .observeOn(AndroidSchedulers.mainThread())
+                .filter(arrayList -> arrayList.size() > 0)
                 .first(new ArrayList<>())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
                     if (listener != null) {
                         listener.onLoadMessageSuccessfully(listMessage);

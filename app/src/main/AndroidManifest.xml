@@ -24,6 +24,8 @@
 
         <activity android:name=".chat.activity.DetailChatActivity"/>
 
+        <activity android:name=".login.activity.LoginActivity"/>
+
         <service
             android:name=".service.KindergartenMessagingService">
             <intent-filter>

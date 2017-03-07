@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.camera.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.srinnix.kindergarten.R;
@@ -40,13 +39,12 @@ public class CameraFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
-        MediaController mediacontroller = new MediaController(getContext());
-        mediacontroller.setAnchorView(vvCamera);
+//        MediaController mediacontroller = new MediaController(getContext());
+//        mediacontroller.setAnchorView(vvCamera);
 
         vvCamera.setVideoURI(Uri.parse("https://cdn.livestream.com/grid/LSPlayer.swf?channel=tnhtv&fb_version=2.0&autoPlay=true"));
-        vvCamera.setOnPreparedListener(mp -> {
-            vvCamera.start();
-        });
+        vvCamera.start();
+
     }
 
     @Override

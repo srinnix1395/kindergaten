@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_fragment_login"
-    android:descendantFocusability="beforeDescendants">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_fragment_login"
+                android:descendantFocusability="beforeDescendants">
 
     <TextView
         style="@style/TextAppearance.AppCompat.Medium"
@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/margin_vertical_high_fragment_login"
         android:text="@string/login"
         android:textAllCaps="true"
-        android:textColor="@color/colorWhiteFade" />
+        android:textColor="@color/colorWhiteFade"/>
 
     <EditText
         android:id="@+id/edittext_email"
@@ -24,14 +24,16 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:hint="@string/email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edittext_email"
+        android:layout_marginTop="@dimen/margin_top_text_input_layout_frm_login"
         android:textColorHint="@color/colorWhiteFadeFade"
+        app:hintEnabled="false"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorWhiteFade">
 
@@ -42,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -55,9 +57,10 @@
         android:layout_marginRight="@dimen/margin_horizontal_fragment_login"
         android:layout_marginTop="@dimen/margin_vertical"
         android:background="@drawable/background_button_login"
+        android:foreground="?selectableItemBackground"
         android:text="@string/login"
         android:textColor="@color/colorWhiteFade"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/textview_forgetpassword"
@@ -67,7 +70,7 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/margin_vertical"
         android:text="@string/forgetPassword"
-        android:textColor="@color/colorWhiteFade" />
+        android:textColor="@color/colorWhiteFade"/>
 
     <ProgressBar
         android:id="@+id/progressbar_loading"
@@ -75,5 +78,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textview_forgetpassword"
         android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/margin_vertical_high_fragment_login" />
+        android:layout_marginTop="@dimen/margin_vertical_high_fragment_login"/>
+
+    <TextView
+        android:id="@+id/textview_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/margin_vertical_low"
+        android:layout_marginTop="@dimen/margin_vertical_low"
+        android:paddingLeft="@dimen/margin_horizontal"
+        android:paddingRight="@dimen/margin_horizontal"
+        android:text="@string/close"
+        android:textColor="@color/colorWhiteFade"/>
+
 </RelativeLayout>
