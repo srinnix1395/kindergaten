@@ -105,4 +105,14 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
         mBasePresenter.onDestroy();
         super.onDestroy();
     }
+
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        if (count > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            // back Activity;
+            getActivity().finish();
+        }
+    }
 }

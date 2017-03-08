@@ -85,10 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/margin_vertical_low"
-        android:layout_marginTop="@dimen/margin_vertical_low"
-        android:paddingLeft="@dimen/margin_horizontal"
-        android:paddingRight="@dimen/margin_horizontal"
+        android:padding="@dimen/margin_vertical"
         android:text="@string/close"
         android:textAllCaps="true"
         android:textColor="@color/colorWhiteFade"/>

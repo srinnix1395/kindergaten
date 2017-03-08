@@ -77,8 +77,8 @@ public class MainFragment extends BaseFragment {
         arrayList = new ArrayList<>();
         arrayList.add(SchoolBoardFragment.newInstance());
         arrayList.add(ClassFragment.newInstance());
-        arrayList.add(SchoolBoardFragment.newInstance());
         arrayList.add(new CameraFragment());
+        arrayList.add(SchoolBoardFragment.newInstance());
 
         adapter = new MainAdapter(getChildFragmentManager(), arrayList);
         viewPager.setAdapter(adapter);

@@ -14,7 +14,6 @@ import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.login.presenter.LoginPresenter;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
-import com.srinnix.kindergarten.util.ViewManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -68,7 +67,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
                     break;
                 }
             }
-            return true;
+            return false;
         });
 
         tvClose.setOnTouchListener((view, motionEvent) -> {
@@ -86,7 +85,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
                     break;
                 }
             }
-            return true;
+            return false;
         });
 
 
@@ -118,7 +117,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     @OnClick(R.id.textview_close)
     void onClickClose(){
-        ViewManager.getInstance().backFragment();
+        onBackPressed();
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.util.ViewManager;
 
 /**
@@ -30,5 +31,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ViewManager.getInstance().setActivity(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        BaseFragment fragment = ViewManager.getInstance().getCurrentFragment(this);
+        if (fragment != null) {
+            fragment.onBackPressed();
+        }
     }
 }

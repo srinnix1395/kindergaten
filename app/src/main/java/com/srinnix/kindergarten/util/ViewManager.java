@@ -2,12 +2,16 @@ package com.srinnix.kindergarten.util;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.BaseActivity;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
+
+import java.util.List;
 
 /**
  * Created by anhtu on 3/7/2017.
@@ -65,14 +69,17 @@ public class ViewManager {
         }
     }
 
-    public void backFragment() {
-        if (null != mFragmentManager) {
-            if (mFragmentManager.getFragments().size() > 0) {
-                mFragmentManager.popBackStack();
-            } else {
-                mActivity.finish();
+    public BaseFragment getCurrentFragment(BaseActivity activity) {
+        List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (int i = fragments.size() - 1; i >= 0; i--) {
+                Fragment fragment = fragments.get(i);
+                if (fragment != null && fragment.isVisible())
+                    if (fragment instanceof BaseFragment) {
+                        return (BaseFragment) fragment;
+                    }
             }
         }
+        return null;
     }
-
 }
