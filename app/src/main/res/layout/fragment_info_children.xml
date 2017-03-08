@@ -24,7 +24,7 @@
                 android:layout_height="@dimen/size_image_view_info_children"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/margin_vertical"
-                android:layout_marginTop="@dimen/margin_vertical"/>
+                android:layout_marginTop="@dimen/margin_info_children"/>
 
             <TextView
                 android:id="@+id/textview_name"

@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.schoolboard.fragment;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -24,6 +25,9 @@ import butterknife.BindView;
  */
 
 public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDelegate {
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
+
     @BindView(R.id.recyclerview_schoolboard)
     RecyclerView rvListPost;
 
@@ -59,6 +63,8 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
                 () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
                 (idPost, isLike) -> mPresenter.onClickLike(arrPost, idPost, isLike));
         rvListPost.setAdapter(postAdapter);
+
+        refreshLayout.setOnRefreshListener(() -> mPresenter.refresh());
     }
 
     @Override

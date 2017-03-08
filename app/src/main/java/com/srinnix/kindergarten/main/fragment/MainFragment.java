@@ -13,6 +13,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.camera.fragment.CameraFragment;
+import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.clazz.fragment.ClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.login.activity.LoginActivity;
@@ -78,7 +79,7 @@ public class MainFragment extends BaseFragment {
         arrayList.add(SchoolBoardFragment.newInstance());
         arrayList.add(ClassFragment.newInstance());
         arrayList.add(new CameraFragment());
-        arrayList.add(SchoolBoardFragment.newInstance());
+        arrayList.add(new InfoChildrenFragment());
 
         adapter = new MainAdapter(getChildFragmentManager(), arrayList);
         viewPager.setAdapter(adapter);
@@ -111,12 +112,11 @@ public class MainFragment extends BaseFragment {
     private void onMenuItemItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_sign_in: {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+                startActivityLogin();
                 break;
             }
             case R.id.menu_item_sign_out: {
-
+                mPresenter.signOut();
                 break;
             }
             case R.id.menu_item_about: {
@@ -128,12 +128,22 @@ public class MainFragment extends BaseFragment {
                 break;
             }
             case R.id.menu_item_setting: {
-                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivitySetting();
                 break;
             }
             default:
                 break;
         }
+    }
+
+    private void startActivityLogin() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void startActivitySetting() {
+        Intent intent = new Intent(getActivity(), SettingActivity.class);
+        mContext.startActivity(intent);
     }
 
     @Override

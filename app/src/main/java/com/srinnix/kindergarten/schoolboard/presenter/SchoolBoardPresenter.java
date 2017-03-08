@@ -196,4 +196,8 @@ public class SchoolBoardPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
+
+    public void refresh() {
+
+    }
 }

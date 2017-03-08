@@ -47,24 +47,6 @@ public class CameraFragment extends BaseFragment {
     @Override
     protected void initChildView() {
         mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                initMediaPlayer();
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-            }
-        });
-
-
     }
 
     private void initMediaPlayer() {
@@ -91,7 +73,12 @@ public class CameraFragment extends BaseFragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        mPresenter.isUserVisibleHint(isVisibleToUser);
     }
 
     @Override

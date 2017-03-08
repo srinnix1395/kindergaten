@@ -25,6 +25,9 @@ public class AppConstant {
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
 
     public static final String API_GET_MESSAGE = "chat/message";
+
+    public static final String API_GET_INFO_CHILDREN = "children/getInfo";
+    public static final String API_GET_TIMELINE_CHILDREN = "children/getTimeLine";
     //API END
 
     public static final String KINDERGARTEN_SHARED_PREFERENCES = "Kindergarten_shared_preferences";
@@ -75,4 +78,5 @@ public class AppConstant {
 
     public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
     public static final String URL_CAMERA = "URL_CAMERA";
+
 }

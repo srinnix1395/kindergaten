@@ -1,9 +1,11 @@
 package com.srinnix.kindergarten.request.remote;
 
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.model.TimeLineChildren;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.request.model.DataLogin;
@@ -61,12 +63,20 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_MESSAGE)
     Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
-                                                     @Query("conversation_id") String conversationID,
-                                                     @Query("time_first_message") long timeFirstMessage);
+                                                                  @Query("conversation_id") String conversationID,
+                                                                  @Query("time_first_message") long timeFirstMessage);
 
     @POST(AppConstant.API_UPDATE_REG_ID)
     @FormUrlEncoded
     Observable<ApiResponse<Boolean>> updateRegId(@Header("x-access-token") String header,
                                                  @Field("_id") String id,
                                                  @Field("reg_id") String regId);
+
+    @GET(AppConstant.API_GET_INFO_CHILDREN)
+    Observable<ApiResponse<Child>> getInfoChildren(@Header("x-access-token") String header,
+                                                   @Query("_id") String id);
+
+    @GET(AppConstant.API_GET_TIMELINE_CHILDREN)
+    Observable<ApiResponse<ArrayList<TimeLineChildren>>> getTimelineChildren(@Header("x-access-token") String header,
+                                                                             @Query("time") long time);
 }

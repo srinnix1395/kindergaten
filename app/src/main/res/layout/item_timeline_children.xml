@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_horizontal_low"
+                android:paddingRight="@dimen/margin_horizontal_low">
+
+    <TextView
+        android:id="@+id/textview_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_textview_frm_info_children"
+        tools:text="2/2017"/>
+
+    <LinearLayout
+        android:id="@+id/layout_mark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_horizontal_low"
+        android:layout_marginRight="@dimen/margin_horizontal_low"
+        android:layout_toRightOf="@+id/textview_time"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/colorPrimary"/>
+
+        <ImageView
+            android:id="@+id/imageview_mark"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/ic_circle"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorPrimary"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="@dimen/margin_top_textview_frm_info_children"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/layout_mark"
+        tools:text="bé nam tháng này lên kg...v..v.."/>
+</RelativeLayout>

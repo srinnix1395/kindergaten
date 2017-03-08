@@ -79,4 +79,8 @@ public class MainPresenter extends BasePresenter {
             UpdateFirebaseRegId.updateRegId(mContext, token, id, regID);
         }
     }
+
+    public void signOut() {
+
+    }
 }

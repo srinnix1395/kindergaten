@@ -12,4 +12,8 @@ public class CameraPresenter extends BasePresenter {
 	public CameraPresenter(BaseDelegate mDelegate) {
 		super(mDelegate);
 	}
+
+    public void isUserVisibleHint(boolean isVisibleToUser) {
+
+    }
 }

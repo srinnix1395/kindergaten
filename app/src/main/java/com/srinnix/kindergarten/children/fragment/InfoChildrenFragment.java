@@ -5,6 +5,7 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.children.adapter.TimelineAdapter;
 import com.srinnix.kindergarten.children.presenter.InfoChildrenPresenter;
 
 import butterknife.BindView;
@@ -31,6 +32,7 @@ public class InfoChildrenFragment extends BaseFragment {
     TextView tvCharacteristic;
 
     private InfoChildrenPresenter mPresenter;
+    private TimelineAdapter adapter;
 
     @Override
     protected int getLayoutId() {
@@ -39,6 +41,12 @@ public class InfoChildrenFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
     }
 
