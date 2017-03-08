@@ -45,6 +45,14 @@ public class MainPresenter extends BasePresenter {
         }
     }
 
+    public void lockMenu(DrawerLayout drawerLayout, boolean isLock) {
+        if (isLock) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED);
+        }
+    }
+
     public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout, ViewPager viewPager) {
         if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             drawerLayout.closeDrawer(Gravity.RIGHT);

@@ -1,35 +1,26 @@
 package com.srinnix.kindergarten.chat.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 
-import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.BaseActivity;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
+import com.srinnix.kindergarten.util.ViewManager;
 
 /**
  * Created by anhtu on 2/27/2017.
  */
 
-public class DetailChatActivity extends AppCompatActivity {
+public class DetailChatActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_chat);
-        initFragment();
-    }
-
-    private void initFragment() {
+    protected void initChildView() {
+        super.initChildView();
         Intent intent = getIntent();
 
         DetailChatFragment fragment = new DetailChatFragment();
         fragment.setArguments(intent.getExtras());
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.layout_chat, fragment);
-        transaction.commit();
+        ViewManager.getInstance().addFragment(fragment);
     }
+
 }

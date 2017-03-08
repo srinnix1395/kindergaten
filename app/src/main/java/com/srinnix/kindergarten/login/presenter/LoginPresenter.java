@@ -11,8 +11,8 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
-import com.srinnix.kindergarten.login.activity.LoginActivity;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
+import com.srinnix.kindergarten.login.fragment.ForgetPasswordFragment;
 import com.srinnix.kindergarten.login.helper.LoginHelper;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.DataLogin;
@@ -22,6 +22,7 @@ import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import io.realm.Realm;
 
@@ -84,7 +85,7 @@ public class LoginPresenter extends BasePresenter {
     }
 
     public void handleForgetPassword() {
-        ((LoginActivity) mContext).addOrRemoveFragment(true);
+        ViewManager.getInstance().addFragment(new ForgetPasswordFragment());
     }
 
     public void handleDestroy(String email) {

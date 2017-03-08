@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.login.fragment;
 
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -15,6 +14,7 @@ import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.login.presenter.LoginPresenter;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -71,25 +71,22 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
             return true;
         });
 
-        tvClose.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        tvClose.setTextColor(
-                                ContextCompat.getColor(mContext, R.color.colorWhiteFadeFade)
-                        );
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        tvClose.setTextColor(
-                                ContextCompat.getColor(mContext, R.color.colorWhiteFade)
-                        );
-                        break;
-                    }
+        tvClose.setOnTouchListener((view, motionEvent) -> {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    tvClose.setTextColor(
+                            ContextCompat.getColor(mContext, R.color.colorWhiteFadeFade)
+                    );
+                    break;
                 }
-                return true;
+                case MotionEvent.ACTION_UP: {
+                    tvClose.setTextColor(
+                            ContextCompat.getColor(mContext, R.color.colorWhiteFade)
+                    );
+                    break;
+                }
             }
+            return true;
         });
 
 
@@ -121,7 +118,7 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     @OnClick(R.id.textview_close)
     void onClickClose(){
-        getActivity().finish();
+        ViewManager.getInstance().backFragment();
     }
 
     @Override

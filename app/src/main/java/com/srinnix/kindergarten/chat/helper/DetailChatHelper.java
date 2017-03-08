@@ -11,6 +11,7 @@ import com.srinnix.kindergarten.util.DebugLog;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -46,7 +47,7 @@ public class DetailChatHelper {
                 getMessageApi(realm, token, conversationID, timeFirstMessage))
                 .filter(arrayList -> arrayList.size() > 0)
                 .first(new ArrayList<>())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(applyScheduler())
                 .subscribe(o -> {
                     if (listener != null) {
                         listener.onLoadMessageSuccessfully(listMessage);
@@ -57,6 +58,11 @@ public class DetailChatHelper {
                     }
                 });
         mDisposable.add(disposable);
+    }
+
+    public <T> SingleTransformer<T, T> applyScheduler(){
+        return upstream -> upstream.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private Observable<ArrayList<Message>> getMessageApi(Realm realm, String token, String conversationID, long timeFirstMessage) {

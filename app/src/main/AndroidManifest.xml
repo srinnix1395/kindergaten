@@ -26,6 +26,8 @@
 
         <activity android:name=".login.activity.LoginActivity"/>
 
+        <activity android:name=".setting.activity.SettingActivity"/>
+
         <service
             android:name=".service.KindergartenMessagingService">
             <intent-filter>

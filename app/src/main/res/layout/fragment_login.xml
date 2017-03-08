@@ -90,6 +90,7 @@
         android:paddingLeft="@dimen/margin_horizontal"
         android:paddingRight="@dimen/margin_horizontal"
         android:text="@string/close"
+        android:textAllCaps="true"
         android:textColor="@color/colorWhiteFade"/>
 
 </RelativeLayout>
