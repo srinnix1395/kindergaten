@@ -35,6 +35,11 @@ public class LoginHelper {
         mApi.login(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    if (mListener != null) {
+                        mListener.onFinally();
+                    }
+                })
                 .subscribe(response -> {
                             if (mListener != null) {
                                 mListener.onResponseSuccess(response);
@@ -76,5 +81,7 @@ public class LoginHelper {
         void onResponseSuccess(ApiResponse<DataLogin> dataLogin);
 
         void onResponseFail(Throwable throwable);
+
+        void onFinally();
     }
 }

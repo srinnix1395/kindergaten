@@ -81,6 +81,11 @@ public class LoginPresenter extends BasePresenter {
                 AlertUtils.showToast(mContext, R.string.commonError);
                 DebugLog.e(throwable.getMessage());
             }
+
+            @Override
+            public void onFinally() {
+                UiUtils.hideProgressBar(pbLoading);
+            }
         });
     }
 
