@@ -48,4 +48,5 @@
     <dimen name="margin_vertical_low">8dp</dimen>
     <dimen name="margin_top_textview_frm_info_children">16dp</dimen>
     <dimen name="margin_horizontal_low">8dp</dimen>
+    <dimen name="height_image_post">360dp</dimen>
 </resources>

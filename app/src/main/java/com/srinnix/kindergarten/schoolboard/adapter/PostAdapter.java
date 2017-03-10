@@ -15,6 +15,7 @@ import com.srinnix.kindergarten.schoolboard.adapter.viewholder.PostedViewHolder;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by DELL on 2/11/2017.
@@ -22,19 +23,32 @@ import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_POST = 0;
-    private static final int VIEW_TYPE_POSTED = 1;
-    private static final int VIEW_TYPE_LOADING = 2;
+    public static final int VIEW_TYPE_POSTED_1 = 1;
+    public static final int VIEW_TYPE_POSTED_2_1 = 2;
+    public static final int VIEW_TYPE_POSTED_2_2 = 3;
+    public static final int VIEW_TYPE_POSTED_3_1 = 4;
+    public static final int VIEW_TYPE_POSTED_3_2 = 5;
+    public static final int VIEW_TYPE_POSTED_4_1 = 6;
+    public static final int VIEW_TYPE_POSTED_4_2 = 7;
+    public static final int VIEW_TYPE_POSTED_4_3 = 8;
+    public static final int VIEW_TYPE_POSTED_5_1 = 9;
+    public static final int VIEW_TYPE_POSTED_5_2 = 10;
+    public static final int VIEW_TYPE_POSTED_0 = 11;
+
+    private static final int VIEW_TYPE_LOADING = 12;
 
     private ArrayList<Object> arrPost;
     private int accountType;
     private RetryListener mRetryListener;
     private LikeListener mLikeListener;
+    private Random random;
 
     public PostAdapter(Context context, ArrayList<Object> arrPost, RetryListener mRetryListener, LikeListener mLikeListener) {
         this.arrPost = arrPost;
         accountType = SharedPreUtils.getInstance(context).getAccountType();
         this.mRetryListener = mRetryListener;
         this.mLikeListener = mLikeListener;
+        random = new Random();
     }
 
     @Override
@@ -44,9 +58,18 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
                 return new PostViewHolder(view);
             }
-            case VIEW_TYPE_POSTED: {
+            case VIEW_TYPE_POSTED_1:
+            case VIEW_TYPE_POSTED_2_1:
+            case VIEW_TYPE_POSTED_2_2:
+            case VIEW_TYPE_POSTED_3_1:
+            case VIEW_TYPE_POSTED_3_2:
+            case VIEW_TYPE_POSTED_4_1:
+            case VIEW_TYPE_POSTED_4_2:
+            case VIEW_TYPE_POSTED_4_3:
+            case VIEW_TYPE_POSTED_5_1:
+            case VIEW_TYPE_POSTED_5_2: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted, parent, false);
-                return new PostedViewHolder(view, mLikeListener);
+                return new PostedViewHolder(view, mLikeListener, viewType);
             }
             case VIEW_TYPE_LOADING: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
@@ -72,10 +95,48 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == arrPost.size() - 1) {
+        if (arrPost.get(position) instanceof LoadingItem) {
             return VIEW_TYPE_LOADING;
         }
-        return VIEW_TYPE_POSTED;
+
+        switch (((Post) arrPost.get(position)).getListImage().size()) {
+            case 0:{
+                return VIEW_TYPE_POSTED_0;
+            }
+            case 1:
+                return VIEW_TYPE_POSTED_1;
+            case 2: {
+                int i = random.nextInt(3);
+                if (i == 1) {
+                    return VIEW_TYPE_POSTED_2_1;
+                }
+                return VIEW_TYPE_POSTED_2_2;
+            }
+            case 3: {
+                int i = random.nextInt(3);
+                if (i == 1) {
+                    return VIEW_TYPE_POSTED_3_1;
+                }
+                return VIEW_TYPE_POSTED_3_2;
+            }
+            case 4: {
+                int i = random.nextInt(4);
+                if (i == 1) {
+                    return VIEW_TYPE_POSTED_4_1;
+                }
+                if (i == 2) {
+                    return VIEW_TYPE_POSTED_4_2;
+                }
+                return VIEW_TYPE_POSTED_4_3;
+            }
+            default: {
+                int i = random.nextInt(3);
+                if (i == 1) {
+                    return VIEW_TYPE_POSTED_5_1;
+                }
+                return VIEW_TYPE_POSTED_5_2;
+            }
+        }
     }
 
     public interface RetryListener {

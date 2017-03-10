@@ -36,6 +36,8 @@ public class Post {
 
     private boolean isUserLike;
 
+    private String layoutImages;
+
     public Post(String id, String content, ArrayList<String> listImage, int type, long createdAt
             , int numberOfLikes, boolean isUserLike) {
         this.id = id;
@@ -77,5 +79,13 @@ public class Post {
 
     public void setUserLike(boolean userLike) {
         isUserLike = userLike;
+    }
+
+    public String getLayoutImages() {
+        return layoutImages;
+    }
+
+    public void setLayoutImages(String layoutImages) {
+        this.layoutImages = layoutImages;
     }
 }
