@@ -34,7 +34,7 @@ public class DetailChatPresenter extends BasePresenter {
     private String idSender;
     private String idReceiver;
     private String conversationID;
-    private PublishSubject<Boolean> mSubject;
+    private PublishSubject mSubject;
     private boolean isUserTyping;
 
     private DetailChatHelper mHelper;
@@ -44,14 +44,13 @@ public class DetailChatPresenter extends BasePresenter {
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
+        mDisposable = new CompositeDisposable();
 
         mSubject = PublishSubject.create();
-        mSubject.doOnNext(aBoolean -> isUserTyping = false)
+        mDisposable.add(mSubject.doOnNext(o -> isUserTyping = false)
                 .debounce(5, TimeUnit.SECONDS)
-                .distinctUntilChanged()
-                .subscribe(aBoolean -> mSocketUtil.sendStatusTyping(idSender, idReceiver, false));
+                .subscribe(o -> mSocketUtil.sendStatusTyping(idSender, idReceiver, false)));
 
-        mDisposable = new CompositeDisposable();
         mHelper = new DetailChatHelper(mDisposable);
         mRealm = KinderApplication.getInstance().getRealm();
     }
@@ -84,7 +83,7 @@ public class DetailChatPresenter extends BasePresenter {
                     isUserTyping = true;
                     mSocketUtil.sendStatusTyping(idSender, idReceiver, true);
                 }
-                mSubject.onNext(false);
+                mSubject.onNext(null);
             }
         });
     }

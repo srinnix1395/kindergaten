@@ -20,9 +20,17 @@ public class Child {
     @Expose
     private String name;
 
+    @SerializedName("aka")
+    @Expose
+    private String aka;
+
     @SerializedName("DOB")
     @Expose
     private String DOB;
+
+    @SerializedName("gender")
+    @Expose
+    private String gender;
 
     @SerializedName("hobby")
     @Expose
@@ -32,10 +40,15 @@ public class Child {
     @Expose
     private String characteristic;
 
-    public Child(String id, String image, String name, String DOB, String hobby, String characteristic) {
+    @SerializedName("_id_class")
+    @Expose
+    private String idClass;
+
+    public Child(String id, String image, String name,String aka, String DOB, String hobby, String characteristic) {
         this.id = id;
         this.image = image;
         this.name = name;
+        this.aka = aka;
         this.DOB = DOB;
         this.hobby = hobby;
         this.characteristic = characteristic;
@@ -87,5 +100,25 @@ public class Child {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getAka() {
+        return aka;
+    }
+
+    public void setAka(String aka) {
+        this.aka = aka;
+    }
+
+    public String getIdClass() {
+        return idClass;
+    }
+
+    public void setIdClass(String idClass) {
+        this.idClass = idClass;
+    }
+
+    public String getGender() {
+        return gender;
     }
 }

@@ -150,9 +150,11 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
 
         int size = post.getListImage().size();
         for (int i = 0; i < size; i++) {
-            Glide.with(itemView.getContext())
-                    .load(post.getListImage().get(i))
-                    .into(imageViews[i]);
+            if (imageViews[i] != null) {
+                Glide.with(itemView.getContext())
+                        .load(post.getListImage().get(i))
+                        .into(imageViews[i]);
+            }
             if (i == 4) {
                 break;
             }
