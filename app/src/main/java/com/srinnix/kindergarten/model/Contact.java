@@ -18,6 +18,10 @@ public class Contact {
     @Expose
     protected String name;
 
+    @SerializedName("gender")
+    @Expose
+    protected String gender;
+
     protected int status = ChatConstant.UNDEFINED;
 
     public String getId() {
@@ -42,5 +46,13 @@ public class Contact {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

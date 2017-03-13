@@ -6,11 +6,11 @@ package com.srinnix.kindergarten.constant;
 
 public class ChatConstant {
 
-    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-//        public static final String SERVER_URL = "http://192.168.0.103";
+//    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+        public static final String SERVER_URL = "http://192.168.0.101:3000/";
 
     //Event START
-    public static final String EVENT_SETUP = "setup";
+    public static final String EVENT_SETUP_CONTACT = "setup_contacts";
     public static final String EVENT_SEND_SUCCESSFULLY = "send_successfully";
     public static final String EVENT_TYPING = "typing";
 
@@ -24,6 +24,7 @@ public class ChatConstant {
     public static final String _ID_MESSAGE_CLIENT = "id_message_client";
     public static final String CREATED_AT = "created_at";
     public static final String IS_TYPING = "is_typing";
+    public static final String _ID_CONVERSATION = "_id_conversation";
 
     //Key data END
 

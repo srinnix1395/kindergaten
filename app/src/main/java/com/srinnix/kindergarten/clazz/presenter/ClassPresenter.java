@@ -75,7 +75,7 @@ public class ClassPresenter extends BasePresenter {
 
     public void onClickChat(int teacherPosition) {
         if (classInfo != null) {
-            classInfo.getaClass().getTeacherArrayList().get(teacherPosition);
+            classInfo.getTeacherArrayList().get(teacherPosition);
             //// TODO: 3/2/2017  
         }
     }

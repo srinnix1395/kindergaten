@@ -8,11 +8,11 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Error{
-    @SerializedName("error_code")
+    @SerializedName("code")
     @Expose
     public int code;
 
-    @SerializedName("error_message")
+    @SerializedName("message")
     @Expose
     public String message;
 

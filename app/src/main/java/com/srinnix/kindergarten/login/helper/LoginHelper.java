@@ -53,20 +53,22 @@ public class LoginHelper {
     }
 
     public void insertContact(Realm realm, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
-        if (arrayList.size() <= 0) {
-            loginDelegate.loginFail();
-            return;
-        }
-
         realm.executeTransactionAsync(realm12 -> {
+            if (arrayList == null || arrayList.size() == 0) {
+                if (loginDelegate != null) {
+                    loginDelegate.loginSuccessfully();
+                }
+                return;
+            }
+
             if (arrayList.get(0) instanceof ContactTeacher) {
                 for (Contact contact : arrayList) {
-                    ContactTeacherRealm c = realm12.createObject(ContactTeacherRealm.class);
+                    ContactTeacherRealm c = realm12.createObject(ContactTeacherRealm.class, contact.getId());
                     c.bindData(((ContactTeacher) contact));
                 }
             } else {
                 for (Contact contact : arrayList) {
-                    ContactParentRealm c = realm12.createObject(ContactParentRealm.class);
+                    ContactParentRealm c = realm12.createObject(ContactParentRealm.class, contact.getId());
                     c.bindData(((ContactParent) contact));
                 }
             }

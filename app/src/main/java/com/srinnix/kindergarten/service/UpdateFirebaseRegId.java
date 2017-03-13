@@ -32,7 +32,7 @@ public class UpdateFirebaseRegId {
                     }
 
                     if (response.result == ApiResponse.RESULT_NG) {
-                        ErrorUtil.handleErrorApi(response.error);
+                        ErrorUtil.handleErrorApi(context, response.error);
                         return;
                     }
 

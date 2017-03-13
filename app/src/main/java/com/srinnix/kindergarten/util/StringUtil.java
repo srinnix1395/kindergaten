@@ -1,6 +1,13 @@
 package com.srinnix.kindergarten.util;
 
-import java.io.UnsupportedEncodingException;
+import android.content.Context;
+
+import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.model.ContactParent;
+import com.srinnix.kindergarten.model.ContactTeacher;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -9,23 +16,56 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class StringUtil {
-    private static String convertToHex(byte[] data) {
-        StringBuilder buf = new StringBuilder();
-        for (byte b : data) {
-            int halfbyte = (b >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do {
-                buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
-                halfbyte = b & 0x0F;
-            } while (two_halfs++ < 1);
+
+    public static String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return buf.toString();
+        return "";
     }
 
-    public static String encryptSHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest md = MessageDigest.getInstance("SHA-1");
-        md.update(text.getBytes("iso-8859-1"), 0, text.length());
-        byte[] sha1hash = md.digest();
-        return convertToHex(sha1hash);
+    public static String getNameContactTeacher(Context context, ContactTeacher contact) {
+        String[] names = contact.getName().split(" ");
+        int size = names.length;
+
+        if (contact.getGender().equals(AppConstant.MALE)) {
+            return String.format("%s %s %s - %s", context.getString(R.string.MrTeacher),
+                    names[size - 2], names[size - 1], contact.getClassName());
+        } else {
+            return String.format("%s %s %s - %s", context.getString(R.string.MsTeacher),
+                    names[size - 2], names[size - 1], contact.getClassName());
+        }
+    }
+
+    public static String getNameContactParent(Context context, ContactParent contact) {
+        String[] namesParent = contact.getName().split(" ");
+        int size = namesParent.length;
+
+        Child children = contact.getChildren().get(0);
+        String[] namesChild = children.getName().split(" ");
+        int sizeChild = namesChild.length;
+
+        if (contact.getGender().equals(AppConstant.MALE)) {
+            return String.format("%s %s %s - %s %s %s", context.getString(R.string.Mr),
+                    namesParent[size - 2], namesParent[size - 1], context.getString(R.string.baby),
+                    namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
+        } else {
+            return String.format("%s %s %s - %s %s %s", context.getString(R.string.Ms),
+                    namesParent[size - 2], namesParent[size - 1], context.getString(R.string.baby),
+                    namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
+        }
+
     }
 }

@@ -178,7 +178,7 @@ public class ClassFragment extends BaseFragment implements ClassDelegate, View.O
 
         tvClassName.setText(classInfo.getaClass().getName());
 
-        ArrayList<Teacher> teacherArrayList = classInfo.getaClass().getTeacherArrayList();
+        ArrayList<Teacher> teacherArrayList = classInfo.getTeacherArrayList();
         tvName1.setText(teacherArrayList.get(0).getName());
         Glide.with(mContext)
                 .load(teacherArrayList.get(0).getImage())

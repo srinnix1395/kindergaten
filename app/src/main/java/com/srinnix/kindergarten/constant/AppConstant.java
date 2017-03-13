@@ -8,7 +8,8 @@ import com.srinnix.kindergarten.R;
 
 public class AppConstant {
     //API START
-    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+//    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+    public static final String BASE_URL = "http://192.168.0.101:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
@@ -79,4 +80,6 @@ public class AppConstant {
     public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
     public static final String URL_CAMERA = "URL_CAMERA";
 
+    public static final String MALE = "Nam";
+    public static final String FEMALE = "Nữ";
 }

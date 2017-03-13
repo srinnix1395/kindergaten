@@ -1,5 +1,7 @@
 package com.srinnix.kindergarten.schoolboard.helper;
 
+import android.content.Context;
+
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -61,7 +63,7 @@ public class SchoolBoardHelper {
                         }));
     }
 
-    public void getPostSignIn(String token, String idUser, long timePrevPost, PostListener listener) {
+    public void getPostSignIn(Context context, String token, String idUser, long timePrevPost, PostListener listener) {
         mDisposable.add(mApiService.getListPostMember(token, idUser, timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
@@ -86,7 +88,7 @@ public class SchoolBoardHelper {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
                             if (o instanceof Error) {
-                                ErrorUtil.handleErrorApi((Error) o);
+                                ErrorUtil.handleErrorApi(context, (Error) o);
                             } else if (listener != null) {
                                 listener.onSuccess(((ArrayList<Post>) o));
                             }
@@ -98,7 +100,7 @@ public class SchoolBoardHelper {
                         }));
     }
 
-    public void getPostUnsignIn(long timePrevPost, PostListener listener) {
+    public void getPostUnsignIn(Context context, long timePrevPost, PostListener listener) {
         mDisposable.add(mApiService.getListPostGuest(timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
@@ -115,7 +117,7 @@ public class SchoolBoardHelper {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
                     if (o instanceof Error) {
-                        ErrorUtil.handleErrorApi((Error) o);
+                        ErrorUtil.handleErrorApi(context, (Error) o);
                     } else if (listener != null) {
                         listener.onSuccess((ArrayList<Post>) o);
                     }

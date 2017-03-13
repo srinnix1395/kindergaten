@@ -74,7 +74,7 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 		
 		//bind
 		ButterKnife.bind(this, view);
-		
+
 		// get data transfer
 		if (getArguments() != null) {
 			getData();

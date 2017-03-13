@@ -58,6 +58,12 @@ public class DetailChatPresenter extends BasePresenter {
     public void setupDataPresenter(Contact contact) {
         idReceiver = contact.getId();
         idSender = SharedPreUtils.getInstance(mContext).getUserID();
+
+        if (idSender.compareTo(idReceiver) > 0) {
+            conversationID = idSender + idReceiver;
+        } else {
+            conversationID = idReceiver + idSender;
+        }
     }
 
     public void onClickMenuItemInfo() {
@@ -103,12 +109,13 @@ public class DetailChatPresenter extends BasePresenter {
             , ChatAdapter adapter) {
 
         mRealm.beginTransaction();
-        Message chatItem = mRealm.createObject(Message.class);
+        long l = System.currentTimeMillis();
+        Message chatItem = mRealm.createObject(Message.class, String.valueOf(l));
         chatItem.setIdSender(idSender);
         chatItem.setIdReceiver(idReceiver);
         chatItem.setMessage(message);
         chatItem.setStatus(ChatConstant.PENDING);
-        chatItem.setCreatedAt(System.currentTimeMillis());
+        chatItem.setCreatedAt(l);
         mRealm.commitTransaction();
 
         chatItem.setLayoutType(getLayoutType(listMessage, idSender, chatItem.getCreatedAt()));

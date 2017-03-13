@@ -17,9 +17,10 @@ public class ContactTeacher extends Contact {
     @Expose
     private String className;
 
-    public ContactTeacher(String id, String name, String image, String className) {
+    public ContactTeacher(String id, String name, String gender, String image, String className) {
         this.id = id;
         this.name = name;
+        this.gender = gender;
         this.image = image;
         this.className = className;
     }

@@ -34,4 +34,10 @@
     <string name="reset_password">Đặt lại mật khẩu</string>
     <string name="back">Quay lại</string>
     <string name="edu_plan">Kế hoạch giáo dục</string>
+    <string name="Ms">Chị</string>
+    <string name="Mr">Anh</string>
+    <string name="MrTeacher">Thầy</string>
+    <string name="MsTeacher">Cô</string>
+    <string name="baby">Bé</string>
+    <string name="error_msg_101">Email hoặc mật khẩu không chính xác</string>
 </resources>

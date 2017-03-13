@@ -3,11 +3,13 @@ package com.srinnix.kindergarten.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Created by anhtu on 2/21/2017.
  */
 
-public class Child {
+public class Child extends RealmObject{
     @SerializedName("_id")
     @Expose
     private String id;
@@ -43,6 +45,10 @@ public class Child {
     @SerializedName("_id_class")
     @Expose
     private String idClass;
+
+    public Child(){
+//        do nothing
+    }
 
     public Child(String id, String image, String name,String aka, String DOB, String hobby, String characteristic) {
         this.id = id;

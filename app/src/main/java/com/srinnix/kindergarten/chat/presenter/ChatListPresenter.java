@@ -76,7 +76,6 @@ public class ChatListPresenter extends BasePresenter {
 
     public void getContactFromDatabase(Realm realm, ArrayList<Contact> contacts, ChatListAdapter adapter) {
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-
             if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_PARENTS) {
                 getContactTeacher(realm, contacts, adapter);
             } else {
@@ -95,6 +94,8 @@ public class ChatListPresenter extends BasePresenter {
 
                 contactParent.setId(result.getId());
                 contactParent.setName(result.getName());
+                contactParent.setGender(result.getGender());
+                contactParent.setChildren(result.getChildren());
 
                 arrayList.add(contactParent);
             }
@@ -120,6 +121,7 @@ public class ChatListPresenter extends BasePresenter {
 
                 contactTeacher.setId(result.getId());
                 contactTeacher.setName(result.getName());
+                contactTeacher.setGender(result.getGender());
                 contactTeacher.setImage(result.getImage());
                 contactTeacher.setClassName(result.getClassName());
 

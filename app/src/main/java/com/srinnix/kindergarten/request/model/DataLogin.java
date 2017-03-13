@@ -19,7 +19,7 @@ public class DataLogin {
 
     @SerializedName("contact")
     @Expose
-    private ArrayList<Contact> contacts = null;
+    private ArrayList<Contact> contacts;
 
     public User getUser() {
         return user;

@@ -70,7 +70,7 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     private void getPostSignIn(String token, String idUser, long timePrevPost) {
-        mHelper.getPostSignIn(token, idUser, timePrevPost, new SchoolBoardHelper.PostListener() {
+        mHelper.getPostSignIn(mContext, token, idUser, timePrevPost, new SchoolBoardHelper.PostListener() {
             @Override
             public void onSuccess(ArrayList<Post> arrayList) {
                 if (mDelegate != null) {
@@ -86,7 +86,7 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     private void getPostUnsignIn(long timePrevPost) {
-        mHelper.getPostUnsignIn(timePrevPost, new SchoolBoardHelper.PostListener() {
+        mHelper.getPostUnsignIn(mContext, timePrevPost, new SchoolBoardHelper.PostListener() {
             @Override
             public void onSuccess(ArrayList<Post> arrayList) {
                 if (mDelegate != null) {
@@ -180,7 +180,7 @@ public class SchoolBoardPresenter extends BasePresenter {
                         }
                     });
         } else {
-            ErrorUtil.handleErrorApi(response.error);
+            ErrorUtil.handleErrorApi(mContext, response.error);
         }
     }
 

@@ -96,7 +96,7 @@ public class DetailChatHelper {
 
     private Observable<ArrayList<Message>> getMessageDB(Realm realm, String conversationID, long timeFirstMessage) {
         return Observable.fromCallable(() -> realm.where(Message.class)
-                .equalTo("conversationID", conversationID)
+                .equalTo("conversationId", conversationID)
                 .lessThan("created_at", timeFirstMessage)
                 .findAllSorted("created_at", Sort.DESCENDING))
                 .filter(messages -> messages.size() > 0)

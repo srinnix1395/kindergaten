@@ -29,6 +29,10 @@ public class AlertUtils {
         Toast.makeText(context, context.getString(resID), Toast.LENGTH_SHORT).show();
     }
 
+    public static void showToast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
     public static void showDialogToLogin(Context mContext, int resString) {
         AlertDialog dialog = new AlertDialog.Builder(mContext)
                 .setMessage(resString)

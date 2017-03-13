@@ -20,6 +20,10 @@ public class Teacher {
     @Expose
     private String DOB;
 
+    @SerializedName("gender")
+    @Expose
+    private String gender;
+
     @SerializedName("image")
     @Expose
     private String image;
@@ -31,7 +35,6 @@ public class Teacher {
     @SerializedName("_id_class")
     @Expose
     private String classId;
-
 
     public String getId() {
         return id;
@@ -55,5 +58,9 @@ public class Teacher {
 
     public String getClassId() {
         return classId;
+    }
+
+    public String getGender() {
+        return gender;
     }
 }

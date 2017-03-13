@@ -1,7 +1,7 @@
 package com.srinnix.kindergarten.main.activity;
 
 import com.srinnix.kindergarten.base.activity.BaseActivity;
-import com.srinnix.kindergarten.camera.fragment.CameraFragment;
+import com.srinnix.kindergarten.login.fragment.LoginFragment;
 import com.srinnix.kindergarten.util.ViewManager;
 
 /**
@@ -15,6 +15,6 @@ public class MainActivity extends BaseActivity{
         super.initChildView();
 
 //        MainFragment mainFragment = new MainFragment();
-        ViewManager.getInstance().addFragment(new CameraFragment());
+        ViewManager.getInstance().addFragment(new LoginFragment());
     }
 }

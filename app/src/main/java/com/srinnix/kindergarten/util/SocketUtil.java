@@ -38,13 +38,18 @@ public class SocketUtil {
 
     public void connect(Context context) {
         try {
-            mSocket = IO.socket(ChatConstant.SERVER_URL);
+            IO.Options options = new IO.Options();
+            options.query = "token=" + SharedPreUtils.getInstance(context).getToken() +
+                    "&id=" + SharedPreUtils.getInstance(context).getUserID();
+
+            mSocket = IO.socket(ChatConstant.SERVER_URL, options);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        mSocket.on(Socket.EVENT_CONNECT, args -> onConnected(context, mSocket))
+        mSocket.on(Socket.EVENT_CONNECT, args -> onConnected())
                 .on(Socket.EVENT_DISCONNECT, args -> onDisconnect())
                 .on(Socket.EVENT_MESSAGE, this::onMessage)
+                .on(ChatConstant.EVENT_SETUP_CONTACT, this::onSetupContacts)
                 .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully)
                 .on(ChatConstant.EVENT_TYPING, args -> onTyping(args[0]));
         mSocket.connect();
@@ -54,22 +59,8 @@ public class SocketUtil {
         return mSocket != null && mSocket.connected();
     }
 
-    private void onConnected(Context context, Socket socket) {
+    private void onConnected() {
         DebugLog.i("Connected");
-        if (socket == null) {
-            return;
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put(ChatConstant._ID, SharedPreUtils.getInstance(context).getUserID());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        socket.emit(ChatConstant.EVENT_SETUP, jsonObject, (Ack) args -> {
-            DebugLog.i("Setup successfully");
-            setupContacts(args);
-        });
     }
 
     private void onDisconnect() {
@@ -77,10 +68,11 @@ public class SocketUtil {
         EventBus.getDefault().post(new MessageDisconnect());
     }
 
-    private void setupContacts(Object[] args) {
+    private void onSetupContacts(Object[] args) {
+        DebugLog.i("onSetupContacts:" + Thread.currentThread().getName());
+
         Observable.just(((JSONArray) args[0]))
                 .map(jsonArray -> {
-                    DebugLog.i("setupContacts:" + Thread.currentThread().getName());
                     ArrayList<String> arrayList = JsonUtil.parseListContact(args[0]);
                     return new MessageContactStatus(arrayList);
                 })

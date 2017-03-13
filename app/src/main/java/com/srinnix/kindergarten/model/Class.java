@@ -3,8 +3,6 @@ package com.srinnix.kindergarten.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-
 /**
  * Created by Administrator on 2/21/2017.
  */
@@ -17,10 +15,6 @@ public class Class {
     @SerializedName("name")
     @Expose
     private String name;
-
-    @SerializedName("list_teachers")
-    @Expose
-    private ArrayList<Teacher> teacherArrayList;
 
     @SerializedName("number_member")
     @Expose
@@ -36,10 +30,6 @@ public class Class {
 
     public String getName() {
         return name;
-    }
-
-    public ArrayList<Teacher> getTeacherArrayList() {
-        return teacherArrayList;
     }
 
     public int getNumberMember() {

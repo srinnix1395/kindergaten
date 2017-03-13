@@ -31,6 +31,7 @@ public class JsonUtil {
             jsonObject.put(ChatConstant._ID, message.getId());
             jsonObject.put(ChatConstant._ID_SENDER, message.getIdSender());
             jsonObject.put(ChatConstant._ID_RECEIVER, message.getIdReceiver());
+            jsonObject.put(ChatConstant._ID_CONVERSATION, message.getConversationId());
             jsonObject.put(ChatConstant.MESSAGE, message.getMessage());
         } catch (JSONException e) {
             e.printStackTrace();

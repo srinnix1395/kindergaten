@@ -21,6 +21,7 @@ import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
@@ -59,7 +60,7 @@ public class LoginPresenter extends BasePresenter {
         UiUtils.showProgressBar(pbLoading);
         btnLogin.setEnabled(false);
 
-        mLoginHelper.login(email, password, new LoginHelper.LoginListener() {
+        mLoginHelper.login(email, StringUtil.md5(password), new LoginHelper.LoginListener() {
             @Override
             public void onResponseSuccess(ApiResponse<DataLogin> response) {
                 if (response == null) {
@@ -68,7 +69,7 @@ public class LoginPresenter extends BasePresenter {
                 }
 
                 if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(response.error);
+                    ErrorUtil.handleErrorApi(mContext, response.error);
                     return;
                 }
 
@@ -84,6 +85,7 @@ public class LoginPresenter extends BasePresenter {
 
             @Override
             public void onFinally() {
+                btnLogin.setEnabled(true);
                 UiUtils.hideProgressBar(pbLoading);
             }
         });

@@ -6,4 +6,7 @@ package com.srinnix.kindergarten.constant;
 
 public class ErrorConstant {
     public static final String RESPONSE_NULL = "The response is null";
+
+    public static final int ERROR_CODE_101 = 101;
+
 }
