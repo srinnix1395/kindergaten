@@ -14,7 +14,6 @@ public class MainActivity extends BaseActivity{
     protected void initChildView() {
         super.initChildView();
 
-//        MainFragment mainFragment = new MainFragment();
         ViewManager.getInstance().addFragment(new LoginFragment());
     }
 }

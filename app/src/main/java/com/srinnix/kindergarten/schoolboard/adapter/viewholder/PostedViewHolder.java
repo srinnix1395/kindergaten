@@ -13,6 +13,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
+import com.srinnix.kindergarten.util.StringUtil;
 
 import java.util.Locale;
 
@@ -115,14 +116,20 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
 
             if (viewType > PostAdapter.VIEW_TYPE_POSTED_1) {
                 imageViews[1] = (ImageView) view.findViewById(R.id.imageview_2);
+            } else {
+                return;
             }
 
             if (viewType > PostAdapter.VIEW_TYPE_POSTED_2_2) {
                 imageViews[2] = (ImageView) view.findViewById(R.id.imageview_3);
+            } else {
+                return;
             }
 
             if (viewType > PostAdapter.VIEW_TYPE_POSTED_3_2) {
                 imageViews[3] = (ImageView) view.findViewById(R.id.imageview_4);
+            } else {
+                return;
             }
 
             if (viewType > PostAdapter.VIEW_TYPE_POSTED_4_3) {
@@ -147,6 +154,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
             }
         }
         tvContent.setText(post.getContent());
+        tvCreatedAt.setText(StringUtil.getTime(post.getCreatedAt()));
 
         int size = post.getListImage().size();
         for (int i = 0; i < size; i++) {
@@ -154,15 +162,14 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
                 Glide.with(itemView.getContext())
                         .load(post.getListImage().get(i))
                         .into(imageViews[i]);
+            } else {
+                break;
             }
             if (i == 4) {
                 break;
             }
         }
-        if (size <= 5) {
-            tvMoreImage.setVisibility(View.INVISIBLE);
-            tvMoreImage.setText("");
-        } else {
+        if (size > 5) {
             tvMoreImage.setVisibility(View.VISIBLE);
             tvMoreImage.setText(String.format(Locale.getDefault(), "+%d", size - 5));
         }
@@ -177,6 +184,13 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     void onClickLike() {
         if (mLikeListener != null) {
             mLikeListener.onClickLike(id, !userLike);
+        }
+    }
+
+    @OnClick(R.id.textview_number_like)
+    void onClickNumberLike(){
+        if (mLikeListener != null) {
+            mLikeListener.onClickNumberLike(id);
         }
     }
 }

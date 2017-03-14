@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
@@ -122,11 +123,13 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
 
     @Override
     public void loginSuccessfully() {
+        Toast.makeText(mContext, "ok", Toast.LENGTH_SHORT).show();
         //// TODO: 3/3/2017 login successfully
     }
 
     @Override
     public void loginFail() {
+        Toast.makeText(mContext, "fail", Toast.LENGTH_SHORT).show();
         //// TODO: 3/3/2017 login fail when there's no contacts
     }
 

@@ -99,8 +99,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return VIEW_TYPE_LOADING;
         }
 
+        if (((Post) arrPost.get(position)).getListImage() == null) {
+            return VIEW_TYPE_POSTED_0;
+        }
         switch (((Post) arrPost.get(position)).getListImage().size()) {
-            case 0:{
+            case 0: {
                 return VIEW_TYPE_POSTED_0;
             }
             case 1:
@@ -145,5 +148,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface LikeListener {
         void onClickLike(String idPost, boolean isLike);
+
+        void onClickNumberLike(String id);
     }
 }

@@ -10,11 +10,13 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="2dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:scaleType="centerCrop"/>
 
     <ImageView
         android:id="@+id/imageview_2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:scaleType="centerCrop"/>
 </LinearLayout>

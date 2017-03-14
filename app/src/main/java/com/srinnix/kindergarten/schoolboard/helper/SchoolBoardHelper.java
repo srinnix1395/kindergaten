@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.schoolboard.helper;
 
 import android.content.Context;
 
+import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -126,6 +127,27 @@ public class SchoolBoardHelper {
                         listener.onFail(throwable);
                     }
                 }));
+    }
+
+    public void getListNumberLike(String token, String id, NumberLikeListener listener) {
+        mDisposable.add(mApiService.getListNumberLike(token, id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (listener != null) {
+                        listener.onSuccess(response);
+                    }
+                }, throwable -> {
+                    if (listener != null) {
+                        listener.onFail(throwable);
+                    }
+                }));
+    }
+
+    public interface NumberLikeListener {
+        void onSuccess(ApiResponse<LikeModel> response);
+
+        void onFail(Throwable throwable);
     }
 
     public interface LikeListener {

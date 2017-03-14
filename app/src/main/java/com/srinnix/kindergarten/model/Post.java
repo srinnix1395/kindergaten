@@ -18,7 +18,7 @@ public class Post {
     @Expose
     private String content;
 
-    @SerializedName("list_image")
+    @SerializedName("image")
     @Expose
     private ArrayList<String> listImage;
 

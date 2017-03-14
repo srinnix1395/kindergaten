@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -52,12 +53,19 @@ public class SchoolBoardPresenter extends BasePresenter {
             timePrevPost = ((Post) arrayList.get(size - 2)).getCreatedAt();
         }
 
-        if (ServiceUtils.isNetworkAvailable(mContext)) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
             ((LoadingItem) arrayList.get(arrayList.size() - 1)).setLoadingState(LoadingItem.STATE_ERROR);
 
             //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
             rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
             return;
+        }
+
+        if (((LoadingItem) arrayList.get(arrayList.size() - 1)).getLoadingState() == LoadingItem.STATE_ERROR) {
+            ((LoadingItem) arrayList.get(arrayList.size() - 1)).setLoadingState(LoadingItem.STATE_IDLE_AND_LOADING);
+
+            //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
+            rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
         }
 
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
@@ -190,6 +198,27 @@ public class SchoolBoardPresenter extends BasePresenter {
         AlertUtils.showToast(mContext, R.string.commonError);
     }
 
+    public void onClickNumberLike(String id) {
+        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            AlertUtils.showToast(mContext, R.string.login_to_see);
+            //// TODO: 3/13/2017 hieenj man hinhf ddawng nhapaj
+            return;
+        }
+
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+        mHelper.getListNumberLike(token, id, new SchoolBoardHelper.NumberLikeListener() {
+            @Override
+            public void onSuccess(ApiResponse<LikeModel> response) {
+
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
@@ -198,6 +227,6 @@ public class SchoolBoardPresenter extends BasePresenter {
     }
 
     public void refresh() {
-
+        // TODO: 3/13/2017 refesh
     }
 }

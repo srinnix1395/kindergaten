@@ -6,6 +6,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.adapter.TimelineAdapter;
+import com.srinnix.kindergarten.children.delegate.InfoChildrenDelegate;
 import com.srinnix.kindergarten.children.presenter.InfoChildrenPresenter;
 
 import butterknife.BindView;
@@ -15,7 +16,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by anhtu on 2/21/2017.
  */
 
-public class InfoChildrenFragment extends BaseFragment {
+public class InfoChildrenFragment extends BaseFragment implements InfoChildrenDelegate{
     @BindView(R.id.imageview_icon)
     CircleImageView imvIcon;
 

@@ -22,7 +22,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
     public EndlessScrollListener(RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
         positionLoading = POSITION_DOWN;
-        visibleThreshold = 2;
+        visibleThreshold = 1;
     }
 
     public EndlessScrollListener(RecyclerView.LayoutManager layoutManager, int positionLoading, int visibleThreshold) {

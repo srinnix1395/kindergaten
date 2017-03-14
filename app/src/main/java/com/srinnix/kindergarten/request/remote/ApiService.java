@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.request.remote;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Class;
+import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.model.TimeLineChildren;
@@ -79,4 +80,7 @@ public interface ApiService {
     @GET(AppConstant.API_GET_TIMELINE_CHILDREN)
     Observable<ApiResponse<ArrayList<TimeLineChildren>>> getTimelineChildren(@Header("x-access-token") String header,
                                                                              @Query("time") long time);
+
+    Observable<ApiResponse<LikeModel>> getListNumberLike(@Header("x-access-token") String token,
+                                                         @Query("_id_post") String id);
 }

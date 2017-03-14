@@ -28,7 +28,7 @@ public class KinderApplication extends Application {
     }
 
     private void connect() {
-        if (!SharedPreUtils.getInstance(this).isUserSignedIn()) {
+        if (SharedPreUtils.getInstance(this).isUserSignedIn()) {
             getSocketUtil().connect(this);
         }
     }

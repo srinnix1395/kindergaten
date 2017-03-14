@@ -46,6 +46,24 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
 
     @Override
     protected void initChildView() {
+        arrPost = new ArrayList<>();
+        arrPost.add(new LoadingItem());
+
+        postAdapter = new PostAdapter(mContext, arrPost,
+                () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
+                new PostAdapter.LikeListener() {
+                    @Override
+                    public void onClickLike(String idPost, boolean isLike) {
+                        mPresenter.onClickLike(arrPost, idPost, isLike);
+                    }
+
+                    @Override
+                    public void onClickNumberLike(String id) {
+                        mPresenter.onClickNumberLike(id);
+                    }
+                });
+        rvListPost.setAdapter(postAdapter);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvListPost.setLayoutManager(linearLayoutManager);
         rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
@@ -55,14 +73,6 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
                 mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
             }
         });
-
-        arrPost = new ArrayList<>();
-        arrPost.add(new LoadingItem());
-
-        postAdapter = new PostAdapter(mContext, arrPost,
-                () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
-                (idPost, isLike) -> mPresenter.onClickLike(arrPost, idPost, isLike));
-        rvListPost.setAdapter(postAdapter);
 
         refreshLayout.setOnRefreshListener(() -> mPresenter.refresh());
     }
@@ -76,8 +86,12 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
     @Override
     public void updateSchoolBoard(ArrayList<Post> arrayList) {
         int size = arrPost.size();
-        arrPost.addAll(size - 1, arrayList);
-        postAdapter.notifyItemRangeInserted(size - 1, arrayList.size());
+        if (size == 0) {
+            //// TODO: 3/13/2017 khi không còn tin nào
+        } else {
+            arrPost.addAll(size - 1, arrayList);
+            postAdapter.notifyItemRangeInserted(size - 1, arrayList.size());
+        }
     }
 
     @Override

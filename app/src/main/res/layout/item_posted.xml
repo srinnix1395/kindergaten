@@ -6,7 +6,6 @@
                 android:layout_marginBottom="@dimen/margin_vertical_post"
                 android:layout_marginTop="@dimen/margin_vertical_post"
                 android:background="@color/colorWhite"
-                android:paddingBottom="@dimen/padding_post"
                 android:paddingTop="@dimen/padding_post">
 
     <TextView
@@ -17,6 +16,7 @@
         android:layout_marginRight="@dimen/padding_post"
         android:fontFamily="sans-serif-light"
         android:textColor="@color/colorPrimaryText"
+        android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Thông báo"/>
 
@@ -74,14 +74,16 @@
 
     <TextView
         android:id="@+id/textview_number_like"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
         android:layout_below="@+id/view_line"
         android:layout_marginLeft="@dimen/padding_post"
-        android:layout_marginTop="@dimen/margin_vertical_divider_post"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_heart_fill_black"
         android:drawablePadding="@dimen/padding_drawable"
         android:fontFamily="sans-serif-light"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center_vertical"
         android:textStyle="bold"
         tools:text="68 likes"/>
 </RelativeLayout>

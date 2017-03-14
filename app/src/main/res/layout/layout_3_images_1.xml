@@ -9,7 +9,8 @@
     <ImageView
         android:id="@+id/imageview_1"
         android:layout_width="match_parent"
-        android:layout_height="175dp"/>
+        android:layout_height="175dp"
+        android:scaleType="centerCrop"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,13 +22,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="2dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
 
         <ImageView
             android:id="@+id/imageview_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="2dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:scaleType="centerCrop"/>
     </LinearLayout>
 </LinearLayout>

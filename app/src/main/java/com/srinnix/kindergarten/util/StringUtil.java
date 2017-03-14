@@ -10,6 +10,9 @@ import com.srinnix.kindergarten.model.ContactTeacher;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2/16/2017.
@@ -67,5 +70,10 @@ public class StringUtil {
                     namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
         }
 
+    }
+
+    public static String getTime(long createdAt) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault());
+        return dateFormat.format(new Date(createdAt));
     }
 }

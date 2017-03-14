@@ -36,7 +36,7 @@
     <!--chat END-->
 
     <color name="colorGrayIcon">#BDBDBD</color>
-    <color name="colorBackgroundSchoolBoard">#BDBDBD</color>
+    <color name="colorBackground">#ededed</color>
     <color name="colorThumbScrollbar">#59000000</color>
     <color name="colorPrimaryFade">#4D6580d4</color>
 

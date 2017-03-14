@@ -7,16 +7,6 @@
         android:descendantFocusability="beforeDescendants"
         android:orientation="vertical">
 
-    <EditText
-            android:id="@+id/edittext_chatlist_search"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_size"
-            android:background="@null"
-            android:drawableLeft="@drawable/ic_search"
-            android:drawablePadding="@dimen/padding_drawable"
-            android:hint="@string/className"
-            android:paddingLeft="@dimen/padding_horizontal_edittext" />
-
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_chat_list"
             android:layout_width="match_parent"
