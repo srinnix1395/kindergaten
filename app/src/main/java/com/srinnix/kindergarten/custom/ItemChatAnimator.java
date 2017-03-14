@@ -91,7 +91,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
             @Override
             public void onAnimationEnd(View view) {
                 animation.setListener(null);
-                ViewCompat.setY(view, view.getHeight());
+//                ViewCompat.setY(view, view.getHeight());
                 ViewCompat.setAlpha(view, 1);
                 dispatchRemoveFinished(holder);
                 mRemoveAnimations.remove(holder);
@@ -103,7 +103,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
     @Override
     public boolean animateAdd(final ViewHolder holder) {
         resetAnimation(holder);
-        ViewCompat.setY(holder.itemView, holder.itemView.getHeight());
+//        ViewCompat.setY(holder.itemView, holder.itemView.getHeight());
         mPendingAdditions.add(holder);
         return true;
     }
@@ -123,7 +123,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
 
                     @Override
                     public void onAnimationCancel(View view) {
-                        ViewCompat.setY(view, 0);
+//                        ViewCompat.setY(view, 0);
                     }
 
                     @Override
@@ -155,12 +155,12 @@ public class ItemChatAnimator extends SimpleItemAnimator {
         ViewCompat.animate(view).cancel();
         // TODO if some other animations are chained to end, how do we cancel them as well?
         if (mPendingRemovals.remove(item)) {
-            ViewCompat.setY(view, view.getHeight());
+//            ViewCompat.setY(view, view.getHeight());
             ViewCompat.setAlpha(view, 1);
             dispatchRemoveFinished(item);
         }
         if (mPendingAdditions.remove(item)) {
-            ViewCompat.setY(view, 0);
+//            ViewCompat.setY(view, 0);
             ViewCompat.setAlpha(view, 1);
             dispatchAddFinished(item);
         }
@@ -168,7 +168,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
         for (int i = mAdditionsList.size() - 1; i >= 0; i--) {
             ArrayList<ViewHolder> additions = mAdditionsList.get(i);
             if (additions.remove(item)) {
-                ViewCompat.setY(view, 0);
+//                ViewCompat.setY(view, 0);
                 ViewCompat.setAlpha(view, 1);
                 dispatchAddFinished(item);
                 if (additions.isEmpty()) {
@@ -230,7 +230,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
         for (int i = count - 1; i >= 0; i--) {
             ViewHolder item = mPendingAdditions.get(i);
             View view = item.itemView;
-            ViewCompat.setY(view, 0);
+//            ViewCompat.setY(view, 0);
             ViewCompat.setAlpha(view, 1);
             dispatchAddFinished(item);
             mPendingAdditions.remove(i);
@@ -246,7 +246,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
             for (int j = count - 1; j >= 0; j--) {
                 ViewHolder item = additions.get(j);
                 View view = item.itemView;
-                ViewCompat.setY(view, 0);
+//                ViewCompat.setY(view, 0);
                 ViewCompat.setAlpha(view, 1);
                 dispatchAddFinished(item);
                 additions.remove(j);
