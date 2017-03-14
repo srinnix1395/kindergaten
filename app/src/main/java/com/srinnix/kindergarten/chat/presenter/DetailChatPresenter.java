@@ -8,11 +8,10 @@ import android.widget.ImageView;
 import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
+import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.helper.DetailChatHelper;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Contact;
-import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
@@ -34,20 +33,22 @@ public class DetailChatPresenter extends BasePresenter {
     private String idSender;
     private String idReceiver;
     private String conversationID;
-    private PublishSubject mSubject;
+    private PublishSubject<Boolean> mSubject;
     private boolean isUserTyping;
 
     private DetailChatHelper mHelper;
     private Realm mRealm;
     private CompositeDisposable mDisposable;
+    private DetailChatDelegate mDetailChatDelegate;
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
+        mDetailChatDelegate = (DetailChatDelegate) mDelegate;
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
         mDisposable = new CompositeDisposable();
 
         mSubject = PublishSubject.create();
-        mDisposable.add(mSubject.doOnNext(o -> isUserTyping = false)
+        mDisposable.add(mSubject.doOnNext(aBoolean -> isUserTyping = false)
                 .debounce(5, TimeUnit.SECONDS)
                 .subscribe(o -> mSocketUtil.sendStatusTyping(idSender, idReceiver, false)));
 
@@ -89,7 +90,7 @@ public class DetailChatPresenter extends BasePresenter {
                     isUserTyping = true;
                     mSocketUtil.sendStatusTyping(idSender, idReceiver, true);
                 }
-                mSubject.onNext(null);
+                mSubject.onNext(false);
             }
         });
     }
@@ -105,8 +106,7 @@ public class DetailChatPresenter extends BasePresenter {
         }
     }
 
-    public void onClickSend(String message, ArrayList<Object> listMessage
-            , ChatAdapter adapter) {
+    public void onClickSend(String message, ArrayList<Object> listMessage) {
 
         mRealm.beginTransaction();
         long l = System.currentTimeMillis();
@@ -119,23 +119,24 @@ public class DetailChatPresenter extends BasePresenter {
         mRealm.commitTransaction();
 
         chatItem.setLayoutType(getLayoutType(listMessage, idSender, chatItem.getCreatedAt()));
-        listMessage.add(chatItem);
-        adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
+        if (mDetailChatDelegate != null) {
+            mDetailChatDelegate.addMessageLast(chatItem);
+        }
 
         KinderApplication.getInstance().getSocketUtil().sendMessage(chatItem);
     }
 
-    public void onMessage(Message message, ArrayList<Object> listMessage, ChatAdapter adapter) {
+    public void onMessage(Message message, ArrayList<Object> listMessage) {
         if (message.getIdSender().equals(idReceiver)) {
             message.setLayoutType(getLayoutType(listMessage, message.getIdSender(), message.getCreatedAt()));
 
-            listMessage.add(message);
-            adapter.notifyItemRangeChanged(listMessage.size() - 2, 2);
+            if (mDetailChatDelegate != null) {
+                mDetailChatDelegate.addMessageLast(message);
+            }
         }
     }
 
-    public void onServerReceived(Message data, String id, ArrayList<Object> listMessage
-            , ChatAdapter adapter) {
+    public void onServerReceived(Message data, String id, ArrayList<Object> listMessage) {
 
         if (data.getIdSender().equals(idReceiver)) {
             int i;
@@ -150,11 +151,13 @@ public class DetailChatPresenter extends BasePresenter {
                     break;
                 }
             }
-            adapter.notifyItemChanged(i);
+            if (mDetailChatDelegate != null) {
+                mDetailChatDelegate.changeMessage(i);
+            }
         }
     }
 
-    public void onFriendReceived(Message data, ArrayList<Object> listMessage, ChatAdapter adapter) {
+    public void onFriendReceived(Message data, ArrayList<Object> listMessage) {
         if (data.getIdSender().equals(idReceiver)) {
             int i;
             for (i = listMessage.size() - 1; i >= 0; i--) {
@@ -165,7 +168,9 @@ public class DetailChatPresenter extends BasePresenter {
                 }
             }
 
-            adapter.notifyItemChanged(i);
+            if (mDetailChatDelegate != null) {
+                mDetailChatDelegate.changeMessage(i);
+            }
         }
     }
 
@@ -197,44 +202,49 @@ public class DetailChatPresenter extends BasePresenter {
         return ChatConstant.LAST;
     }
 
-    public void onLoadMore(ArrayList<Object> listMessage, ChatAdapter adapter) {
+    public void onLoadMore(ArrayList<Object> listMessage) {
         Realm realm = KinderApplication.getInstance().getRealm();
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
         mHelper.getPreviousMessage(realm, conversationID, listMessage, token, new DetailChatHelper.DetailChatHelperListener() {
             @Override
             public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
-                listMessage.addAll(1, arrayList);
-                adapter.notifyItemRangeInserted(1, arrayList.size());
+                if (mDetailChatDelegate != null) {
+                    mDetailChatDelegate.addAllMessage(arrayList, 1);
+                }
             }
 
             @Override
             public void onLoadMessageFail(Throwable throwable) {
-                ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
-                adapter.notifyItemChanged(0);
+                if (mDetailChatDelegate != null) {
+                    mDetailChatDelegate.loadMessageFail();
+                }
             }
         });
     }
 
-    public void onFriendTyping(Message message, ArrayList<Object> listMessage, ChatAdapter adapter) {
+    public void onFriendTyping(Message message, ArrayList<Object> listMessage) {
         if (message.getIdSender().equals(idReceiver)) {
             if (!listMessage.isEmpty()) {
                 Object o = listMessage.get(listMessage.size() - 1);
                 if (message.isTypingMessage()) {
                     if (o instanceof Message && !(((Message) o).isTypingMessage())) {
-                        listMessage.add(message);
-                        adapter.notifyItemInserted(listMessage.size() - 1);
+                        if (mDetailChatDelegate != null) {
+                            mDetailChatDelegate.addMessageLast(message, listMessage.size() - 1);
+                        }
                     }
                 } else {
                     if (o instanceof Message && ((Message) o).isTypingMessage()) {
-                        listMessage.remove(listMessage.size() - 1);
-                        adapter.notifyItemRemoved(listMessage.size());
+                        if (mDetailChatDelegate != null) {
+                            mDetailChatDelegate.removeMessage(listMessage.size()-1);
+                        }
                     }
                 }
             } else {
                 if (message.isTypingMessage()) {
-                    listMessage.add(message);
-                    adapter.notifyItemInserted(0);
+                    if (mDetailChatDelegate != null) {
+                        mDetailChatDelegate.addMessageLast(message, listMessage.size() - 1);
+                    }
                 }
             }
         }
