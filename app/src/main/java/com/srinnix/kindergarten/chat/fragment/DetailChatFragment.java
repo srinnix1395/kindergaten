@@ -15,9 +15,11 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
+import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.custom.ItemChatAnimator;
 import com.srinnix.kindergarten.custom.EndlessScrollListener;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
@@ -40,7 +42,7 @@ import butterknife.OnClick;
  * Created by DELL on 2/9/2017.
  */
 
-public class DetailChatFragment extends BaseFragment {
+public class DetailChatFragment extends BaseFragment implements DetailChatDelegate {
     @BindView(R.id.recyclerview_detailchat)
     RecyclerView rvChat;
 
@@ -79,7 +81,7 @@ public class DetailChatFragment extends BaseFragment {
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> {
             UiUtils.hideKeyboard(getActivity());
-            getActivity().finish();
+            onBackPressed();
         });
 
         listMessage = new ArrayList<>();
@@ -135,20 +137,19 @@ public class DetailChatFragment extends BaseFragment {
         listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafsd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE));
         listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafsd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE, true));
 
-        adapter = new ChatAdapter(mContext, listMessage, () -> {
-//            mPresenter.onLoadMore(listMessage, adapter);
-        });
+        rvChat.setItemAnimator(new ItemChatAnimator());
+        adapter = new ChatAdapter(mContext, listMessage, () -> mPresenter.onLoadMore(listMessage));
+        rvChat.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         rvChat.addOnScrollListener(new EndlessScrollListener(layoutManager
                 , EndlessScrollListener.POSITION_UP, ChatConstant.ITEM_MESSAGE_PER_PAGE) {
             @Override
             public void onLoadMore() {
-                mPresenter.onLoadMore(listMessage, adapter);
+                mPresenter.onLoadMore(listMessage);
             }
         });
         rvChat.setLayoutManager(layoutManager);
-        rvChat.setAdapter(adapter);
 
         mPresenter.setupTextChange(etMessage, imvSend);
     }
@@ -174,26 +175,64 @@ public class DetailChatFragment extends BaseFragment {
     @OnClick(R.id.imageview_send)
     void onClickSend() {
         mPresenter.onClickSend(etMessage.getText().toString(),
-                listMessage, adapter);
+                listMessage);
     }
 
     @Subscribe
     public void onMessageIncoming(MessageChat message) {
-        mPresenter.onMessage(message.message, listMessage, adapter);
+        mPresenter.onMessage(message.message, listMessage);
     }
 
     @Subscribe
     public void onServerReceied(MessageServerReceived message) {
-        mPresenter.onServerReceived(message.data, message.id, listMessage, adapter);
+        mPresenter.onServerReceived(message.data, message.id, listMessage);
     }
 
     @Subscribe
     public void onFriendReceived(MessageFriendReceived message) {
-        mPresenter.onFriendReceived(message.data, listMessage, adapter);
+        mPresenter.onFriendReceived(message.data, listMessage);
     }
 
     @Subscribe
     public void onFriendTyping(MessageTyping message) {
-        mPresenter.onFriendTyping(message.mMessage, listMessage, adapter);
+        mPresenter.onFriendTyping(message.mMessage, listMessage);
+    }
+
+    @Override
+    public void addMessageLast(Message message) {
+        listMessage.add(message);
+        adapter.notifyItemChanged(listMessage.size() - 2);
+        adapter.notifyItemInserted(listMessage.size() - 1);
+    }
+
+    @Override
+    public void changeMessage(int position) {
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void addAllMessage(ArrayList<Object> arrayList, int position) {
+        listMessage.addAll(position, arrayList);
+        adapter.notifyItemRangeInserted(position, arrayList.size());
+        rvChat.scrollToPosition(listMessage.size() - 1);
+    }
+
+    @Override
+    public void loadMessageFail() {
+        ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
+        adapter.notifyItemChanged(0);
+    }
+
+    @Override
+    public void addMessageLast(Message message, int position) {
+        listMessage.add(message);
+        adapter.notifyItemInserted(position);
+        rvChat.scrollToPosition(position);
+    }
+
+    @Override
+    public void removeMessage(int position) {
+        listMessage.remove(position);
+        adapter.notifyItemRemoved(position);
     }
 }
