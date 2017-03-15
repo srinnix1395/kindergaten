@@ -15,7 +15,7 @@ import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.login.fragment.ForgetPasswordFragment;
 import com.srinnix.kindergarten.login.helper.LoginHelper;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.request.model.DataLogin;
+import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -62,7 +62,7 @@ public class LoginPresenter extends BasePresenter {
 
         mLoginHelper.login(email, StringUtil.md5(password), new LoginHelper.LoginListener() {
             @Override
-            public void onResponseSuccess(ApiResponse<DataLogin> response) {
+            public void onResponseSuccess(ApiResponse<LoginResponse> response) {
                 if (response == null) {
                     DebugLog.e(ErrorConstant.RESPONSE_NULL);
                     return;

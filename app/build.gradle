@@ -14,7 +14,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -70,10 +69,6 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.2.0'
 
     compile 'de.hdodenhof:circleimageview:2.1.0'
-
-    compile 'org.parceler:parceler:1.1.6'
-
-    compile 'com.android.support:multidex:1.0.1'
 
 }
 

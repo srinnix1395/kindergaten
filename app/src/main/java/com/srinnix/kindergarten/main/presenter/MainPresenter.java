@@ -5,8 +5,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -40,6 +42,10 @@ public class MainPresenter extends BasePresenter {
     }
 
     public void onClickMenuItemChat(DrawerLayout drawerLayout) {
+        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            Toast.makeText(mContext, R.string.login_to_chat, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (!drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             drawerLayout.openDrawer(Gravity.RIGHT);
         }
@@ -82,5 +88,11 @@ public class MainPresenter extends BasePresenter {
 
     public void signOut() {
 
+    }
+
+    public void setupDrawerLayout(DrawerLayout mDrawer) {
+        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
     }
 }

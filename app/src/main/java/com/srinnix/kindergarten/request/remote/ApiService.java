@@ -9,8 +9,8 @@ import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.model.TimeLineChildren;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.DataLogin;
 import com.srinnix.kindergarten.request.model.LikeResponse;
+import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
 
 import java.util.ArrayList;
@@ -30,8 +30,8 @@ import retrofit2.http.Query;
 public interface ApiService {
     @POST(AppConstant.API_LOGIN)
     @FormUrlEncoded
-    Observable<ApiResponse<DataLogin>> login(@Field("email") String email,
-                                             @Field("password") String password);
+    Observable<ApiResponse<LoginResponse>> login(@Field("email") String email,
+                                                 @Field("password") String password);
 
     //POST START
     @GET(AppConstant.API_GET_POST_MEMBER)

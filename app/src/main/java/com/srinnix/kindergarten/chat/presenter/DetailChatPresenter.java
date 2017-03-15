@@ -151,7 +151,7 @@ public class DetailChatPresenter extends BasePresenter {
                     break;
                 }
             }
-            if (mDetailChatDelegate != null) {
+            if (mDetailChatDelegate != null && i >= 0) {
                 mDetailChatDelegate.changeMessage(i);
             }
         }
@@ -168,7 +168,7 @@ public class DetailChatPresenter extends BasePresenter {
                 }
             }
 
-            if (mDetailChatDelegate != null) {
+            if (mDetailChatDelegate != null && i >= 0) {
                 mDetailChatDelegate.changeMessage(i);
             }
         }
@@ -236,7 +236,7 @@ public class DetailChatPresenter extends BasePresenter {
                 } else {
                     if (o instanceof Message && ((Message) o).isTypingMessage()) {
                         if (mDetailChatDelegate != null) {
-                            mDetailChatDelegate.removeMessage(listMessage.size()-1);
+                            mDetailChatDelegate.removeMessage(listMessage.size() - 1);
                         }
                     }
                 }

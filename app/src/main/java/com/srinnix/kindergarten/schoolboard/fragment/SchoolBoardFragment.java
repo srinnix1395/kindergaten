@@ -70,7 +70,7 @@ public class SchoolBoardFragment extends BaseFragment implements SchoolBoardDele
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
-                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
+//                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
             }
         });
 

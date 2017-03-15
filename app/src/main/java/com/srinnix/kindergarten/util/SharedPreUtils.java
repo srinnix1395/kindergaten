@@ -92,6 +92,9 @@ public class SharedPreUtils {
         editor.putString(AppConstant.EMAIL, user.getEmail());
         editor.putString(AppConstant.NAME, user.getName());
         editor.putInt(AppConstant.USER_TYPE, user.getAccountType());
+        if (user.getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
+            editor.putString(AppConstant._ID_CLASS, user.getIdClass());
+        }
         editor.putString(AppConstant.TOKEN, user.getToken());
         editor.apply();
     }
@@ -104,6 +107,9 @@ public class SharedPreUtils {
         editor.remove(AppConstant.NAME);
         editor.remove(AppConstant.USER_TYPE);
         editor.remove(AppConstant.TOKEN);
+        if (sharedPreferences.contains(AppConstant._ID_CLASS)) {
+            editor.remove(AppConstant._ID_CLASS);
+        }
         editor.apply();
     }
 

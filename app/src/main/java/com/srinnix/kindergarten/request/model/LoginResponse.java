@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by anhtu on 2/23/2017.
  */
 
-public class DataLogin {
+public class LoginResponse {
 
     @SerializedName("info")
     @Expose

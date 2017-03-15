@@ -28,6 +28,10 @@ public class User {
     @Expose
     private String idSchool;
 
+    @SerializedName("_id_class")
+    @Expose
+    private String idClass;
+
     @SerializedName("token")
     @Expose
     private String token;
@@ -87,5 +91,13 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getIdClass() {
+        return idClass;
+    }
+
+    public void setIdClass(String idClass) {
+        this.idClass = idClass;
     }
 }

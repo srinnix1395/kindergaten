@@ -44,6 +44,9 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.layout_image)
     LinearLayout layoutImage;
 
+    @BindView(R.id.view_line)
+    View viewLine;
+
     ImageView[] imageViews;
     TextView tvMoreImage;
 
@@ -61,6 +64,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     private void inflateLayout(int viewType) {
         if (viewType == PostAdapter.VIEW_TYPE_POSTED_0) {
             layoutImage.setVisibility(View.INVISIBLE);
+            viewLine.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -161,6 +165,8 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
             if (imageViews[i] != null) {
                 Glide.with(itemView.getContext())
                         .load(post.getListImage().get(i))
+                        .placeholder(R.drawable.dummy_image)
+                        .error(R.drawable.dummy_image)
                         .into(imageViews[i]);
             } else {
                 break;

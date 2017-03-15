@@ -7,6 +7,8 @@ import com.srinnix.kindergarten.R;
  */
 
 public class AppConstant {
+    public static final String APP_NAME = "KINDERGARTEN";
+
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
     public static final String BASE_URL = "http://192.168.0.102:8080/";
@@ -61,8 +63,8 @@ public class AppConstant {
     public static final String NAME = "NAME";
     public static final String USER_TYPE = "USER_TYPE";
     public static final String TOKEN = "TOKEN";
+    public static final String _ID_CLASS = "_ID_CLASS";
 
-    public static final String KEY_NAME_CONVERSATION = "KEY_NAME_CONVERSATION";
     public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 
     //post type

@@ -26,9 +26,8 @@ public class ContactTeacher extends Contact {
     }
 
     public ContactTeacher() {
-        //do nothing
-    }
 
+    }
 
     public String getImage() {
         return image;

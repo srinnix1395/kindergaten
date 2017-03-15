@@ -2,10 +2,12 @@ package com.srinnix.kindergarten;
 
 import android.app.Application;
 
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 /**
@@ -37,17 +39,22 @@ public class KinderApplication extends Application {
         return mInstance;
     }
 
-    public SocketUtil getSocketUtil(){
+    public SocketUtil getSocketUtil() {
         if (socketUtil == null) {
             socketUtil = new SocketUtil();
         }
         return socketUtil;
     }
 
-    public Realm getRealm(){
+    public Realm getRealm() {
         if (realm == null) {
             Realm.init(this);
-            realm = Realm.getDefaultInstance();
+            RealmConfiguration config2 = new RealmConfiguration.Builder()
+                    .name(AppConstant.APP_NAME)
+                    .schemaVersion(3)
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+            realm = Realm.getInstance(config2);
         }
         return realm;
     }

@@ -47,15 +47,12 @@ public class ItemChatAnimator extends SimpleItemAnimator {
             additions.addAll(mPendingAdditions);
             mAdditionsList.add(additions);
             mPendingAdditions.clear();
-            Runnable adder = new Runnable() {
-                @Override
-                public void run() {
-                    for (ViewHolder holder : additions) {
-                        animateAddImpl(holder);
-                    }
-                    additions.clear();
-                    mAdditionsList.remove(additions);
+            Runnable adder = () -> {
+                for (ViewHolder holder : additions) {
+                    animateAddImpl(holder);
                 }
+                additions.clear();
+                mAdditionsList.remove(additions);
             };
             if (removalsPending) {
                 long removeDuration = removalsPending ? getRemoveDuration() : 0;

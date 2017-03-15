@@ -58,6 +58,7 @@ public class SchoolBoardPresenter extends BasePresenter {
 
             //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
             rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
+            AlertUtils.showSnackBarNoInternet(rvListPost);
             return;
         }
 

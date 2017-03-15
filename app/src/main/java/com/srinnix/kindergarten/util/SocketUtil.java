@@ -39,8 +39,11 @@ public class SocketUtil {
     public void connect(Context context) {
         try {
             IO.Options options = new IO.Options();
-            options.query = "token=" + SharedPreUtils.getInstance(context).getToken() +
-                    "&id=" + SharedPreUtils.getInstance(context).getUserID();
+
+            SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(context);
+            options.query = "token=" + sharedPreUtils.getToken() +
+                    "&id=" + sharedPreUtils.getUserID() +
+                    "&account_type=" + sharedPreUtils.getAccountType();
 
             mSocket = IO.socket(ChatConstant.SERVER_URL, options);
         } catch (URISyntaxException e) {
@@ -69,7 +72,7 @@ public class SocketUtil {
     }
 
     private void onSetupContacts(Object[] args) {
-        DebugLog.i("onSetupContacts:" + Thread.currentThread().getName());
+        DebugLog.i("onSetupContacts");
 
         Observable.just(((JSONArray) args[0]))
                 .map(jsonArray -> {

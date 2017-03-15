@@ -42,7 +42,7 @@ public class MainFragment extends BaseFragment {
     ViewPager viewPager;
 
     @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
+    DrawerLayout mDrawer;
 
     private SchoolBoardFragment schoolBoardFragment;
     private MainAdapter adapter;
@@ -107,6 +107,7 @@ public class MainFragment extends BaseFragment {
 
             }
         });
+        mPresenter.setupDrawerLayout(mDrawer);
     }
 
     private void onMenuItemItemSelected(MenuItem item) {
@@ -124,7 +125,7 @@ public class MainFragment extends BaseFragment {
                 break;
             }
             case R.id.menu_item_chat: {
-                mPresenter.onClickMenuItemChat(drawerLayout);
+                mPresenter.onClickMenuItemChat(mDrawer);
                 break;
             }
             case R.id.menu_item_setting: {
@@ -153,6 +154,6 @@ public class MainFragment extends BaseFragment {
     }
 
     public void onBackPressed() {
-        mPresenter.onBackPressed(this, drawerLayout, viewPager);
+        mPresenter.onBackPressed(this, mDrawer, viewPager);
     }
 }

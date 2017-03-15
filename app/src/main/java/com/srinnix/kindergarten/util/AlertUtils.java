@@ -3,7 +3,6 @@ package com.srinnix.kindergarten.util;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Toast;
@@ -19,10 +18,9 @@ public class AlertUtils {
 
     public static void showSnackBarNoInternet(View view) {
         final Snackbar snackbar = Snackbar.make(view, R.string.noInternetConnection, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.close, v -> snackbar.dismiss());
-        snackbar.setActionTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
+//        snackbar.setAction(R.string.close, v -> snackbar.dismiss());
+//        snackbar.setActionTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
         snackbar.show();
-        //// TODO: 2/3/2017 snackbar
     }
 
     public static void showToast(Context context, int resID) {

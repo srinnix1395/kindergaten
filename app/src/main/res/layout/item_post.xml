@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_line"
         android:layout_marginTop="@dimen/margin_vertical_divider_post"
-        android:drawableLeft="@drawable/ic_heart_fill_black"
+        android:drawableLeft="@drawable/ic_heart_fill_gray"
         android:drawablePadding="@dimen/padding_drawable"
         android:fontFamily="sans-serif-light"
         android:textStyle="bold"

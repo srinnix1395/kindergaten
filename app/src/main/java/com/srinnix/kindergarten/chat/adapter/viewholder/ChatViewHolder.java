@@ -16,15 +16,13 @@ import com.srinnix.kindergarten.util.StringUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by DELL on 2/6/2017.
  */
 
 public class ChatViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.imageview_icon)
-    CircleImageView imvIcon;
+    ImageView imvIcon;
 
     @BindView(R.id.text_view_name)
     TextView tvName;
@@ -37,6 +35,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     public ChatViewHolder(View itemView, ChatListAdapter.OnClickItemChatListener onClickItemChatListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        imvIcon = (ImageView) itemView.findViewById(R.id.imageview_icon);
         itemView.setOnClickListener(view -> {
             if (onClickItemChatListener != null) {
                 onClickItemChatListener.onClick(position);
@@ -71,6 +70,8 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         if (contact instanceof ContactTeacher) {
             Glide.with(itemView.getContext())
                     .load(((ContactTeacher) contact).getImage())
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.image_teacher)
                     .error(R.drawable.image_teacher)
                     .into(imvIcon);
             tvName.setText(StringUtil.getNameContactTeacher(itemView.getContext(),
@@ -78,6 +79,8 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         } else {
             Glide.with(itemView.getContext())
                     .load(((ContactParent) contact).getChildren().get(0).getImage())
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.image_parent)
                     .error(R.drawable.image_parent)
                     .into(imvIcon);
             tvName.setText(StringUtil.getNameContactParent(itemView.getContext(),

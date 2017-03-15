@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
@@ -19,8 +20,8 @@ import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.custom.ItemChatAnimator;
 import com.srinnix.kindergarten.custom.EndlessScrollListener;
+import com.srinnix.kindergarten.custom.ItemChatAnimator;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
@@ -31,7 +32,6 @@ import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.Subscribe;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -55,6 +55,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     @BindView(R.id.imageview_send)
     ImageView imvSend;
 
+    @BindView(R.id.progressbar_loading)
+    ProgressBar pbLoading;
+
     private DetailChatPresenter mPresenter;
     private ChatAdapter adapter;
     private ArrayList<Object> listMessage;
@@ -70,7 +73,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     protected void getData() {
         super.getData();
         Bundle bundle = getArguments();
-        contact = Parcels.unwrap(bundle.getParcelable(AppConstant.KEY_INFO));
+        contact = bundle.getParcelable(AppConstant.KEY_INFO);
         mPresenter.setupDataPresenter(contact);
     }
 
@@ -85,57 +88,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         });
 
         listMessage = new ArrayList<>();
-        listMessage.add(new LoadingItem());
-        listMessage.add(new Message("dà", "-1", "3", "xin chàsadfffffffffffsdafsdafsdafsdafsdao", 234234234, ChatConstant.SERVER_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("dà", "-1", "3", "xin chàsadfffffffffffsdafsdafsdafsdafsdao", 234234234, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("dà", "-1", "3", "xin chàsadfffffffffffsdafsdafsdafsdafsdao", 234234234, ChatConstant.PENDING, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.PENDING, ChatConstant.MIDDLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad ", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.LAST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệtsa dsa d", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sadf sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sad", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt sad sda", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.FIRST));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.HANDLE_COMPLETE, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafasd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệt", 234234324, ChatConstant.FRIEND_RECEIVED, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafsd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE));
-        listMessage.add(new Message("á", "3", "-1", "tạm biệtsdafsd", 234234324, ChatConstant.PENDING, ChatConstant.SINGLE, true));
 
         rvChat.setItemAnimator(new ItemChatAnimator());
         adapter = new ChatAdapter(mContext, listMessage, () -> mPresenter.onLoadMore(listMessage));

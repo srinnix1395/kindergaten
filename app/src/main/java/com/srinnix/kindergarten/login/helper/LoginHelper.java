@@ -9,7 +9,7 @@ import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.request.model.DataLogin;
+import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,13 +63,13 @@ public class LoginHelper {
 
             if (arrayList.get(0) instanceof ContactTeacher) {
                 for (Contact contact : arrayList) {
-                    ContactTeacherRealm c = realm12.createObject(ContactTeacherRealm.class, contact.getId());
-                    c.bindData(((ContactTeacher) contact));
+                    ContactTeacherRealm c = new ContactTeacherRealm((ContactTeacher) contact);
+                    realm12.copyToRealmOrUpdate(c);
                 }
             } else {
                 for (Contact contact : arrayList) {
-                    ContactParentRealm c = realm12.createObject(ContactParentRealm.class, contact.getId());
-                    c.bindData(((ContactParent) contact));
+                    ContactParentRealm c = new ContactParentRealm(((ContactParent) contact));
+                    realm12.copyToRealmOrUpdate(c);
                 }
             }
         }, () -> {
@@ -80,7 +80,7 @@ public class LoginHelper {
 
     public interface LoginListener {
 
-        void onResponseSuccess(ApiResponse<DataLogin> dataLogin);
+        void onResponseSuccess(ApiResponse<LoginResponse> dataLogin);
 
         void onResponseFail(Throwable throwable);
 

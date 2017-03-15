@@ -18,6 +18,16 @@ public class ContactTeacherRealm extends RealmObject {
     private String image;
     private String className;
 
+    public ContactTeacherRealm() {
+    }
+
+    public ContactTeacherRealm(ContactTeacher contact) {
+        id = contact.getId();
+        name = contact.getName();
+        gender = contact.getGender();
+        image = contact.getImage();
+        className = contact.getClassName();
+    }
 
     public String getId() {
         return id;
@@ -39,10 +49,4 @@ public class ContactTeacherRealm extends RealmObject {
         return className;
     }
 
-    public void bindData(ContactTeacher contact) {
-        name = contact.getName();
-        gender = contact.getGender();
-        image = contact.getImage();
-        className = contact.getClassName();
-    }
 }
