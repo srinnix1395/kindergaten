@@ -17,15 +17,17 @@ import java.util.ArrayList;
 
 public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
     private ArrayList<Class> mArrayList;
+    private OnClickClassItemListener mItemListener;
 
-    public ClassAdapter(ArrayList<Class> arrayList) {
+    public ClassAdapter(ArrayList<Class> arrayList, OnClickClassItemListener itemListener) {
         mArrayList = arrayList;
+        mItemListener = itemListener;
     }
 
     @Override
     public ClassViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class, parent, false);
-        return new ClassViewHolder(view);
+        return new ClassViewHolder(view, mItemListener);
     }
 
     @Override
@@ -36,5 +38,9 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
     @Override
     public int getItemCount() {
         return mArrayList.size();
+    }
+
+    public interface OnClickClassItemListener {
+        void onClick(int position);
     }
 }

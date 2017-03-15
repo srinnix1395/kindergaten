@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.clazz.adapter.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -11,7 +12,6 @@ import com.srinnix.kindergarten.model.Child;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by anhtu on 3/2/2017.
@@ -19,7 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChildrenGridViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_icon)
-    CircleImageView imvIcon;
+    ImageView imvIcon;
 
     @BindView(R.id.textview_name)
     TextView tvName;

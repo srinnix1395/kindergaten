@@ -1,16 +1,20 @@
 package com.srinnix.kindergarten.chat.fragment;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
@@ -58,6 +62,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
 
+    @BindView(R.id.textview_error)
+    TextView tvError;
+
     private DetailChatPresenter mPresenter;
     private ChatAdapter adapter;
     private ArrayList<Object> listMessage;
@@ -89,6 +96,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         listMessage = new ArrayList<>();
 
+        rvChat.setVisibility(View.INVISIBLE);
         rvChat.setItemAnimator(new ItemChatAnimator());
         adapter = new ChatAdapter(mContext, listMessage, () -> mPresenter.onLoadMore(listMessage));
         rvChat.setAdapter(adapter);
@@ -104,6 +112,10 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         rvChat.setLayoutManager(layoutManager);
 
         mPresenter.setupTextChange(etMessage, imvSend);
+
+        pbLoading.getIndeterminateDrawable().setColorFilter(
+                ContextCompat.getColor(mContext, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -126,8 +138,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
     @OnClick(R.id.imageview_send)
     void onClickSend() {
-        mPresenter.onClickSend(etMessage.getText().toString(),
-                listMessage);
+        mPresenter.onClickSend(etMessage.getText().toString(), listMessage);
     }
 
     @Subscribe
@@ -150,12 +161,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onFriendTyping(message.mMessage, listMessage);
     }
 
-    @Override
-    public void addMessageLast(Message message) {
-        listMessage.add(message);
-        adapter.notifyItemChanged(listMessage.size() - 2);
-        adapter.notifyItemInserted(listMessage.size() - 1);
-    }
 
     @Override
     public void changeMessage(int position) {
@@ -163,16 +168,49 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     @Override
-    public void addAllMessage(ArrayList<Object> arrayList, int position) {
-        listMessage.addAll(position, arrayList);
-        adapter.notifyItemRangeInserted(position, arrayList.size());
-        rvChat.scrollToPosition(listMessage.size() - 1);
+    public void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst) {
+        if (arrayList.size() == ChatConstant.ITEM_MESSAGE_PER_PAGE) {
+            if (!(listMessage.get(0) instanceof LoadingItem)) {
+                listMessage.add(new LoadingItem());
+                adapter.notifyItemInserted(0);
+            }
+            listMessage.addAll(1, arrayList);
+            adapter.notifyItemRangeInserted(1, arrayList.size());
+        } else {
+            if ((listMessage.get(0) instanceof LoadingItem)) {
+                listMessage.remove(0);
+                adapter.notifyItemRemoved(0);
+            }
+            listMessage.addAll(0, arrayList);
+            adapter.notifyItemRangeInserted(0, arrayList.size());
+        }
+
+        if (isLoadingDataFirst) {
+            UiUtils.hideProgressBar(pbLoading);
+            rvChat.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
-    public void loadMessageFail() {
-        ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
-        adapter.notifyItemChanged(0);
+    public void loadMessageFail(boolean isLoadingDataFirst) {
+        if (isLoadingDataFirst) {
+            UiUtils.hideProgressBar(pbLoading);
+            tvError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (listMessage.get(0) instanceof LoadingItem) {
+            ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
+            adapter.notifyItemChanged(0);
+        }
+    }
+
+    @Override
+    public void addMessageLast(Message message) {
+        listMessage.add(message);
+        adapter.notifyItemChanged(listMessage.size() - 2);
+        adapter.notifyItemInserted(listMessage.size() - 1);
+        rvChat.scrollToPosition(listMessage.size() - 1);
     }
 
     @Override

@@ -9,10 +9,12 @@
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
         android:layout_centerInParent="true"
+        android:padding="8dp"
         android:src="@drawable/btn_loading"
         android:visibility="visible"/>
 
     <ProgressBar
+        android:padding="4.5dp"
         android:id="@+id/progressbar_itemloading"
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"

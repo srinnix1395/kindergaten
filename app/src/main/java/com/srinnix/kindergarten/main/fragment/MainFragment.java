@@ -19,7 +19,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.login.activity.LoginActivity;
 import com.srinnix.kindergarten.main.adapter.MainAdapter;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
-import com.srinnix.kindergarten.schoolboard.fragment.SchoolBoardFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
 import com.srinnix.kindergarten.setting.activity.SettingActivity;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
@@ -44,7 +44,7 @@ public class MainFragment extends BaseFragment {
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
 
-    private SchoolBoardFragment schoolBoardFragment;
+    private BulletinBoardFragment mBulletinBoardFragment;
     private MainAdapter adapter;
     private ArrayList<Fragment> arrayList;
 
@@ -76,7 +76,7 @@ public class MainFragment extends BaseFragment {
         });
 
         arrayList = new ArrayList<>();
-        arrayList.add(SchoolBoardFragment.newInstance());
+        arrayList.add(BulletinBoardFragment.newInstance());
         arrayList.add(ClassFragment.newInstance());
         arrayList.add(new CameraFragment());
         arrayList.add(new InfoChildrenFragment());

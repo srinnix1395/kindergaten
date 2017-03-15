@@ -40,6 +40,7 @@ public class DetailChatPresenter extends BasePresenter {
     private Realm mRealm;
     private CompositeDisposable mDisposable;
     private DetailChatDelegate mDetailChatDelegate;
+    private boolean isLoadingDataFirst = true;
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
@@ -137,7 +138,6 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onServerReceived(Message data, String id, ArrayList<Object> listMessage) {
-
         if (data.getIdSender().equals(idReceiver)) {
             int i;
             for (i = listMessage.size() - 1; i >= 0; i--) {
@@ -210,14 +210,20 @@ public class DetailChatPresenter extends BasePresenter {
             @Override
             public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.addAllMessage(arrayList, 1);
+                    mDetailChatDelegate.loadMessageSuccess(arrayList, isLoadingDataFirst);
+                }
+                if (isLoadingDataFirst) {
+                    isLoadingDataFirst = false;
                 }
             }
 
             @Override
             public void onLoadMessageFail(Throwable throwable) {
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.loadMessageFail();
+                    mDetailChatDelegate.loadMessageFail(isLoadingDataFirst);
+                }
+                if (isLoadingDataFirst) {
+                    isLoadingDataFirst = false;
                 }
             }
         });

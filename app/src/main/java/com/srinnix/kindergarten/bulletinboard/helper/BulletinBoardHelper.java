@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.schoolboard.helper;
+package com.srinnix.kindergarten.bulletinboard.helper;
 
 import android.content.Context;
 
@@ -22,11 +22,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Administrator on 3/3/2017.
  */
 
-public class SchoolBoardHelper {
+public class BulletinBoardHelper {
     private CompositeDisposable mDisposable;
     private ApiService mApiService;
 
-    public SchoolBoardHelper(CompositeDisposable disposable) {
+    public BulletinBoardHelper(CompositeDisposable disposable) {
         mDisposable = disposable;
         mApiService = RetrofitClient.getApiService();
     }

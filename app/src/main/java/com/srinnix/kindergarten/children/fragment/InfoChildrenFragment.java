@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.children.fragment;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
@@ -10,7 +11,6 @@ import com.srinnix.kindergarten.children.delegate.InfoChildrenDelegate;
 import com.srinnix.kindergarten.children.presenter.InfoChildrenPresenter;
 
 import butterknife.BindView;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by anhtu on 2/21/2017.
@@ -18,7 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class InfoChildrenFragment extends BaseFragment implements InfoChildrenDelegate{
     @BindView(R.id.imageview_icon)
-    CircleImageView imvIcon;
+    ImageView imvIcon;
 
     @BindView(R.id.textview_name)
     TextView tvName;

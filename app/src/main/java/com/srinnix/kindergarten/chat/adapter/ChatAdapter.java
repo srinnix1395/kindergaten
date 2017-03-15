@@ -12,8 +12,8 @@ import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatRightViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatTimeViewHolder;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
-import com.srinnix.kindergarten.schoolboard.adapter.PostAdapter;
-import com.srinnix.kindergarten.schoolboard.adapter.viewholder.LoadingViewHolder;
+import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
+import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
