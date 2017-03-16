@@ -11,12 +11,12 @@ import io.realm.RealmList;
  * Created by anhtu on 2/25/2017.
  */
 
-public class ContactParent extends Contact{
+public class ContactParent extends Contact {
     @SerializedName("children")
     @Expose
     private ArrayList<Child> children;
 
-    public ContactParent(String id, String name,String gender, ArrayList<Child> children) {
+    public ContactParent(String id, String name, String gender, ArrayList<Child> children) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -35,6 +35,8 @@ public class ContactParent extends Contact{
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        this.children.addAll(children);
+        for (Child child : children) {
+            this.children.add(new Child(child.getName(), child.getImage(), child.getIdClass()));
+        }
     }
 }

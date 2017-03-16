@@ -42,4 +42,5 @@
     <string name="error_msg_101">Email hoặc mật khẩu không chính xác</string>
     <string name="login_to_see">Hãy đăng nhập để xem đầy đủ</string>
     <string name="login_to_chat">Hãy đăng nhập để trò chuyện!</string>
+    <string name="login_successfully">Đăng nhập thành công</string>
 </resources>

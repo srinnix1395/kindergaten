@@ -25,7 +25,7 @@ public class Contact implements Parcelable {
     @Expose
     protected String gender;
 
-    protected int status = ChatConstant.UNDEFINED;
+    protected int status = ChatConstant.STATUS_UNDEFINED;
 
     public Contact() {
     }

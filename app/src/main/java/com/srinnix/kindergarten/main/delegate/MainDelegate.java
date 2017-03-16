@@ -7,5 +7,6 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
  */
 
 public interface MainDelegate extends BaseDelegate {
-	
+
+    void inflateMenuToolbarLogin();
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 
 public class JsonUtil {
-    public static ArrayList<String> parseListContact(Object arg) throws JSONException {
+    public static ArrayList<String> parseListContactOnline(Object arg) throws JSONException {
         ArrayList<String> arrayList = new ArrayList<>();
 
         JSONArray jsonArray = (JSONArray) arg;
@@ -45,5 +45,15 @@ public class JsonUtil {
         boolean isTyping = jsonObject.getBoolean(ChatConstant.IS_TYPING);
 
         return new MessageTyping(new Message("", idSender, idReceiver, "", System.currentTimeMillis(), ChatConstant.PENDING, ChatConstant.FIRST, isTyping));
+    }
+
+    public static String getIdUserDisconnect(Object object) {
+        JSONObject jsonObject = (JSONObject) object;
+        try {
+            return jsonObject.getString("_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

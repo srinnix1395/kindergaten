@@ -34,6 +34,5 @@ public class BasePresenter {
     }
 
     public void onResume() {
-
     }
 }

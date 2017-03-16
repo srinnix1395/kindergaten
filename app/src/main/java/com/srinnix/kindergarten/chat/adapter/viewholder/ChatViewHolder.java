@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
  */
 
 public class ChatViewHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.imageview_icon)
     ImageView imvIcon;
 
     @BindView(R.id.text_view_name)
@@ -35,7 +36,6 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     public ChatViewHolder(View itemView, ChatListAdapter.OnClickItemChatListener onClickItemChatListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        imvIcon = (ImageView) itemView.findViewById(R.id.imageview_icon);
         itemView.setOnClickListener(view -> {
             if (onClickItemChatListener != null) {
                 onClickItemChatListener.onClick(position);
@@ -47,21 +47,21 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         this.position = position;
 
         switch (contact.getStatus()) {
-            case ChatConstant.ONLINE: {
+            case ChatConstant.STATUS_ONLINE: {
                 if (imvStatus.getVisibility() != View.VISIBLE) {
                     imvStatus.setVisibility(View.VISIBLE);
                 }
                 imvStatus.setImageResource(R.drawable.ic_state_online);
                 break;
             }
-            case ChatConstant.OFFLINE: {
+            case ChatConstant.STATUS_OFFLINE: {
                 if (imvStatus.getVisibility() != View.VISIBLE) {
                     imvStatus.setVisibility(View.VISIBLE);
                 }
                 imvStatus.setImageResource(R.drawable.ic_state_offline);
                 break;
             }
-            case ChatConstant.UNDEFINED: {
+            case ChatConstant.STATUS_UNDEFINED: {
                 imvStatus.setVisibility(View.INVISIBLE);
                 break;
             }
@@ -71,7 +71,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
             Glide.with(itemView.getContext())
                     .load(((ContactTeacher) contact).getImage())
                     .thumbnail(0.1f)
-                    .placeholder(R.drawable.image_teacher)
+                    .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.image_teacher)
                     .into(imvIcon);
             tvName.setText(StringUtil.getNameContactTeacher(itemView.getContext(),
@@ -80,7 +80,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
             Glide.with(itemView.getContext())
                     .load(((ContactParent) contact).getChildren().get(0).getImage())
                     .thumbnail(0.1f)
-                    .placeholder(R.drawable.image_parent)
+                    .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.image_parent)
                     .into(imvIcon);
             tvName.setText(StringUtil.getNameContactParent(itemView.getContext(),

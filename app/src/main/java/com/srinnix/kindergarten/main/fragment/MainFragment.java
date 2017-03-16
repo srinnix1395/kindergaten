@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.main.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,15 +11,14 @@ import android.view.MenuItem;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
 import com.srinnix.kindergarten.camera.fragment.CameraFragment;
 import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.clazz.fragment.ClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.login.activity.LoginActivity;
 import com.srinnix.kindergarten.main.adapter.MainAdapter;
+import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
-import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
-import com.srinnix.kindergarten.setting.activity.SettingActivity;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
@@ -31,28 +29,20 @@ import butterknife.BindView;
  * Created by DELL on 2/5/2017.
  */
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements MainDelegate {
     @BindView(R.id.toolbar_main)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     @BindView(R.id.tablayout_main)
-    TabLayout tabLayout;
+    TabLayout mTabLayout;
 
     @BindView(R.id.view_pager_main)
-    ViewPager viewPager;
+    ViewPager mViewPager;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
 
-    private BulletinBoardFragment mBulletinBoardFragment;
-    private MainAdapter adapter;
-    private ArrayList<Fragment> arrayList;
-
     private MainPresenter mPresenter;
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
-    }
 
     @Override
     protected int getLayoutId() {
@@ -63,35 +53,35 @@ public class MainFragment extends BaseFragment {
     protected void initChildView() {
         mPresenter.updateRegId();
 
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle(AppConstant.TITLE_TAB[0]);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setTitle(AppConstant.TITLE_TAB[0]);
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            toolbar.inflateMenu(R.menu.main_menu_signed_in);
+            mToolbar.inflateMenu(R.menu.main_menu_signed_in);
         } else {
-            toolbar.inflateMenu(R.menu.main_menu_unsigned_in);
+            mToolbar.inflateMenu(R.menu.main_menu_unsigned_in);
         }
-        toolbar.setOnMenuItemClickListener(item -> {
+        mToolbar.setOnMenuItemClickListener(item -> {
             onMenuItemItemSelected(item);
             return false;
         });
 
-        arrayList = new ArrayList<>();
+        ArrayList<Fragment> arrayList = new ArrayList<>();
         arrayList.add(BulletinBoardFragment.newInstance());
         arrayList.add(ClassFragment.newInstance());
         arrayList.add(new CameraFragment());
         arrayList.add(new InfoChildrenFragment());
 
-        adapter = new MainAdapter(getChildFragmentManager(), arrayList);
-        viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(4);
+        MainAdapter adapter = new MainAdapter(getChildFragmentManager(), arrayList);
+        mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(4);
 
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(AppConstant.ICON_TAB_SELECTED[0]);
-        tabLayout.getTabAt(1).setIcon(AppConstant.ICON_TAB_UNSELECTED[1]);
-        tabLayout.getTabAt(2).setIcon(AppConstant.ICON_TAB_UNSELECTED[2]);
-        tabLayout.getTabAt(3).setIcon(AppConstant.ICON_TAB_UNSELECTED[3]);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(0).setIcon(AppConstant.ICON_TAB_SELECTED[0]);
+        mTabLayout.getTabAt(1).setIcon(AppConstant.ICON_TAB_UNSELECTED[1]);
+        mTabLayout.getTabAt(2).setIcon(AppConstant.ICON_TAB_UNSELECTED[2]);
+        mTabLayout.getTabAt(3).setIcon(AppConstant.ICON_TAB_UNSELECTED[3]);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -99,7 +89,7 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                mPresenter.changeTabIcon(toolbar, tabLayout, position);
+                mPresenter.changeTabIcon(mToolbar, mTabLayout, position);
             }
 
             @Override
@@ -113,7 +103,7 @@ public class MainFragment extends BaseFragment {
     private void onMenuItemItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_sign_in: {
-                startActivityLogin();
+                mPresenter.startActivityLogin();
                 break;
             }
             case R.id.menu_item_sign_out: {
@@ -125,26 +115,16 @@ public class MainFragment extends BaseFragment {
                 break;
             }
             case R.id.menu_item_chat: {
-                mPresenter.onClickMenuItemChat(mDrawer);
+                mPresenter.onClickMenuItemChat(this, mDrawer);
                 break;
             }
             case R.id.menu_item_setting: {
-                startActivitySetting();
+                mPresenter.startActivitySetting();
                 break;
             }
             default:
                 break;
         }
-    }
-
-    private void startActivityLogin() {
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
-    }
-
-    private void startActivitySetting() {
-        Intent intent = new Intent(getActivity(), SettingActivity.class);
-        mContext.startActivity(intent);
     }
 
     @Override
@@ -153,7 +133,13 @@ public class MainFragment extends BaseFragment {
         return mPresenter;
     }
 
+    @Override
+    public void inflateMenuToolbarLogin() {
+        mToolbar.getMenu().clear();
+        mToolbar.inflateMenu(R.menu.main_menu_signed_in);
+    }
+
     public void onBackPressed() {
-        mPresenter.onBackPressed(this, mDrawer, viewPager);
+        mPresenter.onBackPressed(this, mDrawer, mViewPager);
     }
 }

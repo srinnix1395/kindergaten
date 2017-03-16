@@ -1,6 +1,9 @@
 package com.srinnix.kindergarten.main.presenter;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -11,9 +14,13 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.login.activity.LoginActivity;
+import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
+import com.srinnix.kindergarten.setting.activity.SettingActivity;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
@@ -22,10 +29,25 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
  */
 
 public class MainPresenter extends BasePresenter {
+
     private int currentPosition = 0;
+
+    private MainDelegate mMainDelegate;
+    private boolean isFirstOpenMenuChat = true;
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
+        mMainDelegate = (MainDelegate) mDelegate;
+    }
+
+    public void startActivityLogin() {
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        mContext.startActivity(intent);
+    }
+
+    public void startActivitySetting() {
+        Intent intent = new Intent(mContext, SettingActivity.class);
+        mContext.startActivity(intent);
     }
 
     public void changeTabIcon(Toolbar toolbar, TabLayout tabLayout, int position) {
@@ -41,12 +63,21 @@ public class MainPresenter extends BasePresenter {
         currentPosition = position;
     }
 
-    public void onClickMenuItemChat(DrawerLayout drawerLayout) {
+    public void onClickMenuItemChat(Fragment mainFragment, DrawerLayout drawerLayout) {
         if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             Toast.makeText(mContext, R.string.login_to_chat, Toast.LENGTH_SHORT).show();
             return;
         }
+
         if (!drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+            if (isFirstOpenMenuChat) {
+                ChatListFragment chatListFragment = new ChatListFragment();
+                FragmentTransaction transaction = mainFragment.getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.layout_menu, chatListFragment);
+                transaction.commit();
+
+                isFirstOpenMenuChat = false;
+            }
             drawerLayout.openDrawer(Gravity.RIGHT);
         }
     }

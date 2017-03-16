@@ -15,5 +15,5 @@ public interface ChatListDelegate extends BaseDelegate {
 
     void addContactParent(ArrayList<ContactParent> contactParents);
 
-    void updateStatus();
+    void updateStatus(int position);
 }

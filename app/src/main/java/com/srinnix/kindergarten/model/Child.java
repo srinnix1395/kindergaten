@@ -9,7 +9,7 @@ import io.realm.RealmObject;
  * Created by anhtu on 2/21/2017.
  */
 
-public class Child extends RealmObject{
+public class Child extends RealmObject {
     @SerializedName("_id")
     @Expose
     private String id;
@@ -46,11 +46,11 @@ public class Child extends RealmObject{
     @Expose
     private String idClass;
 
-    public Child(){
+    public Child() {
 //        do nothing
     }
 
-    public Child(String id, String image, String name,String aka, String DOB, String hobby, String characteristic) {
+    public Child(String id, String image, String name, String aka, String DOB, String hobby, String characteristic) {
         this.id = id;
         this.image = image;
         this.name = name;
@@ -58,6 +58,12 @@ public class Child extends RealmObject{
         this.DOB = DOB;
         this.hobby = hobby;
         this.characteristic = characteristic;
+    }
+
+    public Child(String name, String image, String idClass) {
+        this.image = image;
+        this.name = name;
+        this.idClass = idClass;
     }
 
     public String getId() {

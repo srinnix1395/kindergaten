@@ -37,28 +37,42 @@ public class SocketUtil {
     private Socket mSocket;
 
     public void connect(Context context) {
-        try {
-            IO.Options options = new IO.Options();
+        if (!isConnected()) {
+            try {
+                IO.Options options = new IO.Options();
 
-            SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(context);
-            options.query = "token=" + sharedPreUtils.getToken() +
-                    "&id=" + sharedPreUtils.getUserID() +
-                    "&account_type=" + sharedPreUtils.getAccountType();
+                SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(context);
+                options.query = "token=" + sharedPreUtils.getToken() +
+                        "&id=" + sharedPreUtils.getUserID() +
+                        "&account_type=" + sharedPreUtils.getAccountType();
 
-            mSocket = IO.socket(ChatConstant.SERVER_URL, options);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+                mSocket = IO.socket(ChatConstant.SERVER_URL, options);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            mSocket.on(Socket.EVENT_CONNECT, args -> onConnected())
+                    .on(Socket.EVENT_DISCONNECT, args -> onDisconnect())
+                    .on(Socket.EVENT_MESSAGE, this::onMessage)
+                    .on(ChatConstant.EVENT_USER_DISCONNECT, this::onEventUserDisconnect)
+                    .on(ChatConstant.EVENT_SETUP_CONTACT, this::onSetupContactStatus)
+                    .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully)
+                    .on(ChatConstant.EVENT_TYPING, args -> onTyping(args[0]));
+            mSocket.connect();
         }
-        mSocket.on(Socket.EVENT_CONNECT, args -> onConnected())
-                .on(Socket.EVENT_DISCONNECT, args -> onDisconnect())
-                .on(Socket.EVENT_MESSAGE, this::onMessage)
-                .on(ChatConstant.EVENT_SETUP_CONTACT, this::onSetupContacts)
-                .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully)
-                .on(ChatConstant.EVENT_TYPING, args -> onTyping(args[0]));
-        mSocket.connect();
     }
 
-    public boolean isConnected() {
+    private void onEventUserDisconnect(Object[] objects) {
+        DebugLog.i("User disconnect");
+
+        String idUser = JsonUtil.getIdUserDisconnect(objects[0]);
+        if (idUser.isEmpty()) {
+            return;
+        }
+
+
+    }
+
+    private boolean isConnected() {
         return mSocket != null && mSocket.connected();
     }
 
@@ -71,17 +85,17 @@ public class SocketUtil {
         EventBus.getDefault().post(new MessageDisconnect());
     }
 
-    private void onSetupContacts(Object[] args) {
-        DebugLog.i("onSetupContacts");
+    private void onSetupContactStatus(Object[] args) {
+        DebugLog.i("onSetupContactStatus");
 
         Observable.just(((JSONArray) args[0]))
                 .map(jsonArray -> {
-                    ArrayList<String> arrayList = JsonUtil.parseListContact(args[0]);
+                    ArrayList<String> arrayList = JsonUtil.parseListContactOnline(args[0]);
                     return new MessageContactStatus(arrayList);
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(messageContactStatus -> EventBus.getDefault().post(messageContactStatus));
+                .subscribe(messageContactStatus -> EventBus.getDefault().postSticky(messageContactStatus));
     }
 
     public void sendMessage(Message message) {

@@ -2,26 +2,30 @@ package com.srinnix.kindergarten.chat.presenter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.srinnix.kindergarten.KinderApplication;
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.activity.DetailChatActivity;
+import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.chat.delegate.ChatListDelegate;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
+import com.srinnix.kindergarten.messageeventbus.MessageUserDisconnect;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -55,29 +59,25 @@ public class ChatListPresenter extends BasePresenter {
     }
 
     public void onDisconnect(ArrayList<Contact> arrayList) {
-        mDisposable.add(Observable.fromIterable(arrayList)
-                .doOnNext(contact -> contact.setStatus(ChatConstant.UNDEFINED))
-                .subscribe(contact -> {
-                    if (mChatListDelegate != null) {
-                        mChatListDelegate.updateStatus();
-                    }
-                }));
+        for (Contact contact : arrayList) {
+            contact.setStatus(ChatConstant.STATUS_UNDEFINED);
+        }
     }
 
     public void onSetupContactStatus(MessageContactStatus message, ArrayList<Contact> arrayList) {
-        mDisposable.add(Observable.fromIterable(arrayList)
-                .doOnNext(contact -> {
-                    if (message.arrayList.contains(contact.getId())) {
-                        contact.setStatus(ChatConstant.ONLINE);
-                    } else {
-                        contact.setStatus(ChatConstant.OFFLINE);
-                    }
-                })
-                .subscribe(contact -> {
-                    if (mChatListDelegate != null) {
-                        mChatListDelegate.updateStatus();
-                    }
-                }));
+        if (message.arrayList.size() == 0) {
+            for (Contact contact : arrayList) {
+                contact.setStatus(ChatConstant.STATUS_OFFLINE);
+            }
+        } else {
+            for (Contact contact : arrayList) {
+                if (message.arrayList.contains(contact.getId())) {
+                    contact.setStatus(ChatConstant.STATUS_ONLINE);
+                } else {
+                    contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                }
+            }
+        }
     }
 
     public void getContactFromDatabase() {
@@ -106,6 +106,25 @@ public class ChatListPresenter extends BasePresenter {
 
                 arrayList.add(contactParent);
             }
+
+            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
+            if (message != null) {
+                if (message.arrayList.size() == 0) {
+                    for (Contact contact : arrayList) {
+                        contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                    }
+                } else {
+                    for (Contact contact : arrayList) {
+                        if (message.arrayList.contains(contact.getId())) {
+                            contact.setStatus(ChatConstant.STATUS_ONLINE);
+                        } else {
+                            contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                        }
+                    }
+                }
+                EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
+            }
+
             return arrayList;
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -113,9 +132,7 @@ public class ChatListPresenter extends BasePresenter {
                     if (mChatListDelegate != null) {
                         mChatListDelegate.addContactParent(contactParents);
                     }
-                }, throwable -> {
-                    Toast.makeText(mContext, "lỗi r", Toast.LENGTH_SHORT).show();
-                }));
+                }, throwable -> AlertUtils.showToast(mContext, R.string.commonError)));
     }
 
     private void getContactTeacher() {
@@ -135,6 +152,24 @@ public class ChatListPresenter extends BasePresenter {
 
                 arrayList.add(contactTeacher);
             }
+
+            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
+            if (message != null) {
+                if (message.arrayList.size() == 0) {
+                    for (Contact contact : arrayList) {
+                        contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                    }
+                } else {
+                    for (Contact contact : arrayList) {
+                        if (message.arrayList.contains(contact.getId())) {
+                            contact.setStatus(ChatConstant.STATUS_ONLINE);
+                        } else {
+                            contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                        }
+                    }
+                }
+                EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
+            }
             return arrayList;
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -143,5 +178,19 @@ public class ChatListPresenter extends BasePresenter {
                         mChatListDelegate.addContactTeacher(contactTeachers);
                     }
                 }));
+    }
+
+    public void onUserDisconnect(ArrayList<Contact> listContact, MessageUserDisconnect message, ChatListAdapter mAdapter) {
+        int i = 0;
+        for (Contact contact : listContact) {
+            if (contact.getId().endsWith(message.id)) {
+                contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                break;
+            }
+            i++;
+        }
+        if (i != listContact.size() && mChatListDelegate != null) {
+            mChatListDelegate.updateStatus(i);
+        }
     }
 }

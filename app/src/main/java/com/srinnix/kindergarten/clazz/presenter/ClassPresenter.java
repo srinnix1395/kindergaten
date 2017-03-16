@@ -4,19 +4,16 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
+import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.request.model.Error;
-import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by anhtu on 2/16/2017.
@@ -24,26 +21,30 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ClassPresenter extends BasePresenter {
     private ClassDelegate mDelegate;
-    private ApiService mApi;
     private CompositeDisposable mDisposable;
     private ClassResponse classInfo;
     private boolean isTeacher;
+    private ClassHelper mHelper;
 
     public ClassPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         this.mDelegate = (ClassDelegate) mDelegate;
-        mApi = RetrofitClient.getApiService();
         mDisposable = new CompositeDisposable();
         isTeacher = SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS;
     }
 
     public void getClassInfo(String classId) {
-        mDisposable.add(
-                mApi.getClassInfo(classId, isTeacher)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::handleResponseClassInfo, this::handleException)
-        );
+        mHelper.getClassInfo(mDisposable, classId, isTeacher, new ClassHelper.ClassInfoListener() {
+            @Override
+            public void onResponseSuccess(ApiResponse<ClassResponse> response) {
+                handleResponseClassInfo(response);
+            }
+
+            @Override
+            public void onResponseFail(Throwable throwable) {
+                handleException(throwable);
+            }
+        });
     }
 
     private void handleResponseClassInfo(ApiResponse<ClassResponse> response) {

@@ -10,7 +10,8 @@ import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.chat.delegate.ChatListDelegate;
 import com.srinnix.kindergarten.chat.presenter.ChatListPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
-import com.srinnix.kindergarten.messageeventbus.MessageListContact;
+import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
+import com.srinnix.kindergarten.messageeventbus.MessageUserDisconnect;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
@@ -31,7 +32,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     RecyclerView recyclerView;
 
     private ArrayList<Contact> listContact;
-    private ChatListAdapter adapter;
+    private ChatListAdapter mAdapter;
     private ChatListPresenter mPresenter;
 
     @Override
@@ -42,11 +43,11 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     @Override
     protected void initChildView() {
         listContact = new ArrayList<>();
-        adapter = new ChatListAdapter(listContact, position
+        mAdapter = new ChatListAdapter(listContact, position
                 -> mPresenter.onClickItemChat(listContact.get(position)));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
 
         mPresenter.getContactFromDatabase();
     }
@@ -60,32 +61,42 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe
-    public void onDisconnect() {
-        mPresenter.onDisconnect(listContact);
-    }
-
-    @Subscribe
-    public void onSetupContactList(MessageListContact message) {
-        if (!listContact.isEmpty()) {
-            listContact.clear();
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
-        listContact.addAll(message.arrayList);
-        adapter.notifyItemRangeInserted(0, message.arrayList.size());
     }
 
     @Subscribe
-    public void onSetupContactStatus(MessageContactStatus message) {
-        mPresenter.onSetupContactStatus(message, listContact);
+    public void onEventUserDisconnect(MessageUserDisconnect message) {
+        mPresenter.onUserDisconnect(listContact, message, mAdapter);
+    }
+
+    @Override
+    public void updateStatus(int position) {
+        mAdapter.notifyItemChanged(position);
+    }
+
+    @Subscribe
+    public void onEventDisconnect(MessageDisconnect message) {
+        mPresenter.onDisconnect(listContact);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe(sticky = true)
+    public void onEventSetupContactStatus(MessageContactStatus message) {
+        if (listContact.size() > 0) {
+            EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
+            mPresenter.onSetupContactStatus(message, listContact);
+            mAdapter.notifyItemRangeChanged(0, listContact.size());
+        }
     }
 
     @Override
@@ -94,7 +105,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
             listContact.clear();
         }
         listContact.addAll(contactTeachers);
-        adapter.notifyItemRangeInserted(0, contactTeachers.size());
+        mAdapter.notifyItemRangeInserted(0, contactTeachers.size());
     }
 
     @Override
@@ -103,11 +114,8 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
             listContact.clear();
         }
         listContact.addAll(contactParents);
-        adapter.notifyItemRangeInserted(0, contactParents.size());
+        mAdapter.notifyItemRangeInserted(0, contactParents.size());
     }
 
-    @Override
-    public void updateStatus() {
-        adapter.notifyItemRangeChanged(0, listContact.size());
-    }
+
 }

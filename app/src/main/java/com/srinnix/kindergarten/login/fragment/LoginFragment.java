@@ -1,18 +1,19 @@
 package com.srinnix.kindergarten.login.fragment;
 
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.login.presenter.LoginPresenter;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -117,20 +118,14 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
     }
 
     @OnClick(R.id.textview_close)
-    void onClickClose(){
+    void onClickClose() {
         onBackPressed();
     }
 
     @Override
     public void loginSuccessfully() {
-        Toast.makeText(mContext, "ok", Toast.LENGTH_SHORT).show();
-        //// TODO: 3/3/2017 login successfully
-    }
-
-    @Override
-    public void loginFail() {
-        Toast.makeText(mContext, "fail", Toast.LENGTH_SHORT).show();
-        //// TODO: 3/3/2017 login fail when there's no contacts
+        AlertUtils.showToastSuccess(mContext, R.drawable.ic_account_check, R.string.login_successfully);
+        new Handler().postDelayed(this::onBackPressed, 2000);
     }
 
     @Override

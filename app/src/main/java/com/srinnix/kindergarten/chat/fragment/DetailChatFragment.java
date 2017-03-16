@@ -30,11 +30,13 @@ import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageTyping;
+import com.srinnix.kindergarten.messageeventbus.MessageUserDisconnect;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.UiUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -141,26 +143,49 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onClickSend(etMessage.getText().toString(), listMessage);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
     @Subscribe
-    public void onMessageIncoming(MessageChat message) {
+    public void onEventMessageIncoming(MessageChat message) {
         mPresenter.onMessage(message.message, listMessage);
     }
 
     @Subscribe
-    public void onServerReceied(MessageServerReceived message) {
+    public void onEventServerReceied(MessageServerReceived message) {
         mPresenter.onServerReceived(message.data, message.id, listMessage);
     }
 
     @Subscribe
-    public void onFriendReceived(MessageFriendReceived message) {
+    public void onEventFriendReceived(MessageFriendReceived message) {
         mPresenter.onFriendReceived(message.data, listMessage);
     }
 
     @Subscribe
-    public void onFriendTyping(MessageTyping message) {
-        mPresenter.onFriendTyping(message.mMessage, listMessage);
+    public void onEventFriendTyping(MessageTyping message) {
+        if (isResumed()) {
+            mPresenter.onFriendTyping(message.mMessage, listMessage);
+        }
     }
 
+    @Subscribe
+    public void onEventUserDisconnect(MessageUserDisconnect message) {
+        //todo
+
+    }
 
     @Override
     public void changeMessage(int position) {

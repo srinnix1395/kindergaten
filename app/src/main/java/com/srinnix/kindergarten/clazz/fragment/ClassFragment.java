@@ -93,11 +93,15 @@ public class ClassFragment extends BaseFragment implements ClassDelegate, View.O
 
     @Override
     protected void initChildView() {
+//
+    }
+
+    private void initFragment(){
         cardViewClassName.setVisibility(View.GONE);
-        cardViewTeachers.setVisibility(View.GONE);
+//        cardViewTeachers.setVisibility(View.GONE);
 //        cardViewMemberClass.setVisibility(View.GONE);
-        cardViewImage.setVisibility(View.GONE);
-        imvRetry.setVisibility(View.GONE);
+//        cardViewImage.setVisibility(View.GONE);
+//        imvRetry.setVisibility(View.GONE);
 
         RelativeLayout relTeacher1 = (RelativeLayout) mView.findViewById(R.id.rel_teacher_1);
         imvIcon1 = (ImageView) relTeacher1.findViewById(R.id.imageview_icon);
