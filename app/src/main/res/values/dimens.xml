@@ -4,11 +4,8 @@
     <dimen name="margin_left_item">16dp</dimen>
     <dimen name="margin_right_item">16dp</dimen>
 
-    <dimen name="radius_normal">16dp</dimen>
-    <dimen name="radius_special">4dp</dimen>
     <dimen name="size_item_chat">33dp</dimen>
     <dimen name="padding_horizontal_item_chat">10dp</dimen>
-    <dimen name="padding_vertical_item_chat">8dp</dimen>
     <dimen name="margin_top_item_chat">1dp</dimen>
     <dimen name="margin_horizontal_icon_itemchat">10dp</dimen>
     <dimen name="margin_bottom_item_time_chat">2dp</dimen>
@@ -41,7 +38,7 @@
     <dimen name="size_image_view_info_children">65dp</dimen>
     <dimen name="margin_info_children">8dp</dimen>
     <dimen name="margin_horizontal_left_chat_item">6dp</dimen>
-    <dimen name="size_item_seen">14dp</dimen>
+    <dimen name="size_item_seen">12dp</dimen>
     <dimen name="margin_horizontal_right_chat_item">6dp</dimen>
     <dimen name="margin_top_text_input_layout_frm_login">10dp</dimen>
     <dimen name="margin_vertical_low">8dp</dimen>
@@ -50,4 +47,7 @@
     <dimen name="height_image_post">360dp</dimen>
     <dimen name="margin_top_item_timeline_children">12dp</dimen>
     <dimen name="margin_icon_fragment_class">10dp</dimen>
+    <dimen name="radius_item_chat">4dp</dimen>
+    <dimen name="width_icon_fragment_chat">47dp</dimen>
+    <dimen name="padding_vertical_item_chat">8dp</dimen>
 </resources>

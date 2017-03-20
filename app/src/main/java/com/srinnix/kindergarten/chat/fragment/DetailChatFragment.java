@@ -20,24 +20,28 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
+import com.srinnix.kindergarten.chat.adapter.payload.ImagePayload;
+import com.srinnix.kindergarten.chat.adapter.payload.StatusMessagePayload;
 import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollListener;
-import com.srinnix.kindergarten.custom.ItemChatAnimator;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
+import com.srinnix.kindergarten.messageeventbus.MessageConnect;
+import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageTyping;
-import com.srinnix.kindergarten.messageeventbus.MessageUserDisconnect;
-import com.srinnix.kindergarten.model.Contact;
+import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -67,11 +71,20 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     @BindView(R.id.textview_error)
     TextView tvError;
 
+    @BindView(R.id.textview_name)
+    TextView tvName;
+
+    @BindView(R.id.textview_status)
+    TextView tvStatus;
+
     private DetailChatPresenter mPresenter;
     private ChatAdapter adapter;
     private ArrayList<Object> listMessage;
 
-    private Contact contact;
+    private String name;
+    private int status;
+    private String urlImage;
+    private int accountType;
 
     @Override
     protected int getLayoutId() {
@@ -82,25 +95,21 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     protected void getData() {
         super.getData();
         Bundle bundle = getArguments();
-        contact = bundle.getParcelable(AppConstant.KEY_INFO);
-        mPresenter.setupDataPresenter(contact);
+        name = bundle.getString(AppConstant.KEY_NAME);
+        status = bundle.getInt(AppConstant.KEY_STATUS);
+        urlImage = bundle.getString(AppConstant.KEY_IMAGE);
+        accountType = bundle.getInt(AppConstant.KEY_ACCOUNT_TYPE);
     }
 
     @Override
     protected void initChildView() {
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle(contact != null ? contact.getName() : "");
-        toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setNavigationOnClickListener(view -> {
-            UiUtils.hideKeyboard(getActivity());
-            onBackPressed();
-        });
+        setupToolbar();
 
         listMessage = new ArrayList<>();
 
         rvChat.setVisibility(View.INVISIBLE);
-        rvChat.setItemAnimator(new ItemChatAnimator());
-        adapter = new ChatAdapter(mContext, listMessage, () -> mPresenter.onLoadMore(listMessage));
+//        rvChat.setItemAnimator(new ItemChatAnimator());
+        adapter = new ChatAdapter(mContext, listMessage, urlImage, accountType, () -> mPresenter.onLoadMore(listMessage));
         rvChat.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -108,7 +117,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
                 , EndlessScrollListener.POSITION_UP, ChatConstant.ITEM_MESSAGE_PER_PAGE) {
             @Override
             public void onLoadMore() {
-                mPresenter.onLoadMore(listMessage);
+//                mPresenter.onLoadMore(listMessage);
             }
         });
         rvChat.setLayoutManager(layoutManager);
@@ -118,6 +127,24 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         pbLoading.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(mContext, R.color.colorPrimary),
                 PorterDuff.Mode.SRC_ATOP);
+
+        mPresenter.onLoadMore(listMessage);
+
+        imvSend.setEnabled(false);
+    }
+
+    private void setupToolbar() {
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(name);
+        toolbar.inflateMenu(R.menu.menu_detail_chat);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(view -> {
+            UiUtils.hideKeyboard(getActivity());
+            onBackPressed();
+        });
+
+        tvName.setText(name);
+        tvStatus.setText(StringUtil.getStatus(mContext, status));
     }
 
     @Override
@@ -140,7 +167,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
     @OnClick(R.id.imageview_send)
     void onClickSend() {
-        mPresenter.onClickSend(etMessage.getText().toString(), listMessage);
+        mPresenter.onClickSend(listMessage, etMessage);
     }
 
     @Override
@@ -159,55 +186,76 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMessageIncoming(MessageChat message) {
         mPresenter.onMessage(message.message, listMessage);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventServerReceied(MessageServerReceived message) {
-        mPresenter.onServerReceived(message.data, message.id, listMessage);
+        mPresenter.onServerReceived(message.data, listMessage);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventFriendReceived(MessageFriendReceived message) {
         mPresenter.onFriendReceived(message.data, listMessage);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventFriendTyping(MessageTyping message) {
         if (isResumed()) {
             mPresenter.onFriendTyping(message.mMessage, listMessage);
         }
     }
 
-    @Subscribe
-    public void onEventUserDisconnect(MessageUserDisconnect message) {
-        //todo
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventUserConnect(MessageUserConnect message) {
+        mPresenter.onUserConnect(message, tvStatus, listMessage);
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventConnect(MessageConnect message) {
+        mPresenter.onConnect(tvStatus);
+    }
+
+    @Subscribe
+    public void onEventDisconnect(MessageDisconnect message) {
+        mPresenter.onDisconnect(tvStatus, listMessage);
     }
 
     @Override
-    public void changeMessage(int position) {
+    public void changeDataMessage(int position) {
         adapter.notifyItemChanged(position);
     }
 
     @Override
+    public void changeDataMessage(int position, boolean isDisplayIcon) {
+        adapter.notifyItemChanged(position, new ImagePayload(isDisplayIcon));
+    }
+
+    @Override
+    public void changeDataMessage(int position, int statusMessagePayload) {
+        adapter.notifyItemChanged(position, new StatusMessagePayload(statusMessagePayload));
+    }
+
+    @Override
     public void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst) {
-        if (arrayList.size() == ChatConstant.ITEM_MESSAGE_PER_PAGE) {
-            if (!(listMessage.get(0) instanceof LoadingItem)) {
-                listMessage.add(new LoadingItem());
-                adapter.notifyItemInserted(0);
+        if (listMessage.size() != 0) {
+            if (arrayList.size() == ChatConstant.ITEM_MESSAGE_PER_PAGE) {
+                if (!(listMessage.get(0) instanceof LoadingItem)) {
+                    listMessage.add(new LoadingItem());
+                    adapter.notifyItemInserted(0);
+                }
+                listMessage.addAll(1, arrayList);
+                adapter.notifyItemRangeInserted(1, arrayList.size());
+            } else {
+                if ((listMessage.get(0) instanceof LoadingItem)) {
+                    listMessage.remove(0);
+                    adapter.notifyItemRemoved(0);
+                }
+                listMessage.addAll(0, arrayList);
+                adapter.notifyItemRangeInserted(0, arrayList.size());
             }
-            listMessage.addAll(1, arrayList);
-            adapter.notifyItemRangeInserted(1, arrayList.size());
-        } else {
-            if ((listMessage.get(0) instanceof LoadingItem)) {
-                listMessage.remove(0);
-                adapter.notifyItemRemoved(0);
-            }
-            listMessage.addAll(0, arrayList);
-            adapter.notifyItemRangeInserted(0, arrayList.size());
         }
 
         if (isLoadingDataFirst) {
@@ -231,18 +279,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     @Override
-    public void addMessageLast(Message message) {
-        listMessage.add(message);
-        adapter.notifyItemChanged(listMessage.size() - 2);
-        adapter.notifyItemInserted(listMessage.size() - 1);
-        rvChat.scrollToPosition(listMessage.size() - 1);
-    }
-
-    @Override
-    public void addMessageLast(Message message, int position) {
-        listMessage.add(message);
+    public void addMessage(Message message, int position) {
+        listMessage.add(position, message);
         adapter.notifyItemInserted(position);
-        rvChat.scrollToPosition(position);
     }
 
     @Override

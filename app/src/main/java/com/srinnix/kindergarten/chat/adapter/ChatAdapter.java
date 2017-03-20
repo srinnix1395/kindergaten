@@ -7,16 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
+import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
+import com.srinnix.kindergarten.chat.adapter.payload.ImagePayload;
+import com.srinnix.kindergarten.chat.adapter.payload.StatusMessagePayload;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatLeftViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatRightViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatTimeViewHolder;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
-import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
-import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by DELL on 2/9/2017.
@@ -29,14 +32,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private static final int ITEM_RIGHT = 2;
     private static final int ITEM_TIME = 3;
 
+    private final Context context;
     private ArrayList<Object> arrayList;
-    private String currentUserID;
     private PostAdapter.RetryListener mRetryListener;
     private int positionShowTime = -1;
 
-    public ChatAdapter(Context context, ArrayList<Object> arrayList, PostAdapter.RetryListener mRetryListener) {
+    private final String currentUserID;
+    private final String urlImage;
+    private final int accountType;
+
+    public ChatAdapter(Context context, ArrayList<Object> arrayList, String urlImage
+            , int accountType, PostAdapter.RetryListener mRetryListener) {
+        this.context = context;
         this.arrayList = arrayList;
         currentUserID = SharedPreUtils.getInstance(context).getUserID();
+        this.urlImage = urlImage;
+        this.accountType = accountType;
         this.mRetryListener = mRetryListener;
     }
 
@@ -46,7 +57,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             case ITEM_LEFT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_left, parent, false);
-                return new ItemChatLeftViewHolder(view, this);
+                return new ItemChatLeftViewHolder(view, urlImage, accountType, this);
             }
             case ITEM_RIGHT: {
                 View view = LayoutInflater.from(parent.getContext())
@@ -66,6 +77,25 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             default: {
                 return null;
             }
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+            return;
+        }
+
+        if (holder instanceof ItemChatLeftViewHolder && payloads.get(0) instanceof ImagePayload) {
+            ((ItemChatLeftViewHolder) holder).bindImage(((ImagePayload) payloads.get(0)).isDisplayIcon);
+            return;
+        }
+
+        if (holder instanceof ItemChatRightViewHolder && payloads.get(0) instanceof StatusMessagePayload) {
+            ((ItemChatRightViewHolder) holder).bindStatusMessage(((StatusMessagePayload) payloads.get(0)).status);
+            return;
         }
     }
 
@@ -101,11 +131,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        Object object = arrayList.get(position);
+
+        if (object instanceof LoadingItem) {
             return ITEM_LOADING;
         }
 
-        Object object = arrayList.get(position);
         if (object instanceof Message) {
             if (((Message) object).getIdSender().equals(currentUserID)) {
                 return ITEM_RIGHT;

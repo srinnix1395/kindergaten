@@ -28,7 +28,7 @@
     <color name="colorBackgroundWhite">#fefefe</color>
 
     <!--chat START-->
-    <color name="colorBackgroundItemChatLeft">#EAEAEA</color>
+    <color name="colorBackgroundItemChatLeft">#E2E2E2</color>
     <color name="colorBackgroundItemChatLeftOn">#BBBBBB</color>
     <color name="colorBackgroundItemChatRight">@color/colorPrimary</color>
     <color name="colorBackgroundItemChatRightOn">@color/colorPrimaryDarker</color>

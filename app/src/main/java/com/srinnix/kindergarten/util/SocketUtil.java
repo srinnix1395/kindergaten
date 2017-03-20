@@ -2,13 +2,14 @@ package com.srinnix.kindergarten.util;
 
 import android.content.Context;
 
-import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
+import com.srinnix.kindergarten.messageeventbus.MessageTyping;
+import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Message;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,11 +21,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -53,7 +52,8 @@ public class SocketUtil {
             mSocket.on(Socket.EVENT_CONNECT, args -> onConnected())
                     .on(Socket.EVENT_DISCONNECT, args -> onDisconnect())
                     .on(Socket.EVENT_MESSAGE, this::onMessage)
-                    .on(ChatConstant.EVENT_USER_DISCONNECT, this::onEventUserDisconnect)
+                    .on(ChatConstant.EVENT_USER_CONNECT, args -> onEventUserConnect(args[0], true))
+                    .on(ChatConstant.EVENT_USER_DISCONNECT, args -> onEventUserConnect(args[0], false))
                     .on(ChatConstant.EVENT_SETUP_CONTACT, this::onSetupContactStatus)
                     .on(ChatConstant.EVENT_SEND_SUCCESSFULLY, this::onSendSuccessfully)
                     .on(ChatConstant.EVENT_TYPING, args -> onTyping(args[0]));
@@ -61,15 +61,19 @@ public class SocketUtil {
         }
     }
 
-    private void onEventUserDisconnect(Object[] objects) {
-        DebugLog.i("User disconnect");
+    private void onEventUserConnect(Object jsonObject, boolean isConnect) {
+        if (isConnect) {
+            DebugLog.i("User connected");
+        } else {
+            DebugLog.i("User disconnect");
+        }
 
-        String idUser = JsonUtil.getIdUserDisconnect(objects[0]);
+        String idUser = JsonUtil.getIdUserDisconnect(jsonObject);
         if (idUser.isEmpty()) {
             return;
         }
 
-
+        EventBus.getDefault().post(new MessageUserConnect(idUser, isConnect));
     }
 
     private boolean isConnected() {
@@ -101,96 +105,96 @@ public class SocketUtil {
     public void sendMessage(Message message) {
         JSONObject jsonMessage = JsonUtil.getJsonMessage(message);
         mSocket.emit(Socket.EVENT_MESSAGE, jsonMessage
-                , (Ack) args -> {
-                    try {
-                        onServerReceived(args[0]);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                });
+                , (Ack) args -> onServerReceived(args[0]));
     }
 
-    private void onServerReceived(Object arg) throws JSONException {
-        JSONObject data = (JSONObject) arg;
-        String id = data.getString(ChatConstant._ID_MESSAGE_CLIENT);
+    private void onServerReceived(Object arg) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
 
-        Single.fromCallable(() -> {
-            Realm realm = KinderApplication.getInstance().getRealm();
-            RealmResults<Message> results = realm.where(Message.class)
+            JSONObject data = (JSONObject) arg;
+            String id = null;
+            try {
+                id = data.getString(ChatConstant._ID_MESSAGE_CLIENT);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Message message = realm1.where(Message.class)
                     .equalTo("id", id)
-                    .findAll();
-
-            if (results != null && results.size() == 1) {
-                Message message = results.get(0);
+                    .findFirst();
+            try {
                 message.setId(data.getString(ChatConstant._ID));
                 message.setCreatedAt(data.getLong(ChatConstant.CREATED_AT));
                 message.setStatus(ChatConstant.SERVER_RECEIVED);
-
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(message);
-                realm.commitTransaction();
-                return message;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            return null;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> EventBus.getDefault().post(new MessageServerReceived(message, id)));
 
-
+            if (EventBus.getDefault().hasSubscriberForEvent(MessageServerReceived.class)) {
+                EventBus.getDefault().post(new MessageServerReceived(message));
+            }
+        });
+        realm.close();
     }
 
     private void onSendSuccessfully(Object[] args) {
-        JSONObject ack = (JSONObject) args[0];
+        JSONObject data = (JSONObject) args[0];
 
-        Single.fromCallable(() -> {
-            Realm realm = KinderApplication.getInstance().getRealm();
+        Message[] messageEdited = new Message[1];
 
-            RealmResults<Message> results = realm.where(Message.class)
-                    .equalTo("id", ack.getString(ChatConstant._ID))
-                    .findAll();
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            try {
+                Message message = realm.where(Message.class)
+                        .equalTo("id", data.getString(ChatConstant._ID))
+                        .findFirst();
 
-            if (results != null && results.size() == 1) {
-                Message message = results.get(0);
-                message.setId(ack.getString(ChatConstant._ID));
+                message.setId(data.getString(ChatConstant._ID));
                 message.setStatus(ChatConstant.FRIEND_RECEIVED);
 
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(message);
-                realm.commitTransaction();
-                return message;
+                messageEdited[0] = new Message(message);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            return null;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> EventBus.getDefault().post(new MessageFriendReceived(message)));
+        });
+        realm.close();
+
+        if (EventBus.getDefault().hasSubscriberForEvent(MessageFriendReceived.class)) {
+            EventBus.getDefault().post(new MessageFriendReceived(messageEdited[0]));
+        }
     }
 
     private void onMessage(Object[] args) {
-        Ack ack = (Ack) args[0];
+        Ack ack = (Ack) args[args.length - 1];
         ack.call();
 
         JSONObject jsonObject = (JSONObject) args[0];
+        final Message[] messageEdited = new Message[1];
 
-        Single.fromCallable(() -> {
-            Realm realm = KinderApplication.getInstance().getRealm();
-
-            realm.beginTransaction();
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
             Message message = realm.createObject(Message.class);
             try {
                 message.setId(jsonObject.getString(ChatConstant._ID));
                 message.setIdSender(jsonObject.getString(ChatConstant._ID_SENDER));
                 message.setIdReceiver(jsonObject.getString(ChatConstant._ID_RECEIVER));
-                message.setMessage(message.getMessage());
-                message.setCreatedAt(message.getCreatedAt());
+                message.setConversationId(jsonObject.getString(ChatConstant._ID_CONVERSATION));
+                message.setMessage(jsonObject.getString(ChatConstant.MESSAGE));
+                message.setCreatedAt(jsonObject.getLong(ChatConstant.CREATED_AT));
                 message.setStatus(ChatConstant.FRIEND_RECEIVED);
+                message.setDisplayIcon(true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            realm.commitTransaction();
-            return message;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> EventBus.getDefault().post(new MessageChat(message)));
+
+            messageEdited[0] = new Message(message);
+        });
+        realm.close();
+
+        if (EventBus.getDefault().hasSubscriberForEvent(MessageChat.class)) {
+            EventBus.getDefault().post(new MessageChat(messageEdited[0]));
+        }
     }
 
     public void sendStatusTyping(String idSender, String idReceiver, boolean isTyping) {
@@ -210,7 +214,9 @@ public class SocketUtil {
         JSONObject jsonObject = (JSONObject) arg;
 
         try {
-            EventBus.getDefault().post(JsonUtil.getMessageTyping(jsonObject));
+            if (EventBus.getDefault().hasSubscriberForEvent(MessageTyping.class)) {
+                EventBus.getDefault().post(JsonUtil.getMessageTyping(jsonObject));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

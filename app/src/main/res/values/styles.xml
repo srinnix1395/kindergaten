@@ -14,6 +14,12 @@
         <item name="android:tint">@color/colorWhite</item>
     </style>
 
+    <style name="StyleEditTextChat" parent="AppTheme">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
+
+
+
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash_activity</item>
     </style>
@@ -25,7 +31,7 @@
     <!--chat -->
     <style name="TextViewItemChat">
         <item name="android:textSize">14sp</item>
-        <item name="android:maxWidth">280dp</item>
+        <item name="android:maxWidth">250dp</item>
     </style>
 
     <style name="TextViewItemChatLeft" parent="TextViewItemChat">

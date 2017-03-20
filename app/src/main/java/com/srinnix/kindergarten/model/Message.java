@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by DELL on 2/9/2017.
@@ -13,7 +12,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Message extends RealmObject {
 
-    @PrimaryKey
     @SerializedName("_id")
     @Expose
     private String id;
@@ -43,33 +41,35 @@ public class Message extends RealmObject {
     private int status;
 
     @Ignore
-    private int layoutType;
+    private boolean isTypingMessage;
 
     @Ignore
-    private boolean isTypingMessage;
+    private boolean isDisplayIcon;
 
     public Message() {
     }
 
-    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status, int layoutType) {
+    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status
+            , boolean isTypingMessage, boolean isDisplayIcon) {
         this.id = id;
         this.idSender = idSender;
         this.idReceiver = idReceiver;
         this.message = message;
         this.createdAt = createdAt;
         this.status = status;
-        this.layoutType = layoutType;
+        this.isTypingMessage = isTypingMessage;
+        this.isDisplayIcon = isDisplayIcon;
     }
 
-    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status, int layoutType, boolean isTypingMessage) {
-        this.id = id;
-        this.idSender = idSender;
-        this.idReceiver = idReceiver;
-        this.message = message;
-        this.createdAt = createdAt;
-        this.status = status;
-        this.layoutType = layoutType;
-        this.isTypingMessage = isTypingMessage;
+    public Message(Message messageSample) {
+        this.id = messageSample.getId();
+        this.idSender = messageSample.getIdSender();
+        this.idReceiver = messageSample.getIdReceiver();
+        this.message = messageSample.getMessage();
+        this.createdAt = messageSample.getCreatedAt();
+        this.status = messageSample.getStatus();
+        this.isTypingMessage = messageSample.isTypingMessage();
+        this.isDisplayIcon = messageSample.isDisplayIcon();
     }
 
     public String getId() {
@@ -104,15 +104,6 @@ public class Message extends RealmObject {
         this.message = message;
     }
 
-    public int getLayoutType() {
-        return layoutType;
-    }
-
-
-    public void setLayoutType(int layoutType) {
-        this.layoutType = layoutType;
-    }
-
     public long getCreatedAt() {
         return createdAt;
     }
@@ -143,5 +134,13 @@ public class Message extends RealmObject {
 
     public void setConversationId(String conversationId) {
         this.conversationId = conversationId;
+    }
+
+    public boolean isDisplayIcon() {
+        return isDisplayIcon;
+    }
+
+    public void setDisplayIcon(boolean displayIcon) {
+        isDisplayIcon = displayIcon;
     }
 }

@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -24,6 +25,8 @@ import com.srinnix.kindergarten.setting.activity.SettingActivity;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
+import io.reactivex.disposables.Disposable;
+
 /**
  * Created by DELL on 2/4/2017.
  */
@@ -34,6 +37,7 @@ public class MainPresenter extends BasePresenter {
 
     private MainDelegate mMainDelegate;
     private boolean isFirstOpenMenuChat = true;
+    private Disposable mDisposable;
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
@@ -82,14 +86,6 @@ public class MainPresenter extends BasePresenter {
         }
     }
 
-    public void lockMenu(DrawerLayout drawerLayout, boolean isLock) {
-        if (isLock) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        } else {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED);
-        }
-    }
-
     public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout, ViewPager viewPager) {
         if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             drawerLayout.closeDrawer(Gravity.RIGHT);
@@ -113,17 +109,32 @@ public class MainPresenter extends BasePresenter {
             String id = SharedPreUtils.getInstance(mContext).getUserID();
             String regID = FirebaseInstanceId.getInstance().getToken();
 
-            UpdateFirebaseRegId.updateRegId(mContext, token, id, regID);
+            UpdateFirebaseRegId.updateRegId(mContext, mDisposable, token, id, regID);
         }
     }
 
     public void signOut() {
-
+        // TODO: 3/20/2017 sign out
     }
 
     public void setupDrawerLayout(DrawerLayout mDrawer) {
         if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
+    public void loginSuccessfully(Toolbar mToolbar) {
+        mToolbar.getMenu().clear();
+        mToolbar.inflateMenu(R.menu.main_menu_signed_in);
+
+        KinderApplication.getInstance().getSocketUtil().connect(mContext);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
         }
     }
 }

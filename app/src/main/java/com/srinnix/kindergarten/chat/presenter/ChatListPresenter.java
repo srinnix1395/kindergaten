@@ -3,7 +3,6 @@ package com.srinnix.kindergarten.chat.presenter;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -13,13 +12,14 @@ import com.srinnix.kindergarten.chat.delegate.ChatListDelegate;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
-import com.srinnix.kindergarten.messageeventbus.MessageUserDisconnect;
+import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.util.AlertUtils;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,11 +48,17 @@ public class ChatListPresenter extends BasePresenter {
         mDisposable = new CompositeDisposable();
     }
 
-    public void onClickItemChat(Contact contact) {
+    public void onClickItemChat(Contact contact, String name, String urlImage) {
+        DebugLog.i(contact.getId());
         Intent intent = new Intent(mContext, DetailChatActivity.class);
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstant.KEY_INFO, contact);
+        bundle.putString(AppConstant.KEY_ID, contact.getId());
+        bundle.putString(AppConstant.KEY_NAME, name);
+        bundle.putInt(AppConstant.KEY_STATUS, contact.getStatus());
+        bundle.putString(AppConstant.KEY_IMAGE, urlImage);
+        bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, contact instanceof ContactParent ?
+                AppConstant.ACCOUNT_PARENTS : AppConstant.ACCOUNT_TEACHERS);
         intent.putExtras(bundle);
 
         mContext.startActivity(intent);
@@ -94,7 +100,7 @@ public class ChatListPresenter extends BasePresenter {
         mDisposable.add(Single.fromCallable(() -> {
             ArrayList<ContactParent> arrayList = new ArrayList<>();
 
-            Realm realm = KinderApplication.getInstance().getRealm();
+            Realm realm = Realm.getDefaultInstance();
             RealmResults<ContactParentRealm> results = realm.where(ContactParentRealm.class).findAll();
             for (ContactParentRealm result : results) {
                 ContactParent contactParent = new ContactParent();
@@ -105,6 +111,10 @@ public class ChatListPresenter extends BasePresenter {
                 contactParent.setChildren(result.getChildren());
 
                 arrayList.add(contactParent);
+            }
+
+            if (!realm.isClosed()) {
+                realm.close();
             }
 
             MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
@@ -139,7 +149,7 @@ public class ChatListPresenter extends BasePresenter {
         mDisposable.add(Single.fromCallable(() -> {
             ArrayList<ContactTeacher> arrayList = new ArrayList<>();
 
-            Realm realm = KinderApplication.getInstance().getRealm();
+            Realm realm = Realm.getDefaultInstance();
             RealmResults<ContactTeacherRealm> results = realm.where(ContactTeacherRealm.class).findAll();
             for (ContactTeacherRealm result : results) {
                 ContactTeacher contactTeacher = new ContactTeacher();
@@ -151,6 +161,10 @@ public class ChatListPresenter extends BasePresenter {
                 contactTeacher.setClassName(result.getClassName());
 
                 arrayList.add(contactTeacher);
+            }
+
+            if (!realm.isClosed()) {
+                realm.close();
             }
 
             MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
@@ -180,17 +194,17 @@ public class ChatListPresenter extends BasePresenter {
                 }));
     }
 
-    public void onUserDisconnect(ArrayList<Contact> listContact, MessageUserDisconnect message, ChatListAdapter mAdapter) {
+    public void onUserConnect(ArrayList<Contact> listContact, MessageUserConnect message, ChatListAdapter mAdapter) {
         int i = 0;
         for (Contact contact : listContact) {
-            if (contact.getId().endsWith(message.id)) {
-                contact.setStatus(ChatConstant.STATUS_OFFLINE);
+            if (contact.getId().equals(message.id)) {
+                contact.setStatus(message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE);
                 break;
             }
             i++;
         }
         if (i != listContact.size() && mChatListDelegate != null) {
-            mChatListDelegate.updateStatus(i);
+            mChatListDelegate.updateStatus(i, listContact.get(i).getStatus());
         }
     }
 }

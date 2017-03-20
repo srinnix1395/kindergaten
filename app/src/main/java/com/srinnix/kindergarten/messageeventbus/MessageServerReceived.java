@@ -8,10 +8,8 @@ import com.srinnix.kindergarten.model.Message;
 
 public class MessageServerReceived {
     public final Message data;
-    public final String id;
 
-    public MessageServerReceived(Message data, String id) {
+    public MessageServerReceived(Message data) {
         this.data = data;
-        this.id = id;
     }
 }

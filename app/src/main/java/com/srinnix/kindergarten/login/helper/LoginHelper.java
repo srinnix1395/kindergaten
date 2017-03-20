@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.login.helper;
 
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
+import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
@@ -10,6 +11,8 @@ import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -69,7 +72,15 @@ public class LoginHelper {
                     realm12.copyToRealmOrUpdate(c);
                 }
             }
-        }, loginDelegate::loginSuccessfully);
+        }, () -> {
+            if (loginDelegate != null) {
+                loginDelegate.loginSuccessfully();
+            }
+            EventBus.getDefault().postSticky(new MessageLoginSuccessfully());
+            if (!realm.isClosed()) {
+                realm.close();
+            }
+        });
     }
 
     public interface LoginListener {

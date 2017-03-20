@@ -1,5 +1,7 @@
 package com.srinnix.kindergarten.chat.helper;
 
+import android.content.Context;
+
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.model.Message;
@@ -7,11 +9,11 @@ import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.util.ServiceUtils;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
-import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -33,21 +35,21 @@ public class DetailChatHelper {
         mApi = RetrofitClient.getApiService();
     }
 
-    public void getPreviousMessage(Realm realm, String conversationID
-            , ArrayList<Object> listMessage, String token, DetailChatHelperListener listener) {
+    public void getPreviousMessage(Context mContext, String conversationID, ArrayList<Object> listMessage,
+                                   String token, DetailChatHelperListener listener) {
 
         long timeFirstMessage;
-        if (listMessage.size() == 1) {
+        if (listMessage.isEmpty()) {
             timeFirstMessage = System.currentTimeMillis();
         } else {
-            timeFirstMessage = ((Message) listMessage.get(1)).getCreatedAt();
+            timeFirstMessage = ((Message) listMessage.get(0)).getCreatedAt();
         }
 
-        Disposable disposable = Observable.concat(getMessageDB(realm, conversationID, timeFirstMessage),
-                getMessageApi(realm, token, conversationID, timeFirstMessage))
+        Disposable disposable = Observable.concat(getMessageDB(conversationID, timeFirstMessage),
+                getMessageApi(mContext, token, conversationID, timeFirstMessage))
                 .filter(arrayList -> arrayList.size() > 0)
                 .first(new ArrayList<>())
-                .compose(applyScheduler())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
                     if (listener != null) {
                         listener.onLoadMessageSuccessfully(listMessage);
@@ -58,14 +60,15 @@ public class DetailChatHelper {
                     }
                 });
         mDisposable.add(disposable);
+
     }
 
-    public <T> SingleTransformer<T, T> applyScheduler(){
-        return upstream -> upstream.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 
-    private Observable<ArrayList<Message>> getMessageApi(Realm realm, String token, String conversationID, long timeFirstMessage) {
+    private Observable<ArrayList<Message>> getMessageApi(Context mContext, String token, String conversationID, long timeFirstMessage) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            return Observable.just(new ArrayList<>());
+        }
+
         return mApi.getHistoryMessage(token, conversationID, timeFirstMessage)
                 .map(response -> {
                     if (response == null) {
@@ -81,24 +84,27 @@ public class DetailChatHelper {
                     return response.getData();
                 })
                 .doOnNext(messages -> {
-                    if (messages != null) {
-                        saveMessage(realm, messages);
+                    if (messages != null && messages.size() > 0) {
+                        saveMessage(messages);
                     }
                 })
                 .subscribeOn(Schedulers.io());
     }
 
-    private void saveMessage(Realm realm, ArrayList<Message> messages) {
-        realm.beginTransaction();
-        realm.copyToRealm(messages);
-        realm.commitTransaction();
+    private void saveMessage(ArrayList<Message> messages) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> realm1.copyToRealm(messages));
+        realm.close();
     }
 
-    private Observable<ArrayList<Message>> getMessageDB(Realm realm, String conversationID, long timeFirstMessage) {
-        return Observable.fromCallable(() -> realm.where(Message.class)
-                .equalTo("conversationId", conversationID)
-                .lessThan("created_at", timeFirstMessage)
-                .findAllSorted("created_at", Sort.DESCENDING))
+    private Observable<ArrayList<Message>> getMessageDB(String conversationID, long timeFirstMessage) {
+        return Observable.fromCallable(() -> {
+            Realm realm = Realm.getDefaultInstance();
+            return realm.where(Message.class)
+                    .equalTo("conversationId", conversationID)
+                    .lessThan("createdAt", timeFirstMessage)
+                    .findAllSorted("createdAt", Sort.DESCENDING);
+        })
                 .filter(messages -> messages.size() > 0)
                 .map(messages -> {
                     ArrayList<Message> arrayList = new ArrayList<>();

@@ -1,5 +1,7 @@
 package com.srinnix.kindergarten.service;
 
+import android.support.v4.util.ArrayMap;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -16,6 +18,8 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
     }
 
     private void handleMessage(RemoteMessage remoteMessage) {
-        //// TODO: 3/4/2017  notification
+        ArrayMap<String, String> arrayMap = (ArrayMap<String, String>) remoteMessage.getData();
+
+
     }
 }

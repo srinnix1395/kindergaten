@@ -7,13 +7,14 @@ package com.srinnix.kindergarten.constant;
 public class ChatConstant {
 
 //    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-        public static final String SERVER_URL = "http://192.168.0.101:3000/";
+        public static final String SERVER_URL = "http://192.168.0.103:3000/";
 
     //Event START
     public static final String EVENT_SETUP_CONTACT = "setup_contacts";
     public static final String EVENT_SEND_SUCCESSFULLY = "send_successfully";
     public static final String EVENT_TYPING = "typing";
     public static final String EVENT_USER_DISCONNECT = "user_disconnect";
+    public static final String EVENT_USER_CONNECT = "user_connected";
 
     //Event END
 

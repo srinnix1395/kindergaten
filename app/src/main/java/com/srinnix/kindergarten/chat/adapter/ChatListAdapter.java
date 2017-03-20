@@ -6,30 +6,49 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.chat.adapter.payload.StatusPayload;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ChatViewHolder;
 import com.srinnix.kindergarten.model.Contact;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by DELL on 2/6/2017.
  */
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatViewHolder> {
-	private ArrayList<Contact> arrayList;
-	private OnClickItemChatListener onClickItemChatListener;
-	
-	public ChatListAdapter(ArrayList<Contact> arrayList, OnClickItemChatListener onClickItemChatListener) {
-		this.arrayList = arrayList;
-		this.onClickItemChatListener = onClickItemChatListener;
-	}
-	
-	@Override
-	public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_list, parent
-				, false);
-		return new ChatViewHolder(view, onClickItemChatListener);
-	}
+    private ArrayList<Contact> arrayList;
+    private OnClickItemChatListener onClickItemChatListener;
+
+    public ChatListAdapter(ArrayList<Contact> arrayList, OnClickItemChatListener onClickItemChatListener) {
+        this.arrayList = arrayList;
+        this.onClickItemChatListener = onClickItemChatListener;
+    }
+
+    @Override
+    public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_list, parent
+                , false);
+        return new ChatViewHolder(view, onClickItemChatListener);
+    }
+
+    @Override
+    public void onBindViewHolder(ChatViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+            return;
+        }
+        if (payloads.get(0) instanceof StatusPayload) {
+            holder.bindStatus(((StatusPayload) payloads.get(0)).status);
+            return;
+        }
+
+        for (Contact contact : arrayList) {
+            holder.bindStatus(contact.getStatus());
+        }
+    }
 
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
@@ -37,11 +56,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     }
 
     @Override
-	public int getItemCount() {
-		return arrayList.size();
-	}
-	
-	public interface OnClickItemChatListener {
-		void onClick(int position);
-	}
+    public int getItemCount() {
+        return arrayList.size();
+    }
+
+    public interface OnClickItemChatListener {
+        void onClick(int position, String name, String urlImage);
+    }
 }

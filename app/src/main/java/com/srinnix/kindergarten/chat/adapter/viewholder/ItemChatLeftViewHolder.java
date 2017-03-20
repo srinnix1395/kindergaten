@@ -3,14 +3,16 @@ package com.srinnix.kindergarten.chat.adapter.viewholder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.chat.adapter.ShowTimeListener;
-import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -36,15 +38,24 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_typing)
     ImageView imvTyping;
 
+    @BindView(R.id.cardview_icon)
+    CardView cardViewIcon;
+
     private ValueAnimator mAnimatorIn;
     private ValueAnimator mAnimatorOut;
     private int position;
     private ShowTimeListener mShowTimeListener;
     private int heightTimeExpand;
 
-    public ItemChatLeftViewHolder(View itemView, ShowTimeListener mShowTimeListener) {
+    private final String urlImage;
+    private final int accountType;
+
+    public ItemChatLeftViewHolder(View itemView, String urlImage, int accountType, ShowTimeListener mShowTimeListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+
+        this.urlImage = urlImage;
+        this.accountType = accountType;
 
         heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
 
@@ -82,8 +93,11 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     public void bindData(Message message, int position) {
         this.position = position;
 
+        bindImage(message.isDisplayIcon());
+
+
         if (message.isTypingMessage()) {
-            bindDataMessageTyping(message);
+            bindDataMessageTyping();
         } else {
             bindDataMessage(message);
         }
@@ -99,56 +113,40 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void bindDataMessage(Message message) {
-        imvTyping.setVisibility(View.GONE);
-        tvMessage.setVisibility(View.VISIBLE);
-
         tvMessage.setText(message.getMessage());
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
-        switch (message.getLayoutType()) {
-            case ChatConstant.FIRST: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_first);
-                break;
-            }
-            case ChatConstant.MIDDLE: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_middle);
-                break;
-            }
-            case ChatConstant.LAST: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_last);
-                break;
-            }
-            case ChatConstant.SINGLE: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatleft_single);
-                break;
-            }
-        }
+        imvTyping.setVisibility(View.GONE);
+        tvMessage.setVisibility(View.VISIBLE);
     }
 
-    private void bindDataMessageTyping(Message message) {
-        imvTyping.setVisibility(View.VISIBLE);
-        tvMessage.setVisibility(View.GONE);
-
+    private void bindDataMessageTyping() {
         tvMessage.setText("");
         tvTime.setText("");
 
-        switch (message.getLayoutType()) {
-            case ChatConstant.FIRST: {
-                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_first);
-                break;
+        imvTyping.setVisibility(View.VISIBLE);
+        tvMessage.setVisibility(View.GONE);
+    }
+
+    public void bindImage(boolean isDisplayIcon) {
+        if (isDisplayIcon) {
+            cardViewIcon.setVisibility(View.VISIBLE);
+            if (accountType == AppConstant.ACCOUNT_PARENTS) {
+                Glide.with(itemView.getContext())
+                        .load(urlImage)
+                        .placeholder(R.drawable.dummy_image)
+                        .error(R.drawable.image_parent)
+                        .into(imvIcon);
+            } else {
+                Glide.with(itemView.getContext())
+                        .load(urlImage)
+                        .placeholder(R.drawable.dummy_image)
+                        .error(R.drawable.image_teacher)
+                        .into(imvIcon);
             }
-            case ChatConstant.MIDDLE: {
-                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_middle);
-                break;
-            }
-            case ChatConstant.LAST: {
-                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_last);
-                break;
-            }
-            case ChatConstant.SINGLE: {
-                imvTyping.setBackgroundResource(R.drawable.background_itemchatleft_single);
-                break;
-            }
+        } else {
+            cardViewIcon.setVisibility(View.INVISIBLE);
+            imvIcon.setImageDrawable(null);
         }
     }
 

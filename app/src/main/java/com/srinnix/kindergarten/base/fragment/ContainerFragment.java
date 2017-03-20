@@ -7,7 +7,7 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
  * Created by anhtu on 3/17/2017.
  */
 
-public class ContainterFragment extends BaseFragment {
+public class ContainerFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {

@@ -10,16 +10,18 @@ import android.view.MenuItem;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
+import com.srinnix.kindergarten.base.fragment.ContainerFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
-import com.srinnix.kindergarten.camera.fragment.CameraFragment;
-import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
-import com.srinnix.kindergarten.clazz.fragment.ClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.adapter.MainAdapter;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
+import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -67,9 +69,9 @@ public class MainFragment extends BaseFragment implements MainDelegate {
 
         ArrayList<Fragment> arrayList = new ArrayList<>();
         arrayList.add(BulletinBoardFragment.newInstance());
-        arrayList.add(ClassFragment.newInstance());
-        arrayList.add(new CameraFragment());
-        arrayList.add(new InfoChildrenFragment());
+        arrayList.add(new ContainerFragment());
+        arrayList.add(new ContainerFragment());
+        arrayList.add(new ContainerFragment());
 
         MainAdapter adapter = new MainAdapter(getChildFragmentManager(), arrayList);
         mViewPager.setAdapter(adapter);
@@ -137,6 +139,24 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     public void inflateMenuToolbarLogin() {
         mToolbar.getMenu().clear();
         mToolbar.inflateMenu(R.menu.main_menu_signed_in);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(sticky = true)
+    public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
+        EventBus.getDefault().removeStickyEvent(MessageLoginSuccessfully.class);
+        mPresenter.loginSuccessfully(mToolbar);
     }
 
     public void onBackPressed() {

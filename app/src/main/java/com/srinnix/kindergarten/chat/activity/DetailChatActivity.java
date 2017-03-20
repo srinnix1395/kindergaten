@@ -18,9 +18,7 @@ public class DetailChatActivity extends BaseActivity {
         Intent intent = getIntent();
 
         DetailChatFragment fragment = new DetailChatFragment();
-        fragment.setArguments(intent.getExtras());
-
-        ViewManager.getInstance().addFragment(fragment);
+        ViewManager.getInstance().addFragment(fragment, intent.getExtras());
     }
 
 }

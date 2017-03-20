@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 
@@ -39,7 +41,15 @@ public class StringUtil {
         return "";
     }
 
-    public static String getNameContactTeacher(Context context, ContactTeacher contact) {
+    public static String getNameContact(Context context, Contact contact) {
+        if (contact instanceof ContactParent) {
+            return getNameContactParent(context, (ContactParent) contact);
+        } else {
+            return getNameContactTeacher(context, (ContactTeacher) contact);
+        }
+    }
+
+    private static String getNameContactTeacher(Context context, ContactTeacher contact) {
         String[] names = contact.getName().split(" ");
         int size = names.length;
 
@@ -52,7 +62,7 @@ public class StringUtil {
         }
     }
 
-    public static String getNameContactParent(Context context, ContactParent contact) {
+    private static String getNameContactParent(Context context, ContactParent contact) {
         String[] namesParent = contact.getName().split(" ");
         int size = namesParent.length;
 
@@ -75,5 +85,19 @@ public class StringUtil {
     public static String getTime(long createdAt) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault());
         return dateFormat.format(new Date(createdAt));
+    }
+
+    public static String getStatus(Context context, int status) {
+        switch (status) {
+            case ChatConstant.STATUS_ONLINE: {
+                return context.getString(R.string.online);
+            }
+            case ChatConstant.STATUS_OFFLINE: {
+                return context.getString(R.string.offline);
+            }
+            default: {
+                return "";
+            }
+        }
     }
 }

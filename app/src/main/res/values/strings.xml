@@ -43,4 +43,7 @@
     <string name="login_to_see">Hãy đăng nhập để xem đầy đủ</string>
     <string name="login_to_chat">Hãy đăng nhập để trò chuyện!</string>
     <string name="login_successfully">Đăng nhập thành công</string>
+    <string name="cant_connect">Không thể kết nối, chạm để thử lại</string>
+    <string name="online">Đang hoạt động</string>
+    <string name="offline">Không hoạt động</string>
 </resources>

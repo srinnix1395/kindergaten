@@ -102,8 +102,8 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 
     @Override
     public void onDestroy() {
-        mBasePresenter.onDestroy();
         super.onDestroy();
+        mBasePresenter.onDestroy();
     }
 
     public void onBackPressed() {

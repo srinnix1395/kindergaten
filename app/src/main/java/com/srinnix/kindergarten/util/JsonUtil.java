@@ -44,7 +44,7 @@ public class JsonUtil {
         String idReceiver = jsonObject.getString(ChatConstant._ID_RECEIVER);
         boolean isTyping = jsonObject.getBoolean(ChatConstant.IS_TYPING);
 
-        return new MessageTyping(new Message("", idSender, idReceiver, "", System.currentTimeMillis(), ChatConstant.PENDING, ChatConstant.FIRST, isTyping));
+        return new MessageTyping(new Message("", idSender, idReceiver, "", System.currentTimeMillis(), ChatConstant.PENDING, isTyping, true));
     }
 
     public static String getIdUserDisconnect(Object object) {

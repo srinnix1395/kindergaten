@@ -32,13 +32,14 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     ImageView imvStatus;
 
     private int position;
+    private String urlImage;
 
     public ChatViewHolder(View itemView, ChatListAdapter.OnClickItemChatListener onClickItemChatListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(view -> {
             if (onClickItemChatListener != null) {
-                onClickItemChatListener.onClick(position);
+                onClickItemChatListener.onClick(position, tvName.getText().toString(), urlImage);
             }
         });
     }
@@ -46,7 +47,30 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     public void bindData(Contact contact, int position) {
         this.position = position;
 
-        switch (contact.getStatus()) {
+        bindStatus(contact.getStatus());
+
+        if (contact instanceof ContactTeacher) {
+            this.urlImage = ((ContactTeacher) contact).getImage();
+            Glide.with(itemView.getContext())
+                    .load(urlImage)
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_teacher)
+                    .into(imvIcon);
+        } else {
+            this.urlImage = ((ContactParent) contact).getChildren().get(0).getImage();
+            Glide.with(itemView.getContext())
+                    .load(urlImage)
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_parent)
+                    .into(imvIcon);
+        }
+        tvName.setText(StringUtil.getNameContact(itemView.getContext(), contact));
+    }
+
+    public void bindStatus(int status) {
+        switch (status) {
             case ChatConstant.STATUS_ONLINE: {
                 if (imvStatus.getVisibility() != View.VISIBLE) {
                     imvStatus.setVisibility(View.VISIBLE);
@@ -66,26 +90,5 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
                 break;
             }
         }
-
-        if (contact instanceof ContactTeacher) {
-            Glide.with(itemView.getContext())
-                    .load(((ContactTeacher) contact).getImage())
-                    .thumbnail(0.1f)
-                    .placeholder(R.drawable.dummy_image)
-                    .error(R.drawable.image_teacher)
-                    .into(imvIcon);
-            tvName.setText(StringUtil.getNameContactTeacher(itemView.getContext(),
-                    ((ContactTeacher) contact)));
-        } else {
-            Glide.with(itemView.getContext())
-                    .load(((ContactParent) contact).getChildren().get(0).getImage())
-                    .thumbnail(0.1f)
-                    .placeholder(R.drawable.dummy_image)
-                    .error(R.drawable.image_parent)
-                    .into(imvIcon);
-            tvName.setText(StringUtil.getNameContactParent(itemView.getContext(),
-                    ((ContactParent) contact)));
-        }
-
     }
 }

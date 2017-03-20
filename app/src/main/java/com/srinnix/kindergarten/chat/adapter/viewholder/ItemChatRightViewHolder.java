@@ -88,26 +88,11 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
 //        } else {
 //            mAnimatorOut.start();
 //        }
-        switch (message.getLayoutType()) {
-            case ChatConstant.FIRST: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatright_first);
-                break;
-            }
-            case ChatConstant.MIDDLE: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatright_middle);
-                break;
-            }
-            case ChatConstant.LAST: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatright_last);
-                break;
-            }
-            case ChatConstant.SINGLE: {
-                tvMessage.setBackgroundResource(R.drawable.background_itemchatright_single);
-                break;
-            }
-        }
+        bindStatusMessage(message.getStatus());
+    }
 
-        switch (message.getStatus()) {
+    public void bindStatusMessage(int status) {
+        switch (status) {
             case ChatConstant.PENDING: {
                 imvSeen.setImageResource(R.drawable.ic_circle);
                 break;

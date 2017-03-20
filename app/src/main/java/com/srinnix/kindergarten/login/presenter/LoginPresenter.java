@@ -6,7 +6,6 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -40,7 +39,7 @@ public class LoginPresenter extends BasePresenter {
     public LoginPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mLoginDelegate = (LoginDelegate) mDelegate;
-        mRealm = KinderApplication.getInstance().getRealm();
+        mRealm = Realm.getDefaultInstance();
         mLoginHelper = new LoginHelper();
     }
 
@@ -98,6 +97,14 @@ public class LoginPresenter extends BasePresenter {
     public void handleDestroy(String email) {
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             SharedPreUtils.getInstance(mContext).setLastEmailFragmentLogin(email);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!mRealm.isClosed()) {
+            mRealm.close();
         }
     }
 }

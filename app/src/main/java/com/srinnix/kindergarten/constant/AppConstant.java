@@ -11,7 +11,7 @@ public class AppConstant {
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.0.101:8080/";
+    public static final String BASE_URL = "http://192.168.0.103:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
@@ -77,9 +77,6 @@ public class AppConstant {
     public static final int ACCOUNT_TEACHERS = 2;
     public static final int ACCOUNT_MANAGERS = 3;
 
-    public static final String KEY_INFO = "INFO";
-    public static final String KEY_CONTACTS = "KEY_CONTACTS";
-
     public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
     public static final String URL_CAMERA = "URL_CAMERA";
 
@@ -87,4 +84,10 @@ public class AppConstant {
     public static final String FEMALE = "Nữ";
 
 
+    public static final String KEY_ID = "KEY_ID";
+    public static final String KEY_NAME = "KEY_NAME";
+    public static final String KEY_STATUS = "KEY_STATUS";
+    public static final String KEY_IMAGE = "KEY_IMAGE";
+    public static final String KEY_ACCOUNT_TYPE = "KEY_ACCOUNT_TYPE";
+    public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 }

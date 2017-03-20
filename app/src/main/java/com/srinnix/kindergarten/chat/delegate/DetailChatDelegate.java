@@ -10,15 +10,17 @@ import java.util.ArrayList;
  */
 
 public interface DetailChatDelegate extends BaseDelegate{
-    void addMessageLast(Message message);
+    void addMessage(Message message, int position);
 
-    void changeMessage(int position);
+    void changeDataMessage(int position);
 
     void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst);
 
     void loadMessageFail(boolean isLoadingDataFirst);
 
-    void addMessageLast(Message message, int position);
-
     void removeMessage(int position);
+
+    void changeDataMessage(int position, boolean isDisplayIconPayload);
+
+    void changeDataMessage(int position, int statusMessagePayload);
 }
