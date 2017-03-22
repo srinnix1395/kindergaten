@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
+import io.realm.annotations.Index;
 
 /**
  * Created by DELL on 2/9/2017.
@@ -24,6 +25,7 @@ public class Message extends RealmObject {
     @Expose
     private String idReceiver;
 
+    @Index
     @SerializedName("_id_conversation")
     @Expose
     private String conversationId;
@@ -43,7 +45,6 @@ public class Message extends RealmObject {
     @Ignore
     private boolean isTypingMessage;
 
-    @Ignore
     private boolean isDisplayIcon;
 
     public Message() {

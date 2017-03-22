@@ -14,26 +14,46 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
         android:layout_centerVertical="true"
         app:cardElevation="0dp">
 
-        <ImageView
-            android:id="@+id/imageview_icon"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"/>
+        <TextView
+            android:id="@+id/textview_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="C"/>
 
     </android.support.v7.widget.CardView>
 
-
-    <TextView
-        android:id="@+id/textview_class_name"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_horizontal"
-        android:layout_toRightOf="@+id/cardview_icon"
-        android:textSize="16sp"
-        tools:text="Chồi 4"/>
+        android:layout_toRightOf="@+id/cardview_icon">
+
+        <TextView
+            android:id="@+id/textview_class_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Chồi 4"/>
+
+        <TextView
+            android:id="@+id/textview_number_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_class_name"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="12sp"
+            tools:text="32 thành viên"/>
+    </RelativeLayout>
 </RelativeLayout>

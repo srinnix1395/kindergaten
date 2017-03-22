@@ -21,10 +21,11 @@ public class AppConstant {
     public static final String API_GET_POST_GUEST = "post/get/guest";
     public static final String API_LIKE_POST = "post/like";
     public static final String API_UNLIKE_POST = "post/unlike";
+    public static final String API_GET_LIST_LIKE = "post/getListLike";
 
 
-    public static final String API_GET_LIST_CLASS = "class/getListClass";
-    public static final String API_GET_DETAIL_CLASS = "class/getClassInfo";
+    public static final String API_GET_LIST_CLASS = "class/getList";
+    public static final String API_GET_DETAIL_CLASS = "class/getDetail";
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
 
     public static final String API_GET_MESSAGE = "chat/message";
@@ -64,6 +65,7 @@ public class AppConstant {
     public static final String USER_TYPE = "USER_TYPE";
     public static final String TOKEN = "TOKEN";
     public static final String _ID_CLASS = "_ID_CLASS";
+    public static final String _ID_SCHOOL = "_ID_SCHOOL";
 
     public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 
@@ -89,5 +91,16 @@ public class AppConstant {
     public static final String KEY_STATUS = "KEY_STATUS";
     public static final String KEY_IMAGE = "KEY_IMAGE";
     public static final String KEY_ACCOUNT_TYPE = "KEY_ACCOUNT_TYPE";
+    public static final String KEY_CLASS = "KEY_CLASS";
+    public static final String KEY_MEMBER = "KEY_MEMBER";
+
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
+
+    public static final int TYPE_CLASS_FRAGMENT = 1;
+    public static final int TYPE_CAMERA = 2;
+    public static final int TYPE_CHILDREN = 3;
+
+    public static final String SCREEN_ID = "SCREEN_ID";
+    public static final int FRAGMENT_DETAIL_CLASS = 1;
+    public static final int FRAGMENT_MEMBER_CLASS = 2;
 }

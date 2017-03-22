@@ -32,7 +32,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private static final int ITEM_RIGHT = 2;
     private static final int ITEM_TIME = 3;
 
-    private final Context context;
     private ArrayList<Object> arrayList;
     private PostAdapter.RetryListener mRetryListener;
     private int positionShowTime = -1;
@@ -43,7 +42,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public ChatAdapter(Context context, ArrayList<Object> arrayList, String urlImage
             , int accountType, PostAdapter.RetryListener mRetryListener) {
-        this.context = context;
         this.arrayList = arrayList;
         currentUserID = SharedPreUtils.getInstance(context).getUserID();
         this.urlImage = urlImage;

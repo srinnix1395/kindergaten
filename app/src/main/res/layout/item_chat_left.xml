@@ -59,4 +59,13 @@
         android:visibility="gone"
         app:srcCompat="@drawable/ic_dot_horizontal"/>
 
+    <ImageView
+        android:id="@+id/imageview_heart"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_item_chat"
+        android:layout_below="@+id/textview_chatleft_time"
+        android:layout_toRightOf="@+id/cardview_icon"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_heart_fill"/>
+
 </RelativeLayout>

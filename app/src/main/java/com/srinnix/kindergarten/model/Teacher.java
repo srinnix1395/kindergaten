@@ -36,6 +36,10 @@ public class Teacher {
     @Expose
     private String classId;
 
+    @SerializedName("class_name")
+    @Expose
+    private String className;
+
     public String getId() {
         return id;
     }
@@ -62,5 +66,9 @@ public class Teacher {
 
     public String getGender() {
         return gender;
+    }
+
+    public String getClassName() {
+        return className;
     }
 }

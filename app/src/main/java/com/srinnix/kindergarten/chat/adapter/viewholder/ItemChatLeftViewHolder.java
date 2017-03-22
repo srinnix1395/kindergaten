@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.chat.adapter.ShowTimeListener;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -40,6 +41,9 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.cardview_icon)
     CardView cardViewIcon;
+
+    @BindView(R.id.imageview_heart)
+    ImageView imvHeart;
 
     private ValueAnimator mAnimatorIn;
     private ValueAnimator mAnimatorOut;
@@ -95,7 +99,6 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
         bindImage(message.isDisplayIcon());
 
-
         if (message.isTypingMessage()) {
             bindDataMessageTyping();
         } else {
@@ -113,11 +116,22 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void bindDataMessage(Message message) {
-        tvMessage.setText(message.getMessage());
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
+        if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
+            tvMessage.setText("");
+
+            tvMessage.setVisibility(View.GONE);
+            imvHeart.setVisibility(View.VISIBLE);
+        } else {
+            tvMessage.setText(message.getMessage());
+
+            tvMessage.setVisibility(View.VISIBLE);
+            imvHeart.setVisibility(View.GONE);
+        }
+
         imvTyping.setVisibility(View.GONE);
-        tvMessage.setVisibility(View.VISIBLE);
+
     }
 
     private void bindDataMessageTyping() {
@@ -126,6 +140,7 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
         imvTyping.setVisibility(View.VISIBLE);
         tvMessage.setVisibility(View.GONE);
+        imvHeart.setVisibility(View.GONE);
     }
 
     public void bindImage(boolean isDisplayIcon) {

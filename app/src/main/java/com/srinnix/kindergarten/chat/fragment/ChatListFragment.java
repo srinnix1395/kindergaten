@@ -105,7 +105,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onEventSetupContactStatus(MessageContactStatus message) {
         if (listContact.size() > 0) {
-            EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
+//            EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
             mPresenter.onSetupContactStatus(message, listContact);
             mAdapter.notifyItemRangeChanged(0, listContact.size(), AppConstant.UPDATE_ALL_VIEW_HOLDER);
         }

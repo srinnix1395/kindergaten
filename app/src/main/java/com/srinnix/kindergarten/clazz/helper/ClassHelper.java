@@ -14,13 +14,15 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ClassHelper {
+    private CompositeDisposable mDisposable;
     private ApiService mApi;
 
-    public ClassHelper() {
+    public ClassHelper(CompositeDisposable mDisposable) {
         mApi = RetrofitClient.getApiService();
+        this.mDisposable = mDisposable;
     }
 
-    public void getClassInfo(CompositeDisposable mDisposable, String classId, boolean isTeacher,
+    public void getClassInfo(String classId, boolean isTeacher,
                              ClassInfoListener listener) {
         mDisposable.add(
                 mApi.getClassInfo(classId, isTeacher)

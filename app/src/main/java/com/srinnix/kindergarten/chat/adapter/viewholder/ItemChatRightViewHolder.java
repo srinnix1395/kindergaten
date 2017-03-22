@@ -33,6 +33,9 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_seen)
     ImageView imvSeen;
 
+    @BindView(R.id.imageview_heart)
+    ImageView imvHeart;
+
     private ValueAnimator mAnimatorIn;
     private ValueAnimator mAnimatorOut;
     private int position;
@@ -80,7 +83,17 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
     public void bindData(Message message, int position) {
         this.position = position;
 
-        tvMessage.setText(message.getMessage());
+        if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
+            tvMessage.setText("");
+
+            tvMessage.setVisibility(View.INVISIBLE);
+            imvHeart.setVisibility(View.VISIBLE);
+        } else {
+            tvMessage.setText(message.getMessage());
+
+            tvMessage.setVisibility(View.VISIBLE);
+            imvHeart.setVisibility(View.INVISIBLE);
+        }
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
 //        if (message.isShowTime()) {

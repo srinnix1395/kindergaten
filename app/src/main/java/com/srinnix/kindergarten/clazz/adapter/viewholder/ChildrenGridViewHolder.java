@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.children.adapter.ChildrenAdapter;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.util.StringUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,8 +41,11 @@ public class ChildrenGridViewHolder extends RecyclerView.ViewHolder {
         id = child.getId();
         Glide.with(itemView.getContext())
                 .load(child.getImage())
+                .thumbnail(0.1f)
+                .placeholder(R.drawable.dummy_image)
+                .error(R.drawable.image_children)
                 .into(imvIcon);
 
-        tvName.setText(child.getName());
+        tvName.setText(StringUtil.getNameChildren(child.getName()));
     }
 }

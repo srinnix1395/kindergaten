@@ -50,9 +50,9 @@ public class DetailChatHelper {
                 .filter(arrayList -> arrayList.size() > 0)
                 .first(new ArrayList<>())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
+                .subscribe(messageArrayList -> {
                     if (listener != null) {
-                        listener.onLoadMessageSuccessfully(listMessage);
+                        listener.onLoadMessageSuccessfully(messageArrayList);
                     }
                 }, throwable -> {
                     if (listener != null) {
@@ -60,9 +60,7 @@ public class DetailChatHelper {
                     }
                 });
         mDisposable.add(disposable);
-
     }
-
 
     private Observable<ArrayList<Message>> getMessageApi(Context mContext, String token, String conversationID, long timeFirstMessage) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
@@ -98,27 +96,23 @@ public class DetailChatHelper {
     }
 
     private Observable<ArrayList<Message>> getMessageDB(String conversationID, long timeFirstMessage) {
-        return Observable.fromCallable(() -> {
-            Realm realm = Realm.getDefaultInstance();
-            return realm.where(Message.class)
-                    .equalTo("conversationId", conversationID)
-                    .lessThan("createdAt", timeFirstMessage)
-                    .findAllSorted("createdAt", Sort.DESCENDING);
-        })
-                .filter(messages -> messages.size() > 0)
-                .map(messages -> {
+
+        return Observable.just(Realm.getDefaultInstance().where(Message.class)
+                .equalTo("conversationId", conversationID)
+                .lessThan("createdAt", timeFirstMessage)
+                .findAllSorted("createdAt", Sort.DESCENDING))
+                .map(results -> {
                     ArrayList<Message> arrayList = new ArrayList<>();
-                    int size = messages.size() > ChatConstant.ITEM_MESSAGE_PER_PAGE ? ChatConstant.ITEM_MESSAGE_PER_PAGE : messages.size();
+                    int size = results.size() > ChatConstant.ITEM_MESSAGE_PER_PAGE ? ChatConstant.ITEM_MESSAGE_PER_PAGE : results.size();
                     for (int i = 0; i < size; i++) {
-                        arrayList.add(0, messages.get(i));
+                        arrayList.add(results.get(i));
                     }
                     return arrayList;
-                })
-                .subscribeOn(Schedulers.io());
+                });
     }
 
     public interface DetailChatHelperListener {
-        void onLoadMessageSuccessfully(ArrayList<Object> arrayList);
+        void onLoadMessageSuccessfully(ArrayList<Message> arrayList);
 
         void onLoadMessageFail(Throwable throwable);
     }

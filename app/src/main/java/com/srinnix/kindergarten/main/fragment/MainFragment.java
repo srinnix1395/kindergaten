@@ -69,9 +69,9 @@ public class MainFragment extends BaseFragment implements MainDelegate {
 
         ArrayList<Fragment> arrayList = new ArrayList<>();
         arrayList.add(BulletinBoardFragment.newInstance());
-        arrayList.add(new ContainerFragment());
-        arrayList.add(new ContainerFragment());
-        arrayList.add(new ContainerFragment());
+        arrayList.add(ContainerFragment.newInstance(AppConstant.TYPE_CLASS_FRAGMENT));
+        arrayList.add(ContainerFragment.newInstance(AppConstant.TYPE_CAMERA));
+        arrayList.add(ContainerFragment.newInstance(AppConstant.TYPE_CHILDREN));
 
         MainAdapter adapter = new MainAdapter(getChildFragmentManager(), arrayList);
         mViewPager.setAdapter(adapter);

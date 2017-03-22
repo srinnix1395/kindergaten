@@ -48,4 +48,5 @@ public class ChatConstant {
 
     public static final int ITEM_MESSAGE_PER_PAGE = 30;
     public static final long TIME_DISTANCE = 300000;
+    public static final String ICON_HEART = "\\xE2\\heart\\xA5\\";
 }

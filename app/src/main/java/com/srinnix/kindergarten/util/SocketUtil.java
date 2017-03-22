@@ -111,7 +111,6 @@ public class SocketUtil {
     private void onServerReceived(Object arg) {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
-
             JSONObject data = (JSONObject) arg;
             String id = null;
             try {
@@ -126,7 +125,9 @@ public class SocketUtil {
             try {
                 message.setId(data.getString(ChatConstant._ID));
                 message.setCreatedAt(data.getLong(ChatConstant.CREATED_AT));
-                message.setStatus(ChatConstant.SERVER_RECEIVED);
+                if (message.getStatus() != ChatConstant.FRIEND_RECEIVED) {
+                    message.setStatus(ChatConstant.SERVER_RECEIVED);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -5,30 +5,4 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorBackground"
                 android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/imageview_retry"
-        android:layout_width="@dimen/item_size"
-        android:layout_height="@dimen/item_size"
-        android:layout_centerInParent="true"
-        android:padding="8dp"
-        android:src="@drawable/btn_loading"
-        android:visibility="visible"/>
-
-    <ProgressBar
-        android:id="@+id/progressbar_itemloading"
-        android:layout_width="@dimen/item_size"
-        android:layout_height="@dimen/item_size"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="@dimen/margin_vertical"
-        android:layout_marginTop="@dimen/margin_vertical"
-        android:padding="4.5dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageview_retry"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="5dp"
-        android:text="@string/cant_connect"/>
 </RelativeLayout>

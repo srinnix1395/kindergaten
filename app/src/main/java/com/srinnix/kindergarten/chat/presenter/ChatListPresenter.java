@@ -19,7 +19,6 @@ import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.util.AlertUtils;
-import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +48,6 @@ public class ChatListPresenter extends BasePresenter {
     }
 
     public void onClickItemChat(Contact contact, String name, String urlImage) {
-        DebugLog.i(contact.getId());
         Intent intent = new Intent(mContext, DetailChatActivity.class);
 
         Bundle bundle = new Bundle();
@@ -113,9 +111,7 @@ public class ChatListPresenter extends BasePresenter {
                 arrayList.add(contactParent);
             }
 
-            if (!realm.isClosed()) {
-                realm.close();
-            }
+            realm.close();
 
             MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
             if (message != null) {
@@ -132,11 +128,11 @@ public class ChatListPresenter extends BasePresenter {
                         }
                     }
                 }
-                EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
+//                EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
             }
 
             return arrayList;
-        }).subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(contactParents -> {
                     if (mChatListDelegate != null) {
@@ -163,9 +159,7 @@ public class ChatListPresenter extends BasePresenter {
                 arrayList.add(contactTeacher);
             }
 
-            if (!realm.isClosed()) {
-                realm.close();
-            }
+            realm.close();
 
             MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
             if (message != null) {
@@ -185,7 +179,7 @@ public class ChatListPresenter extends BasePresenter {
                 EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
             }
             return arrayList;
-        }).subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(contactTeachers -> {
                     if (mChatListDelegate != null) {

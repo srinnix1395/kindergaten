@@ -24,11 +24,15 @@
 
         <activity android:name=".main.activity.SplashActivity"/>
 
-        <activity android:name=".chat.activity.DetailChatActivity"/>
+        <activity
+            android:name=".chat.activity.DetailChatActivity"
+            android:windowSoftInputMode="stateHidden"/>
 
         <activity android:name=".login.activity.LoginActivity"/>
 
         <activity android:name=".setting.activity.SettingActivity"/>
+
+        <activity android:name=".clazz.activity.ClassActivity"/>
 
         <service
             android:name=".service.KindergartenMessagingService">

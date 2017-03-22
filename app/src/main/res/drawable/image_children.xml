@@ -2,9 +2,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/background_image_dummy"/>
     <item
-        android:top="5dp"
-        android:bottom="5dp"
+        android:bottom="6dp"
+        android:drawable="@drawable/ic_children_white"
         android:left="6dp"
-        android:right="4dp"
-        android:drawable="@drawable/ic_parent"/>
+        android:right="6dp"
+        android:top="6dp"/>
 </layer-list>

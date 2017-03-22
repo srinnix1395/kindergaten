@@ -1,18 +1,18 @@
 package com.srinnix.kindergarten.bulletinboard.adapter.viewholder;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Post;
-import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.util.StringUtil;
 
 import java.util.Locale;
@@ -42,7 +42,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     TextView tvNumberLike;
 
     @BindView(R.id.layout_image)
-    LinearLayout layoutImage;
+    CardView layoutImage;
 
     @BindView(R.id.view_line)
     View viewLine;
@@ -184,6 +184,12 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
                 "%d %s", post.getNumberOfLikes(), itemView.getContext().getString(R.string.likes)));
 
         imvLike.setImageResource(userLike ? R.drawable.ic_heart_fill : R.drawable.ic_heart_outline);
+
+        if (post.getListImage().isEmpty()) {
+            viewLine.setVisibility(View.VISIBLE);
+        } else {
+            viewLine.setVisibility(View.INVISIBLE);
+        }
     }
 
     @OnClick(R.id.imageview_like)

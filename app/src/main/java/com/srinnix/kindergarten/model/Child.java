@@ -1,5 +1,8 @@
 package com.srinnix.kindergarten.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,8 @@ import io.realm.RealmObject;
  * Created by anhtu on 2/21/2017.
  */
 
-public class Child extends RealmObject {
+public class Child extends RealmObject implements Parcelable {
+
     @SerializedName("_id")
     @Expose
     private String id;
@@ -65,6 +69,30 @@ public class Child extends RealmObject {
         this.name = name;
         this.idClass = idClass;
     }
+
+    protected Child(Parcel in) {
+        id = in.readString();
+        image = in.readString();
+        name = in.readString();
+        aka = in.readString();
+        DOB = in.readString();
+        gender = in.readString();
+        hobby = in.readString();
+        characteristic = in.readString();
+        idClass = in.readString();
+    }
+
+    public static final Creator<Child> CREATOR = new Creator<Child>() {
+        @Override
+        public Child createFromParcel(Parcel in) {
+            return new Child(in);
+        }
+
+        @Override
+        public Child[] newArray(int size) {
+            return new Child[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -132,5 +160,23 @@ public class Child extends RealmObject {
 
     public String getGender() {
         return gender;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(image);
+        dest.writeString(name);
+        dest.writeString(aka);
+        dest.writeString(DOB);
+        dest.writeString(gender);
+        dest.writeString(hobby);
+        dest.writeString(characteristic);
+        dest.writeString(idClass);
     }
 }

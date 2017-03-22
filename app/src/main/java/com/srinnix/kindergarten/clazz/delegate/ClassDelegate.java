@@ -8,5 +8,7 @@ import com.srinnix.kindergarten.request.model.ClassResponse;
  */
 
 public interface ClassDelegate extends BaseDelegate {
-    void displayInfo(ClassResponse classInfo);
+    void onLoadSuccess(ClassResponse classInfo);
+
+    void onLoadError(int resError);
 }

@@ -6,6 +6,7 @@ import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.model.TimeLineChildren;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
@@ -75,12 +76,17 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_INFO_CHILDREN)
     Observable<ApiResponse<Child>> getInfoChildren(@Header("x-access-token") String header,
-                                                   @Query("_id") String id);
+                                                   @Query("_id_teacher") String id);
 
     @GET(AppConstant.API_GET_TIMELINE_CHILDREN)
     Observable<ApiResponse<ArrayList<TimeLineChildren>>> getTimelineChildren(@Header("x-access-token") String header,
                                                                              @Query("time") long time);
 
+    @GET(AppConstant.API_GET_LIST_LIKE)
     Observable<ApiResponse<LikeModel>> getListNumberLike(@Header("x-access-token") String token,
                                                          @Query("_id_post") String id);
+
+
+    @GET(AppConstant.API_GET_INFO_TEACHER)
+    Observable<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
 }

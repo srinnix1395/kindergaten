@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollview_detail_class"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardview_class_name"
@@ -69,7 +69,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_vertical_post"
                 android:orientation="vertical">
 
                 <TextView
@@ -174,17 +175,40 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <ImageView
-            android:id="@+id/imageview_retry"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_centerInParent="true"
-            android:src="@drawable/btn_loading"/>
+        <RelativeLayout
+            android:id="@+id/layout_retry"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progressbar_class"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            <ImageView
+                android:id="@+id/imageview_retry"
+                android:layout_width="@dimen/item_size"
+                android:layout_height="@dimen/item_size"
+                android:layout_centerInParent="true"
+                android:padding="8dp"
+                android:src="@drawable/btn_loading"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                android:id="@+id/progressbar_loading"
+                android:layout_width="@dimen/item_size"
+                android:layout_height="@dimen/item_size"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/margin_vertical"
+                android:layout_marginTop="@dimen/margin_vertical"
+                android:padding="4.5dp"/>
+
+            <TextView
+                android:id="@+id/textview_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageview_retry"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:text="@string/cant_connect"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
     </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>

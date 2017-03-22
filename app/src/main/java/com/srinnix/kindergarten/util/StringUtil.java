@@ -49,7 +49,7 @@ public class StringUtil {
         }
     }
 
-    private static String getNameContactTeacher(Context context, ContactTeacher contact) {
+    public static String getNameContactTeacher(Context context, ContactTeacher contact) {
         String[] names = contact.getName().split(" ");
         int size = names.length;
 
@@ -76,8 +76,9 @@ public class StringUtil {
                     namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
         } else {
             return String.format("%s %s %s - %s %s %s", context.getString(R.string.Ms),
-                    namesParent[size - 2], namesParent[size - 1], context.getString(R.string.baby),
-                    namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
+                    namesParent[size - 2].equalsIgnoreCase("thị") ? "" : namesParent[size - 2]
+                    , namesParent[size - 1], context.getString(R.string.baby),
+                    namesChild[sizeChild - 2], namesChild[sizeChild - 1]).trim();
         }
 
     }
@@ -99,5 +100,14 @@ public class StringUtil {
                 return "";
             }
         }
+    }
+
+    public static String getNameChildren(String name) {
+        String[] names = name.split(" ");
+        int size = names.length;
+
+        return String.format("%s %s",
+                names[size - 2].equalsIgnoreCase("thị") ? "" : names[size - 2],
+                names[size - 1]).trim();
     }
 }

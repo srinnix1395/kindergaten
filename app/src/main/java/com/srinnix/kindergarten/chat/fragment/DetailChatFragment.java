@@ -28,7 +28,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollListener;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
-import com.srinnix.kindergarten.messageeventbus.MessageConnect;
+import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
@@ -109,7 +109,8 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         rvChat.setVisibility(View.INVISIBLE);
 //        rvChat.setItemAnimator(new ItemChatAnimator());
-        adapter = new ChatAdapter(mContext, listMessage, urlImage, accountType, () -> mPresenter.onLoadMore(listMessage));
+        adapter = new ChatAdapter(mContext, listMessage, urlImage, accountType,
+                () -> mPresenter.onLoadMore(listMessage));
         rvChat.setAdapter(adapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -117,7 +118,12 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
                 , EndlessScrollListener.POSITION_UP, ChatConstant.ITEM_MESSAGE_PER_PAGE) {
             @Override
             public void onLoadMore() {
-//                mPresenter.onLoadMore(listMessage);
+                mPresenter.onLoadMore(listMessage);
+            }
+        });
+        rvChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom && !listMessage.isEmpty()) {
+                rvChat.postDelayed(() -> rvChat.smoothScrollToPosition(listMessage.size() - 1), 100);
             }
         });
         rvChat.setLayoutManager(layoutManager);
@@ -129,8 +135,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
                 PorterDuff.Mode.SRC_ATOP);
 
         mPresenter.onLoadMore(listMessage);
-
-        imvSend.setEnabled(false);
     }
 
     private void setupToolbar() {
@@ -167,7 +171,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
     @OnClick(R.id.imageview_send)
     void onClickSend() {
-        mPresenter.onClickSend(listMessage, etMessage);
+        mPresenter.onClickSend(listMessage, etMessage, imvSend.getDrawable().getLevel());
     }
 
     @Override
@@ -184,6 +188,11 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventConnect(MessageContactStatus message) {
+        mPresenter.onEventConnect(message.arrayList);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -213,11 +222,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onUserConnect(message, tvStatus, listMessage);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventConnect(MessageConnect message) {
-        mPresenter.onConnect(tvStatus);
-    }
-
     @Subscribe
     public void onEventDisconnect(MessageDisconnect message) {
         mPresenter.onDisconnect(tvStatus, listMessage);
@@ -239,25 +243,31 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     @Override
-    public void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst) {
-        if (listMessage.size() != 0) {
-            if (arrayList.size() == ChatConstant.ITEM_MESSAGE_PER_PAGE) {
-                if (!(listMessage.get(0) instanceof LoadingItem)) {
-                    listMessage.add(new LoadingItem());
-                    adapter.notifyItemInserted(0);
-                }
-                listMessage.addAll(1, arrayList);
-                adapter.notifyItemRangeInserted(1, arrayList.size());
-            } else {
-                if ((listMessage.get(0) instanceof LoadingItem)) {
-                    listMessage.remove(0);
-                    adapter.notifyItemRemoved(0);
-                }
-                listMessage.addAll(0, arrayList);
-                adapter.notifyItemRangeInserted(0, arrayList.size());
+    public void loadMessageSuccess(ArrayList<Message> arrayList, boolean isLoadingDataFirst) {
+        if (arrayList.size() == 0) {
+            if (!listMessage.isEmpty() && (listMessage.get(0) instanceof LoadingItem)) {
+                listMessage.remove(0);
+                adapter.notifyItemRemoved(0);
             }
+        } else if (arrayList.size() == ChatConstant.ITEM_MESSAGE_PER_PAGE) {
+            if (listMessage.isEmpty() || !(listMessage.get(0) instanceof LoadingItem)) {
+                listMessage.add(new LoadingItem());
+                adapter.notifyItemInserted(0);
+            }
+            listMessage.addAll(1, arrayList);
+            adapter.notifyItemRangeInserted(1, arrayList.size());
+        } else {
+            if (!listMessage.isEmpty() && (listMessage.get(0) instanceof LoadingItem)) {
+                listMessage.remove(0);
+                adapter.notifyItemRemoved(0);
+            }
+            listMessage.addAll(0, arrayList);
+            adapter.notifyItemRangeInserted(0, arrayList.size());
         }
 
+//        if (listMessage.size() > 0) {
+//            rvChat.smoothScrollToPosition(listMessage.size() - 1);
+//        }
         if (isLoadingDataFirst) {
             UiUtils.hideProgressBar(pbLoading);
             rvChat.setVisibility(View.VISIBLE);
@@ -272,7 +282,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
             return;
         }
 
-        if (listMessage.get(0) instanceof LoadingItem) {
+        if (!listMessage.isEmpty() && listMessage.get(0) instanceof LoadingItem) {
             ((LoadingItem) listMessage.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
             adapter.notifyItemChanged(0);
         }
@@ -282,11 +292,17 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     public void addMessage(Message message, int position) {
         listMessage.add(position, message);
         adapter.notifyItemInserted(position);
+        rvChat.smoothScrollToPosition(listMessage.size() - 1);
     }
 
     @Override
     public void removeMessage(int position) {
         listMessage.remove(position);
         adapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void setStatus(String status) {
+        tvStatus.setText(status);
     }
 }

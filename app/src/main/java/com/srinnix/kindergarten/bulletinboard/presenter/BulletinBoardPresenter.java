@@ -5,14 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
+import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
+import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
-import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
-import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
-import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -210,7 +210,7 @@ public class BulletinBoardPresenter extends BasePresenter {
         mHelper.getListNumberLike(token, id, new BulletinBoardHelper.NumberLikeListener() {
             @Override
             public void onSuccess(ApiResponse<LikeModel> response) {
-
+                // TODO: 3/22/2017 hien thi list like
             }
 
             @Override

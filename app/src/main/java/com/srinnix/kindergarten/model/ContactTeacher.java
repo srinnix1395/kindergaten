@@ -29,6 +29,12 @@ public class ContactTeacher extends Contact {
 
     }
 
+    public ContactTeacher(String name, String gender, String className) {
+        this.name = name;
+        this.gender = gender;
+        this.className = className;
+    }
+
     public String getImage() {
         return image;
     }

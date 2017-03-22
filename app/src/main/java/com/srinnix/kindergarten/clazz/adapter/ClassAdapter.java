@@ -32,7 +32,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassViewHolder> {
 
     @Override
     public void onBindViewHolder(ClassViewHolder holder, int position) {
-        holder.bindData(mArrayList.get(position));
+        holder.bindData(mArrayList.get(position), position);
     }
 
     @Override

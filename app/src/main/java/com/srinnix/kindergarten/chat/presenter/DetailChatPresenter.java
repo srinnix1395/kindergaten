@@ -3,7 +3,6 @@ package com.srinnix.kindergarten.chat.presenter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +16,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 import com.srinnix.kindergarten.util.StringUtil;
@@ -45,7 +45,7 @@ public class DetailChatPresenter extends BasePresenter {
     private Realm mRealm;
     private CompositeDisposable mDisposable;
     private DetailChatDelegate mDetailChatDelegate;
-    private boolean mIsLoadingDataFirst = true;
+    private boolean isLoadingDataFirst = true;
 
     public DetailChatPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
@@ -106,19 +106,20 @@ public class DetailChatPresenter extends BasePresenter {
 
     private void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
         if (message.length() > 0) {
-            if (!imvSend.isEnabled()) {
-                imvSend.setEnabled(true);
-                imvSend.setImageLevel(2);
-            }
+            imvSend.setImageLevel(2);
         } else {
-            imvSend.setEnabled(false);
             imvSend.setImageLevel(1);
         }
     }
 
-    public void onClickSend(ArrayList<Object> listMessage, EditText editText) {
-        String message = editText.getText().toString().trim();
-        editText.setText("");
+    public void onClickSend(ArrayList<Object> listMessage, EditText editText, int level) {
+        String message;
+        if (level == 1 || level == 0) {
+            message = ChatConstant.ICON_HEART;
+        } else {
+            message = editText.getText().toString().trim();
+            editText.setText("");
+        }
 
         mRealm.beginTransaction();
         long l = System.currentTimeMillis();
@@ -169,11 +170,10 @@ public class DetailChatPresenter extends BasePresenter {
             if (size >= 2) {
                 Object o1 = listMessage.get(size - 2);
                 if (o1 instanceof Message && ((Message) o1).getIdReceiver().equals(message.getIdReceiver())) {
-                    ((Message) o1).setDisplayIcon(false);
+                    mRealm.executeTransaction(realm -> ((Message) o1).setDisplayIcon(false));
                     mDetailChatDelegate.changeDataMessage(size - 2, false);
                 }
             }
-
             Message m = (Message) objectLast;
             m.setId(message.getId());
             m.setIdSender(message.getIdSender());
@@ -186,6 +186,10 @@ public class DetailChatPresenter extends BasePresenter {
 
             mDetailChatDelegate.changeDataMessage(listMessage.size() - 1);
         } else {
+            if (objectLast instanceof Message && ((Message) objectLast).getIdSender().equals(message.getIdSender())) {
+                mRealm.executeTransaction(realm -> ((Message) objectLast).setDisplayIcon(false));
+                mDetailChatDelegate.changeDataMessage(size - 1, false);
+            }
             if (mDetailChatDelegate != null) {
                 mDetailChatDelegate.addMessage(message, listMessage.size());
             }
@@ -237,19 +241,21 @@ public class DetailChatPresenter extends BasePresenter {
         Object o = listMessage.get(size - 1);
         if (message.isTypingMessage()) {
             if (o instanceof Message && !(((Message) o).isTypingMessage())) {
-                ((Message) o).setDisplayIcon(false);
-                mDetailChatDelegate.changeDataMessage(size - 1);
+//                if (((Message) o).getIdSender().equals(message.getIdSender())) {
+//                    ((Message) o).setDisplayIcon(false);
+//                    mDetailChatDelegate.changeDataMessage(size - 1);
+//                }
                 mDetailChatDelegate.addMessage(message, listMessage.size());
             }
         } else {
             if (o instanceof Message && ((Message) o).isTypingMessage()) {
-                if (size >= 2) {
-                    Object o1 = listMessage.get(size - 2);
-                    if (o1 instanceof Message && ((Message) o1).getIdReceiver().equals(message.getIdReceiver())) {
-                        ((Message) o1).setDisplayIcon(true);
-                        mDetailChatDelegate.changeDataMessage(size - 2);
-                    }
-                }
+//                if (size >= 2) {
+//                    Object o1 = listMessage.get(size - 2);
+//                    if (o1 instanceof Message && ((Message) o1).getIdReceiver().equals(message.getIdReceiver())) {
+//                        ((Message) o1).setDisplayIcon(true);
+//                        mDetailChatDelegate.changeDataMessage(size - 2);
+//                    }
+//                }
                 mDetailChatDelegate.removeMessage(size - 1);
             }
         }
@@ -260,23 +266,23 @@ public class DetailChatPresenter extends BasePresenter {
 
         mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token, new DetailChatHelper.DetailChatHelperListener() {
             @Override
-            public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
+            public void onLoadMessageSuccessfully(ArrayList<Message> arrayList) {
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.loadMessageSuccess(arrayList, mIsLoadingDataFirst);
+                    mDetailChatDelegate.loadMessageSuccess(arrayList, isLoadingDataFirst);
                 }
-                if (mIsLoadingDataFirst) {
-                    mIsLoadingDataFirst = false;
+                if (isLoadingDataFirst) {
+                    isLoadingDataFirst = false;
                 }
             }
 
             @Override
             public void onLoadMessageFail(Throwable throwable) {
-                Log.d("ads", "onLoadMessageFail: " + throwable.getMessage());
+                DebugLog.i(throwable.getMessage());
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.loadMessageFail(mIsLoadingDataFirst);
+                    mDetailChatDelegate.loadMessageFail(isLoadingDataFirst);
                 }
-                if (mIsLoadingDataFirst) {
-                    mIsLoadingDataFirst = false;
+                if (isLoadingDataFirst) {
+                    isLoadingDataFirst = false;
                 }
             }
         });
@@ -332,10 +338,16 @@ public class DetailChatPresenter extends BasePresenter {
         }
     }
 
-    public void onConnect(TextView tvStatus) {
-        if (tvStatus != null) {
-//            tvStatus.setText();
-            // TODO: 3/20/2017 khi connect laij phai xem trang thai cua thang ng dung laf gi
+    public void onEventConnect(ArrayList<String> arrayList) {
+        if (mDetailChatDelegate == null) {
+            return;
+        }
+
+        if (arrayList.contains(mFriendId)) {
+            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_ONLINE));
+        } else {
+            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_OFFLINE));
         }
     }
+
 }

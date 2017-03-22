@@ -46,7 +46,7 @@ public class LoginPresenter extends BasePresenter {
     public void login(FragmentActivity activity, String email, String password, ProgressBar pbLoading,
                       Button btnLogin) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            AlertUtils.showToast(mContext, R.string.noInteretConnection);
+            AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
         }
 
