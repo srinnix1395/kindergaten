@@ -1,11 +1,60 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButton</item>
     </style>
+
+    <style name="MyOverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/colorWhite</item>
+    </style>
+
+    <style name="StyleEditTextChat" parent="AppTheme">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
+
+
+
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash_activity</item>
+    </style>
+
+    <style name="StyleEditText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--chat -->
+    <style name="TextViewItemChat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxWidth">250dp</item>
+    </style>
+
+    <style name="TextViewItemChatLeft" parent="TextViewItemChat">
+        <item name="android:textColor">@color/colorBlack</item>
+
+    </style>
+
+    <style name="TextViewItemChatRight" parent="TextViewItemChat">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="StyleEditTextFragmentLogin">
+        <item name="android:textColorHint">@color/colorWhiteFadeFade</item>
+        <item name="android:layout_marginLeft">@dimen/margin_horizontal_fragment_login</item>
+        <item name="android:layout_marginRight">@dimen/margin_horizontal_fragment_login</item>
+        <item name="android:background">@drawable/background_edit_text_fragment_login</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@color/colorWhiteFade</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+
+    <!--chat-->
+
 
 </resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top_item_chat">
+
+    <TextView
+        android:id="@+id/textview_chatright_time"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_bottom_item_time_chat"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/text_size_item_time_chat"
+        tools:text="17:58"/>
+
+    <ImageView
+        android:id="@+id/imageview_seen"
+        android:layout_width="@dimen/size_item_seen"
+        android:layout_height="@dimen/size_item_seen"
+        android:layout_alignBottom="@+id/textview_itemchatright_message"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/margin_horizontal_left_chat_item"
+        android:layout_marginRight="@dimen/margin_horizontal_right_chat_item"
+        tools:src="@drawable/ic_check_fill"/>
+
+    <TextView
+        android:id="@+id/textview_itemchatright_message"
+        style="@style/TextViewItemChatRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_chatright_time"
+        android:layout_toLeftOf="@+id/imageview_seen"
+        android:background="@drawable/background_itemchatright"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/padding_vertical_item_chat"
+        android:paddingLeft="@dimen/padding_horizontal_item_chat"
+        android:paddingRight="@dimen/padding_horizontal_item_chat"
+        android:paddingTop="@dimen/padding_vertical_item_chat"
+        android:visibility="invisible"
+        tools:text="xin chaof"/>
+
+    <ImageView
+        android:id="@+id/imageview_heart"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_item_chat"
+        android:layout_below="@+id/textview_chatright_time"
+        android:layout_toLeftOf="@+id/imageview_seen"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_heart_fill"/>
+
+
+</RelativeLayout>

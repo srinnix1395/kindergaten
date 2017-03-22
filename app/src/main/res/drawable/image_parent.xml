@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/background_image_dummy"/>
+    <item
+        android:top="5dp"
+        android:bottom="5dp"
+        android:left="6dp"
+        android:right="4dp"
+        android:drawable="@drawable/ic_parent"/>
+</layer-list>

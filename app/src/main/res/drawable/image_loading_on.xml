@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_round_solid" />
+    <item
+        android:bottom="@dimen/margin_image_loading"
+        android:drawable="@drawable/ic_refresh_on"
+        android:left="@dimen/margin_image_loading"
+        android:right="@dimen/margin_image_loading"
+        android:top="@dimen/margin_image_loading" />
+</layer-list>

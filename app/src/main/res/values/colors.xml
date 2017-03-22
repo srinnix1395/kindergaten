@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--<color name="colorPrimary">#03A9F4</color>-->
+    <!--<color name="colorPrimaryDark">#0288D1</color>-->
+    <!--<color name="colorAccent">#FF5722</color>-->
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#313f4f</color>
+    <color name="colorGreenActive">#44b81e</color>
+    <color name="colorGray">#BFBFBF</color>
+    <color name="colorWhiteFade">#ccffffff</color>
+    <color name="colorWhiteFadeFade">#8cffffff</color>
+
+    <!--<color name="colorPrimaryLight">#B3E5FC</color>-->
+
+    <!--<color name="colorBlackText">#212121</color>-->
+    <!--<color name="colorSecondaryText">#757575</color>-->
+    <color name="colorDividerColor">#BFBFBF</color>
+
+    <color name="colorPrimary">#6580d4</color>
+    <color name="colorPrimaryDark">#5e75c3</color>
+    <color name="colorAccent">#ff7878</color>
+
+    <color name="colorPrimaryDarker">#4c5e92</color>
+    <color name="colorPrimaryText">#313f4f</color>
+    <color name="colorSecondaryText">#708499</color>
+    <color name="colorThirdText">#d2d6df</color>
+    <color name="colorBackgroundWhite">#fefefe</color>
+
+    <!--chat START-->
+    <color name="colorBackgroundItemChatLeft">#E2E2E2</color>
+    <color name="colorBackgroundItemChatLeftOn">#BBBBBB</color>
+    <color name="colorBackgroundItemChatRight">@color/colorPrimary</color>
+    <color name="colorBackgroundItemChatRightOn">@color/colorPrimaryDarker</color>
+    <color name="colorBackgroundChatList">#EAEAEA</color>
+    <!--chat END-->
+
+    <color name="colorGrayIcon">#BDBDBD</color>
+    <color name="colorBackground">#EAEAEA</color>
+    <color name="colorThumbScrollbar">#59000000</color>
+    <color name="colorPrimaryFade">#4D6580d4</color>
+
 </resources>
