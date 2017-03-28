@@ -32,39 +32,32 @@ public class BulletinBoardHelper {
     }
 
     public void likePost(String token, String idUser, String idPost, LikeListener listener) {
+        if (listener == null) {
+            return;
+        }
         mDisposable.add(
                 mApiService.likePost(token, idUser, idPost)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(response -> {
-                                    if (listener != null) {
-                                        listener.onSuccess(response);
-                                    }
-                                }
-                                , throwable -> {
-                                    if (listener != null) {
-                                        listener.onFail(throwable);
-                                    }
-                                }));
+                        .subscribe(listener::onSuccess, listener::onFail));
     }
 
     public void unlikePost(String token, String idUser, String idPost, LikeListener listener) {
+        if (listener == null) {
+            return;
+        }
+
         mDisposable.add(mApiService.unlikePost(token, idUser, idPost)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                            if (listener != null) {
-                                listener.onSuccess(response);
-                            }
-                        }
-                        , throwable -> {
-                            if (listener != null) {
-                                listener.onFail(throwable);
-                            }
-                        }));
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 
     public void getPostSignIn(Context context, String token, String idUser, long timePrevPost, PostListener listener) {
+        if (listener == null) {
+            return;
+        }
+
         mDisposable.add(mApiService.getListPostMember(token, idUser, timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
@@ -79,7 +72,6 @@ public class BulletinBoardHelper {
                                 post.setUserLike(true);
                             }
                         }
-
                         return Observable.just(listPost);
                     }
 
@@ -90,18 +82,17 @@ public class BulletinBoardHelper {
                 .subscribe(o -> {
                             if (o instanceof Error) {
                                 ErrorUtil.handleErrorApi(context, (Error) o);
-                            } else if (listener != null) {
+                            } else {
                                 listener.onSuccess(((ArrayList<Post>) o));
                             }
                         }
-                        , throwable -> {
-                            if (listener != null) {
-                                listener.onFail(throwable);
-                            }
-                        }));
+                        , listener::onFail));
     }
 
     public void getPostUnsignIn(Context context, long timePrevPost, PostListener listener) {
+        if (listener == null) {
+            return;
+        }
         mDisposable.add(mApiService.getListPostGuest(timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
@@ -119,29 +110,20 @@ public class BulletinBoardHelper {
                 .subscribe(o -> {
                     if (o instanceof Error) {
                         ErrorUtil.handleErrorApi(context, (Error) o);
-                    } else if (listener != null) {
+                    } else {
                         listener.onSuccess((ArrayList<Post>) o);
                     }
-                }, throwable -> {
-                    if (listener != null) {
-                        listener.onFail(throwable);
-                    }
-                }));
+                }, listener::onFail));
     }
 
     public void getListNumberLike(String token, String id, NumberLikeListener listener) {
+        if (listener == null) {
+            return;
+        }
         mDisposable.add(mApiService.getListNumberLike(token, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    if (listener != null) {
-                        listener.onSuccess(response);
-                    }
-                }, throwable -> {
-                    if (listener != null) {
-                        listener.onFail(throwable);
-                    }
-                }));
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 
     public interface NumberLikeListener {

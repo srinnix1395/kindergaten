@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.chat.adapter.ShowTimeListener;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -36,52 +35,50 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_heart)
     ImageView imvHeart;
 
-    private ValueAnimator mAnimatorIn;
-    private ValueAnimator mAnimatorOut;
-    private int position;
+    private ValueAnimator mAnimatorShow;
+    private ValueAnimator mAnimatorHide;
+    private boolean isShowTime;
 
-    private int heightTimeExpand;
-    private ShowTimeListener mShowTimeListener;
-
-    public ItemChatRightViewHolder(View itemView, ShowTimeListener mShowTimeListener) {
+    public ItemChatRightViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
-        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
+        int heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
 
-        mAnimatorIn = ValueAnimator.ofInt(0, heightTimeExpand);
-        mAnimatorIn.addUpdateListener(valueAnimator1 -> {
+        mAnimatorShow = ValueAnimator.ofInt(0, heightTimeExpand);
+        mAnimatorShow.addUpdateListener(valueAnimator1 -> {
             tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
             tvTime.requestLayout();
         });
-        mAnimatorIn.addListener(new AnimatorListenerAdapter() {
+        mAnimatorShow.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                tvMessage.getBackground().setLevel(2);
+                if (tvMessage.getVisibility() == View.VISIBLE) {
+                    tvMessage.getBackground().setLevel(2);
+                }
             }
         });
-        mAnimatorIn.setDuration(300);
+        mAnimatorShow.setDuration(250);
 
-        mAnimatorOut = ValueAnimator.ofInt(heightTimeExpand, 0);
-        mAnimatorOut.addUpdateListener(valueAnimator1 -> {
+        mAnimatorHide = ValueAnimator.ofInt(heightTimeExpand, 0);
+        mAnimatorHide.addUpdateListener(valueAnimator1 -> {
             tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
             tvTime.requestLayout();
         });
-        mAnimatorOut.addListener(new AnimatorListenerAdapter() {
+        mAnimatorHide.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                tvMessage.getBackground().setLevel(1);
+                if (tvMessage.getVisibility() == View.VISIBLE) {
+                    tvMessage.getBackground().setLevel(1);
+                }
             }
         });
-        mAnimatorOut.setDuration(300);
-
-        this.mShowTimeListener = mShowTimeListener;
+        mAnimatorHide.setDuration(250);
     }
 
-    public void bindData(Message message, int position) {
-        this.position = position;
+    public void bindData(Message message) {
 
         if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
             tvMessage.setText("");
@@ -96,11 +93,6 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
         }
         tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
 
-//        if (message.isShowTime()) {
-//            mAnimatorIn.start();
-//        } else {
-//            mAnimatorOut.start();
-//        }
         bindStatusMessage(message.getStatus());
     }
 
@@ -129,8 +121,15 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.textview_itemchatright_message)
     void onClickMessage() {
-        if (mShowTimeListener != null) {
-            mShowTimeListener.onClickMessage(position);
+        if (isShowTime) {
+            if (!mAnimatorShow.isRunning()) {
+                mAnimatorHide.start();
+                isShowTime = false;
+            }
+        } else {
+            if (!mAnimatorHide.isRunning()) {
+                mAnimatorShow.start();
+            }
         }
     }
 }

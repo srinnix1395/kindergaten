@@ -138,8 +138,8 @@ public class DetailChatPresenter extends BasePresenter {
                 mDetailChatDelegate.addMessage(chatItem, 0);
             }
         } else {
-            Object o = listMessage.get(listMessage.size() - 1);
-            if (o instanceof Message && ((Message) o).isTypingMessage()) {
+            Object objectLast = listMessage.get(listMessage.size() - 1);
+            if (objectLast instanceof Message && ((Message) objectLast).isTypingMessage()) {
                 if (mDetailChatDelegate != null) {
                     mDetailChatDelegate.addMessage(chatItem, listMessage.size() - 1);
                 }
@@ -167,13 +167,13 @@ public class DetailChatPresenter extends BasePresenter {
         int size = listMessage.size();
         Object objectLast = listMessage.get(size - 1);
         if (objectLast instanceof Message && ((Message) objectLast).isTypingMessage()) {
-            if (size >= 2) {
-                Object o1 = listMessage.get(size - 2);
-                if (o1 instanceof Message && ((Message) o1).getIdReceiver().equals(message.getIdReceiver())) {
-                    mRealm.executeTransaction(realm -> ((Message) o1).setDisplayIcon(false));
-                    mDetailChatDelegate.changeDataMessage(size - 2, false);
-                }
-            }
+//            if (size >= 2) {
+//                Object o1 = listMessage.get(size - 2);
+//                if (o1 instanceof Message && ((Message) o1).getIdReceiver().equals(message.getIdReceiver())) {
+//                    ((Message) o1).setDisplayIcon(false);
+//                    mDetailChatDelegate.changeDataMessage(size - 2, false);
+//                }
+//            }
             Message m = (Message) objectLast;
             m.setId(message.getId());
             m.setIdSender(message.getIdSender());
@@ -182,14 +182,14 @@ public class DetailChatPresenter extends BasePresenter {
             m.setMessage(message.getMessage());
             m.setCreatedAt(message.getCreatedAt());
             m.setTypingMessage(false);
-            m.setDisplayIcon(true);
+//            m.setDisplayIcon(true);
 
             mDetailChatDelegate.changeDataMessage(listMessage.size() - 1);
         } else {
-            if (objectLast instanceof Message && ((Message) objectLast).getIdSender().equals(message.getIdSender())) {
-                mRealm.executeTransaction(realm -> ((Message) objectLast).setDisplayIcon(false));
-                mDetailChatDelegate.changeDataMessage(size - 1, false);
-            }
+//            if (objectLast instanceof Message && ((Message) objectLast).getIdSender().equals(message.getIdSender())) {
+//                ((Message) objectLast).setDisplayIcon(false);
+//                mDetailChatDelegate.changeDataMessage(size - 1, false);
+//            }
             if (mDetailChatDelegate != null) {
                 mDetailChatDelegate.addMessage(message, listMessage.size());
             }
@@ -241,32 +241,22 @@ public class DetailChatPresenter extends BasePresenter {
         Object o = listMessage.get(size - 1);
         if (message.isTypingMessage()) {
             if (o instanceof Message && !(((Message) o).isTypingMessage())) {
-//                if (((Message) o).getIdSender().equals(message.getIdSender())) {
-//                    ((Message) o).setDisplayIcon(false);
-//                    mDetailChatDelegate.changeDataMessage(size - 1);
-//                }
                 mDetailChatDelegate.addMessage(message, listMessage.size());
             }
         } else {
             if (o instanceof Message && ((Message) o).isTypingMessage()) {
-//                if (size >= 2) {
-//                    Object o1 = listMessage.get(size - 2);
-//                    if (o1 instanceof Message && ((Message) o1).getIdReceiver().equals(message.getIdReceiver())) {
-//                        ((Message) o1).setDisplayIcon(true);
-//                        mDetailChatDelegate.changeDataMessage(size - 2);
-//                    }
-//                }
                 mDetailChatDelegate.removeMessage(size - 1);
             }
         }
     }
 
     public void onLoadMore(ArrayList<Object> listMessage) {
+        DebugLog.i("");
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
         mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token, new DetailChatHelper.DetailChatHelperListener() {
             @Override
-            public void onLoadMessageSuccessfully(ArrayList<Message> arrayList) {
+            public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
                 if (mDetailChatDelegate != null) {
                     mDetailChatDelegate.loadMessageSuccess(arrayList, isLoadingDataFirst);
                 }

@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
 import com.srinnix.kindergarten.R;
@@ -7,7 +8,9 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
+import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
@@ -18,6 +21,7 @@ import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
 
@@ -35,6 +39,7 @@ public class BulletinBoardPresenter extends BasePresenter {
     private BulletinBoardDelegate mDelegate;
     private BulletinBoardHelper mHelper;
     private CompositeDisposable mDisposable;
+    private boolean isLoadFirst = true;
 
     public BulletinBoardPresenter(BaseDelegate delegate) {
         super(delegate);
@@ -83,7 +88,10 @@ public class BulletinBoardPresenter extends BasePresenter {
             @Override
             public void onSuccess(ArrayList<Post> arrayList) {
                 if (mDelegate != null) {
-                    mDelegate.updateSchoolBoard(arrayList);
+                    mDelegate.updateSchoolBoard(arrayList, isLoadFirst);
+                }
+                if (isLoadFirst) {
+                    isLoadFirst = false;
                 }
             }
 
@@ -99,7 +107,10 @@ public class BulletinBoardPresenter extends BasePresenter {
             @Override
             public void onSuccess(ArrayList<Post> arrayList) {
                 if (mDelegate != null) {
-                    mDelegate.updateSchoolBoard(arrayList);
+                    mDelegate.updateSchoolBoard(arrayList, isLoadFirst);
+                }
+                if (isLoadFirst) {
+                    isLoadFirst = false;
                 }
             }
 
@@ -119,11 +130,14 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
 
-    public void onClickLike(ArrayList<Object> arrPost, String idPost, boolean isLike) {
+    public void onClickLike(ArrayList<Object> arrPost, Post post) {
         if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            AlertUtils.showDialogToLogin(mContext, R.string.login_to_like);
+            AlertUtils.showToast(mContext, R.string.login_to_like);
             return;
         }
+
+        String idPost = post.getId();
+        boolean isLike = !post.isUserLike();
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
         String idUser = SharedPreUtils.getInstance(mContext).getUserID();
@@ -145,7 +159,7 @@ public class BulletinBoardPresenter extends BasePresenter {
 
             @Override
             public void onFail(Throwable throwable) {
-                handleExceptionLike(throwable);
+                ErrorUtil.handleException(mContext, new NullPointerException());
             }
         });
     }
@@ -159,7 +173,7 @@ public class BulletinBoardPresenter extends BasePresenter {
 
             @Override
             public void onFail(Throwable throwable) {
-                handleExceptionLike(throwable);
+                ErrorUtil.handleException(mContext, new NullPointerException());
             }
         });
     }
@@ -167,7 +181,7 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     private void handleResponseLike(ArrayList<Object> arrPost, ApiResponse<LikeResponse> response) {
         if (response == null) {
-            handleExceptionLike(new NullPointerException());
+            ErrorUtil.handleException(mContext, new NullPointerException());
             return;
         }
 
@@ -177,6 +191,12 @@ public class BulletinBoardPresenter extends BasePresenter {
                 for (Object o : arrPost) {
                     if (o instanceof Post && ((Post) o).getId().equals(response.getData().getIdPost())) {
                         ((Post) o).setUserLike(response.getData().isLike());
+                        if (response.getData().isLike()) {
+                            ((Post) o).setNumberOfLikes(((Post) o).getNumberOfLikes() + 1);
+                        } else {
+                            ((Post) o).setNumberOfLikes(((Post) o).getNumberOfLikes() - 1);
+                        }
+                        break;
                     }
                     i++;
                 }
@@ -185,18 +205,13 @@ public class BulletinBoardPresenter extends BasePresenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(integer -> {
                         if (mDelegate != null) {
-                            mDelegate.handleLikePost(integer);
+                            mDelegate.handleLikePost(integer, response.getData().isLike(), ((Post) arrPost.get(integer)).getNumberOfLikes());
+
                         }
                     });
         } else {
             ErrorUtil.handleErrorApi(mContext, response.error);
         }
-    }
-
-    private void handleExceptionLike(Throwable throwable) {
-        DebugLog.e(throwable.getMessage());
-
-        AlertUtils.showToast(mContext, R.string.commonError);
     }
 
     public void onClickNumberLike(String id) {
@@ -229,5 +244,16 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     public void refresh() {
         // TODO: 3/13/2017 refesh
+    }
+
+    public void onClickImages(Post post) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(AppConstant.KEY_IMAGE, post.getListImage());
+
+        ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle);
+    }
+
+    public void onClickComment(Post post) {
+
     }
 }

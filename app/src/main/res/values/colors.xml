@@ -39,5 +39,6 @@
     <color name="colorBackground">#EAEAEA</color>
     <color name="colorThumbScrollbar">#59000000</color>
     <color name="colorPrimaryFade">#4D6580d4</color>
+    <color name="colorBackgroundSnackbar">#59000000</color>
 
 </resources>

@@ -14,7 +14,7 @@ public interface DetailChatDelegate extends BaseDelegate{
 
     void changeDataMessage(int position);
 
-    void loadMessageSuccess(ArrayList<Message> arrayList, boolean isLoadingDataFirst);
+    void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst);
 
     void loadMessageFail(boolean isLoadingDataFirst);
 

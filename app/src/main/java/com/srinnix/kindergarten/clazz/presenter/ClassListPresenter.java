@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.clazz.activity.ClassActivity;
 import com.srinnix.kindergarten.clazz.delegate.ClassListDelegate;
+import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassListHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Class;
@@ -20,6 +19,7 @@ import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.UiUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
 
@@ -82,14 +82,10 @@ public class ClassListPresenter extends BasePresenter {
     }
 
     public void onClickClass(Class aClass) {
-        Intent intent = new Intent(mContext, ClassActivity.class);
-        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_DETAIL_CLASS);
-
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_CLASS, aClass.getId());
-        intent.putExtras(bundle);
 
-        mContext.startActivity(intent);
+        ViewManager.getInstance().addFragment(new DetailClassFragment(), bundle);
     }
 
     public void onClickRetry(ImageView imvRetry, TextView tvRetry, ProgressBar pbLoading) {

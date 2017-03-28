@@ -1,104 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_vertical_post"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
     android:layout_marginTop="@dimen/margin_vertical_post"
-    app:cardCornerRadius="@dimen/radius_post"
-    app:cardElevation="0dp">
+    android:background="@color/colorWhite"
+    android:paddingTop="@dimen/padding_post">
+
+    <TextView
+        android:id="@+id/textview_type_noti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_post"
+        android:layout_marginRight="@dimen/padding_post"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Thông báo"/>
+
+    <TextView
+        android:id="@+id/textview_created_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textview_type_noti"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/padding_post"
+        android:layout_marginRight="@dimen/padding_post"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="12sp"
+        tools:text="13 Feb at 21:58"/>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/textview_type_noti"
+        android:layout_marginTop="@dimen/margin_vertical_post"
+        android:background="@color/colorDividerColor"/>
 
     <RelativeLayout
+        android:id="@+id/layout_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:paddingTop="@dimen/padding_post">
-
-        <TextView
-            android:id="@+id/textview_type_noti"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding_post"
-            android:layout_marginRight="@dimen/padding_post"
-            android:fontFamily="sans-serif-light"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Thông báo"/>
-
-        <TextView
-            android:id="@+id/textview_created_at"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/padding_post"
-            android:layout_marginRight="@dimen/padding_post"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="12sp"
-            tools:text="13 Feb at 21:58"/>
-
-        <View
-            android:id="@+id/view_line"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@+id/textview_type_noti"
-            android:layout_marginTop="@dimen/margin_vertical_post"
-            android:background="@color/colorDividerColor"/>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/layout_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/view_line"
-            android:layout_marginBottom="@dimen/margin_vertical_post"
-            android:layout_marginLeft="@dimen/padding_post"
-            android:layout_marginRight="@dimen/padding_post"
-            android:layout_marginTop="@dimen/margin_vertical_post"
-            android:orientation="horizontal"
-            app:cardCornerRadius="@dimen/radius_post"
-            app:cardElevation="0dp">
-
-        </android.support.v7.widget.CardView>
-
-        <TextView
-            android:id="@+id/textview_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_image"
-            android:layout_marginBottom="@dimen/margin_vertical_post"
-            android:layout_marginLeft="@dimen/padding_post"
-            android:layout_marginRight="@dimen/padding_post"
-            android:layout_marginTop="@dimen/margin_vertical_post"
-            tools:text="Thông báo của trường mầm non là abcdef gh ijsladkfj aslkfj saldkfjsadlfkjasflkasjflskafjs;alkfjslkfjs;lfkjs;flkasjf;lksajf;aslkfjsa;lfkjsalfkjas"/>
+        android:layout_height="0dp"
+        android:layout_below="@+id/view_line"
+        android:layout_marginBottom="@dimen/margin_vertical_post"
+        android:layout_marginTop="@dimen/margin_vertical_post"
+        android:minHeight="250dp">
 
         <ImageView
-            android:id="@+id/imageview_like"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textview_content"
-            android:layout_marginRight="@dimen/padding_post"
-            android:scaleType="center"
-            android:src="@drawable/image_heart"/>
+            android:id="@+id/imageview_first_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
 
         <TextView
-            android:id="@+id/textview_number_like"
+            android:id="@+id/textview_number_image"
+            style="?android:attr/textAppearanceSmall"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_below="@+id/textview_content"
-            android:layout_marginLeft="@dimen/padding_post"
-            android:background="?selectableItemBackground"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_horizontal"
+            android:background="@drawable/background_number_image"
             android:clickable="true"
-            android:drawableLeft="@drawable/ic_heart_fill_gray"
-            android:drawablePadding="@dimen/padding_drawable"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_vertical"
-            android:textColor="@color/colorGrayIcon"
-            android:textStyle="bold"
-            tools:text="68 likes"/>
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_images"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingEnd="@dimen/margin_horizontal"
+            android:paddingStart="@dimen/margin_horizontal"
+            android:paddingTop="8dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"/>
     </RelativeLayout>
-</android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/textview_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_image"
+        android:layout_marginBottom="@dimen/margin_vertical_post"
+        android:layout_marginLeft="@dimen/padding_post"
+        android:layout_marginRight="@dimen/padding_post"
+        android:layout_marginTop="@dimen/margin_vertical_post"
+        tools:text="Thông báo của trường mầm non là abcdef gh ijsladkfj aslkfj saldkfjsadlfkjasflkasjflskafjs;alkfjslkfjs;lfkjs;flkasjf;lksajf;aslkfjsa;lfkjsalfkjas"/>
+
+    <ImageView
+        android:id="@+id/imageview_comment"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_below="@+id/textview_content"
+        android:layout_toLeftOf="@+id/imageview_like"
+        android:foreground="?selectableItemBackgroundBorderless"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_comment"/>
+
+
+    <ImageView
+        android:id="@+id/imageview_like"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textview_content"
+        android:layout_marginRight="@dimen/padding_post"
+        android:clickable="true"
+        android:foreground="?selectableItemBackgroundBorderless"
+        android:scaleType="center"
+        android:src="@drawable/image_heart"/>
+
+    <TextView
+        android:id="@+id/textview_number_like"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_below="@+id/textview_content"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:drawableLeft="@drawable/ic_heart_fill_gray"
+        android:drawablePadding="@dimen/padding_drawable"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/padding_post"
+        android:paddingRight="8dp"
+        android:textColor="@color/colorGrayIcon"
+        android:textStyle="bold"
+        tools:text="68 likes"/>
+
+    <TextView
+        android:id="@+id/textview_number_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_below="@+id/textview_content"
+        android:layout_toRightOf="@+id/textview_number_like"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/padding_post"
+        android:paddingRight="8dp"
+        android:textColor="@color/colorGrayIcon"
+        android:textStyle="bold"
+        tools:text="12 comments"/>
+</RelativeLayout>

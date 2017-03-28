@@ -6,6 +6,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
@@ -84,7 +85,7 @@ public class StringUtil {
     }
 
     public static String getTime(long createdAt) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - kk:mm", Locale.getDefault());
         return dateFormat.format(new Date(createdAt));
     }
 
@@ -109,5 +110,9 @@ public class StringUtil {
         return String.format("%s %s",
                 names[size - 2].equalsIgnoreCase("thị") ? "" : names[size - 2],
                 names[size - 1]).trim();
+    }
+
+    public static String getComment(Comment comment) {
+        return "<b>" + comment.getName() + "</b> " + comment.getComment();
     }
 }

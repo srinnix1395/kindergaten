@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_detail_commentt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_chat"
+        android:layout_below="@+id/toolbar_detail_commentt"
+        android:paddingBottom="6dp"
+        android:scrollbarSize="@dimen/widthScrollbarDetailChat"
+        android:scrollbarThumbVertical="@color/colorGray"
+        android:scrollbarTrackVertical="@color/colorWhite"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_comment"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_chat"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/width_icon_fragment_chat"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite"
+        android:descendantFocusability="beforeDescendants">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDividerColor"/>
+
+        <EditText
+            android:id="@+id/edittext_comment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imageview_send"
+            android:layout_toRightOf="@+id/imageview_icon"
+            android:background="@null"
+            android:hint="@string/hint_comment"
+            android:paddingLeft="@dimen/padding_horizontal_edittext"
+            android:paddingRight="@dimen/padding_horizontal_edittext"
+            android:textColor="@color/colorBlack"
+            android:textColorHighlight="@color/colorPrimary"
+            android:textColorHint="@color/colorSecondaryText"
+            android:theme="@style/StyleEditTextChat"/>
+
+        <ImageView
+            android:id="@+id/imageview_send"
+            android:layout_width="@dimen/width_icon_fragment_chat"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:scaleType="center"
+            app:srcCompat="@drawable/image_send_comment"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_retry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_chat"
+        android:layout_below="@+id/toolbar_detail_commentt"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageview_retry"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_centerInParent="true"
+            android:padding="8dp"
+            android:src="@drawable/btn_loading"/>
+
+        <TextView
+            android:id="@+id/textview_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview_retry"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/cant_connect"/>
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar_loading"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/margin_vertical"
+        android:layout_marginTop="@dimen/margin_vertical"
+        android:padding="4.5dp"/>
+</RelativeLayout>

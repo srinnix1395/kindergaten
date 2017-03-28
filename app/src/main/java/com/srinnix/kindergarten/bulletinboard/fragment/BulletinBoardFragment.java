@@ -51,15 +51,25 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
         postAdapter = new PostAdapter(mContext, arrPost,
                 () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
-                new PostAdapter.LikeListener() {
+                new PostAdapter.PostListener() {
                     @Override
-                    public void onClickLike(String idPost, boolean isLike) {
-                        mPresenter.onClickLike(arrPost, idPost, isLike);
+                    public void onClickLike(int position) {
+                        mPresenter.onClickLike(arrPost, (Post) arrPost.get(position));
                     }
 
                     @Override
-                    public void onClickNumberLike(String id) {
-                        mPresenter.onClickNumberLike(id);
+                    public void onClickNumberLike(int position) {
+                        mPresenter.onClickNumberLike(((Post) arrPost.get(position)).getId());
+                    }
+
+                    @Override
+                    public void onClickImage(int position) {
+                        mPresenter.onClickImages((Post) arrPost.get(position));
+                    }
+
+                    @Override
+                    public void onClickComment(int position) {
+                        mPresenter.onClickComment(((Post) arrPost.get(position)));
                     }
                 });
         rvListPost.setAdapter(postAdapter);
@@ -70,7 +80,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
-//                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
+                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
             }
         });
 
@@ -84,13 +94,17 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void updateSchoolBoard(ArrayList<Post> arrayList) {
+    public void updateSchoolBoard(ArrayList<Post> arrayList, boolean isLoadFirst) {
         int size = arrPost.size();
         if (size == 0) {
             //// TODO: 3/13/2017 khi không còn tin nào
         } else {
             arrPost.addAll(size - 1, arrayList);
             postAdapter.notifyItemRangeInserted(size - 1, arrayList.size());
+        }
+
+        if (isLoadFirst) {
+            rvListPost.scrollToPosition(0);
         }
     }
 
@@ -104,7 +118,15 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void handleLikePost(Integer position) {
-        postAdapter.notifyItemChanged(position);
+    public void handleLikePost(Integer position, boolean like, int numberOfLikes) {
+        if (like) {
+            AlertUtils.showToastSuccess(mContext, R.drawable.ic_heart_white, R.string.liked);
+        } else {
+            AlertUtils.showToastSuccess(mContext, R.drawable.ic_heart_broken_white, R.string.unliked);
+        }
+        ArrayList<Object> payloads = new ArrayList<>();
+        payloads.add(like);
+        payloads.add(numberOfLikes);
+        postAdapter.notifyItemChanged(position, payloads);
     }
 }

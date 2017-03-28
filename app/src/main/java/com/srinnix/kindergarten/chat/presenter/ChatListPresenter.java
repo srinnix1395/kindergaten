@@ -3,10 +3,9 @@ package com.srinnix.kindergarten.chat.presenter;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.DetailActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.chat.activity.DetailChatActivity;
 import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.chat.delegate.ChatListDelegate;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -18,7 +17,7 @@ import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
-import com.srinnix.kindergarten.util.AlertUtils;
+import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,7 +47,8 @@ public class ChatListPresenter extends BasePresenter {
     }
 
     public void onClickItemChat(Contact contact, String name, String urlImage) {
-        Intent intent = new Intent(mContext, DetailChatActivity.class);
+        Intent intent = new Intent(mContext, DetailActivity.class);
+        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_DETAIL_CHAT);
 
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, contact.getId());
@@ -95,6 +95,9 @@ public class ChatListPresenter extends BasePresenter {
     }
 
     private void getContactParent() {
+        if (mChatListDelegate == null) {
+            return;
+        }
         mDisposable.add(Single.fromCallable(() -> {
             ArrayList<ContactParent> arrayList = new ArrayList<>();
 
@@ -134,14 +137,14 @@ public class ChatListPresenter extends BasePresenter {
             return arrayList;
         }).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(contactParents -> {
-                    if (mChatListDelegate != null) {
-                        mChatListDelegate.addContactParent(contactParents);
-                    }
-                }, throwable -> AlertUtils.showToast(mContext, R.string.commonError)));
+                .subscribe(contactParents -> mChatListDelegate.addContactParent(contactParents),
+                        throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
     private void getContactTeacher() {
+        if (mChatListDelegate == null) {
+            return;
+        }
         mDisposable.add(Single.fromCallable(() -> {
             ArrayList<ContactTeacher> arrayList = new ArrayList<>();
 
@@ -181,11 +184,8 @@ public class ChatListPresenter extends BasePresenter {
             return arrayList;
         }).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(contactTeachers -> {
-                    if (mChatListDelegate != null) {
-                        mChatListDelegate.addContactTeacher(contactTeachers);
-                    }
-                }));
+                .subscribe(contactTeachers -> mChatListDelegate.addContactTeacher(contactTeachers),
+                        throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
     public void onUserConnect(ArrayList<Contact> listContact, MessageUserConnect message, ChatListAdapter mAdapter) {

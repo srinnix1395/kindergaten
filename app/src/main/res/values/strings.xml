@@ -46,4 +46,10 @@
     <string name="online">Đang hoạt động</string>
     <string name="offline">Không hoạt động</string>
     <string name="member">thành viên</string>
+    <string name="liked">Đã thích</string>
+    <string name="unliked">Đã bỏ thích</string>
+    <string name="hint_comment">Thêm một bình luận…</string>
+    <string name="comment">Bình luận</string>
+    <string name="login_to_comment">Hãy đăng nhập để bình luận!</string>
+    <string name="comment1">bình luận</string>
 </resources>

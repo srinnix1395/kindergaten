@@ -77,6 +77,10 @@ public class SharedPreUtils {
         return sharedPreferences.getInt(AppConstant.USER_TYPE, AppConstant.ACCOUNT_GUESTS);
     }
 
+    public String getAccountName() {
+        return sharedPreferences.getString(AppConstant.NAME, "");
+    }
+
     public void setLastEmailFragmentLogin(String email) {
         putString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, email);
     }
@@ -85,7 +89,7 @@ public class SharedPreUtils {
         return sharedPreferences.getString(AppConstant.LAST_EMAIL_FRAGMENT_LOGIN, "");
     }
 
-    public String getClassId(){
+    public String getClassId() {
         return sharedPreferences.getString(AppConstant._ID_CLASS, "");
     }
 
@@ -135,5 +139,10 @@ public class SharedPreUtils {
 
     public String getSchoolId() {
         return sharedPreferences.getString(AppConstant._ID_SCHOOL, "");
+    }
+
+    public String getImage() {
+        //todo image
+        return "";
     }
 }

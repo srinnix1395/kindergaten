@@ -10,31 +10,31 @@ import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessScrollListener extends RecyclerView.OnScrollListener {
 
-    public static final int POSITION_UP = 0;
-    public static final int POSITION_DOWN = 1;
+    public static final int DIRECTION_UP = 0;
+    public static final int DIRECTION_DOWN = 1;
 
     private RecyclerView.LayoutManager layoutManager;
     private boolean isLoading;
     private int previousTotalItemCount = 0;
     private int visibleThreshold;
-    private int positionLoading;
+    private int directionLoading;
 
     public EndlessScrollListener(RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
-        positionLoading = POSITION_DOWN;
+        directionLoading = DIRECTION_DOWN;
         visibleThreshold = 1;
     }
 
-    public EndlessScrollListener(RecyclerView.LayoutManager layoutManager, int positionLoading, int visibleThreshold) {
+    public EndlessScrollListener(RecyclerView.LayoutManager layoutManager, int directionLoading, int visibleThreshold) {
         this.layoutManager = layoutManager;
-        this.positionLoading = positionLoading;
+        this.directionLoading = directionLoading;
         this.visibleThreshold = visibleThreshold;
     }
 
     public EndlessScrollListener(GridLayoutManager layoutManager) {
         this.layoutManager = layoutManager;
         visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
-        positionLoading = POSITION_DOWN;
+        directionLoading = DIRECTION_DOWN;
         visibleThreshold = 3;
     }
 
@@ -45,12 +45,14 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         int totalItemCount = layoutManager.getItemCount();
         int firstOrLastVisibleItemCount = 0;
 
-        if (positionLoading == POSITION_DOWN) {
+        if (directionLoading == DIRECTION_DOWN) {
             if (layoutManager instanceof LinearLayoutManager) {
                 firstOrLastVisibleItemCount = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             } else if (layoutManager instanceof GridLayoutManager) {
                 firstOrLastVisibleItemCount = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
             }
+        } else {
+            firstOrLastVisibleItemCount = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
         }
 
         //if it's still loading and current total item > previous total item -> disable loading
@@ -61,7 +63,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 
         //if it is not loading and users reach the threshold of loading more -> load more data
         boolean isReachThreshold;
-        if (positionLoading == POSITION_DOWN) {
+        if (directionLoading == DIRECTION_DOWN) {
             isReachThreshold = (firstOrLastVisibleItemCount + visibleThreshold) >= totalItemCount;
         } else {
             isReachThreshold = (firstOrLastVisibleItemCount - visibleThreshold) <= 0;

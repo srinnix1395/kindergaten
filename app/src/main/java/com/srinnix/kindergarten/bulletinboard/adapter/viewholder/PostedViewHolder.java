@@ -1,11 +1,9 @@
 package com.srinnix.kindergarten.bulletinboard.adapter.viewholder;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,111 +39,32 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_number_like)
     TextView tvNumberLike;
 
+    @BindView(R.id.textview_number_comment)
+    TextView tvNumberComment;
+
     @BindView(R.id.layout_image)
-    CardView layoutImage;
+    RelativeLayout relImage;
+
+    @BindView(R.id.imageview_first_image)
+    ImageView imvFirstImage;
+
+    @BindView(R.id.textview_number_image)
+    TextView tvNumberImage;
 
     @BindView(R.id.view_line)
     View viewLine;
 
-    ImageView[] imageViews;
-    TextView tvMoreImage;
+    private PostAdapter.PostListener mPostListener;
+    private int position;
 
-    private PostAdapter.LikeListener mLikeListener;
-    private boolean userLike;
-    private String id;
-
-    public PostedViewHolder(View view, PostAdapter.LikeListener likeListener, int viewType) {
+    public PostedViewHolder(View view, PostAdapter.PostListener postListener, int viewType) {
         super(view);
         ButterKnife.bind(this, itemView);
-        mLikeListener = likeListener;
-        inflateLayout(viewType);
+        mPostListener = postListener;
     }
 
-    private void inflateLayout(int viewType) {
-        if (viewType == PostAdapter.VIEW_TYPE_POSTED_0) {
-            layoutImage.setVisibility(View.INVISIBLE);
-            viewLine.setVisibility(View.INVISIBLE);
-            return;
-        }
-
-        imageViews = new ImageView[5];
-        LayoutInflater inflater = LayoutInflater.from(itemView.getContext());
-        View view = null;
-        switch (viewType) {
-            case PostAdapter.VIEW_TYPE_POSTED_1: {
-                view = inflater.inflate(R.layout.layout_1_images, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_2_1: {
-                view = inflater.inflate(R.layout.layout_2_images_1, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_2_2: {
-                view = inflater.inflate(R.layout.layout_2_images_2, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_3_1: {
-                view = inflater.inflate(R.layout.layout_3_images_1, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_3_2: {
-                view = inflater.inflate(R.layout.layout_3_images_2, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_4_1: {
-                view = inflater.inflate(R.layout.layout_4_images_1, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_4_2: {
-                view = inflater.inflate(R.layout.layout_4_images_2, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_4_3: {
-                view = inflater.inflate(R.layout.layout_4_images_3, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_5_1: {
-                view = inflater.inflate(R.layout.layout_5_images_1, (ViewGroup) itemView, false);
-                break;
-            }
-            case PostAdapter.VIEW_TYPE_POSTED_5_2: {
-                view = inflater.inflate(R.layout.layout_5_images_2, (ViewGroup) itemView, false);
-                break;
-            }
-        }
-        layoutImage.addView(view);
-
-        if (view != null) {
-            imageViews[0] = (ImageView) view.findViewById(R.id.imageview_1);
-
-            if (viewType > PostAdapter.VIEW_TYPE_POSTED_1) {
-                imageViews[1] = (ImageView) view.findViewById(R.id.imageview_2);
-            } else {
-                return;
-            }
-
-            if (viewType > PostAdapter.VIEW_TYPE_POSTED_2_2) {
-                imageViews[2] = (ImageView) view.findViewById(R.id.imageview_3);
-            } else {
-                return;
-            }
-
-            if (viewType > PostAdapter.VIEW_TYPE_POSTED_3_2) {
-                imageViews[3] = (ImageView) view.findViewById(R.id.imageview_4);
-            } else {
-                return;
-            }
-
-            if (viewType > PostAdapter.VIEW_TYPE_POSTED_4_3) {
-                imageViews[4] = (ImageView) view.findViewById(R.id.imageview_5);
-                tvMoreImage = (TextView) view.findViewById(R.id.textview_more_image);
-            }
-        }
-    }
-
-    public void bindData(Post post) {
-        userLike = post.isUserLike();
-        id = post.getId();
+    public void bindData(Post post, int position) {
+        this.position = position;
 
         switch (post.getType()) {
             case AppConstant.POST_NORMAL: {
@@ -161,29 +80,28 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         tvCreatedAt.setText(StringUtil.getTime(post.getCreatedAt()));
 
         int size = post.getListImage().size();
-        for (int i = 0; i < size; i++) {
-            if (imageViews[i] != null) {
-                Glide.with(itemView.getContext())
-                        .load(post.getListImage().get(i))
-                        .placeholder(R.drawable.dummy_image)
-                        .error(R.drawable.dummy_image)
-                        .into(imageViews[i]);
-            } else {
-                break;
-            }
-            if (i == 4) {
-                break;
-            }
-        }
-        if (size > 5) {
-            tvMoreImage.setVisibility(View.VISIBLE);
-            tvMoreImage.setText(String.format(Locale.getDefault(), "+%d", size - 5));
+        if (size == 0) {
+            relImage.setVisibility(View.GONE);
+            imvFirstImage.setImageDrawable(null);
+        } else {
+            relImage.setVisibility(View.VISIBLE);
+            Glide.with(itemView.getContext())
+                    .load(post.getListImage().get(0))
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.dummy_image)
+                    .into(imvFirstImage);
+
         }
 
-        tvNumberLike.setText(String.format(Locale.getDefault(),
-                "%d %s", post.getNumberOfLikes(), itemView.getContext().getString(R.string.likes)));
+        if (size <= 1) {
+            tvNumberImage.setVisibility(View.GONE);
+        } else {
+            tvNumberImage.setVisibility(View.VISIBLE);
+            tvNumberImage.setText(String.format(Locale.getDefault(), "%d ảnh", size));
+        }
 
-        imvLike.setImageResource(userLike ? R.drawable.ic_heart_fill : R.drawable.ic_heart_outline);
+        bindImageLike(post.isUserLike(), post.getNumberOfLikes());
+        bindComment(post.getNumberOfComments());
 
         if (post.getListImage().isEmpty()) {
             viewLine.setVisibility(View.VISIBLE);
@@ -192,17 +110,42 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    public void bindComment(int numberOfComments) {
+        tvNumberComment.setText(String.format(Locale.getDefault(),
+                "%d %s", numberOfComments, itemView.getContext().getString(R.string.comment1)));
+    }
+
+    public void bindImageLike(boolean userLike, int numberLike) {
+        imvLike.setImageResource(userLike ? R.drawable.ic_heart_fill : R.drawable.ic_heart_outline);
+        tvNumberLike.setText(String.format(Locale.getDefault(),
+                "%d %s", numberLike, itemView.getContext().getString(R.string.likes)));
+    }
+
     @OnClick(R.id.imageview_like)
     void onClickLike() {
-        if (mLikeListener != null) {
-            mLikeListener.onClickLike(id, !userLike);
+        if (mPostListener != null) {
+            mPostListener.onClickLike(position);
         }
     }
 
     @OnClick(R.id.textview_number_like)
-    void onClickNumberLike(){
-        if (mLikeListener != null) {
-            mLikeListener.onClickNumberLike(id);
+    void onClickNumberLike() {
+        if (mPostListener != null) {
+            mPostListener.onClickNumberLike(position);
+        }
+    }
+
+    @OnClick(R.id.imageview_first_image)
+    void onClickImage() {
+        if (mPostListener != null) {
+            mPostListener.onClickImage(position);
+        }
+    }
+
+    @OnClick({R.id.imageview_comment, R.id.textview_number_comment})
+    void onClickComment() {
+        if (mPostListener != null) {
+            mPostListener.onClickComment(position);
         }
     }
 }

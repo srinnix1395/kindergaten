@@ -34,20 +34,11 @@ public class Post {
     @Expose
     private int numberOfLikes;
 
+    @SerializedName("number_of_comments")
+    @Expose
+    private int numberOfComments;
+
     private boolean isUserLike;
-
-    private String layoutImages;
-
-    public Post(String id, String content, ArrayList<String> listImage, int type, long createdAt
-            , int numberOfLikes, boolean isUserLike) {
-        this.id = id;
-        this.content = content;
-        this.listImage = listImage;
-        this.type = type;
-        this.createdAt = createdAt;
-        this.numberOfLikes = numberOfLikes;
-        this.isUserLike = isUserLike;
-    }
 
     public String getId() {
         return id;
@@ -73,6 +64,10 @@ public class Post {
         return numberOfLikes;
     }
 
+    public void setNumberOfLikes(int numberOfLikes) {
+        this.numberOfLikes = numberOfLikes;
+    }
+
     public boolean isUserLike() {
         return isUserLike;
     }
@@ -81,11 +76,11 @@ public class Post {
         isUserLike = userLike;
     }
 
-    public String getLayoutImages() {
-        return layoutImages;
+    public int getNumberOfComments() {
+        return numberOfComments;
     }
 
-    public void setLayoutImages(String layoutImages) {
-        this.layoutImages = layoutImages;
+    public void setNumberOfComments(int numberOfComments) {
+        this.numberOfComments = numberOfComments;
     }
 }

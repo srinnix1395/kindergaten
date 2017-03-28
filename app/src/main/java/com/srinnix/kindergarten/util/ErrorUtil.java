@@ -24,4 +24,10 @@ public class ErrorUtil {
         }
         //// TODO: 3/3/2017 handle error code
     }
+
+    public static void handleException(Context mContext, Throwable throwable) {
+        throwable.printStackTrace();
+
+        AlertUtils.showToast(mContext, R.string.commonError);
+    }
 }

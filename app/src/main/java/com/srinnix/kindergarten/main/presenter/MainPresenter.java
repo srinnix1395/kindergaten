@@ -13,11 +13,11 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.DetailActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.login.activity.LoginActivity;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
@@ -45,7 +45,8 @@ public class MainPresenter extends BasePresenter {
     }
 
     public void startActivityLogin() {
-        Intent intent = new Intent(mContext, LoginActivity.class);
+        Intent intent = new Intent(mContext, DetailActivity.class);
+        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_LOGIN);
         mContext.startActivity(intent);
     }
 

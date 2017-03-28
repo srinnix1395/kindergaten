@@ -10,9 +10,9 @@ import java.util.ArrayList;
  */
 
 public interface BulletinBoardDelegate extends BaseDelegate {
-    void updateSchoolBoard(ArrayList<Post> arrayList);
+    void updateSchoolBoard(ArrayList<Post> arrayList, boolean isLoadFirst);
 
     void setErrorItemLoading();
 
-    void handleLikePost(Integer integer);
+    void handleLikePost(Integer integer, boolean like, int numberOfLikes);
 }

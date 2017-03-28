@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.DetailActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.chat.activity.DetailChatActivity;
-import com.srinnix.kindergarten.clazz.activity.ClassActivity;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
+import com.srinnix.kindergarten.clazz.fragment.MemberClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -19,11 +19,11 @@ import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.Error;
-import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.StringUtil;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -76,19 +76,19 @@ public class DetailClassPresenter extends BasePresenter {
 
             @Override
             public void onResponseFail(Throwable throwable) {
-                handleException(throwable);
+                ErrorUtil.handleException(mContext, throwable);
             }
         });
     }
 
     private void handleResponseClassInfo(ApiResponse<ClassResponse> response) {
         if (response == null) {
-            handleException(new NullPointerException());
+            ErrorUtil.handleException(mContext, new NullPointerException());
             return;
         }
 
         if (response.result == ApiResponse.RESULT_NG) {
-            handleError(response.error);
+            ErrorUtil.handleErrorApi(mContext, response.error);
             return;
         }
 
@@ -98,21 +98,12 @@ public class DetailClassPresenter extends BasePresenter {
         }
     }
 
-    private void handleError(Error error) {
-        //// TODO: 3/2/2017 handle error
-    }
-
-    private void handleException(Throwable throwable) {
-        DebugLog.e(throwable.getMessage());
-
-        mDelegate.onLoadError(R.string.commonError);
-    }
-
     public void onClickChat(int teacherPosition) {
         if (classResponse != null) {
             Teacher teacher = classResponse.getTeacherArrayList().get(teacherPosition);
 
-            Intent intent = new Intent(mContext, DetailChatActivity.class);
+            Intent intent = new Intent(mContext, DetailActivity.class);
+            intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_DETAIL_CHAT);
 
             Bundle bundle = new Bundle();
             bundle.putString(AppConstant.KEY_ID, teacher.getId());
@@ -154,25 +145,23 @@ public class DetailClassPresenter extends BasePresenter {
         //// TODO: 3/2/2017 onclick child
     }
 
+
+
+    public void onClickSeeAll() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(AppConstant.KEY_MEMBER, classResponse.getChildren());
+
+        ViewManager.getInstance().addFragment(new MemberClassFragment(), bundle);
+    }
+
+    public boolean isTeacher() {
+        return isTeacher;
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.clear();
         }
-    }
-
-    public void onClickSeeAll() {
-        Intent intent = new Intent(mContext, ClassActivity.class);
-        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_MEMBER_CLASS);
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(AppConstant.KEY_MEMBER, classResponse.getChildren());
-        intent.putExtras(bundle);
-
-        mContext.startActivity(intent);
-    }
-
-    public boolean isTeacher() {
-        return isTeacher;
     }
 }

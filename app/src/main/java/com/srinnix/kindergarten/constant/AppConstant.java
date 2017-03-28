@@ -9,9 +9,12 @@ import com.srinnix.kindergarten.R;
 public class AppConstant {
     public static final String APP_NAME = "KINDERGARTEN";
 
+    public static final long TIME_BETWEEN_2_MESSAGE = 7200000;
+    public static final int ITEM_COMMENT_PER_PAGE = 15;
+
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.0.103:8080/";
+    public static final String BASE_URL = "http://192.168.0.101:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
@@ -22,6 +25,8 @@ public class AppConstant {
     public static final String API_LIKE_POST = "post/like";
     public static final String API_UNLIKE_POST = "post/unlike";
     public static final String API_GET_LIST_LIKE = "post/getListLike";
+    public static final String API_GET_COMMENT = "post/getComment";
+    public static final String API_INSERT_COMMENT = "post/insertComment";
 
 
     public static final String API_GET_LIST_CLASS = "class/getList";
@@ -97,10 +102,12 @@ public class AppConstant {
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
     public static final int TYPE_CLASS_FRAGMENT = 1;
-    public static final int TYPE_CAMERA = 2;
-    public static final int TYPE_CHILDREN = 3;
+    public static final int TYPE_CAMERA_FRAGMENT = 2;
+    public static final int TYPE_CHILDREN_FRAGMENT = 3;
 
     public static final String SCREEN_ID = "SCREEN_ID";
     public static final int FRAGMENT_DETAIL_CLASS = 1;
     public static final int FRAGMENT_MEMBER_CLASS = 2;
+    public static final int FRAGMENT_DETAIL_CHAT = 3;
+    public static final int FRAGMENT_LOGIN = 4;
 }

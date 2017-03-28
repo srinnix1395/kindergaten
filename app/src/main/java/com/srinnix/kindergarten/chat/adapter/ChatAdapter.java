@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
-import com.srinnix.kindergarten.chat.adapter.payload.ImagePayload;
 import com.srinnix.kindergarten.chat.adapter.payload.StatusMessagePayload;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatLeftViewHolder;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ItemChatRightViewHolder;
@@ -25,7 +24,7 @@ import java.util.List;
  * Created by DELL on 2/9/2017.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ShowTimeListener {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int ITEM_LOADING = 0;
     private static final int ITEM_LEFT = 1;
@@ -34,7 +33,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private ArrayList<Object> arrayList;
     private PostAdapter.RetryListener mRetryListener;
-    private int positionShowTime = -1;
 
     private final String currentUserID;
     private final String urlImage;
@@ -55,12 +53,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             case ITEM_LEFT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_left, parent, false);
-                return new ItemChatLeftViewHolder(view, urlImage, accountType, this);
+                return new ItemChatLeftViewHolder(view, urlImage, accountType);
             }
             case ITEM_RIGHT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_right, parent, false);
-                return new ItemChatRightViewHolder(view, this);
+                return new ItemChatRightViewHolder(view);
             }
             case ITEM_TIME: {
                 View view = LayoutInflater.from(parent.getContext())
@@ -86,10 +84,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             return;
         }
 
-        if (holder instanceof ItemChatLeftViewHolder && payloads.get(0) instanceof ImagePayload) {
-            ((ItemChatLeftViewHolder) holder).bindImage(((ImagePayload) payloads.get(0)).isDisplayIcon);
-            return;
-        }
+//        if (holder instanceof ItemChatLeftViewHolder && payloads.get(0) instanceof ImagePayload) {
+//            ((ItemChatLeftViewHolder) holder).bindImage(((ImagePayload) payloads.get(0)).isDisplayIcon);
+//            return;
+//        }
 
         if (holder instanceof ItemChatRightViewHolder && payloads.get(0) instanceof StatusMessagePayload) {
             ((ItemChatRightViewHolder) holder).bindStatusMessage(((StatusMessagePayload) payloads.get(0)).status);
@@ -109,15 +107,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 break;
             }
             case ITEM_LEFT: {
-                ((ItemChatLeftViewHolder) holder).bindData((Message) arrayList.get(position), position);
+                ((ItemChatLeftViewHolder) holder).bindData((Message) arrayList.get(position));
                 break;
             }
             case ITEM_RIGHT: {
-                ((ItemChatRightViewHolder) holder).bindData((Message) arrayList.get(position), position);
+                ((ItemChatRightViewHolder) holder).bindData((Message) arrayList.get(position));
                 break;
             }
             case ITEM_TIME: {
-                ((ItemChatTimeViewHolder) holder).bindData(arrayList.get(position).toString());
+                ((ItemChatTimeViewHolder) holder).bindData((Long) arrayList.get(position));
             }
         }
     }
@@ -131,10 +129,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public int getItemViewType(int position) {
         Object object = arrayList.get(position);
 
-        if (object instanceof LoadingItem) {
-            return ITEM_LOADING;
-        }
-
         if (object instanceof Message) {
             if (((Message) object).getIdSender().equals(currentUserID)) {
                 return ITEM_RIGHT;
@@ -143,36 +137,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             return ITEM_LEFT;
         }
 
+        if (object instanceof LoadingItem) {
+            return ITEM_LOADING;
+        }
+
         return ITEM_TIME;
     }
-
-    @Override
-    public void onClickMessage(int position) {
-//        if (positionShowTime == -1) {
-//            ((Message) arrayList.get(position)).setShowTime(true);
-//            notifyItemChanged(position);
-//
-//            positionShowTime = position;
-//            return;
-//        }
-//
-//        if (positionShowTime == position) {
-//            ((Message) arrayList.get(positionShowTime)).setShowTime(false);
-//            notifyItemChanged(positionShowTime);
-//
-//            positionShowTime = -1;
-//            return;
-//        }
-//
-//        ((Message) arrayList.get(positionShowTime)).setShowTime(false);
-//        notifyItemChanged(positionShowTime);
-//        new Handler().postDelayed(() -> {
-//            ((Message) arrayList.get(position)).setShowTime(true);
-//            notifyItemChanged(position);
-//        }, 300);
-//
-//        positionShowTime = position;
-    }
-
-
 }

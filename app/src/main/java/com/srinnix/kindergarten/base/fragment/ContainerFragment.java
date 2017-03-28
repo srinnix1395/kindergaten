@@ -1,11 +1,11 @@
 package com.srinnix.kindergarten.base.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.base.presenter.ContainerPresenter;
+import com.srinnix.kindergarten.camera.fragment.CameraFragment;
 import com.srinnix.kindergarten.clazz.fragment.ClassListFragment;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -16,14 +16,13 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
  */
 
 public class ContainerFragment extends BaseFragment {
-    private static final String FRAGMENT_CLASS = "fragment_class";
+
+    private ContainerPresenter mPresenter;
 
     private int typeFragment;
     private int accountType;
-    private boolean isFirst = true;
 
     public static ContainerFragment newInstance(int type) {
-
         ContainerFragment fragment = new ContainerFragment();
         fragment.setTypeFragment(type);
         return fragment;
@@ -52,12 +51,36 @@ public class ContainerFragment extends BaseFragment {
                     initClassFragment();
                     break;
                 }
+                case AppConstant.TYPE_CAMERA_FRAGMENT: {
+                    initCameraFragment();
+                    break;
+                }
+                case AppConstant.TYPE_CHILDREN_FRAGMENT:{
+                    initChildrenFragment();
+                    break;
+                }
             }
         }
     }
 
-    private void initClassFragment() {
-        if (getChildFragmentManager().findFragmentByTag(FRAGMENT_CLASS) != null) {
+    private void initChildrenFragment() {
+        if (getChildFragmentManager().findFragmentByTag(String.valueOf(AppConstant.TYPE_CHILDREN_FRAGMENT)) != null) {
+            return;
+        }
+
+
+    }
+
+    private void initCameraFragment() {
+        if (getChildFragmentManager().findFragmentByTag(String.valueOf(AppConstant.TYPE_CAMERA_FRAGMENT)) != null) {
+            return;
+        }
+
+        mPresenter.replaceFragment(getChildFragmentManager(), new CameraFragment() , String.valueOf(AppConstant.TYPE_CLASS_FRAGMENT));
+    }
+
+    public void initClassFragment() {
+        if (getChildFragmentManager().findFragmentByTag(String.valueOf(AppConstant.TYPE_CLASS_FRAGMENT)) != null) {
             return;
         }
 
@@ -65,20 +88,21 @@ public class ContainerFragment extends BaseFragment {
             String classId = SharedPreUtils.getInstance(mContext).getClassId();
             Bundle bundle = new Bundle();
             bundle.putString(AppConstant.KEY_CLASS, classId);
-            replaceFragment(DetailClassFragment.newInstance(bundle));
+            mPresenter.replaceFragment(getChildFragmentManager(), DetailClassFragment.newInstance(bundle), String.valueOf(AppConstant.TYPE_CLASS_FRAGMENT));
         } else {
-            replaceFragment(new ClassListFragment());
+            mPresenter.replaceFragment(getChildFragmentManager(), new ClassListFragment(), String.valueOf(AppConstant.TYPE_CLASS_FRAGMENT));
         }
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.layout_content, fragment, FRAGMENT_CLASS);
-        transaction.commit();
     }
 
     @Override
     protected BasePresenter initPresenter() {
-        return null;
+        mPresenter = new ContainerPresenter(this);
+        return mPresenter;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPresenter.removeFragment(getChildFragmentManager(), getUserVisibleHint(), typeFragment);
     }
 }

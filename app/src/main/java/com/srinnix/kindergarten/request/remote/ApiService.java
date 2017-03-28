@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.request.remote;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Class;
+import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
@@ -17,6 +18,7 @@ import com.srinnix.kindergarten.request.model.PostResponse;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -89,4 +91,19 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_INFO_TEACHER)
     Observable<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
+
+    @GET(AppConstant.API_GET_COMMENT)
+    Single<ApiResponse<ArrayList<Comment>>> getComment(@Header("x-access-token") String token,
+                                                       @Query("_id_object") String idPost,
+                                                       @Query("time_prev_comment") long timeLastComment);
+
+    @POST(AppConstant.API_INSERT_COMMENT)
+    @FormUrlEncoded
+    Observable<ApiResponse<Comment>> insertComment(@Header("x-access-token") String token,
+                                                   @Field("_id_post") String idPost,
+                                                   @Field("_id_user") String idUser,
+                                                   @Field("name_user") String name,
+                                                   @Field("image_user") String image,
+                                                   @Field("account_type") int accountType,
+                                                   @Field("comment") String comment);
 }
