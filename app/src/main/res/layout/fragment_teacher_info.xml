@@ -84,7 +84,7 @@
             android:layout_width="@dimen/item_size"
             android:layout_height="@dimen/item_size"
             android:layout_centerInParent="true"
-            android:padding="8dp"
+            android:padding="4dp"
             android:src="@drawable/btn_loading"
             android:visibility="gone"/>
 

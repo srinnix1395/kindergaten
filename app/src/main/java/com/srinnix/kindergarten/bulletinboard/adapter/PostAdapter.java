@@ -174,6 +174,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void onClickImage(int position);
 
-        void onClickComment(int position);
+        void onClickComment(int position, boolean isShowKeyboard);
     }
 }

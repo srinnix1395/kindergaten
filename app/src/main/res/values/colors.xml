@@ -35,8 +35,10 @@
     <color name="colorBackgroundChatList">#EAEAEA</color>
     <!--chat END-->
 
-    <color name="colorGrayIcon">#BDBDBD</color>
-    <color name="colorBackground">#EAEAEA</color>
+    <color name="colorGrayIcon">#878787</color>
+    <color name="colorGrayIconBottomBar">#c7c7c7</color>
+    <!--<color name="colorBackground">#EAEAEA</color>-->
+    <color name="colorBackground">#dcdee3</color>
     <color name="colorThumbScrollbar">#59000000</color>
     <color name="colorPrimaryFade">#4D6580d4</color>
     <color name="colorBackgroundSnackbar">#59000000</color>

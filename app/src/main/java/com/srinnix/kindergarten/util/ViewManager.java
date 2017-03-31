@@ -44,27 +44,33 @@ public class ViewManager {
         return mFragmentManager;
     }
 
-    public void setFragmentManager(FragmentManager mFragmentManager) {
+    private void setFragmentManager(FragmentManager mFragmentManager) {
         this.mFragmentManager = mFragmentManager;
     }
 
     public void addFragment(BaseFragment fragment) {
-        addFragment(fragment, null, true);
+        addFragment(fragment, null);
+    }
+
+    public void addFragment(BaseFragment fragment, Bundle bundle, int animAppear, int animDisappear) {
+        if (null != mFragmentManager) {
+            fragment.setArguments(bundle);
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.setCustomAnimations(animAppear, animDisappear, animAppear, animDisappear);
+            ft.add(R.id.layout_content, fragment);
+            ft.show(fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
     }
 
     public void addFragment(BaseFragment fragment, Bundle bundle) {
-        addFragment(fragment, bundle, true);
-    }
-
-    public void addFragment(BaseFragment fragment, Bundle bundle, boolean addStack) {
         if (null != mFragmentManager) {
             fragment.setArguments(bundle);
-            String nameFragment = fragment.getClass().getName();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.replace(R.id.layout_content, fragment);
-            if (addStack) {
-                ft.addToBackStack(nameFragment);
-            }
+            ft.add(R.id.layout_content, fragment);
+            ft.show(fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
     }

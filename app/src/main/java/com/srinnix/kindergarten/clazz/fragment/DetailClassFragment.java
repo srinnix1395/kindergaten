@@ -193,7 +193,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
         if (classInfo == null) {
             imvRetry.setVisibility(View.VISIBLE);
-            AlertUtils.showToast(mContext, R.string.commonError);
+            AlertUtils.showToast(mContext, R.string.error_common);
             return;
         }
 

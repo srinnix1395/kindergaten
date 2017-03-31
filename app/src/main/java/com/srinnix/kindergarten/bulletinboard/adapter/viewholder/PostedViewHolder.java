@@ -2,8 +2,8 @@ package com.srinnix.kindergarten.bulletinboard.adapter.viewholder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -43,7 +43,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     TextView tvNumberComment;
 
     @BindView(R.id.layout_image)
-    RelativeLayout relImage;
+    FrameLayout frameLayoutImage;
 
     @BindView(R.id.imageview_first_image)
     ImageView imvFirstImage;
@@ -81,16 +81,15 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
 
         int size = post.getListImage().size();
         if (size == 0) {
-            relImage.setVisibility(View.GONE);
+            frameLayoutImage.setVisibility(View.GONE);
             imvFirstImage.setImageDrawable(null);
         } else {
-            relImage.setVisibility(View.VISIBLE);
+            frameLayoutImage.setVisibility(View.VISIBLE);
             Glide.with(itemView.getContext())
                     .load(post.getListImage().get(0))
                     .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.dummy_image)
                     .into(imvFirstImage);
-
         }
 
         if (size <= 1) {
@@ -143,9 +142,20 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     }
 
     @OnClick({R.id.imageview_comment, R.id.textview_number_comment})
-    void onClickComment() {
-        if (mPostListener != null) {
-            mPostListener.onClickComment(position);
+    void onClickComment(View v) {
+        if (mPostListener == null) {
+            return;
         }
+        switch (v.getId()) {
+            case R.id.imageview_comment:{
+                mPostListener.onClickComment(position, true);
+                break;
+            }
+            case R.id.textview_number_comment:{
+                mPostListener.onClickComment(position, false);
+                break;
+            }
+        }
+
     }
 }

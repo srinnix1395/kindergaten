@@ -24,13 +24,13 @@ public class CommentHelper {
         this.mDisposable = mDisposable;
     }
 
-    public void getComment(String token, String idPost, long timeLastComment, CommentListener commentListener) {
+    public void getComment(String idPost, long timeLastComment, CommentListener commentListener) {
         if (commentListener == null) {
             return;
         }
 
         mDisposable.add(
-                mApi.getComment(token, idPost, timeLastComment)
+                mApi.getComment(idPost, timeLastComment)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(commentListener::onLoadSuccess, commentListener::onLoadFail)

@@ -14,7 +14,7 @@
     <string name="email">Email</string>
     <string name="forgetPassword">Quên mật khẩu?</string>
     <string name="emptyEmailOrPassword">Hãy nhập email và password</string>
-    <string name="commonError">Đã có lỗi xảy ra trong quá trình xử lý, xin thử lại!</string>
+    <string name="error_common">Đã có lỗi xảy ra trong quá trình xử lý, xin thử lại!</string>
     <string name="newFeed">Bảng tin</string>
     <string name="aClass">Lớp học</string>
     <string name="camera">Camera</string>

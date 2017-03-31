@@ -112,7 +112,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
                 , EndlessScrollListener.DIRECTION_UP, 1) {
             @Override
             public void onLoadMore() {
-                mPresenter.onLoadMore(listMessage);
+                if (isRecyclerScrollable(rvChat)) {
+                    mPresenter.onLoadMore(listMessage);
+                }
             }
         });
         rvChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -321,6 +323,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     public boolean isRecyclerScrollable(RecyclerView recyclerView) {
-        return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth() || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
+        return recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
     }
 }

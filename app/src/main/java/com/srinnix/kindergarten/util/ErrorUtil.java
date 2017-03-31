@@ -18,7 +18,7 @@ public class ErrorUtil {
                 break;
             }
             default:{
-                AlertUtils.showToast(context, R.string.commonError);
+                AlertUtils.showToast(context, R.string.error_common);
                 break;
             }
         }
@@ -28,6 +28,6 @@ public class ErrorUtil {
     public static void handleException(Context mContext, Throwable throwable) {
         throwable.printStackTrace();
 
-        AlertUtils.showToast(mContext, R.string.commonError);
+        AlertUtils.showToast(mContext, R.string.error_common);
     }
 }

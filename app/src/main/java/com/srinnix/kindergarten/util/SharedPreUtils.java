@@ -90,7 +90,7 @@ public class SharedPreUtils {
     }
 
     public String getClassId() {
-        return sharedPreferences.getString(AppConstant._ID_CLASS, "");
+        return sharedPreferences.getString(AppConstant._ID_CLASS, null);
     }
 
     public void saveUserData(User user) {
@@ -108,21 +108,6 @@ public class SharedPreUtils {
         editor.apply();
     }
 
-    public void clearUserData() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(AppConstant.IS_USER_SIGNED_IN);
-        editor.remove(AppConstant.USER_ID);
-        editor.remove(AppConstant.EMAIL);
-        editor.remove(AppConstant.NAME);
-        editor.remove(AppConstant.USER_TYPE);
-        editor.remove(AppConstant.TOKEN);
-        if (sharedPreferences.contains(AppConstant._ID_CLASS)) {
-            editor.remove(AppConstant._ID_CLASS);
-        }
-        editor.remove(AppConstant._ID_SCHOOL);
-        editor.apply();
-    }
-
     public String getToken() {
         return sharedPreferences.getString(AppConstant.TOKEN, "");
     }
@@ -137,12 +122,24 @@ public class SharedPreUtils {
         return sharedPreferences.getBoolean(AppConstant.HAS_DEVICE_TOKEN, false);
     }
 
-    public String getSchoolId() {
-        return sharedPreferences.getString(AppConstant._ID_SCHOOL, "");
-    }
-
     public String getImage() {
         //todo image
         return "";
+    }
+
+    public void clearUserData() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(AppConstant.IS_USER_SIGNED_IN);
+        editor.remove(AppConstant.USER_ID);
+        editor.remove(AppConstant.EMAIL);
+        editor.remove(AppConstant.NAME);
+        editor.remove(AppConstant.USER_TYPE);
+        editor.remove(AppConstant.TOKEN);
+        if (sharedPreferences.contains(AppConstant._ID_CLASS)) {
+            editor.remove(AppConstant._ID_CLASS);
+        }
+        editor.remove(AppConstant.IMAGE);
+        editor.remove(AppConstant._ID_SCHOOL);
+        editor.apply();
     }
 }

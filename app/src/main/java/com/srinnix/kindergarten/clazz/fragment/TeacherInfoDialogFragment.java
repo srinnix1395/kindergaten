@@ -124,7 +124,7 @@ public class TeacherInfoDialogFragment extends BottomSheetDialogFragment {
                 }, throwable -> {
                     DebugLog.e(throwable.getMessage());
 
-                    handleException(R.string.commonError);
+                    handleException(R.string.error_common);
                 });
     }
 

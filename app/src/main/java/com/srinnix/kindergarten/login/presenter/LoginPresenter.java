@@ -73,12 +73,12 @@ public class LoginPresenter extends BasePresenter {
                 }
 
                 SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser());
-                mLoginHelper.insertContact(mRealm, response.getData().getContacts(), mLoginDelegate);
+                mLoginHelper.insertData(mRealm, response.getData().getChildren(), response.getData().getContacts(), mLoginDelegate);
             }
 
             @Override
             public void onResponseFail(Throwable throwable) {
-                AlertUtils.showToast(mContext, R.string.commonError);
+                AlertUtils.showToast(mContext, R.string.error_common);
                 DebugLog.e(throwable.getMessage());
             }
 

@@ -1,10 +1,9 @@
 package com.srinnix.kindergarten.main.presenter;
 
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -15,10 +14,10 @@ import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.activity.DetailActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
+import com.srinnix.kindergarten.base.fragment.ContainerFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
 import com.srinnix.kindergarten.setting.activity.SettingActivity;
@@ -33,15 +32,12 @@ import io.reactivex.disposables.Disposable;
 
 public class MainPresenter extends BasePresenter {
 
-    private int currentPosition = 0;
-
-    private MainDelegate mMainDelegate;
     private boolean isFirstOpenMenuChat = true;
     private Disposable mDisposable;
+    private int currentPosition = 0;
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-        mMainDelegate = (MainDelegate) mDelegate;
     }
 
     public void startActivityLogin() {
@@ -55,17 +51,78 @@ public class MainPresenter extends BasePresenter {
         mContext.startActivity(intent);
     }
 
-    public void changeTabIcon(Toolbar toolbar, TabLayout tabLayout, int position) {
-        if (tabLayout == null || tabLayout.getTabAt(position) == null
-                || tabLayout.getTabAt(currentPosition) == null) {
-            return;
+    public void changeTabIcon(FragmentManager fragmentManager, int tabId) {
+        switch (tabId) {
+            case R.id.menu_item_news: {
+                if (currentPosition == AppConstant.FRAGMENT_BULLETIN_BOARD) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_class: {
+                if (currentPosition == AppConstant.FRAGMENT_CLASS) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_camera: {
+                if (currentPosition == AppConstant.FRAGMENT_CAMERA) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_children: {
+                if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
+                    return;
+                }
+                break;
+            }
         }
 
-        toolbar.setTitle(AppConstant.TITLE_TAB[position]);
+        Fragment fragmentShow = null;
 
-        tabLayout.getTabAt(position).setIcon(AppConstant.ICON_TAB_SELECTED[position]);
-        tabLayout.getTabAt(currentPosition).setIcon(AppConstant.ICON_TAB_UNSELECTED[currentPosition]);
-        currentPosition = position;
+        Fragment fragmentHide = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (fragmentHide != null) {
+            transaction.hide(fragmentHide);
+        }
+
+        switch (tabId) {
+            case R.id.menu_item_news: {
+                currentPosition = AppConstant.FRAGMENT_BULLETIN_BOARD;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                break;
+            }
+            case R.id.menu_item_class: {
+                currentPosition = AppConstant.FRAGMENT_CLASS;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                if (fragmentShow == null) {
+                    fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CLASS_FRAGMENT);
+                    transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                }
+                break;
+            }
+            case R.id.menu_item_camera: {
+                currentPosition = AppConstant.FRAGMENT_CAMERA;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                if (fragmentShow == null) {
+                    fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CAMERA_FRAGMENT);
+                    transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                }
+                break;
+            }
+            case R.id.menu_item_children: {
+                currentPosition = AppConstant.FRAGMENT_CHILDREN;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                if (fragmentShow == null) {
+                    fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CHILDREN_FRAGMENT);
+                    transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                }
+                break;
+            }
+        }
+        transaction.setCustomAnimations(R.anim.anim_show, 0).show(fragmentShow);
+        transaction.commit();
     }
 
     public void onClickMenuItemChat(Fragment mainFragment, DrawerLayout drawerLayout) {
@@ -82,19 +139,16 @@ public class MainPresenter extends BasePresenter {
                 transaction.commit();
 
                 isFirstOpenMenuChat = false;
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED);
             }
             drawerLayout.openDrawer(Gravity.RIGHT);
         }
+
     }
 
-    public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout, ViewPager viewPager) {
+    public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout) {
         if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             drawerLayout.closeDrawer(Gravity.RIGHT);
-            return;
-        }
-
-        if (viewPager.getCurrentItem() != 0) {
-            viewPager.setCurrentItem(0, true);
             return;
         }
 
@@ -115,13 +169,8 @@ public class MainPresenter extends BasePresenter {
     }
 
     public void signOut() {
+        SharedPreUtils.getInstance(mContext).clearUserData();
         // TODO: 3/20/2017 sign out
-    }
-
-    public void setupDrawerLayout(DrawerLayout mDrawer) {
-        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
     }
 
     public void loginSuccessfully(Toolbar mToolbar) {

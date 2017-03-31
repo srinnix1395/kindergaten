@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -33,7 +34,7 @@ import butterknife.OnTextChanged;
  * Created by anhtu on 3/28/2017.
  */
 
-public class CommentFragment extends BaseFragment implements CommentDelegate {
+public class LikeCommentFragment extends BaseFragment implements CommentDelegate {
     @BindView(R.id.toolbar_detail_commentt)
     Toolbar mToolbar;
 
@@ -59,6 +60,17 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
     private CommentAdapter mAdapter;
     private CommentPresenter mPresenter;
 
+    private boolean isShowKeyboard;
+    private int numberComment;
+
+    @Override
+    protected void getData() {
+        super.getData();
+        Bundle bundle = getArguments();
+        isShowKeyboard = bundle.getBoolean(AppConstant.KEY_IS_SHOW_KEYBOARD);
+        numberComment = bundle.getInt(AppConstant.KEY_COMMENT);
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_detail_comment;
@@ -66,9 +78,13 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
 
     @Override
     protected void initChildView() {
+        if (!isShowKeyboard) {
+            UiUtils.hideKeyboard(getActivity());
+        }
+
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(v -> onBackPressed());
-        mToolbar.setTitle(R.string.comment);
+        mToolbar.setTitle(String.format("%s %s", String.valueOf(numberComment), mContext.getString(R.string.comment)));
         mToolbar.setTitleTextColor(Color.WHITE);
 
         mPbLoading.getIndeterminateDrawable().setColorFilter(
@@ -80,6 +96,7 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
         });
 
         mImvSend.setEnabled(false);
+
     }
 
     @OnTextChanged(R.id.edittext_comment)

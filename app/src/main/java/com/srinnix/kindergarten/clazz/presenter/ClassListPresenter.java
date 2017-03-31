@@ -75,7 +75,7 @@ public class ClassListPresenter extends BasePresenter {
             public void onLoadError(Throwable throwable) {
                 DebugLog.e(throwable.getMessage());
                 if (mClassListDelegate != null) {
-                    mClassListDelegate.onLoadError(R.string.commonError);
+                    mClassListDelegate.onLoadError(R.string.error_common);
                 }
             }
         });

@@ -25,7 +25,8 @@
         <ImageView
             android:layout_width="@dimen/item_size"
             android:layout_height="@dimen/item_size"
-            android:background="@drawable/background_imageview_icon"/>
+            android:foreground="?selectableItemBackgroundBorderless"
+            />
     </android.support.v7.widget.CardView>
 
 

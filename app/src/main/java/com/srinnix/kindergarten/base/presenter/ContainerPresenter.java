@@ -18,25 +18,16 @@ public class ContainerPresenter extends BasePresenter {
         super(mDelegate);
     }
 
-
-
-    public void replaceFragment(FragmentManager manager, Fragment fragment, String tag) {
+    public void replaceFragment(FragmentManager manager, Fragment fragment) {
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.layout_content, fragment, tag);
+        transaction.add(R.id.layout_content, fragment);
         transaction.commit();
     }
 
-    public void removeFragment(FragmentManager fragmentManager, boolean isVisible, int typeFragment) {
+    public void removeUnUsedFragment(FragmentManager fragmentManager, Fragment fragment, boolean isVisible, int typeFragment) {
         if (!isVisible) {
-            Fragment fragment = fragmentManager.findFragmentByTag(String.valueOf(typeFragment));
-            if (fragment == null) {
-                return;
-            }
-
             if (typeFragment == AppConstant.TYPE_CLASS_FRAGMENT) {
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.remove(fragment);
-                transaction.commit();
+                fragmentManager.beginTransaction().remove(fragment).commit();
             }
         }
     }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import butterknife.ButterKnife;
 
@@ -107,8 +108,8 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
     }
 
     public void onBackPressed() {
-        int count = getFragmentManager().getBackStackEntryCount();
-        if (count > 1) {
+        int count = ViewManager.getInstance().getFragmentManager().getBackStackEntryCount();
+        if (count > 0) {
             getFragmentManager().popBackStack();
         } else {
             // back Activity;

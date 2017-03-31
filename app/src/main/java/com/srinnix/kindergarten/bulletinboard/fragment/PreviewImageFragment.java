@@ -4,9 +4,10 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.custom.TouchImageView;
 
 import butterknife.BindView;
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 /**
  * Created by anhtu on 3/28/2017.
@@ -14,7 +15,7 @@ import butterknife.BindView;
 
 public class PreviewImageFragment extends BaseFragment {
     @BindView(R.id.touch_image_view)
-    TouchImageView mImageView;
+    ImageViewTouch mImageView;
 
     private String url;
 
@@ -35,6 +36,7 @@ public class PreviewImageFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
+        mImageView.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         Glide.with(mContext)
                 .load(url)
                 .error(R.drawable.dummy_image)

@@ -57,14 +57,12 @@ public class CommentPresenter extends BasePresenter {
     }
 
     public void getComment(String idPost, long time) {
-        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
             mCommentDelegate.onLoadCommentFail(R.string.noInternetConnection, isLoadFirst);
             return;
         }
 
-        String token = SharedPreUtils.getInstance(mContext).getToken();
-
-        mHelper.getComment(token, idPost, time, new CommentHelper.CommentListener() {
+        mHelper.getComment(idPost, time, new CommentHelper.CommentListener() {
             @Override
             public void onLoadSuccess(ApiResponse<ArrayList<Comment>> response) {
                 if (response == null) {
@@ -85,7 +83,7 @@ public class CommentPresenter extends BasePresenter {
 
             @Override
             public void onLoadFail(Throwable throwable) {
-                mCommentDelegate.onLoadCommentFail(R.string.commonError, isLoadFirst);
+                mCommentDelegate.onLoadCommentFail(R.string.error_common, isLoadFirst);
                 if (!isLoadFirst) {
                     ErrorUtil.handleException(mContext, throwable);
                 } else {

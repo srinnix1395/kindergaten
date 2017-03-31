@@ -35,10 +35,6 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     private PostAdapter postAdapter;
     private ArrayList<Object> arrPost;
 
-    public static BulletinBoardFragment newInstance() {
-        return new BulletinBoardFragment();
-    }
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_bulletin_board;
@@ -68,8 +64,8 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                     }
 
                     @Override
-                    public void onClickComment(int position) {
-                        mPresenter.onClickComment(((Post) arrPost.get(position)));
+                    public void onClickComment(int position, boolean isShowKeyboard) {
+                        mPresenter.onClickComment(((Post) arrPost.get(position)), isShowKeyboard);
                     }
                 });
         rvListPost.setAdapter(postAdapter);

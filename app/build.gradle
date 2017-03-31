@@ -67,6 +67,10 @@ dependencies {
     //firebase messaging
     compile 'com.google.firebase:firebase-messaging:10.2.0'
 
+    //ui
+    compile 'com.roughike:bottom-bar:2.2.0'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

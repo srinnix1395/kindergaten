@@ -93,8 +93,7 @@ public interface ApiService {
     Observable<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
 
     @GET(AppConstant.API_GET_COMMENT)
-    Single<ApiResponse<ArrayList<Comment>>> getComment(@Header("x-access-token") String token,
-                                                       @Query("_id_object") String idPost,
+    Single<ApiResponse<ArrayList<Comment>>> getComment(@Query("_id_object") String idPost,
                                                        @Query("time_prev_comment") long timeLastComment);
 
     @POST(AppConstant.API_INSERT_COMMENT)
@@ -106,4 +105,8 @@ public interface ApiService {
                                                    @Field("image_user") String image,
                                                    @Field("account_type") int accountType,
                                                    @Field("comment") String comment);
+
+    @GET(AppConstant.API_GET_LIST_CHILDREN)
+    Observable<ApiResponse<ArrayList<Child>>> getListChildren(@Header("x-access-token") String token,
+                                                              @Query("_id_class") String classId);
 }

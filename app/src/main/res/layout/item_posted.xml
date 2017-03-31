@@ -43,19 +43,19 @@
         android:layout_marginTop="@dimen/margin_vertical_post"
         android:background="@color/colorDividerColor"/>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/layout_image"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/view_line"
         android:layout_marginBottom="@dimen/margin_vertical_post"
-        android:layout_marginTop="@dimen/margin_vertical_post"
-        android:minHeight="250dp">
+        android:layout_marginTop="@dimen/margin_vertical_post">
 
         <ImageView
             android:id="@+id/imageview_first_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="275dp"
             android:scaleType="fitXY"/>
 
         <TextView
@@ -63,11 +63,9 @@
             style="?android:attr/textAppearanceSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|right"
             android:layout_margin="@dimen/margin_horizontal"
             android:background="@drawable/background_number_image"
-            android:clickable="true"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_images"
             android:gravity="center"
@@ -77,7 +75,7 @@
             android:paddingTop="8dp"
             android:textColor="@android:color/white"
             android:textSize="12sp"/>
-    </RelativeLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textview_content"

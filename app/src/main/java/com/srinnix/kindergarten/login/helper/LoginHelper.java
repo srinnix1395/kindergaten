@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.login.helper;
 
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
@@ -52,13 +53,17 @@ public class LoginHelper {
                         });
     }
 
-    public void insertContact(Realm realm, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
+    public void insertData(Realm realm, ArrayList<Child> children, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
         realm.executeTransactionAsync(realm12 -> {
             if (arrayList == null || arrayList.size() == 0) {
                 if (loginDelegate != null) {
                     loginDelegate.loginSuccessfully();
                 }
                 return;
+            }
+
+            for (Child child : children) {
+                realm12.copyToRealm(child);
             }
 
             if (arrayList.get(0) instanceof ContactTeacher) {

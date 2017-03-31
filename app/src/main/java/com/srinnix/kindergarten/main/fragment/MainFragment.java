@@ -1,20 +1,19 @@
 package com.srinnix.kindergarten.main.fragment;
 
 import android.graphics.Color;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.roughike.bottombar.BottomBar;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
-import com.srinnix.kindergarten.base.fragment.ContainerFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
-import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.main.adapter.MainAdapter;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
@@ -22,8 +21,6 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 
@@ -35,11 +32,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
 
-    @BindView(R.id.tablayout_main)
-    TabLayout mTabLayout;
-
-    @BindView(R.id.view_pager_main)
-    ViewPager mViewPager;
+    @BindView(R.id.bottom_navigation)
+    BottomBar mBottomBar;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -51,12 +45,18 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         return R.layout.fragment_main;
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     protected void initChildView() {
         mPresenter.updateRegId();
 
         mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle(AppConstant.TITLE_TAB[0]);
+        mToolbar.setTitle("Kids home");
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             mToolbar.inflateMenu(R.menu.main_menu_signed_in);
         } else {
@@ -67,39 +67,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
             return false;
         });
 
-        ArrayList<Fragment> arrayList = new ArrayList<>();
-        arrayList.add(BulletinBoardFragment.newInstance());
-        arrayList.add(ContainerFragment.newInstance(AppConstant.TYPE_CLASS_FRAGMENT));
-        arrayList.add(ContainerFragment.newInstance(AppConstant.TYPE_CAMERA_FRAGMENT));
-        arrayList.add(ContainerFragment.newInstance(AppConstant.TYPE_CHILDREN_FRAGMENT));
-
-        MainAdapter adapter = new MainAdapter(getChildFragmentManager(), arrayList);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOffscreenPageLimit(4);
-
-        mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.getTabAt(0).setIcon(AppConstant.ICON_TAB_SELECTED[0]);
-        mTabLayout.getTabAt(1).setIcon(AppConstant.ICON_TAB_UNSELECTED[1]);
-        mTabLayout.getTabAt(2).setIcon(AppConstant.ICON_TAB_UNSELECTED[2]);
-        mTabLayout.getTabAt(3).setIcon(AppConstant.ICON_TAB_UNSELECTED[3]);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mPresenter.changeTabIcon(mToolbar, mTabLayout, position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        mPresenter.setupDrawerLayout(mDrawer);
+        mBottomBar.setOnTabSelectListener(tabId -> mPresenter.changeTabIcon(getChildFragmentManager(), tabId));
+        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     private void onMenuItemItemSelected(MenuItem item) {
@@ -160,6 +129,6 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     }
 
     public void onBackPressed() {
-        mPresenter.onBackPressed(this, mDrawer, mViewPager);
+        mPresenter.onBackPressed(this, mDrawer);
     }
 }

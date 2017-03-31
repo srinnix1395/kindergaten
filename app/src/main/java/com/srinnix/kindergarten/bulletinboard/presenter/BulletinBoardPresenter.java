@@ -9,6 +9,7 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.LikeCommentFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.LikeModel;
@@ -217,7 +218,6 @@ public class BulletinBoardPresenter extends BasePresenter {
     public void onClickNumberLike(String id) {
         if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             AlertUtils.showToast(mContext, R.string.login_to_see);
-            //// TODO: 3/13/2017 hieenj man hinhf ddawng nhapaj
             return;
         }
 
@@ -253,7 +253,13 @@ public class BulletinBoardPresenter extends BasePresenter {
         ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle);
     }
 
-    public void onClickComment(Post post) {
+    public void onClickComment(Post post, boolean isShowKeyboard) {
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_ID, post.getId());
+        bundle.putInt(AppConstant.KEY_COMMENT, post.getNumberOfComments());
+        bundle.putBoolean(AppConstant.KEY_IS_SHOW_KEYBOARD, isShowKeyboard);
 
+        ViewManager.getInstance().addFragment(new LikeCommentFragment(), bundle,
+                R.anim.translate_right_to_left,R.anim.translate_left_to_right);
     }
 }
