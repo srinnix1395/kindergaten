@@ -2,17 +2,71 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:background="@color/colorWhite">
 
     <SurfaceView
         android:id="@+id/surface_view_video"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progressbar_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_unsigned_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/what_are_your_children_doing"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/tvContent"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTitle"
+            android:text="@string/children_content_unsigned_in_camera"
+            android:textColor="@color/colorSecondaryText"/>
+
+        <ImageView
+            android:id="@+id/imagview_unsigned_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvContent"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:minHeight="180dp"
+            android:minWidth="180dp"
+            android:scaleType="fitXY"/>
+
+        <Button
+            android:id="@+id/button_login"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imagview_unsigned_in"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/background_button_login_other"
+            android:foreground="?selectableItemBackground"
+            android:text="@string/login"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"/>
+    </RelativeLayout>
 
 </RelativeLayout>

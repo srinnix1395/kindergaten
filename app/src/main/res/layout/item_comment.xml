@@ -4,14 +4,16 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/padding_horizontal_item_comment"
-                android:paddingTop="@dimen/padding_vertical_item_comment">
+                android:clickable="true"
+                android:foreground="?selectableItemBackgroundBorderless">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview_icon"
         android:layout_width="@dimen/size_item_chat"
         android:layout_height="@dimen/size_item_chat"
+        android:layout_marginLeft="@dimen/padding_horizontal_item_comment"
         android:layout_marginRight="@dimen/padding_vertical_item_comment"
+        android:layout_marginTop="@dimen/padding_vertical_item_comment"
         app:cardElevation="0dp">
 
         <ImageView
@@ -25,6 +27,7 @@
         android:id="@+id/textview_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cardview_icon"
         android:layout_marginRight="@dimen/padding_horizontal_item_comment"
         android:layout_toRightOf="@+id/cardview_icon"
         tools:text="xuxukun"/>
@@ -34,10 +37,22 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_below="@+id/textview_comment"
+        android:layout_marginRight="16dp"
         android:layout_toRightOf="@+id/cardview_icon"
         android:gravity="center_vertical"
         android:textColor="@color/colorSecondaryText"
         tools:text="4h"/>
+
+    <TextView
+        android:id="@+id/textview_fail"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@+id/textview_comment"
+        android:layout_toRightOf="@+id/textview_time"
+        android:gravity="center_vertical"
+        android:text="@string/tap_to_retry"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"/>
 
     <View
         android:layout_width="match_parent"

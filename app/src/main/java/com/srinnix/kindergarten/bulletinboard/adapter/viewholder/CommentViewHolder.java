@@ -28,12 +28,25 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_time)
     TextView tvTime;
 
-    public CommentViewHolder(View view) {
+    @BindView(R.id.textview_fail)
+    TextView tvFail;
+
+    private int position;
+    private CommentViewHolder.CommentListener commentListener;
+
+    public CommentViewHolder(View view, CommentViewHolder.CommentListener commentListener) {
         super(view);
+        this.commentListener = commentListener;
         ButterKnife.bind(this, view);
+        itemView.setOnLongClickListener(v -> {
+            commentListener.onLongClick(position);
+            return false;
+        });
+        itemView.setOnClickListener(v -> commentListener.onClickRetry(position));
     }
 
-    public void bindData(Comment comment) {
+    public void bindData(Comment comment, int position) {
+        this.position = position;
         if (comment.getAccountType() == AppConstant.ACCOUNT_PARENTS) {
             Glide.with(itemView.getContext())
                     .load(comment.getImage())
@@ -51,6 +64,28 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         }
 
         tvComment.setText(StringUtil.getComment(comment));
-        tvTime.setText(StringUtil.getTime(comment.getCreatedAt()));
+
+        bindStatus(comment.isSuccess());
+        bindTime(comment.getCreatedAt());
+    }
+
+    public void bindTime(long createdAt) {
+        tvTime.setText(StringUtil.getTime(createdAt));
+    }
+
+    public void bindStatus(boolean success) {
+        if (success) {
+            tvTime.setVisibility(View.VISIBLE);
+            tvFail.setVisibility(View.GONE);
+        } else {
+            tvTime.setVisibility(View.GONE);
+            tvFail.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public interface CommentListener{
+        void onClickRetry(int position);
+
+        void onLongClick(int position);
     }
 }

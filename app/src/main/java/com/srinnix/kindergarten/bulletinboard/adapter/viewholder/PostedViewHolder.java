@@ -120,6 +120,10 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
                 "%d %s", numberLike, itemView.getContext().getString(R.string.likes)));
     }
 
+    public void bindImageLike(boolean userLike) {
+        imvLike.setImageResource(userLike ? R.drawable.ic_heart_fill : R.drawable.ic_heart_outline);
+    }
+
     @OnClick(R.id.imageview_like)
     void onClickLike() {
         if (mPostListener != null) {

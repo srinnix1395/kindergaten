@@ -222,7 +222,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onUserConnect(message, tvStatus, listMessage);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventDisconnect(MessageDisconnect message) {
         mPresenter.onDisconnect(tvStatus, listMessage);
     }

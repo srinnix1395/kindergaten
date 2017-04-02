@@ -14,5 +14,9 @@ public interface CommentDelegate extends BaseDelegate {
 
     void onLoadCommentFail(int noInternetConnection, boolean isLoadFirst);
 
-    void insertCommentSuccess(Comment comment);
+    void insertComment(Comment comment);
+
+    void updateStateComment(long id);
+
+    void updateIdComment(long oldId, Comment comment);
 }

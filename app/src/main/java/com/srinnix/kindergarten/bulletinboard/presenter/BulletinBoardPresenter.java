@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.srinnix.kindergarten.R;
@@ -25,6 +26,7 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,12 +43,14 @@ public class BulletinBoardPresenter extends BasePresenter {
     private BulletinBoardHelper mHelper;
     private CompositeDisposable mDisposable;
     private boolean isLoadFirst = true;
+    private boolean isUserSignIn;
 
     public BulletinBoardPresenter(BaseDelegate delegate) {
         super(delegate);
         mDelegate = (BulletinBoardDelegate) delegate;
         mDisposable = new CompositeDisposable();
         mHelper = new BulletinBoardHelper(mDisposable);
+        isUserSignIn = SharedPreUtils.getInstance(mContext).isUserSignedIn();
     }
 
     public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
@@ -224,7 +228,7 @@ public class BulletinBoardPresenter extends BasePresenter {
         String token = SharedPreUtils.getInstance(mContext).getToken();
         mHelper.getListNumberLike(token, id, new BulletinBoardHelper.NumberLikeListener() {
             @Override
-            public void onSuccess(ApiResponse<LikeModel> response) {
+            public void onSuccess(ApiResponse<ArrayList<LikeModel>> response) {
                 // TODO: 3/22/2017 hien thi list like
             }
 
@@ -235,15 +239,46 @@ public class BulletinBoardPresenter extends BasePresenter {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
+    public void refresh(SwipeRefreshLayout refreshLayout, ArrayList<Object> arrPost) {
+        if (arrPost.size() <= 1) {
+            return;
         }
-    }
 
-    public void refresh() {
-        // TODO: 3/13/2017 refesh
+        if (!refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(true);
+        }
+
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+        String userId = SharedPreUtils.getInstance(mContext).getUserID();
+
+        List<String> listId = new ArrayList<>();
+        for (int i = 0, size = arrPost.size(); i < size - 1; i++) {
+            listId.add(((Post) arrPost.get(i)).getId());
+        }
+        mHelper.getListLike(token, userId, listId, new BulletinBoardHelper.ListLikeListener() {
+            @Override
+            public void onSuccess(ApiResponse<ArrayList<String>> response) {
+                if (response == null) {
+                    ErrorUtil.handleException(mContext, new NullPointerException());
+                    mDelegate.onRefreshResult(false, null);
+                    return;
+                }
+
+                if (response.result == ApiResponse.RESULT_NG) {
+                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    mDelegate.onRefreshResult(false, null);
+                    return;
+                }
+
+                mDelegate.onRefreshResult(true, response.getData());
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+                ErrorUtil.handleException(mContext, throwable);
+                mDelegate.onRefreshResult(false, null);
+            }
+        });
     }
 
     public void onClickImages(Post post) {
@@ -260,6 +295,13 @@ public class BulletinBoardPresenter extends BasePresenter {
         bundle.putBoolean(AppConstant.KEY_IS_SHOW_KEYBOARD, isShowKeyboard);
 
         ViewManager.getInstance().addFragment(new LikeCommentFragment(), bundle,
-                R.anim.translate_right_to_left,R.anim.translate_left_to_right);
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.clear();
+        }
     }
 }

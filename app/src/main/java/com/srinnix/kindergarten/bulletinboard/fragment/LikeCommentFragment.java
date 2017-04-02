@@ -17,6 +17,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.CommentAdapter;
+import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.CommentViewHolder;
 import com.srinnix.kindergarten.bulletinboard.delegate.CommentDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.CommentPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -91,12 +92,21 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
                 ContextCompat.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
 
         mListComment = new ArrayList<>();
-        mAdapter = new CommentAdapter(mListComment, () -> {
-            mPresenter.getComment(((Comment) mListComment.get(1)).getCreatedAt());
+        mAdapter = new CommentAdapter(mListComment, () -> mPresenter.getComment(((Comment) mListComment.get(1)).getCreatedAt()), new CommentViewHolder.CommentListener() {
+            @Override
+            public void onClickRetry(int position) {
+                if (!((Comment) mListComment.get(position)).isSuccess()) {
+                    mPresenter.onResendComment((Comment) mListComment.get(position));
+                }
+            }
+
+            @Override
+            public void onLongClick(int position) {
+                mPresenter.onLongClickComment((Comment) mListComment.get(position));
+            }
         });
 
         mImvSend.setEnabled(false);
-
     }
 
     @OnTextChanged(R.id.edittext_comment)
@@ -168,10 +178,36 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
     }
 
     @Override
-    public void insertCommentSuccess(Comment comment) {
+    public void insertComment(Comment comment) {
         mListComment.add(comment);
         mAdapter.notifyItemInserted(mListComment.size() - 1);
-
         mRvComment.smoothScrollToPosition(mListComment.size() - 1);
+    }
+
+    @Override
+    public void updateIdComment(long oldId, Comment comment) {
+        for (int i = mListComment.size() - 1; i >= 0; i--) {
+            if (mListComment.get(i) instanceof Comment) {
+                if (((Comment) mListComment.get(i)).getId().equals(String.valueOf(oldId))) {
+                    ((Comment) mListComment.get(i)).setId(comment.getId());
+                    ((Comment) mListComment.get(i)).setCreatedAt(comment.getCreatedAt());
+                    mAdapter.notifyItemChanged(i, comment.getCreatedAt());
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void updateStateComment(long id) {
+        for (int i = mListComment.size() - 1; i >= 1; i--) {
+            if (mListComment.get(i) instanceof Comment) {
+                if (((Comment) mListComment.get(i)).getId().equals(String.valueOf(id))) {
+                    ((Comment) mListComment.get(i)).setSuccess(false);
+                    mAdapter.notifyItemChanged(i, false);
+                    break;
+                }
+            }
+        }
     }
 }

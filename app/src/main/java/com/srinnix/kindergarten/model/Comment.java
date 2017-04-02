@@ -32,6 +32,8 @@ public class Comment {
     @Expose
     private int accountType;
 
+    private boolean isSuccess = true;
+
     public Comment(String id, String name, String image, String comment, long createdAt, int accountType) {
         this.id = id;
         this.name = name;
@@ -43,6 +45,10 @@ public class Comment {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -61,7 +67,19 @@ public class Comment {
         return createdAt;
     }
 
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public int getAccountType() {
         return accountType;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(boolean success) {
+        isSuccess = success;
     }
 }

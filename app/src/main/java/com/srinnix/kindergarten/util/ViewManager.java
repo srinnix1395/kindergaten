@@ -40,10 +40,6 @@ public class ViewManager {
         setFragmentManager(mActivity.getSupportFragmentManager());
     }
 
-    public FragmentManager getFragmentManager() {
-        return mFragmentManager;
-    }
-
     private void setFragmentManager(FragmentManager mFragmentManager) {
         this.mFragmentManager = mFragmentManager;
     }

@@ -1,13 +1,12 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.activity.DetailActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.MemberClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
@@ -57,9 +56,11 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getClassInfo(classId);
+    public void onStart(boolean isFirst) {
+        super.onStart(isFirst);
+        if (isFirst) {
+            getClassInfo(classId);
+        }
     }
 
     public void getClassInfo(String classId) {
@@ -102,9 +103,6 @@ public class DetailClassPresenter extends BasePresenter {
         if (classResponse != null) {
             Teacher teacher = classResponse.getTeacherArrayList().get(teacherPosition);
 
-            Intent intent = new Intent(mContext, DetailActivity.class);
-            intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_DETAIL_CHAT);
-
             Bundle bundle = new Bundle();
             bundle.putString(AppConstant.KEY_ID, teacher.getId());
             bundle.putString(AppConstant.KEY_NAME,
@@ -121,9 +119,9 @@ public class DetailClassPresenter extends BasePresenter {
             bundle.putInt(AppConstant.KEY_STATUS, status);
             bundle.putString(AppConstant.KEY_IMAGE, teacher.getImage());
             bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, AppConstant.ACCOUNT_TEACHERS);
-            intent.putExtras(bundle);
 
-            mContext.startActivity(intent);
+            ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,
+                    R.anim.translate_right_to_left, R.anim.translate_left_to_right);
         }
     }
 

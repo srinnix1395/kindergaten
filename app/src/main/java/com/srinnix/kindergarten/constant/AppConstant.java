@@ -17,15 +17,14 @@ public class AppConstant {
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
 
-
     public static final String API_GET_POST_MEMBER = "post/get/member";
     public static final String API_GET_POST_GUEST = "post/get/guest";
     public static final String API_LIKE_POST = "post/like";
     public static final String API_UNLIKE_POST = "post/unlike";
+    public static final String API_GET_LIST_NUMBER_LIKE = "post/getListNumberLike";
     public static final String API_GET_LIST_LIKE = "post/getListLike";
     public static final String API_GET_COMMENT = "post/getComment";
     public static final String API_INSERT_COMMENT = "post/insertComment";
-
 
     public static final String API_GET_LIST_CLASS = "class/getList";
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";
@@ -87,8 +86,6 @@ public class AppConstant {
     public static final int TYPE_CHILDREN_FRAGMENT = 3;
 
     public static final String SCREEN_ID = "SCREEN_ID";
-    public static final int FRAGMENT_DETAIL_CLASS = 1;
-    public static final int FRAGMENT_MEMBER_CLASS = 2;
     public static final int FRAGMENT_DETAIL_CHAT = 3;
     public static final int FRAGMENT_LOGIN = 4;
     public static final int FRAGMENT_BULLETIN_BOARD = 5;

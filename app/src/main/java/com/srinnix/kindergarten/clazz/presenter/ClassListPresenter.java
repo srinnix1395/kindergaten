@@ -43,7 +43,7 @@ public class ClassListPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart() {
+    public void onStart(boolean isFirst) {
         getListClass();
     }
 
@@ -85,7 +85,8 @@ public class ClassListPresenter extends BasePresenter {
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_CLASS, aClass.getId());
 
-        ViewManager.getInstance().addFragment(new DetailClassFragment(), bundle);
+        ViewManager.getInstance().addFragment(new DetailClassFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void onClickRetry(ImageView imvRetry, TextView tvRetry, ProgressBar pbLoading) {

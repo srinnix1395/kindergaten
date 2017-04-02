@@ -11,10 +11,14 @@ import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.BulletinBoardPresenter;
 import com.srinnix.kindergarten.custom.EndlessScrollListener;
+import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -45,7 +49,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         arrPost = new ArrayList<>();
         arrPost.add(new LoadingItem());
 
-        postAdapter = new PostAdapter(mContext, arrPost,
+        postAdapter = new PostAdapter(arrPost,
                 () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
                 new PostAdapter.PostListener() {
                     @Override
@@ -80,13 +84,30 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
             }
         });
 
-        refreshLayout.setOnRefreshListener(() -> mPresenter.refresh());
+        refreshLayout.setOnRefreshListener(() -> mPresenter.refresh(refreshLayout, arrPost));
     }
 
     @Override
     protected BasePresenter initPresenter() {
         mPresenter = new BulletinBoardPresenter(this);
         return mPresenter;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
+        mPresenter.refresh(refreshLayout, arrPost);
     }
 
     @Override
@@ -124,5 +145,33 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         payloads.add(like);
         payloads.add(numberOfLikes);
         postAdapter.notifyItemChanged(position, payloads);
+    }
+
+    @Override
+    public void onRefreshResult(boolean result, ArrayList<String> data) {
+        if (!result) {
+
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
+            }
+            return;
+        }
+
+        if (!data.isEmpty()) {
+            int j = data.size();
+            for (int i = arrPost.size() - 1; i >= 1; i--) {
+                if (j == 0) {
+                    break;
+                }
+                if (arrPost.get(i) instanceof Post && data.contains(((Post) arrPost.get(i)).getId())) {
+                    ((Post) arrPost.get(i)).setUserLike(true);
+                    postAdapter.notifyItemChanged(i, true);
+                    j--;
+                }
+            }
+        }
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(false);
+        }
     }
 }

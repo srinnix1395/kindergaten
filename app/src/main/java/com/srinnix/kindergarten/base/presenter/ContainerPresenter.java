@@ -26,8 +26,9 @@ public class ContainerPresenter extends BasePresenter {
 
     public void removeUnUsedFragment(FragmentManager fragmentManager, Fragment fragment, boolean isVisible, int typeFragment) {
         if (!isVisible) {
-            if (typeFragment == AppConstant.TYPE_CLASS_FRAGMENT) {
+            if (typeFragment == AppConstant.TYPE_CLASS_FRAGMENT || typeFragment == AppConstant.TYPE_CAMERA_FRAGMENT) {
                 fragmentManager.beginTransaction().remove(fragment).commit();
+                fragment.onDestroy();
             }
         }
     }

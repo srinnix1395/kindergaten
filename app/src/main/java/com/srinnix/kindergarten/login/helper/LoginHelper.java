@@ -33,24 +33,14 @@ public class LoginHelper {
     }
 
     public void login(String email, String password, LoginListener mListener) {
+        if (mListener == null) {
+            return;
+        }
         mApi.login(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(() -> {
-                    if (mListener != null) {
-                        mListener.onFinally();
-                    }
-                })
-                .subscribe(response -> {
-                            if (mListener != null) {
-                                mListener.onResponseSuccess(response);
-                            }
-                        },
-                        throwable -> {
-                            if (mListener != null) {
-                                mListener.onResponseFail(throwable);
-                            }
-                        });
+                .doFinally(mListener::onFinally)
+                .subscribe(mListener::onResponseSuccess, mListener::onResponseFail);
     }
 
     public void insertData(Realm realm, ArrayList<Child> children, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
@@ -81,7 +71,7 @@ public class LoginHelper {
             if (loginDelegate != null) {
                 loginDelegate.loginSuccessfully();
             }
-            EventBus.getDefault().postSticky(new MessageLoginSuccessfully());
+            EventBus.getDefault().post(new MessageLoginSuccessfully());
             if (!realm.isClosed()) {
                 realm.close();
             }

@@ -74,7 +74,7 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     private void onMenuItemItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_sign_in: {
-                mPresenter.startActivityLogin();
+                mPresenter.addFragmentLogin();
                 break;
             }
             case R.id.menu_item_sign_out: {
@@ -122,9 +122,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(sticky = true)
+    @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
-        EventBus.getDefault().removeStickyEvent(MessageLoginSuccessfully.class);
         mPresenter.loginSuccessfully(mToolbar);
     }
 

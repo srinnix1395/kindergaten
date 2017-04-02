@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.base.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -11,7 +12,8 @@ import com.srinnix.kindergarten.clazz.fragment.ClassListFragment;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.util.SharedPreUtils;
-import com.srinnix.kindergarten.util.ViewManager;
+
+import java.util.List;
 
 /**
  * Created by anhtu on 3/17/2017.
@@ -67,6 +69,15 @@ public class ContainerFragment extends BaseFragment {
         mPresenter.replaceFragment(getChildFragmentManager(), new CameraFragment());
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        for (Fragment fragment : fragments) {
+            fragment.onHiddenChanged(hidden);
+        }
+    }
+
     public void initClassFragment() {
         if (accountType == AppConstant.ACCOUNT_TEACHERS) {
             String classId = SharedPreUtils.getInstance(mContext).getClassId();
@@ -87,7 +98,11 @@ public class ContainerFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.removeUnUsedFragment(ViewManager.getInstance().getFragmentManager(),
+        removeFragment();
+    }
+
+    public void removeFragment() {
+        mPresenter.removeUnUsedFragment(getParentFragment().getChildFragmentManager(),
                 this,isVisible(), typeFragment);
     }
 }

@@ -1,13 +1,13 @@
 package com.srinnix.kindergarten.chat.presenter;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.srinnix.kindergarten.base.activity.DetailActivity;
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.chat.delegate.ChatListDelegate;
+import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
@@ -19,6 +19,7 @@ import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -47,9 +48,6 @@ public class ChatListPresenter extends BasePresenter {
     }
 
     public void onClickItemChat(Contact contact, String name, String urlImage) {
-        Intent intent = new Intent(mContext, DetailActivity.class);
-        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_DETAIL_CHAT);
-
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, contact.getId());
         bundle.putString(AppConstant.KEY_NAME, name);
@@ -57,9 +55,9 @@ public class ChatListPresenter extends BasePresenter {
         bundle.putString(AppConstant.KEY_IMAGE, urlImage);
         bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, contact instanceof ContactParent ?
                 AppConstant.ACCOUNT_PARENTS : AppConstant.ACCOUNT_TEACHERS);
-        intent.putExtras(bundle);
 
-        mContext.startActivity(intent);
+        ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void onDisconnect(ArrayList<Contact> arrayList) {

@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.main.presenter;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.activity.DetailActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.fragment.ContainerFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -20,9 +18,10 @@ import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
-import com.srinnix.kindergarten.setting.activity.SettingActivity;
+import com.srinnix.kindergarten.setting.fragment.SettingFragment;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import io.reactivex.disposables.Disposable;
 
@@ -38,47 +37,15 @@ public class MainPresenter extends BasePresenter {
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-    }
 
-    public void startActivityLogin() {
-        Intent intent = new Intent(mContext, DetailActivity.class);
-        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_LOGIN);
-        mContext.startActivity(intent);
     }
 
     public void startActivitySetting() {
-        Intent intent = new Intent(mContext, SettingActivity.class);
-        mContext.startActivity(intent);
+        ViewManager.getInstance().addFragment(new SettingFragment(), null,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void changeTabIcon(FragmentManager fragmentManager, int tabId) {
-        switch (tabId) {
-            case R.id.menu_item_news: {
-                if (currentPosition == AppConstant.FRAGMENT_BULLETIN_BOARD) {
-                    return;
-                }
-                break;
-            }
-            case R.id.menu_item_class: {
-                if (currentPosition == AppConstant.FRAGMENT_CLASS) {
-                    return;
-                }
-                break;
-            }
-            case R.id.menu_item_camera: {
-                if (currentPosition == AppConstant.FRAGMENT_CAMERA) {
-                    return;
-                }
-                break;
-            }
-            case R.id.menu_item_children: {
-                if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
-                    return;
-                }
-                break;
-            }
-        }
-
         Fragment fragmentShow = null;
 
         Fragment fragmentHide = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
@@ -143,7 +110,6 @@ public class MainPresenter extends BasePresenter {
             }
             drawerLayout.openDrawer(Gravity.RIGHT);
         }
-
     }
 
     public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout) {

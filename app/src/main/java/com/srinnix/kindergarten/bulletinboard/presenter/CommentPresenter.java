@@ -47,9 +47,11 @@ public class CommentPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getComment(idPost, System.currentTimeMillis());
+    public void onStart(boolean isFirst) {
+        super.onStart(isFirst);
+        if (isFirst) {
+            getComment(idPost, System.currentTimeMillis());
+        }
     }
 
     public void getComment(long time) {
@@ -94,12 +96,12 @@ public class CommentPresenter extends BasePresenter {
     }
 
     public void onClickSend(EditText etComment) {
-        if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            AlertUtils.showToast(mContext, R.string.noInternetConnection);
+        SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(mContext);
+        if (!sharedPreUtils.isUserSignedIn()) {
+            AlertUtils.showToast(mContext, R.string.login_to_comment);
             return;
         }
 
-        SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(mContext);
         String token = sharedPreUtils.getToken();
         String idUser = sharedPreUtils.getUserID();
         String name = sharedPreUtils.getAccountName();
@@ -109,27 +111,47 @@ public class CommentPresenter extends BasePresenter {
 
         etComment.setText("");
 
+        long now = System.currentTimeMillis();
+        mCommentDelegate.insertComment(new Comment(String.valueOf(now),
+                name, image, comment, now, accountType));
+
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            mCommentDelegate.updateStateComment(now);
+            return;
+        }
+
         mHelper.sendComment(token, idPost, idUser, name, image, accountType, comment, new CommentHelper.InsertCommentListener() {
             @Override
             public void onInsertSuccess(ApiResponse<Comment> response) {
                 if (response == null) {
+                    mCommentDelegate.updateStateComment(now);
                     ErrorUtil.handleException(mContext, new NullPointerException());
                     return;
                 }
 
                 if (response.result == ApiResponse.RESULT_NG) {
+                    mCommentDelegate.updateStateComment(now);
                     ErrorUtil.handleErrorApi(mContext, response.error);
                     return;
                 }
 
-                mCommentDelegate.insertCommentSuccess(response.getData());
+                mCommentDelegate.updateIdComment(now, response.getData());
             }
 
             @Override
             public void onLoadFail(Throwable throwable) {
+                mCommentDelegate.updateStateComment(now);
                 ErrorUtil.handleException(mContext, throwable);
             }
         });
+    }
+
+    public void onResendComment(Comment comment) {
+        // TODO: 4/2/2017 resend
+    }
+
+    public void onLongClickComment(Comment comment) {
+        // TODO: 4/2/2017 long click
     }
 
     @Override
@@ -139,4 +161,7 @@ public class CommentPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
+
+
+
 }

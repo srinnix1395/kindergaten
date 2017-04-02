@@ -18,9 +18,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.base_activity);
-
+        overrideTransition();
         ViewManager.getInstance().setActivity(this);
         initChildView();
+    }
+
+    protected void overrideTransition() {
+
     }
 
     protected void initChildView() {

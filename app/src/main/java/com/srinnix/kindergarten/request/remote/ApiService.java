@@ -16,6 +16,7 @@ import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -84,9 +85,9 @@ public interface ApiService {
     Observable<ApiResponse<ArrayList<TimeLineChildren>>> getTimelineChildren(@Header("x-access-token") String header,
                                                                              @Query("time") long time);
 
-    @GET(AppConstant.API_GET_LIST_LIKE)
-    Observable<ApiResponse<LikeModel>> getListNumberLike(@Header("x-access-token") String token,
-                                                         @Query("_id_post") String id);
+    @GET(AppConstant.API_GET_LIST_NUMBER_LIKE)
+    Observable<ApiResponse<ArrayList<LikeModel>>> getListNumberLike(@Header("x-access-token") String token,
+                                                                   @Query("_id_post") String id);
 
 
     @GET(AppConstant.API_GET_INFO_TEACHER)
@@ -109,4 +110,9 @@ public interface ApiService {
     @GET(AppConstant.API_GET_LIST_CHILDREN)
     Observable<ApiResponse<ArrayList<Child>>> getListChildren(@Header("x-access-token") String token,
                                                               @Query("_id_class") String classId);
+
+    @GET(AppConstant.API_GET_LIST_LIKE)
+    Observable<ApiResponse<ArrayList<String>>> getListLike(@Header("x-access-token") String token,
+                                                           @Query("_id_user") String userId,
+                                                           @Query("list_post") List<String> createdAt);
 }

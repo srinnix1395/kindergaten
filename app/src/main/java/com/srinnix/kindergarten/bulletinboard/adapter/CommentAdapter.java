@@ -12,6 +12,7 @@ import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.LoadingItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by anhtu on 3/28/2017.
@@ -23,10 +24,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private ArrayList<Object> listComments;
     private PostAdapter.RetryListener retryListener;
+    private final CommentViewHolder.CommentListener commentListener;
 
-    public CommentAdapter(ArrayList<Object> listComments, PostAdapter.RetryListener retryListener) {
+    public CommentAdapter(ArrayList<Object> listComments, PostAdapter.RetryListener retryListener,
+                          CommentViewHolder.CommentListener listener) {
         this.listComments = listComments;
         this.retryListener = retryListener;
+        commentListener = listener;
     }
 
     @Override
@@ -39,13 +43,31 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         view = inflater.inflate(R.layout.item_comment, parent, false);
-        return new CommentViewHolder(view);
+        return new CommentViewHolder(view, commentListener);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+            return;
+        }
+
+        if (payloads.get(0) instanceof Long) {
+            ((CommentViewHolder) holder).bindTime((Long) payloads.get(0));
+            return;
+        }
+
+        if (payloads.get(0) instanceof Boolean) {
+            ((CommentViewHolder) holder).bindStatus((Boolean) payloads.get(0));
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CommentViewHolder) {
-            ((CommentViewHolder) holder).bindData(((Comment) listComments.get(position)));
+            ((CommentViewHolder) holder).bindData(((Comment) listComments.get(position)),position);
         } else {
             ((LoadingViewHolder) holder).bindData((LoadingItem) listComments.get(position));
         }
@@ -63,4 +85,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         return VIEW_TYPE_COMMENT;
     }
+
+
 }

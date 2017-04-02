@@ -12,6 +12,7 @@ import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.ErrorUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,9 +68,14 @@ public class BulletinBoardHelper {
                     if (response.result == ApiResponse.RESULT_OK) {
                         ArrayList<String> listLikes = response.getData().getListLikes();
                         ArrayList<Post> listPost = response.getData().getListPost();
+                        int i = listLikes.size();
                         for (Post post : listPost) {
+                            if (i == 0) {
+                                break;
+                            }
                             if (listLikes.contains(post.getId())) {
                                 post.setUserLike(true);
+                                i--;
                             }
                         }
                         return Observable.just(listPost);
@@ -126,8 +132,25 @@ public class BulletinBoardHelper {
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
+    public void getListLike(String token, String userId, List<String> listId, ListLikeListener listener) {
+        if (listener == null) {
+            return;
+        }
+
+        mDisposable.add(mApiService.getListLike(token, userId, listId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(listener::onSuccess, listener::onFail));
+    }
+
+    public interface ListLikeListener {
+        void onSuccess(ApiResponse<ArrayList<String>> response);
+
+        void onFail(Throwable throwable);
+    }
+
     public interface NumberLikeListener {
-        void onSuccess(ApiResponse<LikeModel> response);
+        void onSuccess(ApiResponse<ArrayList<LikeModel>> response);
 
         void onFail(Throwable throwable);
     }

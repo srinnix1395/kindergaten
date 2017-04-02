@@ -19,6 +19,7 @@ import com.srinnix.kindergarten.children.adapter.TimelineAdapter;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
 import com.srinnix.kindergarten.children.presenter.ChildrenPresenter;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
@@ -58,6 +59,12 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
 
+    @BindView(R.id.layout_unsigned_in)
+    RelativeLayout relUnsignedIn;
+
+    @BindView(R.id.imagview_unsigned_in)
+    ImageView imvUnsignedIn;
+
     private ChildrenPresenter mPresenter;
     private TimelineAdapter mTimelineAdapter;
 
@@ -71,6 +78,23 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @Override
     protected void initChildView() {
+        pbLoading.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_ATOP);
+
+        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            UiUtils.hideProgressBar(pbLoading);
+            Glide.with(mContext)
+                    .load(R.drawable.kid_drawing)
+                    .into(imvUnsignedIn);
+
+            relUnsignedIn.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
         mListChildren = new ArrayList<>();
         mChildrenAdapter = new ChildrenAdapter(mListChildren, ChildrenAdapter.TYPE_LINEAR, new ChildrenAdapter.OnClickChildListener() {
             @Override
@@ -83,9 +107,6 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
         });
         rvListChildren.setAdapter(mChildrenAdapter);
         rvListChildren.setLayoutManager(new LinearLayoutManager(mContext));
-
-        pbLoading.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary),
-                PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
@@ -94,8 +115,13 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
         return mPresenter;
     }
 
+    @OnClick(R.id.button_login)
+    public void onClickLogin() {
+        mPresenter.addFragmentLogin();
+    }
+
     @OnClick(R.id.layout_retry)
-    void onClickRetry() {
+    public void onClickRetry() {
         relRety.setVisibility(View.GONE);
         UiUtils.showProgressBar(pbLoading);
         mPresenter.onClickRetry();

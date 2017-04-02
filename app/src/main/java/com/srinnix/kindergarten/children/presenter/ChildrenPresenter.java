@@ -36,9 +36,11 @@ public class ChildrenPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getListChildren();
+    public void onStart(boolean isFirst) {
+        super.onStart(isFirst);
+        if (isFirst && SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            getListChildren();
+        }
     }
 
     public void getInfoChildren(String idChildren) {
@@ -151,7 +153,7 @@ public class ChildrenPresenter extends BasePresenter {
     }
 
     public void onClickRetry() {
-
+        // TODO: 4/1/2017 retry
     }
 
     @Override
