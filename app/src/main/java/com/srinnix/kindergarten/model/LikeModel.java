@@ -16,11 +16,35 @@ public class LikeModel {
     @Expose
     private String name;
 
+    @SerializedName("image")
+    @Expose
+    private String image;
+
+    @SerializedName("account_type")
+    @Expose
+    private int accountType;
+
+    @SerializedName("created_at")
+    @Expose
+    private long createdAt;
+
     public String getIdUser() {
         return idUser;
     }
 
     public String getName() {
         return name;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public int getAccountType() {
+        return accountType;
     }
 }

@@ -7,9 +7,10 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.CommentViewHolder;
-import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
+import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.Loading3StateViewHolder;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.LoadingItem;
+import com.srinnix.kindergarten.model.LoadingItem3State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private ArrayList<Object> listComments;
     private PostAdapter.RetryListener retryListener;
-    private final CommentViewHolder.CommentListener commentListener;
+    private CommentViewHolder.CommentListener commentListener;
 
     public CommentAdapter(ArrayList<Object> listComments, PostAdapter.RetryListener retryListener,
                           CommentViewHolder.CommentListener listener) {
@@ -39,7 +40,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == VIEW_TYPE_LOADING) {
             view = inflater.inflate(R.layout.item_loading_comment, parent, false);
-            return new LoadingViewHolder(view, retryListener);
+            return new Loading3StateViewHolder(view, retryListener);
         }
 
         view = inflater.inflate(R.layout.item_comment, parent, false);
@@ -54,22 +55,24 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return;
         }
 
-        if (payloads.get(0) instanceof Long) {
+        int size = payloads.size();
+
+        if (payloads.get(size - 1) instanceof Long) {
             ((CommentViewHolder) holder).bindTime((Long) payloads.get(0));
             return;
         }
 
-        if (payloads.get(0) instanceof Boolean) {
-            ((CommentViewHolder) holder).bindStatus((Boolean) payloads.get(0));
+        if (payloads.get(size - 1) instanceof Boolean) {
+            ((CommentViewHolder) holder).bindStatus((Boolean) payloads.get(size - 1));
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CommentViewHolder) {
-            ((CommentViewHolder) holder).bindData(((Comment) listComments.get(position)),position);
+            ((CommentViewHolder) holder).bindData(((Comment) listComments.get(position)), position);
         } else {
-            ((LoadingViewHolder) holder).bindData((LoadingItem) listComments.get(position));
+            ((Loading3StateViewHolder) holder).bindData((LoadingItem3State) listComments.get(position));
         }
     }
 

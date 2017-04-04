@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#03A9F4</color>-->
-    <!--<color name="colorPrimaryDark">#0288D1</color>-->
-    <!--<color name="colorAccent">#FF5722</color>-->
-
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#313f4f</color>
     <color name="colorGreenActive">#44b81e</color>
@@ -11,10 +7,6 @@
     <color name="colorWhiteFade">#ccffffff</color>
     <color name="colorWhiteFadeFade">#8cffffff</color>
 
-    <!--<color name="colorPrimaryLight">#B3E5FC</color>-->
-
-    <!--<color name="colorBlackText">#212121</color>-->
-    <!--<color name="colorSecondaryText">#757575</color>-->
     <color name="colorDividerColor">#BFBFBF</color>
 
     <color name="colorPrimary">#6580d4</color>

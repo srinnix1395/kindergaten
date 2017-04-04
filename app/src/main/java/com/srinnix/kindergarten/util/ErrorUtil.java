@@ -30,4 +30,8 @@ public class ErrorUtil {
 
         AlertUtils.showToast(mContext, R.string.error_common);
     }
+
+    public static void handleException(Throwable throwable) {
+        throwable.printStackTrace();
+    }
 }

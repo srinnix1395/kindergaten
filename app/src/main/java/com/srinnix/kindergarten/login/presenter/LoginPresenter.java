@@ -72,7 +72,7 @@ public class LoginPresenter extends BasePresenter {
                     return;
                 }
 
-                SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser());
+                SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser(), response.getData().getChildren());
                 mLoginHelper.insertData(mRealm, response.getData().getChildren(), response.getData().getContacts(), mLoginDelegate);
             }
 

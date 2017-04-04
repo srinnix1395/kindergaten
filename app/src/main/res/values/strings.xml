@@ -57,4 +57,9 @@
     <string name="what_are_your_children_doing">Trẻ đang làm gì?</string>
     <string name="children_content_unsigned_in_camera">Xem camera ở trường để biết trẻ học và chơi thế nào.</string>
     <string name="tap_to_retry">Không thể đăng, chạm để thử lại</string>
+    <string name="just_now">Vừa xong</string>
+    <string name="minutes_ago">phút trước</string>
+    <string name="hour_ago">giờ trước</string>
+    <string name="yesterday">Ngày hôm qua</string>
+    <string name="days_ago">ngày trước</string>
 </resources>

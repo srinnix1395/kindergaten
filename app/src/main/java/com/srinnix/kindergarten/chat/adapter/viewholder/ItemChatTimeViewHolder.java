@@ -23,7 +23,7 @@ public class ItemChatTimeViewHolder extends RecyclerView.ViewHolder {
 		ButterKnife.bind(this, itemView);
 	}
 	
-	public void bindData(long l) {
-		tvTime.setText(StringUtil.getTime(l));
+	public void bindData(long time) {
+		tvTime.setText(StringUtil.getTimeAgo(itemView.getContext(),time));
 	}
 }

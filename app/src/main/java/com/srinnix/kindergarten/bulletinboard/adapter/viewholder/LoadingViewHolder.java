@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
+import com.srinnix.kindergarten.model.LoadingItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,12 +21,12 @@ import butterknife.OnClick;
 
 public class LoadingViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.progressbar_itemloading)
-    ProgressBar progressBar;
+    protected ProgressBar progressBar;
 
     @BindView(R.id.imageview_retry)
-    ImageView imvRetry;
+    protected ImageView imvRetry;
 
-    private PostAdapter.RetryListener mRetryListener;
+    protected PostAdapter.RetryListener mRetryListener;
 
     public LoadingViewHolder(View itemView, PostAdapter.RetryListener mRetryListener) {
         super(itemView);

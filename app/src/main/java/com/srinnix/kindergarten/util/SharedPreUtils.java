@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.User;
+
+import java.util.ArrayList;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -93,7 +96,7 @@ public class SharedPreUtils {
         return sharedPreferences.getString(AppConstant._ID_CLASS, null);
     }
 
-    public void saveUserData(User user) {
+    public void saveUserData(User user, ArrayList<Child> children) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(AppConstant.IS_USER_SIGNED_IN, true);
         editor.putString(AppConstant.USER_ID, user.getId());
@@ -103,6 +106,7 @@ public class SharedPreUtils {
         if (user.getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
             editor.putString(AppConstant._ID_CLASS, user.getIdClass());
         }
+        editor.putString(AppConstant.IMAGE, !children.isEmpty() ? children.get(0).getImage() : "");
         editor.putString(AppConstant._ID_SCHOOL, user.getIdSchool());
         editor.putString(AppConstant.TOKEN, user.getToken());
         editor.apply();
@@ -123,8 +127,7 @@ public class SharedPreUtils {
     }
 
     public String getImage() {
-        //todo image
-        return "";
+        return sharedPreferences.getString(AppConstant.IMAGE, "");
     }
 
     public void clearUserData() {

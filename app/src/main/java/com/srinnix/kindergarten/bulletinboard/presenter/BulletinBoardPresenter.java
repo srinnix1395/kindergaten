@@ -9,11 +9,11 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
+import com.srinnix.kindergarten.bulletinboard.fragment.CommentFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
-import com.srinnix.kindergarten.bulletinboard.fragment.LikeCommentFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.LikeFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -136,7 +136,9 @@ public class BulletinBoardPresenter extends BasePresenter {
 
 
     public void onClickLike(ArrayList<Object> arrPost, Post post) {
-        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+        SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(mContext);
+
+        if (!sharedPreUtils.isUserSignedIn()) {
             AlertUtils.showToast(mContext, R.string.login_to_like);
             return;
         }
@@ -144,19 +146,23 @@ public class BulletinBoardPresenter extends BasePresenter {
         String idPost = post.getId();
         boolean isLike = !post.isUserLike();
 
-        String token = SharedPreUtils.getInstance(mContext).getToken();
-        String idUser = SharedPreUtils.getInstance(mContext).getUserID();
+        String token = sharedPreUtils.getToken();
+        String idUser = sharedPreUtils.getUserID();
 
         if (isLike) {
-            likePost(arrPost, token, idUser, idPost);
+            String name = sharedPreUtils.getAccountName();
+            int accountType = sharedPreUtils.getAccountType();
+            String image = sharedPreUtils.getImage();
+            likePost(arrPost, token, idUser, idPost, name, image, accountType);
         } else {
             unlikePost(arrPost, token, idUser, idPost);
         }
 
     }
 
-    private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
-        mHelper.likePost(token, idUser, idPost, new BulletinBoardHelper.LikeListener() {
+    private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost,
+                          String name, String image, int accountType) {
+        mHelper.likePost(token, idUser, idPost, name, image, accountType, new BulletinBoardHelper.LikeListener() {
             @Override
             public void onSuccess(ApiResponse<LikeResponse> response) {
                 handleResponseLike(arrPost, response);
@@ -219,24 +225,13 @@ public class BulletinBoardPresenter extends BasePresenter {
         }
     }
 
-    public void onClickNumberLike(String id) {
-        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            AlertUtils.showToast(mContext, R.string.login_to_see);
-            return;
-        }
+    public void onClickNumberLike(Post post) {
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_ID, post.getId());
+        bundle.putInt(AppConstant.KEY_LIKE, post.getNumberOfLikes());
 
-        String token = SharedPreUtils.getInstance(mContext).getToken();
-        mHelper.getListNumberLike(token, id, new BulletinBoardHelper.NumberLikeListener() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<LikeModel>> response) {
-                // TODO: 3/22/2017 hien thi list like
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-
-            }
-        });
+        ViewManager.getInstance().addFragment(new LikeFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void refresh(SwipeRefreshLayout refreshLayout, ArrayList<Object> arrPost) {
@@ -292,9 +287,8 @@ public class BulletinBoardPresenter extends BasePresenter {
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, post.getId());
         bundle.putInt(AppConstant.KEY_COMMENT, post.getNumberOfComments());
-        bundle.putBoolean(AppConstant.KEY_IS_SHOW_KEYBOARD, isShowKeyboard);
 
-        ViewManager.getInstance().addFragment(new LikeCommentFragment(), bundle,
+        ViewManager.getInstance().addFragment(new CommentFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 

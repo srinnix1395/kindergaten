@@ -9,6 +9,7 @@ public class AppConstant {
 
     public static final long TIME_BETWEEN_2_MESSAGE = 7200000;
     public static final int ITEM_COMMENT_PER_PAGE = 15;
+    public static final int ITEM_LIKE_PER_PAGE = 20;
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
@@ -77,7 +78,7 @@ public class AppConstant {
     public static final String KEY_CLASS = "KEY_CLASS";
     public static final String KEY_MEMBER = "KEY_MEMBER";
     public static final String KEY_COMMENT = "KEY_COMMENT";
-    public static final String KEY_IS_SHOW_KEYBOARD = "KEY_IS_SHOW_KEYBOARD";
+    public static final String KEY_LIKE = "KEY_LIKE";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -85,9 +86,6 @@ public class AppConstant {
     public static final int TYPE_CAMERA_FRAGMENT = 2;
     public static final int TYPE_CHILDREN_FRAGMENT = 3;
 
-    public static final String SCREEN_ID = "SCREEN_ID";
-    public static final int FRAGMENT_DETAIL_CHAT = 3;
-    public static final int FRAGMENT_LOGIN = 4;
     public static final int FRAGMENT_BULLETIN_BOARD = 5;
     public static final int FRAGMENT_CLASS = 6;
     public static final int FRAGMENT_CAMERA = 7;

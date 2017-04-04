@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.srinnix.kindergarten.bulletinboard.delegate.CommentDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.CommentPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Comment;
-import com.srinnix.kindergarten.model.LoadingItem;
+import com.srinnix.kindergarten.model.LoadingItem3State;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import butterknife.OnTextChanged;
  * Created by anhtu on 3/28/2017.
  */
 
-public class LikeCommentFragment extends BaseFragment implements CommentDelegate {
+public class CommentFragment extends BaseFragment implements CommentDelegate {
     @BindView(R.id.toolbar_detail_commentt)
     Toolbar mToolbar;
 
@@ -61,28 +62,22 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
     private CommentAdapter mAdapter;
     private CommentPresenter mPresenter;
 
-    private boolean isShowKeyboard;
     private int numberComment;
 
     @Override
     protected void getData() {
         super.getData();
         Bundle bundle = getArguments();
-        isShowKeyboard = bundle.getBoolean(AppConstant.KEY_IS_SHOW_KEYBOARD);
         numberComment = bundle.getInt(AppConstant.KEY_COMMENT);
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_detail_comment;
+        return R.layout.fragment_list_comment;
     }
 
     @Override
     protected void initChildView() {
-        if (!isShowKeyboard) {
-            UiUtils.hideKeyboard(getActivity());
-        }
-
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(v -> onBackPressed());
         mToolbar.setTitle(String.format("%s %s", String.valueOf(numberComment), mContext.getString(R.string.comment)));
@@ -91,12 +86,20 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
         mPbLoading.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
 
+        mRvComment.setLayoutManager(new LinearLayoutManager(mContext));
+
         mListComment = new ArrayList<>();
-        mAdapter = new CommentAdapter(mListComment, () -> mPresenter.getComment(((Comment) mListComment.get(1)).getCreatedAt()), new CommentViewHolder.CommentListener() {
+        mAdapter = new CommentAdapter(mListComment, () -> {
+            if (!mListComment.isEmpty() && (mListComment.get(0) instanceof LoadingItem3State)) {
+                ((LoadingItem3State) mListComment.get(0)).setLoadingState(LoadingItem3State.STATE_IDLE);
+                mAdapter.notifyItemChanged(0);
+            }
+            mPresenter.getComment(((Comment) mListComment.get(1)).getCreatedAt());
+        }, new CommentViewHolder.CommentListener() {
             @Override
             public void onClickRetry(int position) {
                 if (!((Comment) mListComment.get(position)).isSuccess()) {
-                    mPresenter.onResendComment((Comment) mListComment.get(position));
+                    mPresenter.onResendComment((Comment) mListComment.get(position), position);
                 }
             }
 
@@ -105,6 +108,7 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
                 mPresenter.onLongClickComment((Comment) mListComment.get(position));
             }
         });
+        mRvComment.setAdapter(mAdapter);
 
         mImvSend.setEnabled(false);
     }
@@ -141,18 +145,20 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
     @Override
     public void onLoadCommentSuccess(ArrayList<Comment> commentArrayList, boolean isLoadFirst) {
         if (commentArrayList.size() < AppConstant.ITEM_COMMENT_PER_PAGE) {
-            if (!mListComment.isEmpty() && mListComment.get(0) instanceof LoadingItem) {
+            if (!mListComment.isEmpty() && mListComment.get(0) instanceof LoadingItem3State) {
                 mListComment.remove(0);
                 mAdapter.notifyItemRemoved(0);
             }
-            mListComment.add(0, commentArrayList);
-            mAdapter.notifyItemRangeInserted(0, commentArrayList.size());
+            if (!commentArrayList.isEmpty()) {
+                mListComment.addAll(commentArrayList);
+                mAdapter.notifyItemRangeInserted(0, commentArrayList.size());
+            }
         } else {
             if (mListComment.isEmpty()) {
-                mListComment.add(0, new LoadingItem());
+                mListComment.add(0, new LoadingItem3State());
                 mAdapter.notifyItemInserted(0);
-            } else if ((mListComment.get(0) instanceof LoadingItem)) {
-                ((LoadingItem) mListComment.get(0)).setLoadingState(LoadingItem.STATE_ERROR);
+            } else if ((mListComment.get(0) instanceof LoadingItem3State)) {
+                ((LoadingItem3State) mListComment.get(0)).setLoadingState(LoadingItem3State.STATE_IDLE);
                 mAdapter.notifyItemChanged(0);
             }
             mListComment.addAll(1, commentArrayList);
@@ -163,6 +169,7 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
             if (!mListComment.isEmpty()) {
                 mRvComment.smoothScrollToPosition(commentArrayList.size() - 1);
             }
+            mRvComment.setVisibility(View.VISIBLE);
             UiUtils.hideProgressBar(mPbLoading);
         }
     }
@@ -174,6 +181,9 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
 
             mTvRetry.setText(resError);
             mRelRetry.setVisibility(View.VISIBLE);
+        } else if (!mListComment.isEmpty() && (mListComment.get(0) instanceof LoadingItem3State)) {
+            ((LoadingItem3State) mListComment.get(0)).setLoadingState(LoadingItem3State.STATE_IDLE);
+            mAdapter.notifyItemChanged(0);
         }
     }
 
@@ -209,5 +219,11 @@ public class LikeCommentFragment extends BaseFragment implements CommentDelegate
                 }
             }
         }
+    }
+
+    @Override
+    public void updateStateComment(int position, boolean state) {
+        ((Comment) mListComment.get(position)).setSuccess(state);
+        mAdapter.notifyItemChanged(position, state);
     }
 }

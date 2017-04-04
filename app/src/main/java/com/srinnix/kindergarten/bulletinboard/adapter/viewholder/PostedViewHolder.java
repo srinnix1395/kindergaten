@@ -77,7 +77,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
             }
         }
         tvContent.setText(post.getContent());
-        tvCreatedAt.setText(StringUtil.getTime(post.getCreatedAt()));
+        tvCreatedAt.setText(StringUtil.getTimeAgo(itemView.getContext(), post.getCreatedAt()));
 
         int size = post.getListImage().size();
         if (size == 0) {
@@ -151,11 +151,11 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
             return;
         }
         switch (v.getId()) {
-            case R.id.imageview_comment:{
+            case R.id.imageview_comment: {
                 mPostListener.onClickComment(position, true);
                 break;
             }
-            case R.id.textview_number_comment:{
+            case R.id.textview_number_comment: {
                 mPostListener.onClickComment(position, false);
                 break;
             }

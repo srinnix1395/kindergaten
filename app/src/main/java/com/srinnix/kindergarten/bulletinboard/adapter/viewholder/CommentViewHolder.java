@@ -70,7 +70,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindTime(long createdAt) {
-        tvTime.setText(StringUtil.getTime(createdAt));
+        tvTime.setText(StringUtil.getTimeAgo(itemView.getContext(), createdAt));
     }
 
     public void bindStatus(boolean success) {
@@ -83,7 +83,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public interface CommentListener{
+    public interface CommentListener {
         void onClickRetry(int position);
 
         void onLongClick(int position);

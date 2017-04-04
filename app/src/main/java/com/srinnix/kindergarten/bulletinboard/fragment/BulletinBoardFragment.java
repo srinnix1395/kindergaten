@@ -59,7 +59,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
                     @Override
                     public void onClickNumberLike(int position) {
-                        mPresenter.onClickNumberLike(((Post) arrPost.get(position)).getId());
+                        mPresenter.onClickNumberLike(((Post) arrPost.get(position)));
                     }
 
                     @Override

@@ -18,5 +18,8 @@ public interface CommentDelegate extends BaseDelegate {
 
     void updateStateComment(long id);
 
+    void updateStateComment(int position, boolean state);
+
     void updateIdComment(long oldId, Comment comment);
+
 }

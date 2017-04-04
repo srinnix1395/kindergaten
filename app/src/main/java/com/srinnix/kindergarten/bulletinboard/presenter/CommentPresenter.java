@@ -12,7 +12,6 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
-import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -50,15 +49,11 @@ public class CommentPresenter extends BasePresenter {
     public void onStart(boolean isFirst) {
         super.onStart(isFirst);
         if (isFirst) {
-            getComment(idPost, System.currentTimeMillis());
+            getComment(System.currentTimeMillis());
         }
     }
 
     public void getComment(long time) {
-        getComment(idPost, time);
-    }
-
-    public void getComment(String idPost, long time) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             mCommentDelegate.onLoadCommentFail(R.string.noInternetConnection, isLoadFirst);
             return;
@@ -85,12 +80,8 @@ public class CommentPresenter extends BasePresenter {
 
             @Override
             public void onLoadFail(Throwable throwable) {
+                ErrorUtil.handleException(throwable);
                 mCommentDelegate.onLoadCommentFail(R.string.error_common, isLoadFirst);
-                if (!isLoadFirst) {
-                    ErrorUtil.handleException(mContext, throwable);
-                } else {
-                    DebugLog.e(throwable.getMessage());
-                }
             }
         });
     }
@@ -107,7 +98,7 @@ public class CommentPresenter extends BasePresenter {
         String name = sharedPreUtils.getAccountName();
         int accountType = sharedPreUtils.getAccountType();
         String image = sharedPreUtils.getImage();
-        String comment = etComment.getText().toString();
+        String comment = etComment.getText().toString().trim();
 
         etComment.setText("");
 
@@ -115,8 +106,14 @@ public class CommentPresenter extends BasePresenter {
         mCommentDelegate.insertComment(new Comment(String.valueOf(now),
                 name, image, comment, now, accountType));
 
+        sendComment(token,idUser,name,image,accountType,comment,now);
+    }
+
+    private void sendComment(String token, String idUser, String name, String image,
+                             int accountType, String comment, long time) {
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mCommentDelegate.updateStateComment(now);
+            mCommentDelegate.updateStateComment(time);
             return;
         }
 
@@ -124,30 +121,35 @@ public class CommentPresenter extends BasePresenter {
             @Override
             public void onInsertSuccess(ApiResponse<Comment> response) {
                 if (response == null) {
-                    mCommentDelegate.updateStateComment(now);
+                    mCommentDelegate.updateStateComment(time);
                     ErrorUtil.handleException(mContext, new NullPointerException());
                     return;
                 }
 
                 if (response.result == ApiResponse.RESULT_NG) {
-                    mCommentDelegate.updateStateComment(now);
+                    mCommentDelegate.updateStateComment(time);
                     ErrorUtil.handleErrorApi(mContext, response.error);
                     return;
                 }
 
-                mCommentDelegate.updateIdComment(now, response.getData());
+                mCommentDelegate.updateIdComment(time, response.getData());
             }
 
             @Override
             public void onLoadFail(Throwable throwable) {
-                mCommentDelegate.updateStateComment(now);
-                ErrorUtil.handleException(mContext, throwable);
+                mCommentDelegate.updateStateComment(time);
+                ErrorUtil.handleException(throwable);
             }
         });
     }
 
-    public void onResendComment(Comment comment) {
-        // TODO: 4/2/2017 resend
+    public void onResendComment(Comment comment, int position) {
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+
+        mCommentDelegate.updateStateComment(position, true);
+
+        sendComment(token, comment.getId(), comment.getName(), comment.getImage(),
+                comment.getAccountType(), comment.getComment(), comment.getCreatedAt());
     }
 
     public void onLongClickComment(Comment comment) {
@@ -161,7 +163,6 @@ public class CommentPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
-
 
 
 }

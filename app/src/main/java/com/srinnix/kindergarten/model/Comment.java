@@ -12,11 +12,11 @@ public class Comment {
     @Expose
     private String id;
 
-    @SerializedName("name")
+    @SerializedName("name_user")
     @Expose
     private String name;
 
-    @SerializedName("image")
+    @SerializedName("image_user")
     @Expose
     private String image;
 
@@ -33,6 +33,10 @@ public class Comment {
     private int accountType;
 
     private boolean isSuccess = true;
+
+    public Comment() {
+        isSuccess = true;
+    }
 
     public Comment(String id, String name, String image, String comment, long createdAt, int accountType) {
         this.id = id;

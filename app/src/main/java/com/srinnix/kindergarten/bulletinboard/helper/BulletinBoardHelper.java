@@ -32,12 +32,13 @@ public class BulletinBoardHelper {
         mApiService = RetrofitClient.getApiService();
     }
 
-    public void likePost(String token, String idUser, String idPost, LikeListener listener) {
+    public void likePost(String token, String idUser, String idPost,
+                         String name, String image, int accountType, LikeListener listener) {
         if (listener == null) {
             return;
         }
         mDisposable.add(
-                mApiService.likePost(token, idUser, idPost)
+                mApiService.likePost(token, idUser, name, image, accountType, idPost)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(listener::onSuccess, listener::onFail));
@@ -122,11 +123,11 @@ public class BulletinBoardHelper {
                 }, listener::onFail));
     }
 
-    public void getListNumberLike(String token, String id, NumberLikeListener listener) {
+    public void getListNumberLike(String idPost, long timePrevLike, NumberLikeListener listener) {
         if (listener == null) {
             return;
         }
-        mDisposable.add(mApiService.getListNumberLike(token, id)
+        mDisposable.add(mApiService.getListNumberLike(idPost, timePrevLike)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listener::onSuccess, listener::onFail));
