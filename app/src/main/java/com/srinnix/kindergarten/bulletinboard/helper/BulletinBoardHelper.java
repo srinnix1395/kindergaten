@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.bulletinboard.helper;
 
 import android.content.Context;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
@@ -33,7 +34,7 @@ public class BulletinBoardHelper {
     }
 
     public void likePost(String token, String idUser, String idPost,
-                         String name, String image, int accountType, LikeListener listener) {
+                         String name, String image, int accountType, ResponseListener<LikeResponse> listener) {
         if (listener == null) {
             return;
         }
@@ -44,7 +45,7 @@ public class BulletinBoardHelper {
                         .subscribe(listener::onSuccess, listener::onFail));
     }
 
-    public void unlikePost(String token, String idUser, String idPost, LikeListener listener) {
+    public void unlikePost(String token, String idUser, String idPost, ResponseListener<LikeResponse> listener) {
         if (listener == null) {
             return;
         }
@@ -123,7 +124,7 @@ public class BulletinBoardHelper {
                 }, listener::onFail));
     }
 
-    public void getListNumberLike(String idPost, long timePrevLike, NumberLikeListener listener) {
+    public void getListNumberLike(String idPost, long timePrevLike, ResponseListener<ArrayList<LikeModel>> listener) {
         if (listener == null) {
             return;
         }
@@ -133,7 +134,7 @@ public class BulletinBoardHelper {
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
-    public void getListLike(String token, String userId, List<String> listId, ListLikeListener listener) {
+    public void getListLike(String token, String userId, List<String> listId, ResponseListener<ArrayList<String>> listener) {
         if (listener == null) {
             return;
         }
@@ -142,25 +143,6 @@ public class BulletinBoardHelper {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listener::onSuccess, listener::onFail));
-    }
-
-    public interface ListLikeListener {
-        void onSuccess(ApiResponse<ArrayList<String>> response);
-
-        void onFail(Throwable throwable);
-    }
-
-    public interface NumberLikeListener {
-        void onSuccess(ApiResponse<ArrayList<LikeModel>> response);
-
-        void onFail(Throwable throwable);
-    }
-
-    public interface LikeListener {
-        void onSuccess(ApiResponse<LikeResponse> response);
-
-        void onFail(Throwable throwable);
-
     }
 
     public interface PostListener {

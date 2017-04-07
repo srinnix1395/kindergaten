@@ -10,6 +10,7 @@ import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PreviewImageAdapter;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.model.Image;
 
 import java.util.ArrayList;
 
@@ -31,13 +32,13 @@ public class DetailPostFragment extends BaseFragment {
     @BindView(R.id.cardview_right)
     CardView cardViewRight;
 
-    private ArrayList<String> mListImage;
+    private ArrayList<Image> mListImage;
     private int currentPosition = 0;
 
     @Override
     protected void getData() {
         super.getData();
-        mListImage = getArguments().getStringArrayList(AppConstant.KEY_IMAGE);
+        mListImage = getArguments().getParcelableArrayList(AppConstant.KEY_IMAGE);
     }
 
     @Override

@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -94,9 +94,23 @@ public class UiUtils {
         progressBar.setEnabled(false);
     }
 
-    public static String convertDateTime(long dateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault());
+    public static Bitmap retrieveVideoFrameFromVideo(String videoPath) throws Throwable
+    {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever mediaMetadataRetriever = null;
+        try
+        {
+            mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<>());
 
-        return dateFormat.format(new Date(dateTime));
+            bitmap = mediaMetadataRetriever.getFrameAtTime();
+        } catch (Exception e) {
+            ErrorUtil.handleException(e);
+        } finally {
+            if (mediaMetadataRetriever != null) {
+                mediaMetadataRetriever.release();
+            }
+        }
+        return bitmap;
     }
 }

@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.children.presenter;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
@@ -36,9 +37,9 @@ public class ChildrenPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart(boolean isFirst) {
-        super.onStart(isFirst);
-        if (isFirst && SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+    public void onStart() {
+        super.onStart();
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             getListChildren();
         }
     }
@@ -51,10 +52,20 @@ public class ChildrenPresenter extends BasePresenter {
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mHelper.getInfoChildren(token, idChildren, new ChildrenHelper.ChildrenListener() {
+        mHelper.getInfoChildren(token, idChildren, new ResponseListener<Child>() {
             @Override
             public void onSuccess(ApiResponse<Child> response) {
+                if (response == null) {
+                    onFail(new NullPointerException());
+                    return;
+                }
 
+                if (response.result == ApiResponse.RESULT_NG) {
+                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    return;
+                }
+
+                mChildrenDelegate.onLoadChildren(response.getData());
             }
 
             @Override
@@ -65,11 +76,7 @@ public class ChildrenPresenter extends BasePresenter {
         });
     }
 
-    public void getListChildren() {
-        if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mChildrenDelegate.onLoadFail(R.string.noInternetConnection);
-            return;
-        }
+    private void getListChildren() {
         int accountType = SharedPreUtils.getInstance(mContext).getAccountType();
         if (accountType == AppConstant.ACCOUNT_PARENTS) {
             getListChildrenParent();
@@ -86,31 +93,7 @@ public class ChildrenPresenter extends BasePresenter {
                 .findAllAsync()
                 .addChangeListener(element -> {
                     if (element.size() == 1) {
-                        String token = SharedPreUtils.getInstance(mContext).getToken();
-                        mHelper.getInfoChildren(token, element.get(0).getId(), new ChildrenHelper.ChildrenListener() {
-                            @Override
-                            public void onSuccess(ApiResponse<Child> response) {
-                                if (response == null) {
-                                    DebugLog.e("response is null");
-                                    mChildrenDelegate.onLoadFail(R.string.error_common);
-                                    return;
-                                }
-
-                                if (response.result == ApiResponse.RESULT_NG) {
-                                    ErrorUtil.handleErrorApi(mContext, response.error);
-                                    mChildrenDelegate.onLoadFail(R.string.error_common);
-                                    return;
-                                }
-
-                                mChildrenDelegate.onLoadChildren(response.getData());
-                            }
-
-                            @Override
-                            public void onFail(Throwable throwable) {
-                                ErrorUtil.handleException(mContext, throwable);
-                                mChildrenDelegate.onLoadFail(R.string.error_common);
-                            }
-                        });
+                        getInfoChildren(element.get(0).getId());
                     } else {
                         ArrayList<Child> childArrayList = new ArrayList<>();
                         childArrayList.addAll(element);
@@ -120,13 +103,18 @@ public class ChildrenPresenter extends BasePresenter {
     }
 
     private void getListChildrenTeacher() {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            mChildrenDelegate.onLoadFail(R.string.noInternetConnection);
+            return;
+        }
+
         String classId = SharedPreUtils.getInstance(mContext).getClassId();
         if (classId == null) {
             return;
         }
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
-        mHelper.getListChildrenTeacher(token, classId, new ChildrenHelper.ListChildrenListener() {
+        mHelper.getListChildrenTeacher(token, classId, new ResponseListener<ArrayList<Child>>() {
             @Override
             public void onSuccess(ApiResponse<ArrayList<Child>> response) {
                 if (response == null) {

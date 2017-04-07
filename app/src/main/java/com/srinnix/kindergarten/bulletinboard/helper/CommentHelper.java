@@ -1,8 +1,8 @@
 package com.srinnix.kindergarten.bulletinboard.helper;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class CommentHelper {
         this.mDisposable = mDisposable;
     }
 
-    public void getComment(String idPost, long timeLastComment, CommentListener commentListener) {
+    public void getComment(String idPost, long timeLastComment, ResponseListener<ArrayList<Comment>> commentListener) {
         if (commentListener == null) {
             return;
         }
@@ -33,12 +33,12 @@ public class CommentHelper {
                 mApi.getComment(idPost, timeLastComment)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(commentListener::onLoadSuccess, commentListener::onLoadFail)
+                        .subscribe(commentListener::onSuccess, commentListener::onFail)
         );
     }
 
     public void sendComment(String token, String idPost, String idUser, String name, String image,
-                            int accountType, String comment, InsertCommentListener listener) {
+                            int accountType, String comment, ResponseListener<Comment> listener) {
         if (listener == null) {
             return;
         }
@@ -46,18 +46,6 @@ public class CommentHelper {
         mDisposable.add(mApi.insertComment(token, idPost, idUser, name, image, accountType, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listener::onInsertSuccess, listener::onLoadFail));
-    }
-
-    public interface CommentListener {
-        void onLoadSuccess(ApiResponse<ArrayList<Comment>> response);
-
-        void onLoadFail(Throwable throwable);
-    }
-
-    public interface InsertCommentListener {
-        void onInsertSuccess(ApiResponse<Comment> response);
-
-        void onLoadFail(Throwable throwable);
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 }

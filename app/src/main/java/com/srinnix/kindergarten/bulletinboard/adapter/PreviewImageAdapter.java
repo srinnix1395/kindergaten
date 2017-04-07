@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
+import com.srinnix.kindergarten.model.Image;
 
 import java.util.ArrayList;
 
@@ -13,9 +14,9 @@ import java.util.ArrayList;
  */
 
 public class PreviewImageAdapter extends FragmentStatePagerAdapter{
-    private ArrayList<String> listImage;
+    private ArrayList<Image> listImage;
 
-    public PreviewImageAdapter(FragmentManager fm, ArrayList<String> listImage) {
+    public PreviewImageAdapter(FragmentManager fm, ArrayList<Image> listImage) {
         super(fm);
         this.listImage = listImage;
     }

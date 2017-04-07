@@ -31,6 +31,7 @@ public class StringUtil {
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final long DAY_MILLIS = 24 * HOUR_MILLIS;
     private static final long WEEK_MILLIS = 24 * 7 * HOUR_MILLIS;
+    private static final long MONTH_MILLIS = DAY_MILLIS * 30;
     private static final long YEAR_MILLIS = 365 * DAY_MILLIS;
 
     public static String md5(String s) {
@@ -124,6 +125,37 @@ public class StringUtil {
             SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy - kk:mm", Locale.getDefault());
             return dateFormat.format(new Date(time)).replace("-", "lúc");
         }
+    }
+
+    public static String getTimeAgoComment(Context context, long time) {
+        long now = System.currentTimeMillis();
+
+        long diff = now - time;
+        if (diff < MINUTE_MILLIS) {
+            return context.getString(R.string.just_now);
+        }
+        if (diff < 60 * MINUTE_MILLIS) {
+            return String.format(Locale.getDefault(), "%d %s", diff / MINUTE_MILLIS, context.getString(R.string.minute));
+        }
+        if (diff < 24 * HOUR_MILLIS) {
+            return String.format(Locale.getDefault(), "%d %s", diff / HOUR_MILLIS, context.getString(R.string.hour));
+        }
+        if (diff < 48 * HOUR_MILLIS) {
+            return context.getString(R.string.yesterday);
+        }
+        if (diff < WEEK_MILLIS) {
+            return String.format(Locale.getDefault(), "%d %s", diff / DAY_MILLIS, context.getString(R.string.day));
+        }
+
+        if (diff < MONTH_MILLIS) {
+            return String.format(Locale.getDefault(), "%d %s", diff / WEEK_MILLIS, context.getString(R.string.week));
+        }
+
+        if (diff < YEAR_MILLIS) {
+            return String.format(Locale.getDefault(), "%d %s", diff / MONTH_MILLIS, context.getString(R.string.week));
+        }
+
+        return String.format(Locale.getDefault(), "%d %s", diff / YEAR_MILLIS, context.getString(R.string.week));
     }
 
     public static String getStatus(Context context, int status) {

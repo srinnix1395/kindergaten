@@ -1,8 +1,9 @@
 package com.srinnix.kindergarten.clazz.helper;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
+import com.srinnix.kindergarten.request.model.ImageResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,27 +23,25 @@ public class ClassHelper {
         this.mDisposable = mDisposable;
     }
 
-    public void getClassInfo(String classId, boolean isTeacher,
-                             ClassInfoListener listener) {
+    public void getClassInfo(String classId, boolean isTeacher, ResponseListener<ClassResponse> listener) {
+        if (listener == null) {
+            return;
+        }
         mDisposable.add(
                 mApi.getClassInfo(classId, isTeacher)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(response -> {
-                            if (listener != null) {
-                                listener.onResponseSuccess(response);
-                            }
-                        }, throwable -> {
-                            if (listener != null) {
-                                listener.onResponseFail(throwable);
-                            }
-                        })
+                        .subscribe(listener::onSuccess, listener::onFail)
         );
     }
 
-    public interface ClassInfoListener{
-        void onResponseSuccess(ApiResponse<ClassResponse> response);
-
-        void onResponseFail(Throwable throwable);
+    public void getClassImage(String classId, long time, ResponseListener<ImageResponse> listener) {
+        if (listener == null) {
+            return;
+        }
+        mDisposable.add(mApi.getImageClass(classId, time)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 }

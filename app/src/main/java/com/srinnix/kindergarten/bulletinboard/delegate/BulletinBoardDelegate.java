@@ -17,4 +17,6 @@ public interface BulletinBoardDelegate extends BaseDelegate {
     void handleLikePost(Integer integer, boolean like, int numberOfLikes);
 
     void onRefreshResult(boolean result, ArrayList<String> data);
+
+    void updateNumberComment(int position, int numberOfComments);
 }

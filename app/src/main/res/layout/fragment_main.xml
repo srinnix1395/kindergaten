@@ -15,7 +15,7 @@
             android:background="@color/colorPrimary"/>
 
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/frame_layout_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,12 +23,7 @@
             android:layout_marginBottom="52dp"
             android:background="@color/colorBackground">
 
-            <fragment
-                android:name="com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:tag="5"/>
-        </RelativeLayout>
+        </FrameLayout>
 
         <View
             android:id="@+id/view_shadow"

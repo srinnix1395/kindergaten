@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +21,12 @@ import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.CommentViewHold
 import com.srinnix.kindergarten.bulletinboard.delegate.CommentDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.CommentPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.LoadingItem3State;
 import com.srinnix.kindergarten.util.UiUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -62,14 +64,7 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
     private CommentAdapter mAdapter;
     private CommentPresenter mPresenter;
 
-    private int numberComment;
-
-    @Override
-    protected void getData() {
-        super.getData();
-        Bundle bundle = getArguments();
-        numberComment = bundle.getInt(AppConstant.KEY_COMMENT);
-    }
+    private int numberComment =0;
 
     @Override
     protected int getLayoutId() {
@@ -80,7 +75,7 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
     protected void initChildView() {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(v -> onBackPressed());
-        mToolbar.setTitle(String.format("%s %s", String.valueOf(numberComment), mContext.getString(R.string.comment)));
+        mToolbar.setTitle(mContext.getString(R.string.comment));
         mToolbar.setTitleTextColor(Color.WHITE);
 
         mPbLoading.getIndeterminateDrawable().setColorFilter(
@@ -202,6 +197,7 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
                     ((Comment) mListComment.get(i)).setId(comment.getId());
                     ((Comment) mListComment.get(i)).setCreatedAt(comment.getCreatedAt());
                     mAdapter.notifyItemChanged(i, comment.getCreatedAt());
+                    numberComment++;
                     break;
                 }
             }
@@ -225,5 +221,13 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
     public void updateStateComment(int position, boolean state) {
         ((Comment) mListComment.get(position)).setSuccess(state);
         mAdapter.notifyItemChanged(position, state);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (numberComment != 0) {
+            EventBus.getDefault().post(new MessageNumberComment(mPresenter.getIdPost(),numberComment));
+        }
+        super.onBackPressed();
     }
 }

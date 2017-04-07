@@ -33,11 +33,10 @@ public class MainPresenter extends BasePresenter {
 
     private boolean isFirstOpenMenuChat = true;
     private Disposable mDisposable;
-    private int currentPosition = 0;
+    private int currentPosition = 5;
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-
     }
 
     public void startActivitySetting() {
@@ -58,6 +57,7 @@ public class MainPresenter extends BasePresenter {
             case R.id.menu_item_news: {
                 currentPosition = AppConstant.FRAGMENT_BULLETIN_BOARD;
                 fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                transaction.setCustomAnimations(R.anim.anim_show, 0);
                 break;
             }
             case R.id.menu_item_class: {
@@ -66,6 +66,8 @@ public class MainPresenter extends BasePresenter {
                 if (fragmentShow == null) {
                     fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CLASS_FRAGMENT);
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                } else {
+                    transaction.setCustomAnimations(R.anim.anim_show, 0);
                 }
                 break;
             }
@@ -75,6 +77,8 @@ public class MainPresenter extends BasePresenter {
                 if (fragmentShow == null) {
                     fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CAMERA_FRAGMENT);
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                } else {
+                    transaction.setCustomAnimations(R.anim.anim_show, 0);
                 }
                 break;
             }
@@ -84,11 +88,17 @@ public class MainPresenter extends BasePresenter {
                 if (fragmentShow == null) {
                     fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CHILDREN_FRAGMENT);
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                } else {
+                    transaction.setCustomAnimations(R.anim.anim_show, 0);
                 }
                 break;
             }
         }
-        transaction.setCustomAnimations(R.anim.anim_show, 0).show(fragmentShow);
+
+        if (fragmentShow == null) {
+            return;
+        }
+        transaction.show(fragmentShow);
         transaction.commit();
     }
 

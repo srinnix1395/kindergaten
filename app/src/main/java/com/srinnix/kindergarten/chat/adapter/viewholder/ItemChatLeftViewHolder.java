@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
@@ -102,7 +103,7 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void bindDataMessage(Message message) {
-        tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
+        tvTime.setText(StringUtil.getTimeAgoComment(itemView.getContext(), message.getCreatedAt()));
 
         if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
             tvMessage.setText("");

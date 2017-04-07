@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.clazz.fragment;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,10 +21,15 @@ import com.srinnix.kindergarten.children.adapter.ChildrenAdapter;
 import com.srinnix.kindergarten.clazz.adapter.ImageAdapter;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.presenter.DetailClassPresenter;
+import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
+import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.model.Image;
+import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -66,6 +71,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.recyclerview_member_class)
     RecyclerView rvMember;
 
+    @BindView(R.id.imageview_icon)
+    ImageView imvIconClass;
+
     @BindView(R.id.textview_class_name)
     TextView tvClassName;
 
@@ -73,7 +81,10 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     TextView tvSeeAll;
 
     @BindView(R.id.scrollview_detail_class)
-    ScrollView scrollView;
+    NestedScrollView scrollView;
+
+    @BindView(R.id.recyclerview_image_class)
+    RecyclerView rvImageClass;
 
     ImageView imvIcon1;
     TextView tvName1;
@@ -89,8 +100,8 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     private DetailClassPresenter mPresenter;
 
-    private ArrayList<String> listImage;
-    private ImageAdapter imageAdapter;
+    private ArrayList<Object> listImage;
+    private ImageAdapter mImageAdapter;
 
     private ArrayList<Child> childArrayList;
     private ChildrenAdapter childrenAdapter;
@@ -147,10 +158,37 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         rvMember.setLayoutManager(new GridLayoutManager(mContext, 4));
         rvMember.setAdapter(childrenAdapter);
 
+        listImage = new ArrayList<>();
+        listImage.add(new LoadingItem());
+        mImageAdapter = new ImageAdapter(listImage, position -> {
+            mPresenter.onClickImage(((Image) listImage.get(position)));
+        });
+        rvImageClass.setAdapter(mImageAdapter);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 3);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (listImage.get(position) instanceof LoadingItem) {
+                    return 3;
+                }
+                return 1;
+            }
+        });
+        rvImageClass.setLayoutManager(layoutManager);
+        rvImageClass.addOnScrollListener(new EndlessScrollDownListener(layoutManager) {
+            @Override
+            public void onLoadMore() {
+                DebugLog.i("onLoadMore() called");
+                mPresenter.getImage(listImage);
+            }
+        });
+        SpacesItemDecoration decoration = new SpacesItemDecoration(mImageAdapter, UiUtils.dpToPixel(mContext, 2), 3);
+        rvImageClass.addItemDecoration(decoration);
+
         pbClass.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary)
                 , PorterDuff.Mode.SRC_ATOP);
     }
-
 
     @Override
     protected BasePresenter initPresenter() {
@@ -196,6 +234,12 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             AlertUtils.showToast(mContext, R.string.error_common);
             return;
         }
+
+        Glide.with(mContext)
+                .load(R.drawable.logo_school)
+                .placeholder(R.drawable.dummy_image)
+                .error(R.drawable.dummy_image)
+                .into(imvIconClass);
 
         tvClassName.setText(classInfo.getaClass().getName());
 
@@ -252,5 +296,22 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         tvRetry.setText(resError);
         tvRetry.setVisibility(View.VISIBLE);
         imvRetry.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onLoadImage(ArrayList<Image> data) {
+        int size = listImage.size();
+        if (data.isEmpty()) {
+            listImage.remove(size - 1);
+            mImageAdapter.notifyItemRemoved(size - 1);
+            return;
+        }
+
+        listImage.addAll(size - 1, data);
+        mImageAdapter.notifyItemRangeInserted(size - 1, data.size());
+
+        if (listImage.size() - data.size() == 1) {
+            rvImageClass.smoothScrollToPosition(0);
+        }
     }
 }

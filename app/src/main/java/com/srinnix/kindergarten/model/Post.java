@@ -20,7 +20,7 @@ public class Post {
 
     @SerializedName("image")
     @Expose
-    private ArrayList<String> listImage;
+    private ArrayList<Image> listImage;
 
     @SerializedName("notification_type")
     @Expose
@@ -48,7 +48,7 @@ public class Post {
         return content;
     }
 
-    public ArrayList<String> getListImage() {
+    public ArrayList<Image> getListImage() {
         return listImage;
     }
 

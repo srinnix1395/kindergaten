@@ -86,7 +86,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         } else {
             frameLayoutImage.setVisibility(View.VISIBLE);
             Glide.with(itemView.getContext())
-                    .load(post.getListImage().get(0))
+                    .load(post.getListImage().get(0).getUrl())
                     .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.dummy_image)
                     .into(imvFirstImage);
@@ -102,7 +102,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         bindImageLike(post.isUserLike(), post.getNumberOfLikes());
         bindComment(post.getNumberOfComments());
 
-        if (post.getListImage().isEmpty()) {
+        if (size == 0) {
             viewLine.setVisibility(View.VISIBLE);
         } else {
             viewLine.setVisibility(View.INVISIBLE);
@@ -122,6 +122,13 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
 
     public void bindImageLike(boolean userLike) {
         imvLike.setImageResource(userLike ? R.drawable.ic_heart_fill : R.drawable.ic_heart_outline);
+    }
+
+    @OnClick(R.id.imageview_share)
+    void onClickShare() {
+        if (mPostListener != null) {
+            mPostListener.onClickShare(position);
+        }
     }
 
     @OnClick(R.id.imageview_like)

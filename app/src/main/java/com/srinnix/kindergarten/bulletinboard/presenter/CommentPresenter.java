@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.CommentDelegate;
@@ -46,11 +47,9 @@ public class CommentPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart(boolean isFirst) {
-        super.onStart(isFirst);
-        if (isFirst) {
-            getComment(System.currentTimeMillis());
-        }
+    public void onStart() {
+        super.onStart();
+        getComment(System.currentTimeMillis());
     }
 
     public void getComment(long time) {
@@ -59,9 +58,9 @@ public class CommentPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getComment(idPost, time, new CommentHelper.CommentListener() {
+        mHelper.getComment(idPost, time, new ResponseListener<ArrayList<Comment>>() {
             @Override
-            public void onLoadSuccess(ApiResponse<ArrayList<Comment>> response) {
+            public void onSuccess(ApiResponse<ArrayList<Comment>> response) {
                 if (response == null) {
                     ErrorUtil.handleException(mContext, new NullPointerException());
                     return;
@@ -79,7 +78,7 @@ public class CommentPresenter extends BasePresenter {
             }
 
             @Override
-            public void onLoadFail(Throwable throwable) {
+            public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(throwable);
                 mCommentDelegate.onLoadCommentFail(R.string.error_common, isLoadFirst);
             }
@@ -117,9 +116,9 @@ public class CommentPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.sendComment(token, idPost, idUser, name, image, accountType, comment, new CommentHelper.InsertCommentListener() {
+        mHelper.sendComment(token, idPost, idUser, name, image, accountType, comment, new ResponseListener<Comment>() {
             @Override
-            public void onInsertSuccess(ApiResponse<Comment> response) {
+            public void onSuccess(ApiResponse<Comment> response) {
                 if (response == null) {
                     mCommentDelegate.updateStateComment(time);
                     ErrorUtil.handleException(mContext, new NullPointerException());
@@ -136,7 +135,7 @@ public class CommentPresenter extends BasePresenter {
             }
 
             @Override
-            public void onLoadFail(Throwable throwable) {
+            public void onFail(Throwable throwable) {
                 mCommentDelegate.updateStateComment(time);
                 ErrorUtil.handleException(throwable);
             }
@@ -164,5 +163,7 @@ public class CommentPresenter extends BasePresenter {
         }
     }
 
-
+    public String getIdPost() {
+        return idPost;
+    }
 }

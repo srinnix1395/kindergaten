@@ -32,7 +32,11 @@ public class BasePresenter {
 
     }
 
-    public void onStart(boolean isFirst) {
+    public void onStart() {
+
+    }
+
+    public void onResume() {
 
     }
 
@@ -44,4 +48,6 @@ public class BasePresenter {
     public void onHiddenChanged(boolean hidden) {
 
     }
+
+
 }

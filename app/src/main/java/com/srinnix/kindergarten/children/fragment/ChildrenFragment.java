@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.children.fragment;
 
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -64,6 +65,9 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @BindView(R.id.imagview_unsigned_in)
     ImageView imvUnsignedIn;
+
+    @BindView(R.id.cardview_profile)
+    CardView cardViewProfile;
 
     private ChildrenPresenter mPresenter;
     private TimelineAdapter mTimelineAdapter;
@@ -148,9 +152,12 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @Override
     public void onLoadChildren(Child child) {
+        UiUtils.hideProgressBar(pbLoading);
+        cardViewProfile.setVisibility(View.VISIBLE);
+
         Glide.with(mContext)
-                .load(child.getName())
-                .thumbnail(0.3f)
+                .load(child.getImage())
+                .thumbnail(0.5f)
                 .placeholder(R.drawable.dummy_image)
                 .error(R.drawable.dummy_image)
                 .into(imvIcon);

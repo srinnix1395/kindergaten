@@ -108,13 +108,12 @@ public class DetailChatHelper {
     }
 
     private void saveMessage(ArrayList<Message> messages) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> realm1.copyToRealm(messages));
-        realm.close();
+//        Realm realm = Realm.getDefaultInstance();
+//        realm.executeTransaction(realm1 -> realm1.copyToRealm(messages));
+//        realm.close();
     }
 
     private Observable<ArrayList<Message>> getMessageDB(String conversationID, long timeFirstMessage) {
-
         return Observable.just(Realm.getDefaultInstance().where(Message.class)
                 .equalTo("conversationId", conversationID)
                 .lessThan("createdAt", timeFirstMessage)

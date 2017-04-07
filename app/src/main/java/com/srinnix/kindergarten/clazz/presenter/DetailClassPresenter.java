@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.MemberClassFragment;
@@ -15,9 +17,11 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.model.ContactTeacher;
+import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
+import com.srinnix.kindergarten.request.model.ImageResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -26,6 +30,8 @@ import com.srinnix.kindergarten.util.ViewManager;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -33,16 +39,16 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class DetailClassPresenter extends BasePresenter {
-    private ClassDelegate mDelegate;
+    private ClassDelegate mClassDelegate;
     private CompositeDisposable mDisposable;
     private boolean isTeacher;
     private ClassResponse classResponse;
     private ClassHelper mHelper;
     private String classId;
 
-    public DetailClassPresenter(BaseDelegate mDelegate) {
-        super(mDelegate);
-        this.mDelegate = (ClassDelegate) mDelegate;
+    public DetailClassPresenter(BaseDelegate mClassDelegate) {
+        super(mClassDelegate);
+        this.mClassDelegate = (ClassDelegate) mClassDelegate;
 
         mDisposable = new CompositeDisposable();
         mHelper = new ClassHelper(mDisposable);
@@ -56,27 +62,25 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart(boolean isFirst) {
-        super.onStart(isFirst);
-        if (isFirst) {
-            getClassInfo(classId);
-        }
+    public void onStart() {
+        super.onStart();
+        getClassInfo(classId);
     }
 
-    public void getClassInfo(String classId) {
+    private void getClassInfo(String classId) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mDelegate.onLoadError(R.string.noInternetConnection);
+            mClassDelegate.onLoadError(R.string.noInternetConnection);
             return;
         }
 
-        mHelper.getClassInfo(classId, isTeacher, new ClassHelper.ClassInfoListener() {
+        mHelper.getClassInfo(classId, isTeacher, new ResponseListener<ClassResponse>() {
             @Override
-            public void onResponseSuccess(ApiResponse<ClassResponse> response) {
+            public void onSuccess(ApiResponse<ClassResponse> response) {
                 handleResponseClassInfo(response);
             }
 
             @Override
-            public void onResponseFail(Throwable throwable) {
+            public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, throwable);
             }
         });
@@ -94,8 +98,8 @@ public class DetailClassPresenter extends BasePresenter {
         }
 
         classResponse = response.getData();
-        if (mDelegate != null) {
-            mDelegate.onLoadSuccess(classResponse);
+        if (mClassDelegate != null) {
+            mClassDelegate.onLoadSuccess(classResponse);
         }
     }
 
@@ -143,17 +147,57 @@ public class DetailClassPresenter extends BasePresenter {
         //// TODO: 3/2/2017 onclick child
     }
 
-
-
     public void onClickSeeAll() {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_MEMBER, classResponse.getChildren());
 
-        ViewManager.getInstance().addFragment(new MemberClassFragment(), bundle);
+        ViewManager.getInstance().addFragment(new MemberClassFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+    }
+
+    public void getImage(ArrayList<Object> arrayList) {
+        long time;
+        if (arrayList.size() == 1) {
+            time = System.currentTimeMillis();
+        } else {
+            time = ((Image) arrayList.get(arrayList.size() - 2)).getCreatedAt();
+        }
+        mHelper.getClassImage(classId, time, new ResponseListener<ImageResponse>() {
+            @Override
+            public void onSuccess(ApiResponse<ImageResponse> response) {
+                if (response == null) {
+                    onFail(new NullPointerException());
+                    return;
+                }
+
+                if (response.result == ApiResponse.RESULT_NG) {
+                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    return;
+                }
+
+                if (response.getData() != null) {
+                    mClassDelegate.onLoadImage(response.getData().getArrayList());
+                }
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+                ErrorUtil.handleException(mContext, throwable);
+            }
+        });
     }
 
     public boolean isTeacher() {
         return isTeacher;
+    }
+
+
+
+    public void onClickImage(Image image) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstant.KEY_IMAGE, image);
+
+        ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle);
     }
 
     @Override

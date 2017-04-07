@@ -11,6 +11,7 @@ import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.model.TimeLineChildren;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
+import com.srinnix.kindergarten.request.model.ImageResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
@@ -74,7 +75,7 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_COMMENT)
     Observable<ApiResponse<ArrayList<Comment>>> getComment(@Query("_id_object") String idPost,
-                                                       @Query("time_prev_comment") long timeLastComment);
+                                                           @Query("time_prev_comment") long timeLastComment);
 
     @POST(AppConstant.API_INSERT_COMMENT)
     @FormUrlEncoded
@@ -103,6 +104,9 @@ public interface ApiService {
     @GET(AppConstant.API_GET_INFO_TEACHER)
     Observable<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
 
+    @GET(AppConstant.API_GET_IMAGE_CLASS)
+    Observable<ApiResponse<ImageResponse>> getImageClass(@Query("_id_class") String classId,
+                                                         @Query("time_prev_image") long timePrevImage);
 
     @GET(AppConstant.API_GET_MESSAGE)
     Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
@@ -111,7 +115,7 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_INFO_CHILDREN)
     Observable<ApiResponse<Child>> getInfoChildren(@Header("x-access-token") String header,
-                                                   @Query("_id_teacher") String id);
+                                                   @Query("_id_child") String id);
 
     @GET(AppConstant.API_GET_TIMELINE_CHILDREN)
     Observable<ApiResponse<ArrayList<TimeLineChildren>>> getTimelineChildren(@Header("x-access-token") String header,

@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.bulletinboard.presenter;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.LikeDelegate;
@@ -42,11 +43,9 @@ public class LikePresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart(boolean isFirst) {
-        super.onStart(isFirst);
-        if (isFirst) {
-            getListLike(System.currentTimeMillis());
-        }
+    public void onStart() {
+        super.onStart();
+        getListLike(System.currentTimeMillis());
     }
 
     public void getListLike(long timePrevLike) {
@@ -55,7 +54,7 @@ public class LikePresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getListNumberLike(idPost, timePrevLike, new BulletinBoardHelper.NumberLikeListener() {
+        mHelper.getListNumberLike(idPost, timePrevLike, new ResponseListener<ArrayList<LikeModel>>() {
             @Override
             public void onSuccess(ApiResponse<ArrayList<LikeModel>> response) {
                 if (response == null) {

@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +11,9 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.BulletinBoardPresenter;
-import com.srinnix.kindergarten.custom.EndlessScrollListener;
+import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.util.AlertUtils;
@@ -35,6 +37,9 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @BindView(R.id.recyclerview_schoolboard)
     RecyclerView rvListPost;
 
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+
     private BulletinBoardPresenter mPresenter;
     private PostAdapter postAdapter;
     private ArrayList<Object> arrPost;
@@ -50,7 +55,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         arrPost.add(new LoadingItem());
 
         postAdapter = new PostAdapter(arrPost,
-                () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
+                () -> mPresenter.onLoadMore(coordinatorLayout, rvListPost, arrPost, postAdapter),
                 new PostAdapter.PostListener() {
                     @Override
                     public void onClickLike(int position) {
@@ -69,18 +74,23 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
                     @Override
                     public void onClickComment(int position, boolean isShowKeyboard) {
-                        mPresenter.onClickComment(((Post) arrPost.get(position)), isShowKeyboard);
+                        mPresenter.onClickComment(((Post) arrPost.get(position)));
+                    }
+
+                    @Override
+                    public void onClickShare(int position) {
+                        mPresenter.onClickShare(((Post) arrPost.get(position)));
                     }
                 });
         rvListPost.setAdapter(postAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvListPost.setLayoutManager(linearLayoutManager);
-        rvListPost.addOnScrollListener(new EndlessScrollListener(linearLayoutManager) {
+        rvListPost.addOnScrollListener(new EndlessScrollDownListener(linearLayoutManager) {
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
-                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
+                mPresenter.onLoadMore(coordinatorLayout, rvListPost, arrPost, postAdapter);
             }
         });
 
@@ -108,6 +118,11 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
         mPresenter.refresh(refreshLayout, arrPost);
+    }
+
+    @Subscribe
+    public void onEventNumberComment(MessageNumberComment message) {
+        mPresenter.updateNumberComment(message, arrPost);
     }
 
     @Override
@@ -173,5 +188,10 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         if (refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void updateNumberComment(int position, int numberOfComments) {
+        postAdapter.notifyItemChanged(position, numberOfComments);
     }
 }

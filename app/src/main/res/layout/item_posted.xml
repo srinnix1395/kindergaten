@@ -2,7 +2,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -78,6 +77,17 @@
     </FrameLayout>
 
     <ImageView
+        android:id="@+id/imageview_share"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_below="@+id/textview_content"
+        android:layout_toLeftOf="@+id/imageview_comment"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_share"/>
+
+    <ImageView
         android:id="@+id/imageview_comment"
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
@@ -97,7 +107,6 @@
         android:layout_below="@+id/textview_content"
         android:layout_marginRight="@dimen/padding_post"
         android:background="?selectableItemBackground"
-        android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/image_heart"/>
 

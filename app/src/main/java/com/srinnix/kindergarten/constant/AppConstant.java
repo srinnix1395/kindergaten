@@ -30,6 +30,7 @@ public class AppConstant {
     public static final String API_GET_LIST_CLASS = "class/getList";
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
+    public static final String API_GET_IMAGE_CLASS = "class/getImage";
 
     public static final String API_GET_MESSAGE = "chat/message";
 

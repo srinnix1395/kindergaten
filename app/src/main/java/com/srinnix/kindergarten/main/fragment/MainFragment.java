@@ -1,19 +1,16 @@
 package com.srinnix.kindergarten.main.fragment;
 
 import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.roughike.bottombar.BottomBar;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
@@ -45,12 +42,6 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         return R.layout.fragment_main;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     @Override
     protected void initChildView() {
         mPresenter.updateRegId();
@@ -67,8 +58,13 @@ public class MainFragment extends BaseFragment implements MainDelegate {
             return false;
         });
 
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.frame_layout_main, new BulletinBoardFragment(), "5");
+        transaction.commit();
+
         mBottomBar.setOnTabSelectListener(tabId -> mPresenter.changeTabIcon(getChildFragmentManager(), tabId));
         mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
     }
 
     private void onMenuItemItemSelected(MenuItem item) {

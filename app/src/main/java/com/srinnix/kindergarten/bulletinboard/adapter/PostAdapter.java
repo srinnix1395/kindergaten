@@ -56,24 +56,25 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
-        if (payloads.isEmpty()) {
+        int size = payloads.size();
+        if (size == 0) {
             onBindViewHolder(holder, position);
             return;
         }
 
-        if (payloads.get(0) instanceof Boolean) {
-            ((PostedViewHolder) holder).bindImageLike((Boolean) payloads.get(0));
+        if (payloads.get(size - 1) instanceof Boolean) {
+            ((PostedViewHolder) holder).bindImageLike((Boolean) payloads.get(size-1));
             return;
         }
 
-        if (payloads.get(0) instanceof ArrayList) {
-            ArrayList arrayListPayloads = (ArrayList) payloads.get(0);
+        if (payloads.get(size - 1) instanceof ArrayList) {
+            ArrayList arrayListPayloads = (ArrayList) payloads.get(size-1);
             ((PostedViewHolder) holder).bindImageLike((Boolean) arrayListPayloads.get(0), (Integer) arrayListPayloads.get(1));
             return;
         }
 
-        if (payloads.get(0) instanceof Integer) {
-            ((PostedViewHolder) holder).bindComment((Integer) payloads.get(0));
+        if (payloads.get(size - 1) instanceof Integer) {
+            ((PostedViewHolder) holder).bindComment((Integer) payloads.get(size-1));
         }
     }
 
@@ -112,5 +113,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onClickImage(int position);
 
         void onClickComment(int position, boolean isShowKeyboard);
+
+        void onClickShare(int position);
     }
 }

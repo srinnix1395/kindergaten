@@ -13,11 +13,11 @@ import com.srinnix.kindergarten.request.model.Error;
 public class ErrorUtil {
     public static void handleErrorApi(Context context, Error error) {
         switch (error.code) {
-            case ErrorConstant.ERROR_CODE_101:{
+            case ErrorConstant.ERROR_CODE_101: {
                 AlertUtils.showToast(context, R.string.error_msg_101);
                 break;
             }
-            default:{
+            default: {
                 AlertUtils.showToast(context, R.string.error_common);
                 break;
             }
@@ -29,6 +29,9 @@ public class ErrorUtil {
         throwable.printStackTrace();
 
         AlertUtils.showToast(mContext, R.string.error_common);
+
+
+
     }
 
     public static void handleException(Throwable throwable) {

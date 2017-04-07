@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.clazz.delegate.ClassListDelegate;
@@ -43,7 +44,8 @@ public class ClassListPresenter extends BasePresenter {
     }
 
     @Override
-    public void onStart(boolean isFirst) {
+    public void onStart() {
+        super.onStart();
         getListClass();
     }
 
@@ -53,11 +55,11 @@ public class ClassListPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getListClass(new ClassListHelper.ClassResponseListener() {
+        mHelper.getListClass(new ResponseListener<ArrayList<Class>>() {
             @Override
-            public void onLoadSuccess(ApiResponse<ArrayList<Class>> response) {
+            public void onSuccess(ApiResponse<ArrayList<Class>> response) {
                 if (response == null) {
-                    onLoadError(new NullPointerException());
+                    onFail(new NullPointerException());
                     return;
                 }
 
@@ -72,7 +74,7 @@ public class ClassListPresenter extends BasePresenter {
             }
 
             @Override
-            public void onLoadError(Throwable throwable) {
+            public void onFail(Throwable throwable) {
                 DebugLog.e(throwable.getMessage());
                 if (mClassListDelegate != null) {
                     mClassListDelegate.onLoadError(R.string.error_common);

@@ -1,8 +1,8 @@
 package com.srinnix.kindergarten.children.helper;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import java.util.ArrayList;
@@ -24,18 +24,18 @@ public class ChildrenHelper {
         mDisposable = compositeDisposable;
     }
 
-    public void getInfoChildren(String token, String id, ChildrenListener listener) {
+    public void getInfoChildren(String token, String id, ResponseListener<Child> listener) {
         if (listener == null) {
             return;
         }
 
-        mApi.getInfoChildren(token, id)
+        mDisposable.add(mApi.getInfoChildren(token, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listener::onSuccess, listener::onFail);
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 
-    public void getListChildrenTeacher(String token, String idClass, ListChildrenListener listener) {
+    public void getListChildrenTeacher(String token, String idClass, ResponseListener<ArrayList<Child>> listener) {
         if (listener == null) {
             return;
         }
@@ -46,17 +46,5 @@ public class ChildrenHelper {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(listener::onSuccess, listener::onFail));
 
-    }
-
-    public interface ListChildrenListener {
-        void onSuccess(ApiResponse<ArrayList<Child>> response);
-
-        void onFail(Throwable throwable);
-    }
-
-    public interface ChildrenListener {
-        void onSuccess(ApiResponse<Child> response);
-
-        void onFail(Throwable throwable);
     }
 }

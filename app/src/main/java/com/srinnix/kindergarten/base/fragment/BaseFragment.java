@@ -19,17 +19,17 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseFragment extends Fragment implements BaseDelegate {
-	protected Context mContext;
-	protected View mView;
-	protected BasePresenter mBasePresenter;
+    protected Context mContext;
+    protected View mView;
+    protected BasePresenter mBasePresenter;
     private boolean isFirst;
 
     public BaseFragment() {
-		mBasePresenter = initPresenter();
-		if (mBasePresenter == null) {
-			mBasePresenter = new BasePresenter(this);
-		}
-	}
+        mBasePresenter = initPresenter();
+        if (mBasePresenter == null) {
+            mBasePresenter = new BasePresenter(this);
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,10 +39,10 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
     }
 
     @Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflateView(inflater, container);
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflateView(inflater, container);
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -53,54 +53,60 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
     }
 
     private View inflateView(LayoutInflater inflater, ViewGroup container) {
-		mView = inflater.inflate(getLayoutId(), container, false);
-		return mView;
-	}
-	
-	protected abstract int getLayoutId();
-	
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		mContext = context;
-		if (mBasePresenter != null) {
-			mBasePresenter.setContext(mContext);
-		}
-	}
-	
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		
-		//bind
-		ButterKnife.bind(this, view);
+        mView = inflater.inflate(getLayoutId(), container, false);
+        return mView;
+    }
 
-		// get data transfer
-		if (getArguments() != null) {
-			getData();
-			Bundle bundle = getArguments();
-			mBasePresenter.getData(bundle);
-		}
+    protected abstract int getLayoutId();
 
-		initChildView();
-	}
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        if (mBasePresenter != null) {
+            mBasePresenter.setContext(mContext);
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //bind
+        ButterKnife.bind(this, view);
+
+        // get data transfer
+        if (getArguments() != null) {
+            getData();
+            Bundle bundle = getArguments();
+            mBasePresenter.getData(bundle);
+        }
+        initChildView();
+
+//        if (isFirst) {
+//            mBasePresenter.onStart();
+//            isFirst = false;
+//        } else {
+//            mBasePresenter.onResume();
+//        }
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        mBasePresenter.onStart(isFirst);
         if (isFirst) {
+            mBasePresenter.onStart();
             isFirst = false;
         }
     }
 
     protected abstract void initChildView();
-	
-	protected abstract BasePresenter initPresenter();
-	
-	protected void getData() {
-		
-	}
+
+    protected abstract BasePresenter initPresenter();
+
+    protected void getData() {
+
+    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {

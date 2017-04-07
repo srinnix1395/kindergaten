@@ -31,10 +31,6 @@ public class ViewManager {
         return mInstance;
     }
 
-    public Activity getActivity() {
-        return mActivity;
-    }
-
     public void setActivity(Activity activity) {
         mActivity = (AppCompatActivity) activity;
         setFragmentManager(mActivity.getSupportFragmentManager());
@@ -52,10 +48,9 @@ public class ViewManager {
         if (null != mFragmentManager) {
             fragment.setArguments(bundle);
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.setCustomAnimations(animAppear, animDisappear, animAppear, animDisappear);
+            ft.setCustomAnimations(animAppear, 0, animAppear, animDisappear);
             ft.add(R.id.layout_content, fragment);
             ft.show(fragment);
-            ft.addToBackStack(null);
             ft.commit();
         }
     }
@@ -66,7 +61,6 @@ public class ViewManager {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.add(R.id.layout_content, fragment);
             ft.show(fragment);
-            ft.addToBackStack(null);
             ft.commit();
         }
     }

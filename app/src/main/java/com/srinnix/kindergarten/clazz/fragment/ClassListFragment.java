@@ -83,6 +83,9 @@ public class ClassListFragment extends BaseFragment implements ClassListDelegate
 
         relRetry.setVisibility(View.INVISIBLE);
 
+        if (mRvListClass.getVisibility() != View.VISIBLE) {
+            mRvListClass.setVisibility(View.VISIBLE);
+        }
         if (!mListClass.isEmpty()) {
             mListClass.clear();
         }

@@ -1,10 +1,12 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
@@ -14,6 +16,7 @@ import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.LikeFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -39,21 +42,19 @@ import io.reactivex.schedulers.Schedulers;
 
 public class BulletinBoardPresenter extends BasePresenter {
 
-    private BulletinBoardDelegate mDelegate;
+    private BulletinBoardDelegate mBoardDelegate;
     private BulletinBoardHelper mHelper;
     private CompositeDisposable mDisposable;
     private boolean isLoadFirst = true;
-    private boolean isUserSignIn;
 
     public BulletinBoardPresenter(BaseDelegate delegate) {
         super(delegate);
-        mDelegate = (BulletinBoardDelegate) delegate;
+        mBoardDelegate = (BulletinBoardDelegate) delegate;
         mDisposable = new CompositeDisposable();
         mHelper = new BulletinBoardHelper(mDisposable);
-        isUserSignIn = SharedPreUtils.getInstance(mContext).isUserSignedIn();
     }
 
-    public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
+    public void onLoadMore(CoordinatorLayout coordinatorLayout, RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
         int size = arrayList.size();
 
         long timePrevPost;
@@ -68,7 +69,7 @@ public class BulletinBoardPresenter extends BasePresenter {
 
             //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
             rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
-            AlertUtils.showSnackBarNoInternet(rvListPost);
+            AlertUtils.showSnackBarNoInternet(coordinatorLayout);
             return;
         }
 
@@ -92,8 +93,8 @@ public class BulletinBoardPresenter extends BasePresenter {
         mHelper.getPostSignIn(mContext, token, idUser, timePrevPost, new BulletinBoardHelper.PostListener() {
             @Override
             public void onSuccess(ArrayList<Post> arrayList) {
-                if (mDelegate != null) {
-                    mDelegate.updateSchoolBoard(arrayList, isLoadFirst);
+                if (mBoardDelegate != null) {
+                    mBoardDelegate.updateSchoolBoard(arrayList, isLoadFirst);
                 }
                 if (isLoadFirst) {
                     isLoadFirst = false;
@@ -111,8 +112,8 @@ public class BulletinBoardPresenter extends BasePresenter {
         mHelper.getPostUnsignIn(mContext, timePrevPost, new BulletinBoardHelper.PostListener() {
             @Override
             public void onSuccess(ArrayList<Post> arrayList) {
-                if (mDelegate != null) {
-                    mDelegate.updateSchoolBoard(arrayList, isLoadFirst);
+                if (mBoardDelegate != null) {
+                    mBoardDelegate.updateSchoolBoard(arrayList, isLoadFirst);
                 }
                 if (isLoadFirst) {
                     isLoadFirst = false;
@@ -129,8 +130,8 @@ public class BulletinBoardPresenter extends BasePresenter {
     private void handleExceptionPost(Throwable throwable) {
         DebugLog.e(throwable.getMessage());
 
-        if (mDelegate != null) {
-            mDelegate.setErrorItemLoading();
+        if (mBoardDelegate != null) {
+            mBoardDelegate.setErrorItemLoading();
         }
     }
 
@@ -162,7 +163,7 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost,
                           String name, String image, int accountType) {
-        mHelper.likePost(token, idUser, idPost, name, image, accountType, new BulletinBoardHelper.LikeListener() {
+        mHelper.likePost(token, idUser, idPost, name, image, accountType, new ResponseListener<LikeResponse>() {
             @Override
             public void onSuccess(ApiResponse<LikeResponse> response) {
                 handleResponseLike(arrPost, response);
@@ -176,7 +177,7 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
     private void unlikePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
-        mHelper.unlikePost(token, idUser, idPost, new BulletinBoardHelper.LikeListener() {
+        mHelper.unlikePost(token, idUser, idPost, new ResponseListener<LikeResponse>() {
             @Override
             public void onSuccess(ApiResponse<LikeResponse> response) {
                 handleResponseLike(arrPost, response);
@@ -215,8 +216,8 @@ public class BulletinBoardPresenter extends BasePresenter {
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(integer -> {
-                        if (mDelegate != null) {
-                            mDelegate.handleLikePost(integer, response.getData().isLike(), ((Post) arrPost.get(integer)).getNumberOfLikes());
+                        if (mBoardDelegate != null) {
+                            mBoardDelegate.handleLikePost(integer, response.getData().isLike(), ((Post) arrPost.get(integer)).getNumberOfLikes());
 
                         }
                     });
@@ -250,40 +251,40 @@ public class BulletinBoardPresenter extends BasePresenter {
         for (int i = 0, size = arrPost.size(); i < size - 1; i++) {
             listId.add(((Post) arrPost.get(i)).getId());
         }
-        mHelper.getListLike(token, userId, listId, new BulletinBoardHelper.ListLikeListener() {
+        mHelper.getListLike(token, userId, listId, new ResponseListener<ArrayList<String>>() {
             @Override
             public void onSuccess(ApiResponse<ArrayList<String>> response) {
                 if (response == null) {
                     ErrorUtil.handleException(mContext, new NullPointerException());
-                    mDelegate.onRefreshResult(false, null);
+                    mBoardDelegate.onRefreshResult(false, null);
                     return;
                 }
 
                 if (response.result == ApiResponse.RESULT_NG) {
                     ErrorUtil.handleErrorApi(mContext, response.error);
-                    mDelegate.onRefreshResult(false, null);
+                    mBoardDelegate.onRefreshResult(false, null);
                     return;
                 }
 
-                mDelegate.onRefreshResult(true, response.getData());
+                mBoardDelegate.onRefreshResult(true, response.getData());
             }
 
             @Override
             public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, throwable);
-                mDelegate.onRefreshResult(false, null);
+                mBoardDelegate.onRefreshResult(false, null);
             }
         });
     }
 
     public void onClickImages(Post post) {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList(AppConstant.KEY_IMAGE, post.getListImage());
+        bundle.putParcelableArrayList(AppConstant.KEY_IMAGE, post.getListImage());
 
         ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle);
     }
 
-    public void onClickComment(Post post, boolean isShowKeyboard) {
+    public void onClickComment(Post post) {
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, post.getId());
         bundle.putInt(AppConstant.KEY_COMMENT, post.getNumberOfComments());
@@ -292,10 +293,28 @@ public class BulletinBoardPresenter extends BasePresenter {
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
+    public void onClickShare(Post post) {
+        // TODO: 4/7/2017 share
+    }
+
+    public void updateNumberComment(MessageNumberComment message, ArrayList<Object> arrPost) {
+        for (int i = 0, size = arrPost.size(); i < size; i++) {
+            if (arrPost.get(i) instanceof Post && ((Post) arrPost.get(i)).getId().equals(message.idPost)) {
+                ((Post) arrPost.get(i)).setNumberOfComments(((Post) arrPost.get(i)).getNumberOfComments() + message.numberComment);
+                mBoardDelegate.updateNumberComment(i, ((Post) arrPost.get(i)).getNumberOfComments());
+                break;
+            }
+        }
+
+
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.clear();
         }
     }
+
+
 }

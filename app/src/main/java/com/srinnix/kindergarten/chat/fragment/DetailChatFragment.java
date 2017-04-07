@@ -25,7 +25,7 @@ import com.srinnix.kindergarten.chat.adapter.payload.StatusMessagePayload;
 import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.custom.EndlessScrollListener;
+import com.srinnix.kindergarten.custom.EndlessScrollUpListener;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
@@ -108,8 +108,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         rvChat.setVisibility(View.INVISIBLE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        rvChat.addOnScrollListener(new EndlessScrollListener(layoutManager
-                , EndlessScrollListener.DIRECTION_UP, 1) {
+        rvChat.addOnScrollListener(new EndlessScrollUpListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isRecyclerScrollable(rvChat)) {

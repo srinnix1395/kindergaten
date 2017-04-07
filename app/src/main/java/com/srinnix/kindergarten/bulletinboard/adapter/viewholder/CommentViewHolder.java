@@ -70,7 +70,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindTime(long createdAt) {
-        tvTime.setText(StringUtil.getTimeAgo(itemView.getContext(), createdAt));
+        tvTime.setText(StringUtil.getTimeAgoComment(itemView.getContext(), createdAt));
     }
 
     public void bindStatus(boolean success) {
