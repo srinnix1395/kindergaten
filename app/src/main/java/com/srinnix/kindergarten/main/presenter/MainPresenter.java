@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.main.presenter;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,9 +13,12 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
-import com.srinnix.kindergarten.base.fragment.ContainerFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.camera.fragment.CameraFragment;
 import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
+import com.srinnix.kindergarten.children.fragment.ChildrenFragment;
+import com.srinnix.kindergarten.clazz.fragment.ClassListFragment;
+import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
@@ -34,9 +38,11 @@ public class MainPresenter extends BasePresenter {
     private boolean isFirstOpenMenuChat = true;
     private Disposable mDisposable;
     private int currentPosition = 5;
+    private int accountType;
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
+        accountType = SharedPreUtils.getInstance(mContext).getAccountType();
     }
 
     public void startActivitySetting() {
@@ -45,6 +51,32 @@ public class MainPresenter extends BasePresenter {
     }
 
     public void changeTabIcon(FragmentManager fragmentManager, int tabId) {
+        switch (tabId) {
+            case R.id.menu_item_news: {
+                if (currentPosition == AppConstant.FRAGMENT_BULLETIN_BOARD) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_class: {
+                if (currentPosition == AppConstant.FRAGMENT_CLASS) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_camera: {
+                if (currentPosition == AppConstant.FRAGMENT_CAMERA) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_children: {
+                if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
+                    return;
+                }
+                break;
+            }
+        }
         Fragment fragmentShow = null;
 
         Fragment fragmentHide = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
@@ -64,7 +96,7 @@ public class MainPresenter extends BasePresenter {
                 currentPosition = AppConstant.FRAGMENT_CLASS;
                 fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
                 if (fragmentShow == null) {
-                    fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CLASS_FRAGMENT);
+                    fragmentShow = initClassFragment();
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
                 } else {
                     transaction.setCustomAnimations(R.anim.anim_show, 0);
@@ -75,7 +107,7 @@ public class MainPresenter extends BasePresenter {
                 currentPosition = AppConstant.FRAGMENT_CAMERA;
                 fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
                 if (fragmentShow == null) {
-                    fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CAMERA_FRAGMENT);
+                    fragmentShow = new CameraFragment();
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
                 } else {
                     transaction.setCustomAnimations(R.anim.anim_show, 0);
@@ -86,7 +118,7 @@ public class MainPresenter extends BasePresenter {
                 currentPosition = AppConstant.FRAGMENT_CHILDREN;
                 fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
                 if (fragmentShow == null) {
-                    fragmentShow = ContainerFragment.newInstance(AppConstant.TYPE_CHILDREN_FRAGMENT);
+                    fragmentShow = new ChildrenFragment();
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
                 } else {
                     transaction.setCustomAnimations(R.anim.anim_show, 0);
@@ -100,6 +132,17 @@ public class MainPresenter extends BasePresenter {
         }
         transaction.show(fragmentShow);
         transaction.commit();
+    }
+
+    private Fragment initClassFragment() {
+        if (accountType == AppConstant.ACCOUNT_TEACHERS) {
+            String classId = SharedPreUtils.getInstance(mContext).getClassId();
+            Bundle bundle = new Bundle();
+            bundle.putString(AppConstant.KEY_CLASS, classId);
+            return DetailClassFragment.newInstance(bundle);
+        } else {
+            return new ClassListFragment();
+        }
     }
 
     public void onClickMenuItemChat(Fragment mainFragment, DrawerLayout drawerLayout) {
@@ -161,6 +204,13 @@ public class MainPresenter extends BasePresenter {
         super.onDestroy();
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
+        }
+    }
+
+    public void removeUnUsedFragment(FragmentManager manager) {
+        Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
+        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS) {
+            manager.beginTransaction().remove(fragment).commit();
         }
     }
 }

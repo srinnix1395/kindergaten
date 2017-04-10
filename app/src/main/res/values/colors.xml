@@ -11,7 +11,7 @@
 
     <color name="colorPrimary">#6580d4</color>
     <color name="colorPrimaryDark">#5e75c3</color>
-    <color name="colorAccent">#ff7878</color>
+    <color name="colorAccent">#fd7874</color>
 
     <color name="colorPrimaryDarker">#4c5e92</color>
     <color name="colorPrimaryText">#313f4f</color>
@@ -34,5 +34,6 @@
     <color name="colorThumbScrollbar">#59000000</color>
     <color name="colorPrimaryFade">#4D6580d4</color>
     <color name="colorBackgroundSnackbar">#59000000</color>
+    <color name="colorOrange">#ff9e68</color>
 
 </resources>

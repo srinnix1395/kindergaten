@@ -1,33 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollview_detail_class"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:fillViewport="true">
+    android:background="@color/colorWhite">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollview_detail_class"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview_class_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_item_high"
-            android:layout_marginBottom="@dimen/margin_vertical_post"
-            app:cardCornerRadius="@dimen/radius_card_view_fragment_class"
-            app:cardElevation="@dimen/elevation_card_view">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/padding_post"
-                android:paddingLeft="@dimen/margin_horizontal"
-                android:paddingRight="@dimen/margin_horizontal"
-                android:paddingTop="@dimen/padding_post">
+                android:layout_height="@dimen/height_item_high">
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardview_icon"
@@ -42,12 +35,11 @@
                         android:layout_height="@dimen/item_size"/>
                 </android.support.v7.widget.CardView>
 
-
                 <TextView
                     android:id="@+id/textview_class_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_icon_fragment_class"
                     android:layout_marginRight="@dimen/margin_icon_fragment_class"
                     android:layout_toRightOf="@id/cardview_icon"
@@ -56,17 +48,15 @@
                     android:textSize="16sp"
                     tools:text="Lớp chồi 4"/>
             </RelativeLayout>
-        </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview_teachers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cardview_class_name"
-            android:layout_marginBottom="@dimen/margin_vertical_post"
-            android:layout_marginTop="@dimen/margin_vertical_post"
-            app:cardCornerRadius="@dimen/radius_card_view_fragment_class"
-            app:cardElevation="@dimen/elevation_card_view">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="@dimen/margin_vertical_post"
+                android:layout_marginLeft="@dimen/margin_horizontal"
+                android:layout_marginRight="@dimen/margin_horizontal"
+                android:layout_marginTop="@dimen/margin_vertical_post"
+                android:background="@color/colorDividerColor"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,6 +67,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_size"
+                    android:drawableLeft="@drawable/ic_user"
+                    android:drawablePadding="@dimen/padding_drawable_high"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/margin_horizontal"
@@ -97,29 +89,37 @@
                     layout="@layout/item_teacher"/>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview_member_class"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cardview_teachers"
-            android:layout_marginBottom="@dimen/margin_vertical_post"
-            android:layout_marginTop="@dimen/margin_vertical_post"
-            app:cardCornerRadius="@dimen/radius_card_view_fragment_class"
-            app:cardElevation="@dimen/elevation_card_view">
-
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="@dimen/margin_vertical_post"
+                android:layout_marginLeft="@dimen/margin_horizontal"
+                android:layout_marginRight="@dimen/margin_horizontal"
+                android:layout_marginTop="@dimen/margin_vertical_post"
+                android:background="@color/colorDividerColor"/>
+
+            <RelativeLayout
+                android:id="@+id/layout_member"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/image_children"
+                    android:layout_width="20dp"
+                    android:layout_height="@dimen/item_size"
+                    android:layout_marginLeft="@dimen/margin_horizontal"
+                    android:layout_marginRight="@dimen/padding_drawable_high"
+                    android:src="@drawable/image_children_crawl"/>
+
                 <TextView
+                    android:id="@+id/textview_title2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_size"
+                    android:layout_toRightOf="@+id/image_children"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/margin_horizontal"
                     android:text="@string/class_member"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -127,45 +127,53 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_member_class"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_title2"/>
 
                 <TextView
                     android:id="@+id/textview_see_all"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_size"
+                    android:layout_below="@+id/recyclerview_member_class"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_next"
-                    android:drawablePadding="@dimen/padding_drawable"
+                    android:drawablePadding="@dimen/padding_drawable_high"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/margin_horizontal"
                     android:textAllCaps="true"
                     tools:text="@string/see_all"/>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+            </RelativeLayout>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardview_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cardview_member_class"
-            android:layout_marginBottom="@dimen/margin_vertical_post"
-            android:layout_marginTop="@dimen/margin_vertical_post"
-            app:cardCornerRadius="@dimen/radius_card_view_fragment_class"
-            app:cardElevation="@dimen/elevation_card_view">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="@dimen/margin_vertical_post"
+                android:layout_marginLeft="@dimen/margin_horizontal"
+                android:layout_marginRight="@dimen/margin_horizontal"
+                android:layout_marginTop="@dimen/margin_vertical_post"
+                android:background="@color/colorDividerColor"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="vertical">
+                android:background="@color/colorWhite">
+
+                <ImageView
+                    android:id="@+id/image_children1"
+                    android:layout_width="20dp"
+                    android:layout_height="@dimen/item_size"
+                    android:layout_marginLeft="@dimen/margin_horizontal"
+                    android:layout_marginRight="@dimen/padding_drawable_high"
+                    android:src="@drawable/image_images"/>
 
                 <TextView
+                    android:id="@+id/textview_title3"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_size"
+                    android:layout_toRightOf="@+id/image_children1"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/margin_horizontal"
                     android:text="@string/image_class"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
@@ -173,43 +181,46 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_image_class"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"/>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_title3"/>
+            </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/layout_retry"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </android.support.v4.widget.NestedScrollView>
 
-            <ImageView
-                android:id="@+id/imageview_retry"
-                android:layout_width="@dimen/item_size"
-                android:layout_height="@dimen/item_size"
-                android:layout_centerInParent="true"
-                android:padding="4dp"
-                android:src="@drawable/btn_loading"
-                android:visibility="gone"/>
+    <RelativeLayout
+        android:id="@+id/layout_retry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-            <ProgressBar
-                android:id="@+id/progressbar_loading"
-                android:layout_width="@dimen/item_size"
-                android:layout_height="@dimen/item_size"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/margin_vertical"
-                android:layout_marginTop="@dimen/margin_vertical"/>
+        <ImageView
+            android:id="@+id/imageview_retry"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_centerInParent="true"
+            android:padding="4dp"
+            android:src="@drawable/btn_loading"
+            android:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/textview_retry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageview_retry"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="5dp"
-                android:text="@string/cant_connect"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/textview_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview_retry"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/cant_connect"
+            android:visibility="visible"/>
 
     </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressbar_loading"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/margin_vertical"
+        android:layout_marginTop="@dimen/margin_vertical"/>
+
+</RelativeLayout>

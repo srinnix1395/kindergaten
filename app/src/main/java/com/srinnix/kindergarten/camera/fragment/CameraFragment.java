@@ -15,9 +15,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
-import com.srinnix.kindergarten.base.fragment.ContainerFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.camera.presenter.CameraPresenter;
+import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -99,7 +99,7 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden && SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            ((ContainerFragment) getParentFragment()).removeFragment();
+            ((MainFragment) (getParentFragment())).removeFragment();
             onDestroy();
         }
     }

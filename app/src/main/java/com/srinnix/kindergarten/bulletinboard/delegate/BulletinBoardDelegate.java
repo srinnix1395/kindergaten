@@ -19,4 +19,6 @@ public interface BulletinBoardDelegate extends BaseDelegate {
     void onRefreshResult(boolean result, ArrayList<String> data);
 
     void updateNumberComment(int position, int numberOfComments);
+
+    void updateLogout();
 }

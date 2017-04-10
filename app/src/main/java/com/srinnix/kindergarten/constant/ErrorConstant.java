@@ -9,4 +9,5 @@ public class ErrorConstant {
 
     public static final int ERROR_CODE_101 = 101;
 
+    public static final int ERROR_CODE_102 = 102;
 }

@@ -1,7 +1,5 @@
 package com.srinnix.kindergarten.chat.fragment;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -47,26 +45,25 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     }
 
     @Override
-    protected void initChildView() {
+    protected void initData() {
+        super.initData();
         listContact = new ArrayList<>();
         mAdapter = new ChatListAdapter(listContact, new ChatListAdapter.OnClickItemChatListener() {
             @Override
             public void onClick(int position, String name, String urlImage) {
-                mPresenter.onClickItemChat(listContact.get(position), name, urlImage);
+                mPresenter.onClickItemChat(ChatListFragment.this, listContact.get(position), name, urlImage);
             }
         });
+    }
 
-        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator(){
-            @Override
-            public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-                return true;
-            }
-        };
-        recyclerView.setItemAnimator(defaultItemAnimator);
+    @Override
+    protected void initChildView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(mAdapter);
 
-        mPresenter.getContactFromDatabase();
+        if (isFirst) {
+            mPresenter.getContactFromDatabase();
+        }
     }
 
     @Override

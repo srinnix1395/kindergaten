@@ -28,7 +28,7 @@
     <string name="error_post">Không thể làm mới bảng tin</string>
     <string name="likes">lượt thích</string>
     <string name="cancel">Hủy</string>
-    <string name="OK">OK</string>
+    <string name="OK">Đồng ý</string>
     <string name="login_to_like">Hãy đăng nhập để like!</string>
     <string name="reset_password">Đặt lại mật khẩu</string>
     <string name="back">Quay lại</string>
@@ -67,4 +67,7 @@
     <string name="day">ngày</string>
     <string name="week">tuần</string>
     <string name="cant_play">Không thể bật video</string>
+    <string name="session_expired">Phiên đã hết hạn</string>
+    <string name="please_re_login">Vui lòng đăng nhập lại</string>
+    <string name="signing_out">Đang đăng xuất</string>
 </resources>

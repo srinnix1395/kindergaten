@@ -13,6 +13,7 @@ import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.BulletinBoardPresenter;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
@@ -50,7 +51,8 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    protected void initChildView() {
+    protected void initData() {
+        super.initData();
         arrPost = new ArrayList<>();
         arrPost.add(new LoadingItem());
 
@@ -82,6 +84,10 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                         mPresenter.onClickShare(((Post) arrPost.get(position)));
                     }
                 });
+    }
+
+    @Override
+    protected void initChildView() {
         rvListPost.setAdapter(postAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -123,6 +129,11 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @Subscribe
     public void onEventNumberComment(MessageNumberComment message) {
         mPresenter.updateNumberComment(message, arrPost);
+    }
+
+    @Subscribe
+    public void onEventLogout(MessageLogout message) {
+        mPresenter.logout(arrPost);
     }
 
     @Override
@@ -193,5 +204,11 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @Override
     public void updateNumberComment(int position, int numberOfComments) {
         postAdapter.notifyItemChanged(position, numberOfComments);
+    }
+
+    @Override
+    public void updateLogout() {
+        postAdapter.notifyItemRangeChanged(0, arrPost.size() - 1, false);
+
     }
 }

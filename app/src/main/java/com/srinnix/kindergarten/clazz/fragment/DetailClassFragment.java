@@ -4,7 +4,6 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.srinnix.kindergarten.children.adapter.ChildrenAdapter;
 import com.srinnix.kindergarten.clazz.adapter.ImageAdapter;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.presenter.DetailClassPresenter;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.model.Child;
@@ -28,7 +28,6 @@ import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -44,23 +43,8 @@ import butterknife.OnClick;
  */
 
 public class DetailClassFragment extends BaseFragment implements ClassDelegate, View.OnClickListener {
-    @BindView(R.id.cardview_member_class)
-    CardView cardViewMemberClass;
-
-    @BindView(R.id.cardview_class_name)
-    CardView cardViewClassName;
-
-    @BindView(R.id.cardview_teachers)
-    CardView cardViewTeachers;
-
-    @BindView(R.id.cardview_image)
-    CardView cardViewImage;
-
     @BindView(R.id.progressbar_loading)
     ProgressBar pbClass;
-
-    @BindView(R.id.imageview_retry)
-    ImageView imvRetry;
 
     @BindView(R.id.textview_retry)
     TextView tvRetry;
@@ -85,6 +69,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @BindView(R.id.recyclerview_image_class)
     RecyclerView rvImageClass;
+
+    @BindView(R.id.layout_member)
+    RelativeLayout layoutMember;
 
     ImageView imvIcon1;
     TextView tvName1;
@@ -118,12 +105,21 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     }
 
     @Override
-    protected void initChildView() {
-        cardViewClassName.setVisibility(View.GONE);
-        cardViewTeachers.setVisibility(View.GONE);
-        cardViewMemberClass.setVisibility(View.GONE);
-        cardViewImage.setVisibility(View.GONE);
+    protected void initData() {
+        super.initData();
+        childArrayList = new ArrayList<>();
+        childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID
+                , id -> mPresenter.onClickChildViewHolder(id));
 
+        listImage = new ArrayList<>();
+        listImage.add(new LoadingItem());
+        mImageAdapter = new ImageAdapter(listImage, position -> {
+            mPresenter.onClickImage(((Image) listImage.get(position)));
+        });
+    }
+
+    @Override
+    protected void initChildView() {
         RelativeLayout relTeacher1 = (RelativeLayout) mView.findViewById(R.id.rel_teacher_1);
         imvIcon1 = (ImageView) relTeacher1.findViewById(R.id.imageview_icon);
         tvName1 = (TextView) relTeacher1.findViewById(R.id.textview_teacher_name);
@@ -146,23 +142,16 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         imvChat2.setOnClickListener(this);
         imvChat3.setOnClickListener(this);
 
-        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn() ||
+                SharedPreUtils.getInstance(mContext).getAccountType() != AppConstant.ACCOUNT_PARENTS) {
             imvChat1.setVisibility(View.GONE);
             imvChat2.setVisibility(View.GONE);
             imvChat3.setVisibility(View.GONE);
         }
 
-        childArrayList = new ArrayList<>();
-        childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID
-                , id -> mPresenter.onClickChildViewHolder(id));
         rvMember.setLayoutManager(new GridLayoutManager(mContext, 4));
         rvMember.setAdapter(childrenAdapter);
 
-        listImage = new ArrayList<>();
-        listImage.add(new LoadingItem());
-        mImageAdapter = new ImageAdapter(listImage, position -> {
-            mPresenter.onClickImage(((Image) listImage.get(position)));
-        });
         rvImageClass.setAdapter(mImageAdapter);
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 3);
@@ -227,13 +216,19 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @Override
     public void onLoadSuccess(ClassResponse classInfo) {
         UiUtils.hideProgressBar(pbClass);
-        relRetry.setVisibility(View.GONE);
 
         if (classInfo == null) {
-            imvRetry.setVisibility(View.VISIBLE);
-            AlertUtils.showToast(mContext, R.string.error_common);
+            tvRetry.setText(R.string.error_common);
+            if (relRetry.getVisibility() != View.VISIBLE) {
+                relRetry.setVisibility(View.VISIBLE);
+            }
             return;
         }
+
+        if (relRetry.getVisibility() == View.VISIBLE) {
+            relRetry.setVisibility(View.GONE);
+        }
+        scrollView.setVisibility(View.VISIBLE);
 
         Glide.with(mContext)
                 .load(R.drawable.logo_school)
@@ -277,16 +272,12 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
             tvSeeAll.setText(String.format(Locale.getDefault(),
                     getString(R.string.see_all), classInfo.getaClass().getNumberMember()));
-            cardViewMemberClass.setVisibility(View.VISIBLE);
+            layoutMember.setVisibility(View.VISIBLE);
         } else {
-            cardViewMemberClass.setVisibility(View.GONE);
+            layoutMember.setVisibility(View.GONE);
         }
 
         scrollView.smoothScrollTo(0, 0);
-
-        cardViewClassName.setVisibility(View.VISIBLE);
-        cardViewTeachers.setVisibility(View.VISIBLE);
-        cardViewImage.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -294,8 +285,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         UiUtils.hideProgressBar(pbClass);
 
         tvRetry.setText(resError);
-        tvRetry.setVisibility(View.VISIBLE);
-        imvRetry.setVisibility(View.VISIBLE);
+        relRetry.setVisibility(View.VISIBLE);
     }
 
     @Override

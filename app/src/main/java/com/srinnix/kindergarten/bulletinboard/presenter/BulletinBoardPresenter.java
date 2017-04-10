@@ -309,12 +309,25 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     }
 
+    public void logout(ArrayList<Object> arrPost) {
+        if (arrPost.size() == 1) {
+            return;
+        }
+        for (Object o : arrPost) {
+            if (o instanceof Post && ((Post) o).isUserLike()) {
+                ((Post) o).setUserLike(false);
+            }
+        }
+        mBoardDelegate.updateLogout();
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.clear();
         }
     }
+
 
 
 }

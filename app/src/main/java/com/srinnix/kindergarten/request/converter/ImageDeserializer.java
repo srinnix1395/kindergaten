@@ -33,9 +33,10 @@ public class ImageDeserializer implements JsonDeserializer<ImageResponse> {
         JsonArray images = jsonObject.getAsJsonArray("images");
         String url;
         for (JsonElement image : images) {
-            url = image.getAsString();
-            if (url.startsWith("video=")) {
-                arrayList.add(new Image(caption, createdAt, url.substring(6), true));
+            JsonObject asJsonObject = image.getAsJsonObject();
+            url = asJsonObject.get("url").getAsString();
+            if (asJsonObject.get("is_video") != null) {
+                arrayList.add(new Image(caption, createdAt, url, true));
             } else {
                 arrayList.add(new Image(caption, createdAt, url, false));
             }

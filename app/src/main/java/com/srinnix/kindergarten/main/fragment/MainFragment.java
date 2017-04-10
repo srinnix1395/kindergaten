@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.roughike.bottombar.BottomBar;
@@ -11,6 +12,7 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
@@ -58,13 +60,14 @@ public class MainFragment extends BaseFragment implements MainDelegate {
             return false;
         });
 
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.frame_layout_main, new BulletinBoardFragment(), "5");
-        transaction.commit();
+        if (getChildFragmentManager().findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_BULLETIN_BOARD)) == null) {
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.add(R.id.frame_layout_main, new BulletinBoardFragment(), String.valueOf(AppConstant.FRAGMENT_BULLETIN_BOARD));
+            transaction.commit();
+        }
 
-        mBottomBar.setOnTabSelectListener(tabId -> mPresenter.changeTabIcon(getChildFragmentManager(), tabId));
+        mBottomBar.setOnTabSelectListener(tabId -> mPresenter.changeTabIcon(getChildFragmentManager(), tabId), false);
         mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
     }
 
     private void onMenuItemItemSelected(MenuItem item) {
@@ -118,12 +121,30 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeFragment();
+    }
+
+    public void removeFragment() {
+        mPresenter.removeUnUsedFragment(getChildFragmentManager());
+    }
+
+
     @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
         mPresenter.loginSuccessfully(mToolbar);
     }
 
+    public void closeDrawer() {
+        if (mDrawer.isDrawerOpen(Gravity.RIGHT)) {
+            mDrawer.closeDrawer(Gravity.RIGHT);
+        }
+    }
+
     public void onBackPressed() {
         mPresenter.onBackPressed(this, mDrawer);
     }
+
 }

@@ -48,9 +48,9 @@ public class ViewManager {
         if (null != mFragmentManager) {
             fragment.setArguments(bundle);
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.setCustomAnimations(animAppear, 0, animAppear, animDisappear);
+            ft.setCustomAnimations(animAppear, animDisappear, animAppear, animDisappear);
             ft.add(R.id.layout_content, fragment);
-            ft.show(fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
     }
@@ -60,7 +60,7 @@ public class ViewManager {
             fragment.setArguments(bundle);
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.add(R.id.layout_content, fragment);
-            ft.show(fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
     }

@@ -52,7 +52,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     RecyclerView rvListChildren;
 
     @BindView(R.id.layout_retry)
-    RelativeLayout relRety;
+    RelativeLayout relRetry;
 
     @BindView(R.id.textview_retry)
     TextView tvRetry;
@@ -126,7 +126,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @OnClick(R.id.layout_retry)
     public void onClickRetry() {
-        relRety.setVisibility(View.GONE);
+        relRetry.setVisibility(View.GONE);
         UiUtils.showProgressBar(pbLoading);
         mPresenter.onClickRetry();
     }
@@ -147,7 +147,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
         UiUtils.hideProgressBar(pbLoading);
 
         tvRetry.setText(resError);
-        relRety.setVisibility(View.VISIBLE);
+        relRetry.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.srinnix.kindergarten.util;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,6 @@ public class AlertUtils {
     public static void showSnackBarNoInternet(View view) {
         final Snackbar snackbar = Snackbar.make(view, R.string.noInternetConnection, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.close, v -> snackbar.dismiss());
-        snackbar.setActionTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
-
-        View viewSnackbar = snackbar.getView();
-        TextView tv = (TextView) viewSnackbar.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
         snackbar.show();
     }
 
@@ -52,5 +48,31 @@ public class AlertUtils {
         toast.setView(view);
 
         toast.show();
+    }
+
+    public static void showAlertDialog(Context context, int resTitle, int resMessage, int resNegative, OnClickListener listener){
+        new AlertDialog.Builder(context)
+                .setTitle(resTitle)
+                .setMessage(resMessage)
+                .setNegativeButton(resNegative, (dialog, which) -> {
+                    if (listener != null) {
+                        listener.onClick();
+                    }
+                    dialog.dismiss();
+                })
+                .create()
+                .show();
+    }
+
+    public static ProgressDialog showDialogSignOut(Context context, int resMessage) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setIndeterminate(true);
+        dialog.setMessage(context.getString(resMessage));
+        dialog.show();
+        return dialog;
+    }
+
+    public interface OnClickListener {
+        void onClick();
     }
 }

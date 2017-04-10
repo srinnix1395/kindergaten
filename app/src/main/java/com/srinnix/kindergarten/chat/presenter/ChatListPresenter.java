@@ -7,9 +7,11 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatListAdapter;
 import com.srinnix.kindergarten.chat.delegate.ChatListDelegate;
+import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Contact;
@@ -47,7 +49,7 @@ public class ChatListPresenter extends BasePresenter {
         mDisposable = new CompositeDisposable();
     }
 
-    public void onClickItemChat(Contact contact, String name, String urlImage) {
+    public void onClickItemChat(ChatListFragment fragment, Contact contact, String name, String urlImage) {
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, contact.getId());
         bundle.putString(AppConstant.KEY_NAME, name);
@@ -58,6 +60,8 @@ public class ChatListPresenter extends BasePresenter {
 
         ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+
+        ((MainFragment) fragment.getParentFragment()).closeDrawer();
     }
 
     public void onDisconnect(ArrayList<Contact> arrayList) {

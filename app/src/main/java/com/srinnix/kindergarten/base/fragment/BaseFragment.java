@@ -22,7 +22,7 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
     protected Context mContext;
     protected View mView;
     protected BasePresenter mBasePresenter;
-    private boolean isFirst;
+    protected boolean isFirst;
 
     public BaseFragment() {
         mBasePresenter = initPresenter();
@@ -81,23 +81,24 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
             Bundle bundle = getArguments();
             mBasePresenter.getData(bundle);
         }
-        initChildView();
 
 //        if (isFirst) {
-//            mBasePresenter.onStart();
-//            isFirst = false;
-//        } else {
-//            mBasePresenter.onResume();
+        initData();
 //        }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        initChildView();
+
         if (isFirst) {
             mBasePresenter.onStart();
             isFirst = false;
+        } else {
+            mBasePresenter.onResume();
         }
+
+    }
+
+    protected void initData() {
+
     }
 
     protected abstract void initChildView();
