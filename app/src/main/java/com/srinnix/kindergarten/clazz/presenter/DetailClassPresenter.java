@@ -1,7 +1,10 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewCompat;
+import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.ResponseListener;
@@ -10,6 +13,7 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
+import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.MemberClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
@@ -193,11 +197,24 @@ public class DetailClassPresenter extends BasePresenter {
 
 
 
-    public void onClickImage(Image image) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstant.KEY_IMAGE, image);
+    public void onClickImage(DetailClassFragment fragmentOne, ImageView sharedTransitionView, Image image) {
 
-        ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            PreviewImageFragment fragmentTwo = PreviewImageFragment.newInstance(image, ViewCompat.getTransitionName(sharedTransitionView));
+
+            fragmentOne.getFragmentManager().beginTransaction()
+                    .addSharedElement(sharedTransitionView, ViewCompat.getTransitionName(sharedTransitionView))
+                    .addToBackStack(fragmentTwo.getClass().getName())
+                    .add(R.id.layout_content, fragmentTwo)
+                    .commit();
+
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(AppConstant.KEY_IMAGE, image);
+
+            ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle);
+        }
     }
 
     @Override

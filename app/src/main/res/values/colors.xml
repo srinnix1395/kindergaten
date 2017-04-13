@@ -33,7 +33,7 @@
     <color name="colorBackground">#dcdee3</color>
     <color name="colorThumbScrollbar">#59000000</color>
     <color name="colorPrimaryFade">#4D6580d4</color>
-    <color name="colorBackgroundSnackbar">#59000000</color>
     <color name="colorOrange">#ff9e68</color>
+    <color name="color_pressed">#40000000</color>
 
 </resources>

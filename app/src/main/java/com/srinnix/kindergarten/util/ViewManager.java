@@ -40,27 +40,29 @@ public class ViewManager {
         this.mFragmentManager = mFragmentManager;
     }
 
-    public void addFragment(BaseFragment fragment) {
+    public void addFragment(Fragment fragment) {
         addFragment(fragment, null);
     }
 
-    public void addFragment(BaseFragment fragment, Bundle bundle, int animAppear, int animDisappear) {
+    public void addFragment(Fragment fragment, Bundle bundle, int animAppear, int animDisappear) {
         if (null != mFragmentManager) {
             fragment.setArguments(bundle);
+            String nameFragment = fragment.getClass().getName();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.setCustomAnimations(animAppear, animDisappear, animAppear, animDisappear);
             ft.add(R.id.layout_content, fragment);
-            ft.addToBackStack(null);
+            ft.addToBackStack(nameFragment);
             ft.commit();
         }
     }
 
-    public void addFragment(BaseFragment fragment, Bundle bundle) {
+    public void addFragment(Fragment fragment, Bundle bundle) {
         if (null != mFragmentManager) {
             fragment.setArguments(bundle);
+            String nameFragment = fragment.getClass().getName();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.add(R.id.layout_content, fragment);
-            ft.addToBackStack(null);
+            ft.addToBackStack(nameFragment);
             ft.commit();
         }
     }

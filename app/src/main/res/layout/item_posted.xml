@@ -54,7 +54,7 @@
             android:id="@+id/imageview_first_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="275dp"
+            android:minHeight="260dp"
             android:scaleType="fitXY"/>
 
         <TextView

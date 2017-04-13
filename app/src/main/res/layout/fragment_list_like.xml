@@ -2,9 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
                 android:clickable="true"
+                android:minHeight="280dp"
                 android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -16,7 +17,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_like"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_detail_like"
         android:paddingBottom="6dp"
         android:scrollbarSize="@dimen/widthScrollbarDetailChat"

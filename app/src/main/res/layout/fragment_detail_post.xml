@@ -17,7 +17,7 @@
         android:layout_height="@dimen/item_size"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        app:cardBackgroundColor="@color/colorBackgroundSnackbar"
+        app:cardBackgroundColor="@color/color_pressed"
         app:cardElevation="0dp">
 
         <ImageView
@@ -33,7 +33,7 @@
         android:layout_height="@dimen/item_size"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="10dp"
-        app:cardBackgroundColor="@color/colorBackgroundSnackbar"
+        app:cardBackgroundColor="@color/color_pressed"
         app:cardElevation="0dp">
 
         <ImageView

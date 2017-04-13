@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,12 +17,6 @@ import com.srinnix.kindergarten.R;
  */
 
 public class AlertUtils {
-
-    public static void showSnackBarNoInternet(View view) {
-        final Snackbar snackbar = Snackbar.make(view, R.string.noInternetConnection, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.close, v -> snackbar.dismiss());
-        snackbar.show();
-    }
 
     public static void showToast(Context context, int resID) {
         Toast.makeText(context, context.getString(resID), Toast.LENGTH_SHORT).show();

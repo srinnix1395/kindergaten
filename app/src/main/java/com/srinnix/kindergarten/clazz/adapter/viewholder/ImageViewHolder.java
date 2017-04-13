@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.clazz.adapter.viewholder;
 
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +9,6 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.clazz.adapter.ImageAdapter;
 import com.srinnix.kindergarten.model.Image;
-import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
@@ -42,7 +42,8 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
 
     public void bindData(Image image, int position) {
         this.position = position;
-        DebugLog.i(image.getUrl());
+        ViewCompat.setTransitionName(imvImage, "image_" + position);
+
         if (image.isVideo()) {
             disposable = Single.fromCallable(() -> {
                 try {
@@ -73,11 +74,11 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.imageview_image)
     void onClick() {
         if (listener != null) {
-            listener.onClick(position);
+            listener.onClick(position, imvImage);
         }
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }

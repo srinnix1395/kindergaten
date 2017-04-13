@@ -28,6 +28,13 @@ public class LikeModel {
     @Expose
     private long createdAt;
 
+    public LikeModel(String name, String image, int accountType, long createdAt) {
+        this.name = name;
+        this.image = image;
+        this.accountType = accountType;
+        this.createdAt = createdAt;
+    }
+
     public String getIdUser() {
         return idUser;
     }

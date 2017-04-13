@@ -78,8 +78,7 @@ public class LoginPresenter extends BasePresenter {
 
             @Override
             public void onResponseFail(Throwable throwable) {
-                AlertUtils.showToast(mContext, R.string.error_common);
-                DebugLog.e(throwable.getMessage());
+                ErrorUtil.handleException(mContext, throwable);
             }
 
             @Override

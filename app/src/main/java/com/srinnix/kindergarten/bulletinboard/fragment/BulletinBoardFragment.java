@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,9 +37,6 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @BindView(R.id.recyclerview_schoolboard)
     RecyclerView rvListPost;
 
-    @BindView(R.id.coordinator_layout)
-    CoordinatorLayout coordinatorLayout;
-
     private BulletinBoardPresenter mPresenter;
     private PostAdapter postAdapter;
     private ArrayList<Object> arrPost;
@@ -57,7 +53,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         arrPost.add(new LoadingItem());
 
         postAdapter = new PostAdapter(arrPost,
-                () -> mPresenter.onLoadMore(coordinatorLayout, rvListPost, arrPost, postAdapter),
+                () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
                 new PostAdapter.PostListener() {
                     @Override
                     public void onClickLike(int position) {
@@ -66,7 +62,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
                     @Override
                     public void onClickNumberLike(int position) {
-                        mPresenter.onClickNumberLike(((Post) arrPost.get(position)));
+                        mPresenter.onClickNumberLike(getChildFragmentManager(), ((Post) arrPost.get(position)));
                     }
 
                     @Override
@@ -96,7 +92,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
-                mPresenter.onLoadMore(coordinatorLayout, rvListPost, arrPost, postAdapter);
+                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
             }
         });
 

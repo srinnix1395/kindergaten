@@ -15,14 +15,24 @@ public class ErrorUtil {
     public static void handleErrorApi(Context context, Error error) {
         switch (error.code) {
             case ErrorConstant.ERROR_CODE_101: {
+                DebugLog.e(error.message);
+                AlertUtils.showToast(context, R.string.error_common);
+                break;
+            }
+            case ErrorConstant.ERROR_CODE_103: {
                 AlertUtils.showToast(context, R.string.error_msg_101);
                 break;
             }
-            case ErrorConstant.ERROR_CODE_102:{
+            case ErrorConstant.ERROR_CODE_102: {
                 AlertUtils.showAlertDialog(context, R.string.session_expired,
                         R.string.please_re_login, R.string.OK, () -> {
                             LogoutHelper.signOut(context);
                         });
+                break;
+            }
+            case ErrorConstant.ERROR_CODE_500:{
+                DebugLog.e(error.message);
+                AlertUtils.showToast(context, R.string.error_common);
                 break;
             }
             default: {
@@ -37,7 +47,6 @@ public class ErrorUtil {
         throwable.printStackTrace();
 
         AlertUtils.showToast(mContext, R.string.error_common);
-
 
 
     }

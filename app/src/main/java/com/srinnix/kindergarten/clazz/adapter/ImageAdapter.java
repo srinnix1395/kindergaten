@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
@@ -75,6 +76,6 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public interface OnClickImageListener {
-        void onClick(int position);
+        void onClick(int position, ImageView sharedTransitionView);
     }
 }

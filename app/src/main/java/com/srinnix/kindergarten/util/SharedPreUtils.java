@@ -105,9 +105,10 @@ public class SharedPreUtils {
         editor.putInt(AppConstant.USER_TYPE, user.getAccountType());
         if (user.getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
             editor.putString(AppConstant._ID_CLASS, user.getIdClass());
+            editor.putString(AppConstant.IMAGE, user.getImage());
+        } else {
+            editor.putString(AppConstant.IMAGE, !children.isEmpty() ? children.get(0).getImage() : "");
         }
-        editor.putString(AppConstant.IMAGE, !children.isEmpty() ? children.get(0).getImage() : "");
-        editor.putString(AppConstant._ID_SCHOOL, user.getIdSchool());
         editor.putString(AppConstant.TOKEN, user.getToken());
         editor.apply();
     }
@@ -142,7 +143,6 @@ public class SharedPreUtils {
             editor.remove(AppConstant._ID_CLASS);
         }
         editor.remove(AppConstant.IMAGE);
-        editor.remove(AppConstant._ID_SCHOOL);
         editor.apply();
     }
 }

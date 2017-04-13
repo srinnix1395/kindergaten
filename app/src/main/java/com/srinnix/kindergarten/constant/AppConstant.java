@@ -13,7 +13,7 @@ public class AppConstant {
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.0.102:8080/";
+    public static final String BASE_URL = "http://192.168.0.101:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
@@ -80,6 +80,7 @@ public class AppConstant {
     public static final String KEY_MEMBER = "KEY_MEMBER";
     public static final String KEY_COMMENT = "KEY_COMMENT";
     public static final String KEY_LIKE = "KEY_LIKE";
+    public static final String KEY_TRANSITION = "KEY_TRANSITION";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -91,4 +92,12 @@ public class AppConstant {
     public static final int FRAGMENT_CLASS = 6;
     public static final int FRAGMENT_CAMERA = 7;
     public static final int FRAGMENT_CHILDREN = 8;
+
+    public static final int STATE_WEIGHT_NORMAL = 1;
+    public static final int STATE_WEIGHT_OBESE = 2;
+    public static final int STATE_WEIGHT_MALNUTRITION = 3;
+
+    public static final int STATE_HEIGHT_NORMAL = 4;
+    public static final int STATE_HEIGHT_STUNTED = 5;
+
 }

@@ -73,6 +73,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.layout_member)
     RelativeLayout layoutMember;
 
+    @BindView(R.id.view_line_member)
+    View viewLineMember;
+
     ImageView imvIcon1;
     TextView tvName1;
     ImageView imvChat1;
@@ -113,9 +116,8 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
         listImage = new ArrayList<>();
         listImage.add(new LoadingItem());
-        mImageAdapter = new ImageAdapter(listImage, position -> {
-            mPresenter.onClickImage(((Image) listImage.get(position)));
-        });
+        mImageAdapter = new ImageAdapter(listImage,
+                (position, sharedTransitionView) -> mPresenter.onClickImage(DetailClassFragment.this, sharedTransitionView, ((Image) listImage.get(position))));
     }
 
     @Override
@@ -273,8 +275,10 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             tvSeeAll.setText(String.format(Locale.getDefault(),
                     getString(R.string.see_all), classInfo.getaClass().getNumberMember()));
             layoutMember.setVisibility(View.VISIBLE);
+            viewLineMember.setVisibility(View.VISIBLE);
         } else {
             layoutMember.setVisibility(View.GONE);
+            viewLineMember.setVisibility(View.GONE);
         }
 
         scrollView.smoothScrollTo(0, 0);

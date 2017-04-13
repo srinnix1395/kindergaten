@@ -1,7 +1,7 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
@@ -13,7 +13,7 @@ import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.fragment.CommentFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
-import com.srinnix.kindergarten.bulletinboard.fragment.LikeFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.LikeDialogFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
@@ -54,7 +54,7 @@ public class BulletinBoardPresenter extends BasePresenter {
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
-    public void onLoadMore(CoordinatorLayout coordinatorLayout, RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
+    public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
         int size = arrayList.size();
 
         long timePrevPost;
@@ -69,7 +69,7 @@ public class BulletinBoardPresenter extends BasePresenter {
 
             //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
             rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
-            AlertUtils.showSnackBarNoInternet(coordinatorLayout);
+            AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
         }
 
@@ -226,13 +226,15 @@ public class BulletinBoardPresenter extends BasePresenter {
         }
     }
 
-    public void onClickNumberLike(Post post) {
+    public void onClickNumberLike(FragmentManager fragmentManager, Post post) {
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, post.getId());
         bundle.putInt(AppConstant.KEY_LIKE, post.getNumberOfLikes());
 
-        ViewManager.getInstance().addFragment(new LikeFragment(), bundle,
-                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        LikeDialogFragment dialog = new LikeDialogFragment();
+        dialog.setArguments(bundle);
+
+        dialog.show(fragmentManager, "dialog");
     }
 
     public void refresh(SwipeRefreshLayout refreshLayout, ArrayList<Object> arrPost) {
@@ -327,7 +329,6 @@ public class BulletinBoardPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
-
 
 
 }
