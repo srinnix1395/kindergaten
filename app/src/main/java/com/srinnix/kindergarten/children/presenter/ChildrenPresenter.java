@@ -8,7 +8,9 @@ import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.model.HealthTotalChildren;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
@@ -28,6 +30,7 @@ public class ChildrenPresenter extends BasePresenter {
     private CompositeDisposable mDisposable;
     private ChildrenDelegate mChildrenDelegate;
     private ChildrenHelper mHelper;
+    private String idChild;
 
     public ChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
@@ -42,6 +45,10 @@ public class ChildrenPresenter extends BasePresenter {
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             getListChildren();
         }
+    }
+
+    public void setIdChild(String id) {
+        idChild = id;
     }
 
     public void getInfoChildren(String idChildren) {
@@ -93,7 +100,9 @@ public class ChildrenPresenter extends BasePresenter {
                 .findAllAsync()
                 .addChangeListener(element -> {
                     if (element.size() == 1) {
+                        idChild = element.get(0).getId();
                         getInfoChildren(element.get(0).getId());
+                        getTimelineChildren(System.currentTimeMillis());
                     } else {
                         ArrayList<Child> childArrayList = new ArrayList<>();
                         childArrayList.addAll(element);
@@ -140,8 +149,46 @@ public class ChildrenPresenter extends BasePresenter {
         });
     }
 
+    public void getTimelineChildren(long time) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            AlertUtils.showToast(mContext, R.string.noInternetConnection);
+            return;
+        }
+
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+        mHelper.getTimelineChildren(token, idChild, time, new ResponseListener<ArrayList<HealthTotalChildren>>() {
+            @Override
+            public void onSuccess(ApiResponse<ArrayList<HealthTotalChildren>> response) {
+                if (response == null) {
+                    onFail(new NullPointerException());
+                    return;
+                }
+
+                if (response.result == ApiResponse.RESULT_NG) {
+                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    return;
+                }
+
+                mChildrenDelegate.onLoadChildrenTimeLine(response.getData());
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+
+            }
+        });
+    }
+
     public void onClickRetry() {
         // TODO: 4/1/2017 retry
+    }
+
+    public void onClickIndex(ArrayList<Object> mListChildrenHealth, int position) {
+        // TODO: 4/15/2017 index
+    }
+
+    public void onClickHealth(HealthTotalChildren health) {
+        // TODO: 4/15/2017 health
     }
 
     @Override

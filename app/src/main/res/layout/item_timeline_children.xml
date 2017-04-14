@@ -4,91 +4,139 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:minHeight="@dimen/height_item_high"
                 android:paddingLeft="@dimen/margin_horizontal_low"
                 android:paddingRight="@dimen/margin_horizontal_low">
 
     <TextView
         android:id="@+id/textview_time"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_top_textview_frm_info_children"
-        tools:text="2/2017"/>
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/margin_vertical_item_timeline_children"
+        android:gravity="center_vertical"
+        tools:text="07/09/2017"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_mark"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_horizontal_low"
-        android:layout_marginRight="@dimen/margin_horizontal_low"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_toRightOf="@+id/textview_time"
-        android:gravity="center"
+        android:minHeight="@dimen/height_item_high"
         android:orientation="vertical">
 
         <View
             android:layout_width="1dp"
-            android:layout_height="10dp"
-            android:layout_marginBottom="2dp"
-            android:background="@color/colorPrimary"/>
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"
+            android:minHeight="@dimen/height_item_high"/>
 
         <ImageView
             android:id="@+id/imageview_mark"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_vertical_item_timeline_children"
+            android:background="#fafafa"
             app:srcCompat="@drawable/ic_circle"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:background="@color/colorPrimary"/>
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_figure"
+    <RelativeLayout
+        android:id="@+id/layout_weight"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/item_size"
         android:layout_marginRight="12dp"
         android:layout_marginTop="@dimen/margin_top_item_timeline_children"
-        android:layout_toRightOf="@+id/layout_mark">
+        android:layout_toRightOf="@+id/layout_mark"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/imageview_weight"
+            android:layout_width="20dp"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginLeft="@dimen/margin_horizontal_low"
+            android:layout_marginRight="@dimen/margin_horizontal_low"
+            android:src="@drawable/image_weight"/>
 
         <TextView
             android:id="@+id/textview_weight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_scale"
-            android:drawablePadding="@dimen/padding_drawable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/imageview_weight"
             android:gravity="center_vertical"
             tools:text="20 kg"/>
 
         <TextView
+            android:id="@+id/textview_weight_state"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            tools:text="Suy dinh dưỡng"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_height"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_below="@+id/layout_weight"
+        android:layout_marginRight="12dp"
+        android:layout_toRightOf="@+id/layout_mark"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/imageview_height"
+            android:layout_width="20dp"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginLeft="@dimen/margin_horizontal_low"
+            android:layout_marginRight="@dimen/margin_horizontal_low"
+            android:src="@drawable/image_height"/>
+
+        <TextView
             android:id="@+id/textview_height"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_height"
-            android:drawablePadding="@dimen/padding_drawable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/imageview_height"
             android:gravity="center_vertical"
             tools:text="162 cm"/>
 
-        <ImageView
+        <TextView
+            android:id="@+id/textview_height_state"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:foreground="?selectableItemBackgroundBorderless"
-            app:srcCompat="@drawable/ic_chart"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            tools:text="Thấp còi"/>
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textview_edu_plan"
+    <LinearLayout
+        android:id="@+id/layout_health"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_figure"
-        android:layout_marginTop="6dp"
+        android:layout_height="@dimen/item_size"
+        android:layout_below="@+id/layout_height"
+        android:layout_marginRight="12dp"
         android:layout_toRightOf="@+id/layout_mark"
-        android:drawableLeft="@drawable/ic_time_table"
-        android:drawablePadding="@dimen/padding_drawable"
-        android:gravity="center_vertical"
-        android:text="@string/edu_plan"/>
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginLeft="@dimen/margin_horizontal_low"
+            android:layout_marginRight="@dimen/margin_horizontal_low"
+            android:src="@drawable/image_health"/>
+
+        <TextView
+            android:id="@+id/textview_health"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/health_overview"/>
+
+    </LinearLayout>
 </RelativeLayout>

@@ -171,6 +171,12 @@ public class MainPresenter extends BasePresenter {
             return;
         }
 
+        if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
+            ChildrenFragment fragmentChildren = (ChildrenFragment) mainFragment.getChildFragmentManager().findFragmentByTag(String.valueOf(currentPosition));
+            fragmentChildren.onBackPressed();
+            return;
+        }
+
         mainFragment.getActivity().finish();
     }
 

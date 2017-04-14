@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Kindergaten</string>
+    <string name="facebook_app_id">149297532267274</string>
+
     <string name="chat">Chat</string>
     <string name="login">Đăng nhập</string>
     <string name="setting">Cài đặt</string>
@@ -24,7 +26,7 @@
     <string name="class_member">Danh sách lớp</string>
     <string name="see_all">Xem tất cả %d thành viên</string>
     <string name="hobby">Sở thích:</string>
-    <string name="characteristic">Đặc điểm khác:</string>
+    <string name="characteristic">Đặc điểm:</string>
     <string name="error_post">Không thể làm mới bảng tin</string>
     <string name="likes">lượt thích</string>
     <string name="cancel">Hủy</string>
@@ -70,4 +72,9 @@
     <string name="session_expired">Phiên đã hết hạn</string>
     <string name="please_re_login">Vui lòng đăng nhập lại</string>
     <string name="signing_out">Đang đăng xuất</string>
+    <string name="health_index">Chỉ số sức khỏe</string>
+    <string name="health_overview">Sức khỏe tổng quan</string>
+    <string name="obese">Thừa cân</string>
+    <string name="malnutrition">Suy dinh dưỡng</string>
+    <string name="stunted">Thấp còi</string>
 </resources>

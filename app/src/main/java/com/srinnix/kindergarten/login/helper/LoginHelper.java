@@ -52,8 +52,10 @@ public class LoginHelper {
                 return;
             }
 
-            for (Child child : children) {
-                realm12.copyToRealm(child);
+            if (children != null) {
+                for (Child child : children) {
+                    realm12.copyToRealm(child);
+                }
             }
 
             if (arrayList.get(0) instanceof ContactTeacher) {

@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.children.fragment;
 
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,10 +15,16 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.adapter.ChildrenAdapter;
-import com.srinnix.kindergarten.children.adapter.TimelineAdapter;
+import com.srinnix.kindergarten.children.adapter.HealthChildrenAdapter;
+import com.srinnix.kindergarten.children.adapter.viewholder.HealthChildrenViewHolder;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
 import com.srinnix.kindergarten.children.presenter.ChildrenPresenter;
+import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.model.Child;
+import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.model.LoadingItem;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -51,6 +56,9 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     @BindView(R.id.recycler_view_children_list)
     RecyclerView rvListChildren;
 
+    @BindView(R.id.recycler_view_timeline)
+    RecyclerView rvTimeline;
+
     @BindView(R.id.layout_retry)
     RelativeLayout relRetry;
 
@@ -63,17 +71,26 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     @BindView(R.id.layout_unsigned_in)
     RelativeLayout relUnsignedIn;
 
+    @BindView(R.id.view_line)
+    View viewLine;
+
     @BindView(R.id.imagview_unsigned_in)
     ImageView imvUnsignedIn;
 
-    @BindView(R.id.cardview_profile)
-    CardView cardViewProfile;
+    @BindView(R.id.layout_profile)
+    RelativeLayout layoutProfile;
+
+    @BindView(R.id.layout_timeline)
+    RelativeLayout layoutTimeline;
 
     private ChildrenPresenter mPresenter;
-    private TimelineAdapter mTimelineAdapter;
+
+    private ArrayList<Object> mListChildrenHealth;
+    private HealthChildrenAdapter mHealthChildrenAdapter;
 
     private ArrayList<Child> mListChildren;
     private ChildrenAdapter mChildrenAdapter;
+    private boolean isDisplayInfo = false;
 
     @Override
     protected int getLayoutId() {
@@ -100,17 +117,45 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     private void initRecyclerView() {
         mListChildren = new ArrayList<>();
-        mChildrenAdapter = new ChildrenAdapter(mListChildren, ChildrenAdapter.TYPE_LINEAR, new ChildrenAdapter.OnClickChildListener() {
-            @Override
-            public void onClick(String id) {
-                rvListChildren.setVisibility(View.GONE);
-                UiUtils.showProgressBar(pbLoading);
+        mChildrenAdapter = new ChildrenAdapter(mListChildren, ChildrenAdapter.TYPE_LINEAR, position -> {
+            rvListChildren.setVisibility(View.GONE);
+            UiUtils.showProgressBar(pbLoading);
 
-                mPresenter.getInfoChildren(id);
-            }
+            mPresenter.setIdChild(mListChildren.get(position).getId());
+            mPresenter.getInfoChildren(mListChildren.get(position).getId());
+            mPresenter.getTimelineChildren(System.currentTimeMillis());
         });
         rvListChildren.setAdapter(mChildrenAdapter);
         rvListChildren.setLayoutManager(new LinearLayoutManager(mContext));
+
+        mListChildrenHealth = new ArrayList<>();
+        mListChildrenHealth.add(new LoadingItem());
+        mHealthChildrenAdapter = new HealthChildrenAdapter(mListChildrenHealth, new HealthChildrenViewHolder.OnClickViewHolderListener() {
+            @Override
+            public void onClickIndex(int position) {
+                mPresenter.onClickIndex(mListChildrenHealth, position);
+            }
+
+            @Override
+            public void onClickHealth(int position) {
+                mPresenter.onClickHealth(((HealthTotalChildren) mListChildrenHealth.get(position)));
+            }
+        });
+        rvTimeline.setAdapter(mHealthChildrenAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        rvTimeline.setLayoutManager(layoutManager);
+        EndlessScrollDownListener scrollDownListener = new EndlessScrollDownListener(layoutManager) {
+            @Override
+            public void onLoadMore() {
+                DebugLog.i("on load more");
+                int size = mListChildrenHealth.size();
+                if (size > 1 && mListChildrenHealth.get(size - 2) instanceof HealthTotalChildren) {
+                    mPresenter.getTimelineChildren(((HealthTotalChildren) mListChildrenHealth.get(size - 1)).getCreatedAt());
+                }
+            }
+        };
+        rvTimeline.addOnScrollListener(scrollDownListener);
     }
 
     @Override
@@ -133,6 +178,8 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @Override
     public void onLoadListChildren(ArrayList<Child> childArrayList) {
+        UiUtils.hideProgressBar(pbLoading);
+
         if (!mListChildren.isEmpty()) {
             mListChildren.clear();
         }
@@ -152,8 +199,12 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @Override
     public void onLoadChildren(Child child) {
+        isDisplayInfo = true;
+
         UiUtils.hideProgressBar(pbLoading);
-        cardViewProfile.setVisibility(View.VISIBLE);
+        layoutProfile.setVisibility(View.VISIBLE);
+        viewLine.setVisibility(View.VISIBLE);
+        layoutTimeline.setVisibility(View.VISIBLE);
 
         Glide.with(mContext)
                 .load(child.getImage())
@@ -166,7 +217,49 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
         tvDOB.setText(child.getDOB());
         tvHobby.setText(child.getHobby());
         tvCharacteristic.setText(child.getCharacteristic());
+    }
 
-        // TODO: 3/31/2017 timeline
+    @Override
+    public void onLoadChildrenTimeLine(ArrayList<HealthTotalChildren> data) {
+        int sizeNewData = data.size();
+        int sizeTotal = mListChildrenHealth.size();
+        if (sizeNewData < AppConstant.ITEM_HEALTH_PER_PAGE) {
+            if (!mListChildrenHealth.isEmpty() && mListChildrenHealth.get(sizeTotal - 1) instanceof LoadingItem) {
+                mListChildrenHealth.remove(sizeTotal - 1);
+                mHealthChildrenAdapter.notifyItemRemoved(sizeTotal - 1);
+            }
+            if (sizeNewData > 0) {
+                sizeTotal = mListChildrenHealth.size();
+                mListChildrenHealth.addAll(data);
+                mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, data.size());
+            }
+        } else {
+            mListChildrenHealth.addAll(sizeTotal - 1, data);
+            mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isDisplayInfo) {
+            layoutProfile.setVisibility(View.GONE);
+            imvIcon.setImageDrawable(null);
+            tvName.setText("");
+            tvDOB.setText("");
+            tvHobby.setText("");
+            tvCharacteristic.setText("");
+
+            viewLine.setVisibility(View.GONE);
+            layoutTimeline.setVisibility(View.GONE);
+            mListChildrenHealth.clear();
+            mListChildrenHealth.add(new LoadingItem());
+            mHealthChildrenAdapter.notifyDataSetChanged();
+
+            rvListChildren.setVisibility(View.VISIBLE);
+            isDisplayInfo = false;
+            return;
+        }
+
+        super.onBackPressed();
     }
 }

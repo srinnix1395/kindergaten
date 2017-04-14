@@ -27,21 +27,24 @@ public class ChildrenLinearViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_child_age)
     TextView tvAge;
 
+    private int position;
+
     public ChildrenLinearViewHolder(View itemView, ChildrenAdapter.OnClickChildListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        itemView.setOnClickListener(v -> onClickItem());
+        itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(position);
+            }
+        });
     }
 
-    public void bindData(Child child) {
+    public void bindData(Child child, int position) {
+        this.position = position;
         Glide.with(itemView.getContext())
                 .load(child.getImage())
                 .into(imvIcon);
 
         tvName.setText(child.getName());
-    }
-
-    private void onClickItem() {
-
     }
 }

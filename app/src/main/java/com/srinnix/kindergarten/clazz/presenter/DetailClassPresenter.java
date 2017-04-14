@@ -154,6 +154,7 @@ public class DetailClassPresenter extends BasePresenter {
     public void onClickSeeAll() {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_MEMBER, classResponse.getChildren());
+        bundle.putString(AppConstant.KEY_CLASS, classResponse.getaClass().getName());
 
         ViewManager.getInstance().addFragment(new MemberClassFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);

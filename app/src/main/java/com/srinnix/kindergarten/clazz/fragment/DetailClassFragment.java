@@ -112,7 +112,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         super.initData();
         childArrayList = new ArrayList<>();
         childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID
-                , id -> mPresenter.onClickChildViewHolder(id));
+                , position -> mPresenter.onClickChildViewHolder(childArrayList.get(position).getId()));
 
         listImage = new ArrayList<>();
         listImage.add(new LoadingItem());

@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.setting.fragment;
 
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 
@@ -12,7 +13,7 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.fragment_setting;
     }
 
     @Override

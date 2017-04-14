@@ -3,7 +3,7 @@
     <item android:drawable="@drawable/background_circle_pink"/>
     <item
         android:bottom="6dp"
-        android:drawable="@drawable/ic_children_white"
+        android:drawable="@drawable/ic_height"
         android:left="6dp"
         android:right="6dp"
         android:top="6dp"/>

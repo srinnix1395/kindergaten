@@ -25,20 +25,21 @@ public class ChildrenGridViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_name)
     TextView tvName;
 
-    private String id;
+    private int position;
 
     public ChildrenGridViewHolder(View view, ChildrenAdapter.OnClickChildListener listener) {
         super(view);
         ButterKnife.bind(this, view);
         view.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onClick(id);
+                listener.onClick(position);
             }
         });
     }
 
-    public void bindData(Child child) {
-        id = child.getId();
+    public void bindData(Child child, int position) {
+        this.position = position;
+
         Glide.with(itemView.getContext())
                 .load(child.getImage())
                 .thumbnail(0.1f)

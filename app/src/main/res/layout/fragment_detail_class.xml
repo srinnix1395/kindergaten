@@ -139,9 +139,11 @@
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_next"
                     android:drawablePadding="@dimen/padding_drawable_high"
+                    android:fontFamily="sans-serif-light"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/margin_horizontal"
                     android:textAllCaps="true"
+                    android:textStyle="bold"
                     tools:text="@string/see_all"/>
             </RelativeLayout>
 

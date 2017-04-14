@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/background_circle_pink"/>
+    <item android:drawable="@drawable/background_circle_orange"/>
     <item
         android:bottom="6dp"
-        android:drawable="@drawable/ic_children_white"
+        android:drawable="@drawable/ic_weight"
         android:left="6dp"
         android:right="6dp"
         android:top="6dp"/>

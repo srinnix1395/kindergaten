@@ -296,7 +296,7 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
     public void onClickShare(Post post) {
-        // TODO: 4/7/2017 share
+
     }
 
     public void updateNumberComment(MessageNumberComment message, ArrayList<Object> arrPost) {

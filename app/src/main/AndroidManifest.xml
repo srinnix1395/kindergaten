@@ -49,6 +49,13 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent"/>
+
+        //facebook
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider149297532267274"
+                  android:name="com.facebook.FacebookContentProvider"
+                  android:exported="true" />
     </application>
 
 </manifest>

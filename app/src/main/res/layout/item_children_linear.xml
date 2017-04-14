@@ -19,6 +19,7 @@
         app:cardElevation="0dp">
 
         <ImageView
+            android:scaleType="centerCrop"
             android:id="@+id/imageview_icon"
             android:layout_width="@dimen/item_size"
             android:layout_height="@dimen/item_size"

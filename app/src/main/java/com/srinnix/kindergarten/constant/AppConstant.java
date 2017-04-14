@@ -10,10 +10,11 @@ public class AppConstant {
     public static final long TIME_BETWEEN_2_MESSAGE = 7200000;
     public static final int ITEM_COMMENT_PER_PAGE = 15;
     public static final int ITEM_LIKE_PER_PAGE = 20;
+    public static final int ITEM_HEALTH_PER_PAGE = 5;
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.0.101:8080/";
+    public static final String BASE_URL = "http://192.168.0.102:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";

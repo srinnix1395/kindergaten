@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by anhtu on 4/11/2017.
  */
 
-public class HealthChildren {
+public class HealthTotalChildren {
     @SerializedName("_id")
     @Expose
     private String id;
@@ -36,6 +36,10 @@ public class HealthChildren {
     @Expose
     private long createdAt;
 
+    @SerializedName("health")
+    @Expose
+    private Health health;
+
     public String getId() {
         return id;
     }
@@ -62,5 +66,9 @@ public class HealthChildren {
 
     public long getCreatedAt() {
         return createdAt;
+    }
+
+    public Health getHealth() {
+        return health;
     }
 }

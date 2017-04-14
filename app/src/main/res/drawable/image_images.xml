@@ -3,9 +3,9 @@
     <item
         android:drawable="@drawable/background_circle_green"/>
     <item
-        android:bottom="5dp"
+        android:bottom="6dp"
         android:drawable="@drawable/ic_images"
-        android:left="5dp"
-        android:right="5dp"
-        android:top="5dp"/>
+        android:left="6dp"
+        android:right="6dp"
+        android:top="6dp"/>
 </layer-list>

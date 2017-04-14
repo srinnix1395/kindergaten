@@ -46,9 +46,9 @@ public class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (layoutType == TYPE_LINEAR) {
-            ((ChildrenLinearViewHolder) holder).bindData(arrayList.get(position));
+            ((ChildrenLinearViewHolder) holder).bindData(arrayList.get(position), position);
         } else {
-            ((ChildrenGridViewHolder) holder).bindData(arrayList.get(position));
+            ((ChildrenGridViewHolder) holder).bindData(arrayList.get(position), position);
         }
     }
 
@@ -66,6 +66,6 @@ public class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public interface OnClickChildListener{
-        void onClick(String id);
+        void onClick(int position);
     }
 }
