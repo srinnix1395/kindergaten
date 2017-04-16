@@ -4,7 +4,6 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/min_height_timeline"
                 android:paddingLeft="@dimen/margin_horizontal_low"
                 android:paddingRight="@dimen/margin_horizontal_low">
 
@@ -22,15 +21,14 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_toRightOf="@+id/textview_time"
-        android:minHeight="@dimen/min_height_timeline">
+        android:layout_toRightOf="@+id/textview_time">
 
         <View
+            android:id="@+id/view_time_line"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimary"
-            android:minHeight="@dimen/min_height_timeline"/>
+            android:background="@color/colorPrimary"/>
 
         <ImageView
             android:id="@+id/imageview_mark"

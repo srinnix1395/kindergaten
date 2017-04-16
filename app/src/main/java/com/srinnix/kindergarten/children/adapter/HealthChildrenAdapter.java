@@ -30,16 +30,17 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.listener = listener;
     }
 
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == VIEW_TYPE_HEALTH) {
-            View view = inflater.inflate(R.layout.item_timeline_children, parent, false);
-            return new HealthChildrenViewHolder(view, listener);
+        if (viewType == VIEW_TYPE_LOADING) {
+            View view = inflater.inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view, null);
         }
 
-        View view = inflater.inflate(R.layout.item_loading, parent, false);
-        return new LoadingViewHolder(view, null);
+        View view = inflater.inflate(R.layout.item_timeline_children, parent, false);
+        return new HealthChildrenViewHolder(view, listener);
     }
 
     @Override
@@ -75,6 +76,7 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (arrayList.get(position) instanceof LoadingItem) {
             return VIEW_TYPE_LOADING;
         }
+
         return VIEW_TYPE_HEALTH;
     }
 

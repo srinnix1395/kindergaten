@@ -1,6 +1,8 @@
 package com.srinnix.kindergarten.children.fragment;
 
 import android.graphics.PorterDuff;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,7 +59,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     RecyclerView rvListChildren;
 
     @BindView(R.id.recycler_view_timeline)
-    RecyclerView rvTimeline;
+    RecyclerView rvHealthChildren;
 
     @BindView(R.id.layout_retry)
     RelativeLayout relRetry;
@@ -71,17 +73,14 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     @BindView(R.id.layout_unsigned_in)
     RelativeLayout relUnsignedIn;
 
-    @BindView(R.id.view_line)
-    View viewLine;
-
     @BindView(R.id.imagview_unsigned_in)
     ImageView imvUnsignedIn;
 
     @BindView(R.id.layout_profile)
-    RelativeLayout layoutProfile;
+    CoordinatorLayout layoutProfile;
 
-    @BindView(R.id.layout_timeline)
-    RelativeLayout layoutTimeline;
+    @BindView(R.id.appbar_layout)
+    AppBarLayout appBarLayout;
 
     private ChildrenPresenter mPresenter;
 
@@ -142,10 +141,10 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
                 mPresenter.onClickHealth(((HealthTotalChildren) mListChildrenHealth.get(position)));
             }
         });
-        rvTimeline.setAdapter(mHealthChildrenAdapter);
+        rvHealthChildren.setAdapter(mHealthChildrenAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        rvTimeline.setLayoutManager(layoutManager);
+        rvHealthChildren.setLayoutManager(layoutManager);
         EndlessScrollDownListener scrollDownListener = new EndlessScrollDownListener(layoutManager) {
             @Override
             public void onLoadMore() {
@@ -156,7 +155,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
                 }
             }
         };
-        rvTimeline.addOnScrollListener(scrollDownListener);
+        rvHealthChildren.addOnScrollListener(scrollDownListener);
     }
 
     @Override
@@ -204,8 +203,6 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
         UiUtils.hideProgressBar(pbLoading);
         layoutProfile.setVisibility(View.VISIBLE);
-        viewLine.setVisibility(View.VISIBLE);
-        layoutTimeline.setVisibility(View.VISIBLE);
 
         Glide.with(mContext)
                 .load(child.getImage())
@@ -243,7 +240,11 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
                 }
 
                 mListChildrenHealth.addAll(data);
-                mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, data.size());
+                mListChildrenHealth.addAll(data);
+                mListChildrenHealth.addAll(data);
+                mListChildrenHealth.addAll(data);
+                mListChildrenHealth.addAll(data);
+                mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, 10);
             }
         } else {
             if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotalChildren) {
@@ -266,9 +267,12 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
             tvHobby.setText("");
             tvCharacteristic.setText("");
 
-            viewLine.setVisibility(View.GONE);
-            layoutTimeline.setVisibility(View.GONE);
-            mListChildrenHealth.clear();
+            appBarLayout.setExpanded(true, false);
+
+            if (!mListChildrenHealth.isEmpty()) {
+                rvHealthChildren.smoothScrollToPosition(0);
+                mListChildrenHealth.clear();
+            }
             mListChildrenHealth.add(new LoadingItem());
             mHealthChildrenAdapter.notifyDataSetChanged();
 

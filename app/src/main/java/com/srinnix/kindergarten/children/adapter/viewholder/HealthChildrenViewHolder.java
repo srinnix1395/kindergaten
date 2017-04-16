@@ -23,9 +23,6 @@ import butterknife.OnClick;
  */
 
 public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.imageview_mark)
-    ImageView imvMark;
-
     @BindView(R.id.textview_time)
     TextView tvTime;
 
@@ -53,6 +50,9 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_show_more)
     ImageView imvShowMore;
 
+    @BindView(R.id.view_time_line)
+    View viewTimeline;
+
     private OnClickViewHolderListener listener;
     private int position;
     private boolean isDisplayHealthContent;
@@ -60,7 +60,16 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     public HealthChildrenViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        setHeightViewTimeLine();
         this.listener = listener;
+    }
+
+    private void setHeightViewTimeLine() {
+        itemView.post(() -> {
+            viewTimeline.getLayoutParams().height = itemView.getHeight();
+            viewTimeline.requestLayout();
+        });
+
     }
 
     public void bindData(HealthTotalChildren healthTotalChildren, int position) {
@@ -119,14 +128,16 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
 
         if (isDisplayHealthContent) {
             isDisplayHealthContent = false;
-            UiUtils.collapse(layoutHealthContent);
+            UiUtils.collapse(layoutHealthContent, viewTimeline);
             imvShowMore.setImageLevel(1);
         } else {
-            UiUtils.expand(layoutHealthContent);
+            UiUtils.expand(layoutHealthContent, viewTimeline);
             isDisplayHealthContent = true;
             imvShowMore.setImageLevel(2);
         }
     }
+
+
 
     public interface OnClickViewHolderListener {
         void onClickIndex(int position);

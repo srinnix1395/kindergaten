@@ -117,7 +117,7 @@ public class UiUtils {
 
     public static void expand(final View v) {
         v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final int targtetHeight = v.getMeasuredHeight();
+        final int targetHeight = v.getMeasuredHeight();
 
         v.getLayoutParams().height = 0;
         v.setVisibility(View.VISIBLE);
@@ -126,7 +126,7 @@ public class UiUtils {
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
                         ? ViewGroup.LayoutParams.WRAP_CONTENT
-                        : (int) (targtetHeight * interpolatedTime);
+                        : (int) (targetHeight * interpolatedTime);
                 v.requestLayout();
             }
 
@@ -153,6 +153,69 @@ public class UiUtils {
                     v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
                     v.requestLayout();
                 }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+
+        v.startAnimation(a);
+    }
+
+    public static void expand(View v, View viewTimeline) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+        final int heightViewTimeLine = viewTimeline.getHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+
+                viewTimeline.getLayoutParams().height = heightViewTimeLine + (int) (targetHeight * interpolatedTime);
+                viewTimeline.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        a.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+        v.startAnimation(a);
+    }
+
+    public static void collapse(View v, View viewTimeline) {
+        final int initialHeight = v.getMeasuredHeight();
+        final int initialHeightViewTimeLine = viewTimeline.getHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                int heightAnimated = (int) (initialHeight * interpolatedTime);
+
+                viewTimeline.getLayoutParams().height = initialHeightViewTimeLine - heightAnimated;
+                viewTimeline.requestLayout();
+
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                    return;
+                }
+
+                v.getLayoutParams().height = initialHeight - heightAnimated;
+                v.requestLayout();
             }
 
             @Override
