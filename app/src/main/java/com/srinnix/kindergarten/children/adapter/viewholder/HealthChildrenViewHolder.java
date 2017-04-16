@@ -60,16 +60,14 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     public HealthChildrenViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        setHeightViewTimeLine();
         this.listener = listener;
     }
 
-    private void setHeightViewTimeLine() {
+    public void setHeightViewTimeLine() {
         itemView.post(() -> {
             viewTimeline.getLayoutParams().height = itemView.getHeight();
             viewTimeline.requestLayout();
         });
-
     }
 
     public void bindData(HealthTotalChildren healthTotalChildren, int position) {
@@ -84,7 +82,6 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
             tvWeightState.setVisibility(View.VISIBLE);
             tvWeightState.setText(healthTotalChildren.getWeightState() == AppConstant.STATE_WEIGHT_OBESE ?
                     R.string.obese : R.string.malnutrition);
-
         }
 
         tvHeight.setText(String.format(Locale.getDefault(), "%d cm", healthTotalChildren.getHeight()));
@@ -131,12 +128,11 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
             UiUtils.collapse(layoutHealthContent, viewTimeline);
             imvShowMore.setImageLevel(1);
         } else {
-            UiUtils.expand(layoutHealthContent, viewTimeline);
             isDisplayHealthContent = true;
+            UiUtils.expand(layoutHealthContent, viewTimeline);
             imvShowMore.setImageLevel(2);
         }
     }
-
 
 
     public interface OnClickViewHolderListener {

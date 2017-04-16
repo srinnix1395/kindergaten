@@ -11,7 +11,7 @@
         android:id="@+id/scrollview_detail_class"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -131,21 +131,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textview_member"/>
 
-                <!--<TextView-->
-                <!--android:id="@+id/textview_see_all"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/item_size"-->
-                <!--android:layout_below="@+id/recyclerview_member_class"-->
-                <!--android:background="?selectableItemBackground"-->
-                <!--android:clickable="true"-->
-                <!--android:drawableLeft="@drawable/ic_next"-->
-                <!--android:drawablePadding="@dimen/padding_drawable_high"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:paddingLeft="@dimen/margin_horizontal"-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textStyle="bold"-->
-                <!--tools:text="@string/see_all"/>-->
             </RelativeLayout>
 
             <View

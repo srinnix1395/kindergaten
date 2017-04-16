@@ -30,6 +30,13 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.listener = listener;
     }
 
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (holder instanceof HealthChildrenViewHolder) {
+            ((HealthChildrenViewHolder) holder).setHeightViewTimeLine();
+        }
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -259,7 +259,9 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     @Override
     public void onBackPressed() {
-        if (isDisplayInfo) {
+        int accountType = SharedPreUtils.getInstance(mContext).getAccountType();
+
+        if (isDisplayInfo && accountType != AppConstant.ACCOUNT_PARENTS) {
             layoutProfile.setVisibility(View.GONE);
             imvIcon.setImageDrawable(null);
             tvName.setText("");

@@ -2,8 +2,8 @@ package com.srinnix.kindergarten.clazz.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,9 +62,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.textview_class_name)
     TextView tvClassName;
 
-    @BindView(R.id.scrollview_detail_class)
-    NestedScrollView scrollView;
-
     @BindView(R.id.recyclerview_image_class)
     RecyclerView rvImageClass;
 
@@ -77,6 +74,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.textview_member)
     TextView tvMember;
 
+    @BindView(R.id.layout_info)
+    CoordinatorLayout layoutInfo;
+
     ImageView imvIcon1;
     TextView tvName1;
     ImageView imvChat1;
@@ -88,7 +88,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     ImageView imvIcon3;
     TextView tvName3;
     ImageView imvChat3;
-
 
     private DetailClassPresenter mPresenter;
 
@@ -107,7 +106,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_detail_class;
+        return R.layout.fragment_detail_class1;
     }
 
     @Override
@@ -228,7 +227,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         if (relRetry.getVisibility() == View.VISIBLE) {
             relRetry.setVisibility(View.GONE);
         }
-        scrollView.setVisibility(View.VISIBLE);
+        layoutInfo.setVisibility(View.VISIBLE);
 
         Glide.with(mContext)
                 .load(R.drawable.logo_school)
@@ -279,7 +278,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             viewLineMember.setVisibility(View.GONE);
         }
 
-        scrollView.smoothScrollTo(0, 0);
     }
 
     @Override
