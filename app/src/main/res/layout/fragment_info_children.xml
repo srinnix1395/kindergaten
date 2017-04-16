@@ -107,7 +107,7 @@
 
         <ImageView
             android:id="@+id/image_children"
-            android:layout_width="20dp"
+            android:layout_width="@dimen/icon_medium_size"
             android:layout_height="@dimen/item_size"
             android:layout_marginLeft="@dimen/margin_horizontal"
             android:layout_marginRight="@dimen/padding_drawable_high"

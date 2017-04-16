@@ -24,7 +24,6 @@
     <string name="teacher">Giáo viên</string>
     <string name="image_class">Hình ảnh của lớp</string>
     <string name="class_member">Danh sách lớp</string>
-    <string name="see_all">Xem tất cả %d thành viên</string>
     <string name="hobby">Sở thích:</string>
     <string name="characteristic">Đặc điểm:</string>
     <string name="error_post">Không thể làm mới bảng tin</string>
@@ -77,4 +76,5 @@
     <string name="obese">Thừa cân</string>
     <string name="malnutrition">Suy dinh dưỡng</string>
     <string name="stunted">Thấp còi</string>
+    <string name="list_member">Danh sách lớp - %d trẻ</string>
 </resources>

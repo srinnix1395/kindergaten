@@ -4,11 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.Locale;
 
@@ -42,8 +44,18 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_height_state)
     TextView tvHeightState;
 
+    @BindView(R.id.view_divider)
+    View viewDivider;
+
+    @BindView(R.id.layout_health_content)
+    RelativeLayout layoutHealthContent;
+
+    @BindView(R.id.imageview_show_more)
+    ImageView imvShowMore;
+
     private OnClickViewHolderListener listener;
     private int position;
+    private boolean isDisplayHealthContent;
 
     public HealthChildrenViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
@@ -75,10 +87,20 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
 
         }
 
-        if (healthTotalChildren.getHealth() == null) {
-            layoutHealth.setVisibility(View.GONE);
+//        if (healthTotalChildren.getHealth() == null) {
+//            layoutHealth.setVisibility(View.GONE);
+//        } else {
+//            layoutHealth.setVisibility(View.VISIBLE);
+//        }
+
+        bindViewDivider(healthTotalChildren.isDisplayLine());
+    }
+
+    public void bindViewDivider(Boolean isShowDivider) {
+        if (isShowDivider) {
+            viewDivider.setVisibility(View.VISIBLE);
         } else {
-            layoutHealth.setVisibility(View.VISIBLE);
+            viewDivider.setVisibility(View.GONE);
         }
     }
 
@@ -93,6 +115,16 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     public void onClickHealth() {
         if (listener != null) {
             listener.onClickHealth(position);
+        }
+
+        if (isDisplayHealthContent) {
+            isDisplayHealthContent = false;
+            UiUtils.collapse(layoutHealthContent);
+            imvShowMore.setImageLevel(1);
+        } else {
+            UiUtils.expand(layoutHealthContent);
+            isDisplayHealthContent = true;
+            imvShowMore.setImageLevel(2);
         }
     }
 

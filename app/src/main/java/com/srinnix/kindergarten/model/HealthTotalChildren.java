@@ -40,6 +40,8 @@ public class HealthTotalChildren {
     @Expose
     private Health health;
 
+    private boolean isDisplayLine = true;
+
     public String getId() {
         return id;
     }
@@ -70,5 +72,13 @@ public class HealthTotalChildren {
 
     public Health getHealth() {
         return health;
+    }
+
+    public boolean isDisplayLine() {
+        return isDisplayLine;
+    }
+
+    public void setDisplayLine(boolean displayLine) {
+        isDisplayLine = displayLine;
     }
 }

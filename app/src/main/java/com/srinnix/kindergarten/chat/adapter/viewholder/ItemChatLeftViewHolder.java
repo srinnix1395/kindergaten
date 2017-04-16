@@ -1,8 +1,5 @@
 package com.srinnix.kindergarten.chat.adapter.viewholder;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,8 +39,6 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_heart)
     ImageView imvHeart;
 
-    private ValueAnimator mAnimatorShow;
-    private ValueAnimator mAnimatorHide;
     private boolean isShowTime;
 
 //    private final String urlImage;
@@ -55,40 +50,6 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
 //        this.urlImage = urlImage;
 //        this.accountType = accountType;
-
-        int heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
-
-        mAnimatorShow = ValueAnimator.ofInt(0, heightTimeExpand);
-        mAnimatorShow.addUpdateListener(valueAnimator1 -> {
-            tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
-            tvTime.requestLayout();
-        });
-        mAnimatorShow.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                if (tvMessage.getVisibility() == View.VISIBLE) {
-                    tvMessage.getBackground().setLevel(2);
-                }
-            }
-        });
-        mAnimatorShow.setDuration(250);
-
-        mAnimatorHide = ValueAnimator.ofInt(heightTimeExpand, 0);
-        mAnimatorHide.addUpdateListener(valueAnimator1 -> {
-            tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
-            tvTime.requestLayout();
-        });
-        mAnimatorHide.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                if (tvMessage.getVisibility() == View.VISIBLE) {
-                    tvMessage.getBackground().setLevel(1);
-                }
-            }
-        });
-        mAnimatorHide.setDuration(250);
     }
 
     public void bindData(Message message) {
@@ -155,14 +116,11 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.textview_itemchatleft_message)
     void onClickMessage() {
         if (isShowTime) {
-            if (!mAnimatorShow.isRunning()) {
-                mAnimatorHide.start();
-                isShowTime = false;
-            }
+            UiUtils.collapse(tvTime);
+            isShowTime = false;
         } else {
-            if (!mAnimatorHide.isRunning()) {
-                mAnimatorShow.start();
-            }
+            UiUtils.expand(tvTime);
+            isShowTime = true;
         }
     }
 }

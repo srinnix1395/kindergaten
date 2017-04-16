@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -61,9 +62,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.textview_class_name)
     TextView tvClassName;
 
-    @BindView(R.id.textview_see_all)
-    TextView tvSeeAll;
-
     @BindView(R.id.scrollview_detail_class)
     NestedScrollView scrollView;
 
@@ -75,6 +73,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @BindView(R.id.view_line_member)
     View viewLineMember;
+
+    @BindView(R.id.textview_member)
+    TextView tvMember;
 
     ImageView imvIcon1;
     TextView tvName1;
@@ -88,6 +89,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     TextView tvName3;
     ImageView imvChat3;
 
+
     private DetailClassPresenter mPresenter;
 
     private ArrayList<Object> listImage;
@@ -95,6 +97,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     private ArrayList<Child> childArrayList;
     private ChildrenAdapter childrenAdapter;
+
 
     public static DetailClassFragment newInstance(Bundle args) {
         DetailClassFragment fragment = new DetailClassFragment();
@@ -151,7 +154,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             imvChat3.setVisibility(View.GONE);
         }
 
-        rvMember.setLayoutManager(new GridLayoutManager(mContext, 4));
+        rvMember.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         rvMember.setAdapter(childrenAdapter);
 
         rvImageClass.setAdapter(mImageAdapter);
@@ -187,8 +190,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         return mPresenter;
     }
 
-    @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,
-            R.id.textview_see_all})
+    @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3})
     void onClickTeachers(View view) {
         switch (view.getId()) {
             case R.id.rel_teacher_1: {
@@ -201,10 +203,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             }
             case R.id.rel_teacher_3: {
                 mPresenter.onClickTeacher(getChildFragmentManager(), 2);
-                break;
-            }
-            case R.id.textview_see_all: {
-                mPresenter.onClickSeeAll();
                 break;
             }
         }
@@ -272,8 +270,8 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             childArrayList.addAll(classInfo.getChildren());
             childrenAdapter.notifyItemRangeInserted(0, classInfo.getChildren().size());
 
-            tvSeeAll.setText(String.format(Locale.getDefault(),
-                    getString(R.string.see_all), classInfo.getaClass().getNumberMember()));
+            tvMember.setText(String.format(Locale.getDefault(),
+                    getString(R.string.list_member), classInfo.getaClass().getNumberMember()));
             layoutMember.setVisibility(View.VISIBLE);
             viewLineMember.setVisibility(View.VISIBLE);
         } else {

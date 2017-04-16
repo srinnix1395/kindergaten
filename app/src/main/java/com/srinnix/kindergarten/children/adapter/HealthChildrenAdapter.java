@@ -12,6 +12,7 @@ import com.srinnix.kindergarten.model.HealthTotalChildren;
 import com.srinnix.kindergarten.model.LoadingItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by anhtu on 3/8/2017.
@@ -39,6 +40,20 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         View view = inflater.inflate(R.layout.item_loading, parent, false);
         return new LoadingViewHolder(view, null);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        int size = payloads.size();
+        if (size == 0) {
+            onBindViewHolder(holder, position);
+            return;
+        }
+
+        if (payloads.get(size - 1) instanceof Boolean) {
+            ((HealthChildrenViewHolder) holder).bindViewDivider(((Boolean) payloads.get(size - 1)));
+        }
     }
 
     @Override

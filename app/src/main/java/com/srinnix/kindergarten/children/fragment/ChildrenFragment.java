@@ -90,6 +90,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
 
     private ArrayList<Child> mListChildren;
     private ChildrenAdapter mChildrenAdapter;
+
     private boolean isDisplayInfo = false;
 
     @Override
@@ -222,7 +223,12 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     @Override
     public void onLoadChildrenTimeLine(ArrayList<HealthTotalChildren> data) {
         int sizeNewData = data.size();
+        if (sizeNewData > 0) {
+            data.get(sizeNewData - 1).setDisplayLine(false);
+        }
+
         int sizeTotal = mListChildrenHealth.size();
+
         if (sizeNewData < AppConstant.ITEM_HEALTH_PER_PAGE) {
             if (!mListChildrenHealth.isEmpty() && mListChildrenHealth.get(sizeTotal - 1) instanceof LoadingItem) {
                 mListChildrenHealth.remove(sizeTotal - 1);
@@ -230,10 +236,21 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
             }
             if (sizeNewData > 0) {
                 sizeTotal = mListChildrenHealth.size();
+
+                if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotalChildren) {
+                    ((HealthTotalChildren) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
+                    mHealthChildrenAdapter.notifyItemChanged(sizeTotal - 1, true);
+                }
+
                 mListChildrenHealth.addAll(data);
                 mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, data.size());
             }
         } else {
+            if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotalChildren) {
+                ((HealthTotalChildren) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
+                mHealthChildrenAdapter.notifyItemChanged(sizeTotal - 1, true);
+            }
+
             mListChildrenHealth.addAll(sizeTotal - 1, data);
             mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
         }

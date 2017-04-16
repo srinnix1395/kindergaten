@@ -8,7 +8,10 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
@@ -24,7 +27,7 @@ public class UiUtils {
         DisplayMetrics metrics = resources.getDisplayMetrics();
 //        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         metrics = context.getResources().getDisplayMetrics();
-        return (int)((dp * metrics.density) + 0.5);
+        return (int) ((dp * metrics.density) + 0.5);
     }
 
     public static int pixelsToDp(Context context, float px) {
@@ -32,7 +35,7 @@ public class UiUtils {
         DisplayMetrics metrics = resources.getDisplayMetrics();
 //        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         metrics = context.getResources().getDisplayMetrics();
-        return (int) ((px/metrics.density)+0.5);
+        return (int) ((px / metrics.density) + 0.5);
     }
 
     // Prevent dialog dismiss when orientation changes
@@ -94,12 +97,10 @@ public class UiUtils {
         progressBar.setEnabled(false);
     }
 
-    public static Bitmap retrieveVideoFrameFromVideo(String videoPath) throws Throwable
-    {
+    public static Bitmap retrieveVideoFrameFromVideo(String videoPath) throws Throwable {
         Bitmap bitmap = null;
         MediaMetadataRetriever mediaMetadataRetriever = null;
-        try
-        {
+        try {
             mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(videoPath, new HashMap<>());
 
@@ -112,5 +113,57 @@ public class UiUtils {
             }
         }
         return bitmap;
+    }
+
+    public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targtetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int) (targtetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        a.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+        v.startAnimation(a);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+
+        v.startAnimation(a);
     }
 }

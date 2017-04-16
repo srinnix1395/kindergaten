@@ -14,7 +14,6 @@ import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
-import com.srinnix.kindergarten.clazz.fragment.MemberClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -149,15 +148,6 @@ public class DetailClassPresenter extends BasePresenter {
 
     public void onClickChildViewHolder(String id) {
         //// TODO: 3/2/2017 onclick child
-    }
-
-    public void onClickSeeAll() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(AppConstant.KEY_MEMBER, classResponse.getChildren());
-        bundle.putString(AppConstant.KEY_CLASS, classResponse.getaClass().getName());
-
-        ViewManager.getInstance().addFragment(new MemberClassFragment(), bundle,
-                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void getImage(ArrayList<Object> arrayList) {

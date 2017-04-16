@@ -10,11 +10,11 @@ public class AppConstant {
     public static final long TIME_BETWEEN_2_MESSAGE = 7200000;
     public static final int ITEM_COMMENT_PER_PAGE = 15;
     public static final int ITEM_LIKE_PER_PAGE = 20;
-    public static final int ITEM_HEALTH_PER_PAGE = 5;
+    public static final int ITEM_HEALTH_PER_PAGE = 6;
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.0.102:8080/";
+    public static final String BASE_URL = "http://192.168.0.104:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
@@ -36,7 +36,7 @@ public class AppConstant {
     public static final String API_GET_MESSAGE = "chat/message";
 
     public static final String API_GET_INFO_CHILDREN = "children/getInfo";
-    public static final String API_GET_TIMELINE_CHILDREN = "children/getTimeLine";
+    public static final String API_GET_HEALTH_INDEX_CHILDREN = "children/getHealthIndex";
     public static final String API_GET_LIST_CHILDREN = "children/getList";
 
     //API END
@@ -98,7 +98,7 @@ public class AppConstant {
     public static final int STATE_WEIGHT_OBESE = 2;
     public static final int STATE_WEIGHT_MALNUTRITION = 3;
 
-    public static final int STATE_HEIGHT_NORMAL = 4;
-    public static final int STATE_HEIGHT_STUNTED = 5;
+    public static final int STATE_HEIGHT_NORMAL = 1;
+    public static final int STATE_HEIGHT_STUNTED = 2;
 
 }

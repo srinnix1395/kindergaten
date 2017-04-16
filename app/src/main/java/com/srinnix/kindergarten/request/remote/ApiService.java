@@ -117,9 +117,9 @@ public interface ApiService {
     Observable<ApiResponse<Child>> getInfoChildren(@Header("x-access-token") String header,
                                                    @Query("_id_child") String id);
 
-    @GET(AppConstant.API_GET_TIMELINE_CHILDREN)
+    @GET(AppConstant.API_GET_HEALTH_INDEX_CHILDREN)
     Observable<ApiResponse<ArrayList<HealthTotalChildren>>> getTimelineChildren(@Header("x-access-token") String token,
-                                                                                @Query("_id_children") String childId,
+                                                                                @Query("_id_child") String childId,
                                                                                 @Query("time_prev") long time);
 
 

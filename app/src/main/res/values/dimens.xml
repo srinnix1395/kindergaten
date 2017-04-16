@@ -44,7 +44,7 @@
     <dimen name="margin_vertical_low">8dp</dimen>
     <dimen name="margin_horizontal_low">8dp</dimen>
     <dimen name="height_image_post">360dp</dimen>
-    <dimen name="margin_top_item_timeline_children">12dp</dimen>
+    <dimen name="margin_top_item_timeline_children">4dp</dimen>
     <dimen name="margin_icon_fragment_class">10dp</dimen>
     <dimen name="radius_item_chat">4dp</dimen>
     <dimen name="width_icon_fragment_chat">47dp</dimen>
@@ -55,4 +55,7 @@
     <dimen name="padding_vertical_item_comment">12dp</dimen>
     <dimen name="padding_drawable_high">8dp</dimen>
     <dimen name="margin_vertical_item_timeline_children">24dp</dimen>
+    <dimen name="min_height_timeline">92dp</dimen>
+    <dimen name="icon_small_size">16dp</dimen>
+    <dimen name="icon_medium_size">20dp</dimen>
 </resources>

@@ -9,11 +9,12 @@
     <TextView
         android:id="@+id/textview_chatleft_time"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_bottom_item_time_chat"
         android:textColor="@color/colorSecondaryText"
         android:textSize="@dimen/text_size_item_time_chat"
+        android:visibility="gone"
         tools:text="28 Jan at 16:26"/>
 
     <!--<android.support.v7.widget.CardView-->
