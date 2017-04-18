@@ -8,7 +8,7 @@ import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
-import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.model.Health;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
@@ -83,7 +83,7 @@ public class ChildrenPresenter extends BasePresenter {
         });
     }
 
-    private void getListChildren() {
+    public void getListChildren() {
         int accountType = SharedPreUtils.getInstance(mContext).getAccountType();
         if (accountType == AppConstant.ACCOUNT_PARENTS) {
             getListChildrenParent();
@@ -156,9 +156,9 @@ public class ChildrenPresenter extends BasePresenter {
         }
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
-        mHelper.getTimelineChildren(token, idChild, time, new ResponseListener<ArrayList<HealthTotalChildren>>() {
+        mHelper.getTimelineChildren(token, idChild, time, new ResponseListener<ArrayList<Health>>() {
             @Override
-            public void onSuccess(ApiResponse<ArrayList<HealthTotalChildren>> response) {
+            public void onSuccess(ApiResponse<ArrayList<Health>> response) {
                 if (response == null) {
                     onFail(new NullPointerException());
                     return;
@@ -187,7 +187,7 @@ public class ChildrenPresenter extends BasePresenter {
         // TODO: 4/15/2017 index
     }
 
-    public void onClickHealth(HealthTotalChildren health) {
+    public void onClickHealth(Health health) {
         // TODO: 4/15/2017 health
     }
 

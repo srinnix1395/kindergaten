@@ -23,12 +23,16 @@ import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
 import com.srinnix.kindergarten.children.presenter.ChildrenPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
+import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.Child;
-import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.model.Health;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -136,10 +140,6 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
                 mPresenter.onClickIndex(mListChildrenHealth, position);
             }
 
-            @Override
-            public void onClickHealth(int position) {
-                mPresenter.onClickHealth(((HealthTotalChildren) mListChildrenHealth.get(position)));
-            }
         });
         rvHealthChildren.setAdapter(mHealthChildrenAdapter);
 
@@ -150,8 +150,8 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
             public void onLoadMore() {
                 DebugLog.i("on load more");
                 int size = mListChildrenHealth.size();
-                if (size > 1 && mListChildrenHealth.get(size - 2) instanceof HealthTotalChildren) {
-                    mPresenter.getTimelineChildren(((HealthTotalChildren) mListChildrenHealth.get(size - 1)).getCreatedAt());
+                if (size > 1 && mListChildrenHealth.get(size - 2) instanceof Health) {
+                    mPresenter.getTimelineChildren(((Health) mListChildrenHealth.get(size - 1)).getCreatedAt());
                 }
             }
         };
@@ -162,6 +162,34 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     protected BasePresenter initPresenter() {
         mPresenter = new ChildrenPresenter(this);
         return mPresenter;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void onEventLoginSuccessfully(MessageLoginSuccessfully messsage) {
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            imvUnsignedIn.setImageDrawable(null);
+            relUnsignedIn.setVisibility(View.GONE);
+
+            UiUtils.showProgressBar(pbLoading);
+
+            mPresenter.getListChildren();
+        }
     }
 
     @OnClick(R.id.button_login)
@@ -218,7 +246,7 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
     }
 
     @Override
-    public void onLoadChildrenTimeLine(ArrayList<HealthTotalChildren> data) {
+    public void onLoadChildrenTimeLine(ArrayList<Health> data) {
         int sizeNewData = data.size();
         if (sizeNewData > 0) {
             data.get(sizeNewData - 1).setDisplayLine(false);
@@ -234,21 +262,17 @@ public class ChildrenFragment extends BaseFragment implements ChildrenDelegate {
             if (sizeNewData > 0) {
                 sizeTotal = mListChildrenHealth.size();
 
-                if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotalChildren) {
-                    ((HealthTotalChildren) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
+                if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof Health) {
+                    ((Health) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
                     mHealthChildrenAdapter.notifyItemChanged(sizeTotal - 1, true);
                 }
 
                 mListChildrenHealth.addAll(data);
-                mListChildrenHealth.addAll(data);
-                mListChildrenHealth.addAll(data);
-                mListChildrenHealth.addAll(data);
-                mListChildrenHealth.addAll(data);
-                mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, 10);
+                mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, data.size());
             }
         } else {
-            if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotalChildren) {
-                ((HealthTotalChildren) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
+            if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof Health) {
+                ((Health) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
                 mHealthChildrenAdapter.notifyItemChanged(sizeTotal - 1, true);
             }
 

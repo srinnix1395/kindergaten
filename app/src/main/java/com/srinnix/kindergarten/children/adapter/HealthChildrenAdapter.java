@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
 import com.srinnix.kindergarten.children.adapter.viewholder.HealthChildrenViewHolder;
-import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.model.Health;
 import com.srinnix.kindergarten.model.LoadingItem;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             return new LoadingViewHolder(view, null);
         }
 
-        View view = inflater.inflate(R.layout.item_timeline_children, parent, false);
+        View view = inflater.inflate(R.layout.item_health_index_children, parent, false);
         return new HealthChildrenViewHolder(view, listener);
     }
 
@@ -69,7 +69,7 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
         } else {
-            ((HealthChildrenViewHolder) holder).bindData((HealthTotalChildren) arrayList.get(position), position);
+            ((HealthChildrenViewHolder) holder).bindData((Health) arrayList.get(position), position);
         }
     }
 

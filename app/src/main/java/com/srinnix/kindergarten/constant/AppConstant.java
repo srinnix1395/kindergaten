@@ -18,6 +18,7 @@ public class AppConstant {
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
+    public static final String API_RESET_PASSWORD = "user/requestResetPassword";
 
     public static final String API_GET_POST_MEMBER = "post/get/member";
     public static final String API_GET_POST_GUEST = "post/get/guest";
@@ -101,4 +102,5 @@ public class AppConstant {
     public static final int STATE_HEIGHT_NORMAL = 1;
     public static final int STATE_HEIGHT_STUNTED = 2;
 
+    public static final int UNSPECIFIED = -1;
 }

@@ -31,7 +31,7 @@
     <string name="cancel">Hủy</string>
     <string name="OK">Đồng ý</string>
     <string name="login_to_like">Hãy đăng nhập để like!</string>
-    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="reset_password">Gửi email đặt lại mật khẩu</string>
     <string name="back">Quay lại</string>
     <string name="edu_plan">Kế hoạch giáo dục</string>
     <string name="Ms">Chị</string>
@@ -72,9 +72,16 @@
     <string name="please_re_login">Vui lòng đăng nhập lại</string>
     <string name="signing_out">Đang đăng xuất</string>
     <string name="health_index">Chỉ số sức khỏe</string>
-    <string name="health_overview">Sức khỏe tổng quan</string>
+    <string name="health_overview">Khám sức khỏe</string>
     <string name="obese">Thừa cân</string>
     <string name="malnutrition">Suy dinh dưỡng</string>
     <string name="stunted">Thấp còi</string>
     <string name="list_member">Danh sách lớp - %d trẻ</string>
+    <string name="eyes">• Mắt:</string>
+    <string name="result">• Kết quả:</string>
+    <string name="ent">• Tai mũi họng:</string>
+    <string name="others">• Bệnh khác:</string>
+    <string name="tooth">• Răng:</string>
+    <string name="type_result">Sức khỏe loại %d</string>
+    <string name="password_reset">Hãy kiểm tra email và\\nđăng nhập lại</string>
 </resources>

@@ -11,7 +11,7 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
-import com.srinnix.kindergarten.login.fragment.ForgetPasswordFragment;
+import com.srinnix.kindergarten.login.fragment.ForgotPasswordFragment;
 import com.srinnix.kindergarten.login.helper.LoginHelper;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
@@ -90,7 +90,7 @@ public class LoginPresenter extends BasePresenter {
     }
 
     public void handleForgetPassword() {
-        ViewManager.getInstance().addFragment(new ForgetPasswordFragment());
+        ViewManager.getInstance().addFragment(new ForgotPasswordFragment());
     }
 
     public void handleDestroy(String email) {

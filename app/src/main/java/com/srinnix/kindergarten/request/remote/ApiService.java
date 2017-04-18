@@ -4,7 +4,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Comment;
-import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.model.Health;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
@@ -43,6 +43,14 @@ public interface ApiService {
     Observable<ApiResponse<Boolean>> updateRegId(@Header("x-access-token") String header,
                                                  @Field("_id") String id,
                                                  @Field("reg_id") String regId);
+
+    @POST(AppConstant.API_RESET_PASSWORD)
+    @FormUrlEncoded
+    Observable<ApiResponse<Boolean>> resetPassword(@Header("x-access-token") String token,
+                                                   @Field("_id_user") String id,
+                                                   @Field("email") String email,
+                                                   @Field("new_password") String newPassword,
+                                                   @Field("new_password_encrypted") String newPasswordEncrypted);
     //USER END
 
     //POST START
@@ -118,9 +126,9 @@ public interface ApiService {
                                                    @Query("_id_child") String id);
 
     @GET(AppConstant.API_GET_HEALTH_INDEX_CHILDREN)
-    Observable<ApiResponse<ArrayList<HealthTotalChildren>>> getTimelineChildren(@Header("x-access-token") String token,
-                                                                                @Query("_id_child") String childId,
-                                                                                @Query("time_prev") long time);
+    Observable<ApiResponse<ArrayList<Health>>> getTimelineChildren(@Header("x-access-token") String token,
+                                                                   @Query("_id_child") String childId,
+                                                                   @Query("time_prev") long time);
 
 
     @GET(AppConstant.API_GET_LIST_CHILDREN)

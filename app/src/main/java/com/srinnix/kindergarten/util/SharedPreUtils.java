@@ -145,4 +145,8 @@ public class SharedPreUtils {
         editor.remove(AppConstant.IMAGE);
         editor.apply();
     }
+
+    public String getEmail() {
+        return sharedPreferences.getString(AppConstant.EMAIL, "");
+    }
 }

@@ -2,7 +2,7 @@ package com.srinnix.kindergarten.children.delegate;
 
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.model.Child;
-import com.srinnix.kindergarten.model.HealthTotalChildren;
+import com.srinnix.kindergarten.model.Health;
 
 import java.util.ArrayList;
 
@@ -18,5 +18,5 @@ public interface ChildrenDelegate extends BaseDelegate {
 
     void onLoadChildren(Child child);
 
-    void onLoadChildrenTimeLine(ArrayList<HealthTotalChildren> data);
+    void onLoadChildrenTimeLine(ArrayList<Health> data);
 }

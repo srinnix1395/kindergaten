@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.login.fragment;
 
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -10,6 +9,9 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.login.delegate.ForgotPasswordDelegate;
+import com.srinnix.kindergarten.login.presenter.ForgotPasswordPresenter;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
@@ -19,12 +21,9 @@ import butterknife.OnClick;
  * Created by Administrator on 3/7/2017.
  */
 
-public class ForgetPasswordFragment extends BaseFragment {
+public class ForgotPasswordFragment extends BaseFragment implements ForgotPasswordDelegate{
     @BindView(R.id.edittext_email)
     EditText etEmail;
-
-    @BindView(R.id.button_reset_password)
-    Button btnResetPassword;
 
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
@@ -32,9 +31,11 @@ public class ForgetPasswordFragment extends BaseFragment {
     @BindView(R.id.textview_close)
     TextView tvClose;
 
+    private ForgotPasswordPresenter mPresenter;
+
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_forget_password;
+        return R.layout.fragment_forgot_password;
     }
 
     @Override
@@ -62,11 +63,23 @@ public class ForgetPasswordFragment extends BaseFragment {
 
     @Override
     protected BasePresenter initPresenter() {
-        return null;
+        mPresenter = new ForgotPasswordPresenter(this);
+        return mPresenter;
     }
 
     @OnClick(R.id.textview_close)
     void onClickClose(){
+        onBackPressed();
+    }
+
+    @OnClick(R.id.button_reset_password)
+    void onClickResetPassword(){
+        mPresenter.onClickResetPassword();
+    }
+
+    @Override
+    public void onResetSuccess() {
+        AlertUtils.showToastSuccess(mContext, R.drawable.ic_lock_reset, R.string.password_reset);
         onBackPressed();
     }
 }
