@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/layout_list_child"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_children_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_retry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageview_retry"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_centerInParent="true"
+            android:padding="4dp"
+            android:src="@drawable/btn_loading"/>
+
+        <TextView
+            android:id="@+id/textview_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview_retry"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/cant_connect"/>
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar_loading"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/margin_vertical"
+        android:layout_marginTop="@dimen/margin_vertical"
+        android:padding="4.5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_unsigned_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/watching_children"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/tvContent"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTitle"
+            android:text="@string/children_content_unsigned_in_children"
+            android:textColor="@color/colorSecondaryText"/>
+
+        <ImageView
+            android:id="@+id/imagview_unsigned_in"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/tvContent"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:scaleType="fitXY"/>
+
+        <Button
+            android:id="@+id/button_login"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imagview_unsigned_in"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/background_button_login_other"
+            android:foreground="?selectableItemBackground"
+            android:text="@string/login"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+</RelativeLayout>

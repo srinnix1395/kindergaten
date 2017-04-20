@@ -33,6 +33,7 @@
                 android:id="@+id/textview_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/padding_drawable"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
                 tools:text="Đang online"/>

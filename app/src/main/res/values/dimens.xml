@@ -49,7 +49,7 @@
     <dimen name="radius_item_chat">4dp</dimen>
     <dimen name="width_icon_fragment_chat">47dp</dimen>
     <dimen name="padding_vertical_item_chat">8dp</dimen>
-    <dimen name="size_image_avatar">120dp</dimen>
+    <dimen name="size_image_avatar">108dp</dimen>
     <dimen name="radius_post">4dp</dimen>
     <dimen name="padding_horizontal_item_comment">14dp</dimen>
     <dimen name="padding_vertical_item_comment">12dp</dimen>
@@ -58,4 +58,6 @@
     <dimen name="min_height_timeline">92dp</dimen>
     <dimen name="icon_small_size">16dp</dimen>
     <dimen name="icon_medium_size">20dp</dimen>
+    <dimen name="radius_card_view">2dp</dimen>
+    <dimen name="radius_card_view_high">4dp</dimen>
 </resources>

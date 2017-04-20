@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.chat.adapter.payload.StatusPayload;
 import com.srinnix.kindergarten.chat.adapter.viewholder.ChatViewHolder;
+import com.srinnix.kindergarten.chat.adapter.viewholder.HeaderViewHolder;
 import com.srinnix.kindergarten.model.Contact;
 
 import java.util.ArrayList;
@@ -17,47 +18,73 @@ import java.util.List;
  * Created by DELL on 2/6/2017.
  */
 
-public class ChatListAdapter extends RecyclerView.Adapter<ChatViewHolder> {
-    private ArrayList<Contact> arrayList;
+public class ChatListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_CONTACT = 0;
+    private static final int VIEW_TYPE_HEADER = 1;
+
+    private ArrayList<Object> arrayList;
     private OnClickItemChatListener onClickItemChatListener;
 
-    public ChatListAdapter(ArrayList<Contact> arrayList, OnClickItemChatListener onClickItemChatListener) {
+    public ChatListAdapter(ArrayList<Object> arrayList, OnClickItemChatListener onClickItemChatListener) {
         this.arrayList = arrayList;
         this.onClickItemChatListener = onClickItemChatListener;
     }
 
     @Override
-    public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_list, parent
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_CONTACT) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_list, parent
+                    , false);
+            return new ChatViewHolder(view, onClickItemChatListener);
+        }
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header_chat, parent
                 , false);
-        return new ChatViewHolder(view, onClickItemChatListener);
+        return new HeaderViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ChatViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
-        if (payloads.isEmpty()) {
+
+        int size = payloads.size();
+        if (size == 0) {
             onBindViewHolder(holder, position);
             return;
         }
-        if (payloads.get(0) instanceof StatusPayload) {
-            holder.bindStatus(((StatusPayload) payloads.get(0)).status);
-            return;
-        }
 
-        for (Contact contact : arrayList) {
-            holder.bindStatus(contact.getStatus());
+        if (holder instanceof ChatViewHolder) {
+            if (payloads.get(size - 1) instanceof StatusPayload) {
+                ((ChatViewHolder) holder).bindStatus(((StatusPayload) payloads.get(size - 1)).status);
+                return;
+            }
+
+            ((ChatViewHolder) holder).bindStatus(((Contact) arrayList.get(position)).getStatus());
         }
     }
 
     @Override
-    public void onBindViewHolder(ChatViewHolder holder, int position) {
-        holder.bindData(arrayList.get(position), position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ChatViewHolder) {
+            ((ChatViewHolder) holder).bindData((Contact) arrayList.get(position), position);
+        } else {
+            ((HeaderViewHolder) holder).bindData(arrayList.get(position).toString());
+        }
     }
 
     @Override
     public int getItemCount() {
         return arrayList.size();
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if (arrayList.get(position) instanceof Contact) {
+            return VIEW_TYPE_CONTACT;
+        }
+
+        return VIEW_TYPE_HEADER;
     }
 
     public interface OnClickItemChatListener {

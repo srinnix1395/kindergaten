@@ -15,6 +15,7 @@
         android:id="@+id/cardview_left"
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
+        app:cardCornerRadius="@dimen/radius_card_view"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         app:cardBackgroundColor="@color/color_pressed"
@@ -33,6 +34,7 @@
         android:layout_height="@dimen/item_size"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="10dp"
+        app:cardCornerRadius="@dimen/radius_card_view"
         app:cardBackgroundColor="@color/color_pressed"
         app:cardElevation="0dp">
 

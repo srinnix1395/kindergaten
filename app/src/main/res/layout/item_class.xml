@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,13 +10,16 @@
     android:paddingBottom="@dimen/padding_post"
     android:paddingLeft="@dimen/margin_horizontal"
     android:paddingRight="@dimen/margin_horizontal"
-    android:paddingTop="@dimen/padding_post">
+    android:paddingTop="@dimen/padding_post"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview_icon"
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
         android:layout_centerVertical="true"
+        app:cardCornerRadius="@dimen/radius_card_view"
         app:cardElevation="0dp">
 
         <TextView
@@ -34,26 +37,29 @@
 
     </android.support.v7.widget.CardView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textview_class_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin_horizontal"
-        android:layout_toRightOf="@+id/cardview_icon">
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/textview_number_member"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cardview_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Chồi 4"/>
 
-        <TextView
-            android:id="@+id/textview_class_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Chồi 4"/>
+    <TextView
+        android:id="@+id/textview_number_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_class_name"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/textview_class_name"
+        app:layout_constraintTop_toBottomOf="@+id/textview_class_name"
+        tools:text="32 thành viên"/>
 
-        <TextView
-            android:id="@+id/textview_number_member"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textview_class_name"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="12sp"
-            tools:text="32 thành viên"/>
-    </RelativeLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

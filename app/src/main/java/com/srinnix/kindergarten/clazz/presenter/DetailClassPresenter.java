@@ -12,6 +12,7 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
 import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
+import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
@@ -147,7 +148,13 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
     public void onClickChildViewHolder(String id) {
-        //// TODO: 3/2/2017 onclick child
+        InfoChildrenFragment childrenFragment = new InfoChildrenFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_ID, id);
+        childrenFragment.setArguments(bundle);
+
+        ViewManager.getInstance().addFragment(childrenFragment, bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void getImage(ArrayList<Object> arrayList) {
@@ -187,10 +194,7 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
 
-
     public void onClickImage(DetailClassFragment fragmentOne, ImageView sharedTransitionView, Image image) {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             PreviewImageFragment fragmentTwo = PreviewImageFragment.newInstance(image, ViewCompat.getTransitionName(sharedTransitionView));
 

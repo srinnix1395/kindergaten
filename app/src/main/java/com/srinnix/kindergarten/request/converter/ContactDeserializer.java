@@ -44,10 +44,11 @@ public class ContactDeserializer implements JsonDeserializer<Contact> {
         String id = obj.get("_id").getAsString();
         String name = obj.get("name").getAsString();
         String gender = obj.get("gender").getAsString();
+        boolean isMyClass = obj.get("is_my_class").getAsBoolean();
 
         Type listType = new TypeToken<ArrayList<Child>>() {
         }.getType();
         ArrayList<Child> children = new Gson().fromJson(obj.getAsJsonArray("children"), listType);
-        return new ContactParent(id, name, gender, children);
+        return new ContactParent(id, name, gender, children, isMyClass);
     }
 }

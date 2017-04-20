@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 public interface ChildrenDelegate extends BaseDelegate {
 
-    void onLoadListChildren(ArrayList<Child> childArrayList);
-
     void onLoadFail(int resError);
 
     void onLoadChildren(Child child);

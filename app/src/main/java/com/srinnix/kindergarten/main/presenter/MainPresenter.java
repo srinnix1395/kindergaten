@@ -16,7 +16,7 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.camera.fragment.CameraFragment;
 import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
-import com.srinnix.kindergarten.children.fragment.ChildrenFragment;
+import com.srinnix.kindergarten.children.fragment.ChildrenListFragment;
 import com.srinnix.kindergarten.clazz.fragment.ClassListFragment;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -118,7 +118,7 @@ public class MainPresenter extends BasePresenter {
                 currentPosition = AppConstant.FRAGMENT_CHILDREN;
                 fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
                 if (fragmentShow == null) {
-                    fragmentShow = new ChildrenFragment();
+                    fragmentShow = new ChildrenListFragment();
                     transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
                 } else {
                     transaction.setCustomAnimations(R.anim.anim_show, 0);
@@ -172,7 +172,8 @@ public class MainPresenter extends BasePresenter {
         }
 
         if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
-            ChildrenFragment fragmentChildren = (ChildrenFragment) mainFragment.getChildFragmentManager().findFragmentByTag(String.valueOf(currentPosition));
+            ChildrenListFragment fragmentChildren = (ChildrenListFragment) mainFragment
+                    .getChildFragmentManager().findFragmentByTag(String.valueOf(currentPosition));
             fragmentChildren.onBackPressed();
             return;
         }

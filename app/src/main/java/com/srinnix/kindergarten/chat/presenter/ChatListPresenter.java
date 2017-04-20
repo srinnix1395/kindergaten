@@ -64,23 +64,29 @@ public class ChatListPresenter extends BasePresenter {
         ((MainFragment) fragment.getParentFragment()).closeDrawer();
     }
 
-    public void onDisconnect(ArrayList<Contact> arrayList) {
-        for (Contact contact : arrayList) {
-            contact.setStatus(ChatConstant.STATUS_UNDEFINED);
+    public void onDisconnect(ArrayList<Object> arrayList) {
+        for (Object obj : arrayList) {
+            if (obj instanceof Contact) {
+                ((Contact) obj).setStatus(ChatConstant.STATUS_UNDEFINED);
+            }
         }
     }
 
-    public void onSetupContactStatus(MessageContactStatus message, ArrayList<Contact> arrayList) {
+    public void onSetupContactStatus(MessageContactStatus message, ArrayList<Object> arrayList) {
         if (message.arrayList.size() == 0) {
-            for (Contact contact : arrayList) {
-                contact.setStatus(ChatConstant.STATUS_OFFLINE);
+            for (Object contact : arrayList) {
+                if (contact instanceof Contact) {
+                    ((Contact) contact).setStatus(ChatConstant.STATUS_OFFLINE);
+                }
             }
         } else {
-            for (Contact contact : arrayList) {
-                if (message.arrayList.contains(contact.getId())) {
-                    contact.setStatus(ChatConstant.STATUS_ONLINE);
-                } else {
-                    contact.setStatus(ChatConstant.STATUS_OFFLINE);
+            for (Object contact : arrayList) {
+                if (contact instanceof Contact) {
+                    if (message.arrayList.contains(((Contact) contact).getId())) {
+                        ((Contact) contact).setStatus(ChatConstant.STATUS_ONLINE);
+                    } else {
+                        ((Contact) contact).setStatus(ChatConstant.STATUS_OFFLINE);
+                    }
                 }
             }
         }
@@ -91,20 +97,26 @@ public class ChatListPresenter extends BasePresenter {
             if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_PARENTS) {
                 getContactTeacher();
             } else {
-                getContactParent();
+                getContactParents();
             }
         }
     }
 
-    private void getContactParent() {
+    private void getContactParents() {
         if (mChatListDelegate == null) {
             return;
         }
         mDisposable.add(Single.fromCallable(() -> {
-            ArrayList<ContactParent> arrayList = new ArrayList<>();
+            ArrayList<Object> arrayList = new ArrayList<>();
+            arrayList.add("Lớp mình");
 
             Realm realm = Realm.getDefaultInstance();
             RealmResults<ContactParentRealm> results = realm.where(ContactParentRealm.class).findAll();
+
+            boolean isAddHeaderOther = false;
+
+            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
+
             for (ContactParentRealm result : results) {
                 ContactParent contactParent = new ContactParent();
 
@@ -113,28 +125,26 @@ public class ChatListPresenter extends BasePresenter {
                 contactParent.setGender(result.getGender());
                 contactParent.setChildren(result.getChildren());
 
-                arrayList.add(contactParent);
-            }
-
-            realm.close();
-
-            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
-            if (message != null) {
-                if (message.arrayList.size() == 0) {
-                    for (Contact contact : arrayList) {
-                        contact.setStatus(ChatConstant.STATUS_OFFLINE);
-                    }
-                } else {
-                    for (Contact contact : arrayList) {
-                        if (message.arrayList.contains(contact.getId())) {
-                            contact.setStatus(ChatConstant.STATUS_ONLINE);
+                if (message != null) {
+                    if (message.arrayList.size() == 0) {
+                        contactParent.setStatus(ChatConstant.STATUS_OFFLINE);
+                    } else {
+                        if (message.arrayList.contains(contactParent.getId())) {
+                            contactParent.setStatus(ChatConstant.STATUS_ONLINE);
                         } else {
-                            contact.setStatus(ChatConstant.STATUS_OFFLINE);
+                            contactParent.setStatus(ChatConstant.STATUS_OFFLINE);
                         }
                     }
                 }
-//                EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
+
+                if (!isAddHeaderOther && !result.isMyClass()) {
+                    arrayList.add("Lớp khác");
+                    isAddHeaderOther = true;
+                }
+
+                arrayList.add(contactParent);
             }
+            realm.close();
 
             return arrayList;
         }).subscribeOn(Schedulers.computation())
@@ -152,6 +162,9 @@ public class ChatListPresenter extends BasePresenter {
 
             Realm realm = Realm.getDefaultInstance();
             RealmResults<ContactTeacherRealm> results = realm.where(ContactTeacherRealm.class).findAll();
+
+            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
+
             for (ContactTeacherRealm result : results) {
                 ContactTeacher contactTeacher = new ContactTeacher();
 
@@ -161,28 +174,24 @@ public class ChatListPresenter extends BasePresenter {
                 contactTeacher.setImage(result.getImage());
                 contactTeacher.setClassName(result.getClassName());
 
+                if (message != null) {
+                    if (message.arrayList.size() == 0) {
+                        contactTeacher.setStatus(ChatConstant.STATUS_OFFLINE);
+
+                    } else {
+                        if (message.arrayList.contains(contactTeacher.getId())) {
+                            contactTeacher.setStatus(ChatConstant.STATUS_ONLINE);
+                        } else {
+                            contactTeacher.setStatus(ChatConstant.STATUS_OFFLINE);
+                        }
+                    }
+                }
+
                 arrayList.add(contactTeacher);
             }
 
             realm.close();
 
-            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
-            if (message != null) {
-                if (message.arrayList.size() == 0) {
-                    for (Contact contact : arrayList) {
-                        contact.setStatus(ChatConstant.STATUS_OFFLINE);
-                    }
-                } else {
-                    for (Contact contact : arrayList) {
-                        if (message.arrayList.contains(contact.getId())) {
-                            contact.setStatus(ChatConstant.STATUS_ONLINE);
-                        } else {
-                            contact.setStatus(ChatConstant.STATUS_OFFLINE);
-                        }
-                    }
-                }
-                EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
-            }
             return arrayList;
         }).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -190,17 +199,17 @@ public class ChatListPresenter extends BasePresenter {
                         throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
-    public void onUserConnect(ArrayList<Contact> listContact, MessageUserConnect message, ChatListAdapter mAdapter) {
+    public void onUserConnect(ArrayList<Object> listContact, MessageUserConnect message, ChatListAdapter mAdapter) {
         int i = 0;
-        for (Contact contact : listContact) {
-            if (contact.getId().equals(message.id)) {
-                contact.setStatus(message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE);
+        for (Object obj : listContact) {
+            if (obj instanceof Contact && ((Contact) obj).getId().equals(message.id)) {
+                ((Contact) obj).setStatus(message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE);
                 break;
             }
             i++;
         }
         if (i != listContact.size() && mChatListDelegate != null) {
-            mChatListDelegate.updateStatus(i, listContact.get(i).getStatus());
+            mChatListDelegate.updateStatus(i, message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE);
         }
     }
 }

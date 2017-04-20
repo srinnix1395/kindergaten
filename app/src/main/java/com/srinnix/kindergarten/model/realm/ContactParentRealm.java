@@ -18,6 +18,7 @@ public class ContactParentRealm extends RealmObject {
     private String name;
     private String gender;
     private RealmList<Child> children;
+    private boolean isMyClass;
 
     public ContactParentRealm() {
     }
@@ -26,6 +27,7 @@ public class ContactParentRealm extends RealmObject {
         id = contact.getId();
         name = contact.getName();
         gender = contact.getGender();
+        isMyClass = contact.isMyClass();
 
         children = new RealmList<>();
         children.addAll(contact.getChildren());
@@ -45,5 +47,9 @@ public class ContactParentRealm extends RealmObject {
 
     public RealmList<Child> getChildren() {
         return children;
+    }
+
+    public boolean isMyClass() {
+        return isMyClass;
     }
 }

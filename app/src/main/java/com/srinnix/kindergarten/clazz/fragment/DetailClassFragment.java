@@ -65,9 +65,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.recyclerview_image_class)
     RecyclerView rvImageClass;
 
-    @BindView(R.id.layout_member)
-    RelativeLayout layoutMember;
-
     @BindView(R.id.view_line_member)
     View viewLineMember;
 
@@ -76,6 +73,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @BindView(R.id.layout_info)
     CoordinatorLayout layoutInfo;
+
+    @BindView(R.id.image_children)
+    ImageView imvMember;
 
     ImageView imvIcon1;
     TextView tvName1;
@@ -271,10 +271,14 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
             tvMember.setText(String.format(Locale.getDefault(),
                     getString(R.string.list_member), classInfo.getaClass().getNumberMember()));
-            layoutMember.setVisibility(View.VISIBLE);
+            imvMember.setVisibility(View.VISIBLE);
+            tvMember.setVisibility(View.VISIBLE);
+            rvMember.setVisibility(View.VISIBLE);
             viewLineMember.setVisibility(View.VISIBLE);
         } else {
-            layoutMember.setVisibility(View.GONE);
+            imvMember.setVisibility(View.GONE);
+            tvMember.setVisibility(View.GONE);
+            rvMember.setVisibility(View.GONE);
             viewLineMember.setVisibility(View.GONE);
         }
 

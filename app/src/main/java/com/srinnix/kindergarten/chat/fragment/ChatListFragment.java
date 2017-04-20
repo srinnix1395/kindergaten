@@ -16,7 +16,6 @@ import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Contact;
-import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +34,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     @BindView(R.id.recyclerview_chat_list)
     RecyclerView recyclerView;
 
-    private ArrayList<Contact> listContact;
+    private ArrayList<Object> listContact;
     private ChatListAdapter mAdapter;
     private ChatListPresenter mPresenter;
 
@@ -51,7 +50,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
         mAdapter = new ChatListAdapter(listContact, new ChatListAdapter.OnClickItemChatListener() {
             @Override
             public void onClick(int position, String name, String urlImage) {
-                mPresenter.onClickItemChat(ChatListFragment.this, listContact.get(position), name, urlImage);
+                mPresenter.onClickItemChat(ChatListFragment.this, ((Contact) listContact.get(position)), name, urlImage);
             }
         });
     }
@@ -117,17 +116,16 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     }
 
     @Override
-    public void addContactParent(ArrayList<ContactParent> contactParents) {
-        if (listContact.size() > 0) {
+    public void addContactParent(ArrayList<Object> contactsParents) {
+        if (!listContact.isEmpty()) {
             listContact.clear();
         }
-        listContact.addAll(contactParents);
-        mAdapter.notifyItemRangeInserted(0, contactParents.size());
+        listContact.addAll(contactsParents);
+        mAdapter.notifyItemRangeInserted(0, contactsParents.size());
     }
 
     @Override
     public void updateStatus(int position, int status) {
         mAdapter.notifyItemChanged(position, new StatusPayload(status));
     }
-
 }
