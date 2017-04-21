@@ -24,5 +24,5 @@ public interface DetailChatDelegate extends BaseDelegate{
 
     void changeDataMessage(int position, int statusMessagePayload);
 
-    void setStatus(String status);
+    void setStatus(String status, int ic_state_online);
 }

@@ -218,4 +218,12 @@ public class DetailClassPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
+
+    public void onClickTimeTable() {
+
+    }
+
+    public void onClickPlaySchedule() {
+
+    }
 }

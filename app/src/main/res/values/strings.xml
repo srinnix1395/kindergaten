@@ -85,4 +85,11 @@
     <string name="type_result">Sức khỏe loại %d</string>
     <string name="password_reset">Hãy kiểm tra email và\\nđăng nhập lại</string>
     <string name="account">Tài khoản</string>
+    <string name="learch_and_play_time">Lịch sinh hoạt</string>
+    <string name="timetable">•  Thời khóa biểu</string>
+    <string name="play_schedule">•  Lịch vui chơi</string>
+    <string name="learn_schedule">•  Lịch học năng khiếu</string>
+    <string name="edit">Sửa</string>
+    <string name="weight">Cân nặng</string>
+    <string name="height">Chiều cao</string>
 </resources>

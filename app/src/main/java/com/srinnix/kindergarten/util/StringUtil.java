@@ -199,4 +199,18 @@ public class StringUtil {
             sb.append(AB.charAt(rnd.nextInt(AB.length())));
         return sb.toString();
     }
+
+    public static int getDrawableState(int status) {
+        switch (status) {
+            case ChatConstant.STATUS_ONLINE: {
+                return R.drawable.ic_state_online;
+            }
+            case ChatConstant.STATUS_OFFLINE: {
+                return R.drawable.ic_state_offline;
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
 import com.srinnix.kindergarten.children.adapter.viewholder.HealthChildrenViewHolder;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.model.LoadingItem;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
         } else {
-            ((HealthChildrenViewHolder) holder).bindData((Health) arrayList.get(position), position);
+            ((HealthChildrenViewHolder) holder).bindData((HealthTotal) arrayList.get(position), position);
         }
     }
 

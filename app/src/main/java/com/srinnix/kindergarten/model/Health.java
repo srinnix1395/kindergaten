@@ -1,91 +1,73 @@
 package com.srinnix.kindergarten.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.srinnix.kindergarten.constant.AppConstant;
 
 /**
- * Created by anhtu on 4/11/2017.
+ * Created by anhtu on 4/21/2017.
  */
 
-public class Health {
+public class Health implements Parcelable{
     @SerializedName("_id")
     @Expose
-    private String id;
+    protected String id;
 
     @SerializedName("measurement_time")
     @Expose
-    private String measureTime;
+    protected String measureTime;
 
     @SerializedName("weight")
     @Expose
-    private float weight;
+    protected float weight;
 
     @SerializedName("weight_state")
     @Expose
-    private int weightState;
+    protected int weightState;
 
     @SerializedName("height")
     @Expose
-    private int height;
+    protected int height;
 
     @SerializedName("height_state")
     @Expose
-    private int heightState;
+    protected int heightState;
 
     @SerializedName("created_at")
     @Expose
-    private long createdAt;
-
-    @SerializedName("eyes")
-    @Expose
-    private String eyes;
-
-    @SerializedName("ent")
-    @Expose
-    private String ent;
-
-    @SerializedName("tooth")
-    @Expose
-    private String tooth;
-
-    @SerializedName("others")
-    @Expose
-    private String others;
-
-    @SerializedName("result")
-    @Expose
-    private int result;
-
-    private boolean isDisplayLine = true;
+    protected long createdAt;
 
     public Health() {
         weight = AppConstant.UNSPECIFIED;
         weightState = AppConstant.UNSPECIFIED;
         height = AppConstant.UNSPECIFIED;
         heightState = AppConstant.UNSPECIFIED;
-        result = AppConstant.UNSPECIFIED;
     }
 
-    public String getEyes() {
-        return eyes;
+    protected Health(Parcel in) {
+        id = in.readString();
+        measureTime = in.readString();
+        weight = in.readFloat();
+        weightState = in.readInt();
+        height = in.readInt();
+        heightState = in.readInt();
+        createdAt = in.readLong();
     }
 
-    public String getEnt() {
-        return ent;
-    }
+    public static final Creator<Health> CREATOR = new Creator<Health>() {
+        @Override
+        public Health createFromParcel(Parcel in) {
+            return new Health(in);
+        }
 
-    public String getTooth() {
-        return tooth;
-    }
-
-    public String getOthers() {
-        return others;
-    }
-
-    public int getResult() {
-        return result;
-    }
+        @Override
+        public Health[] newArray(int size) {
+            return new Health[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -115,11 +97,19 @@ public class Health {
         return createdAt;
     }
 
-    public boolean isDisplayLine() {
-        return isDisplayLine;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setDisplayLine(boolean displayLine) {
-        isDisplayLine = displayLine;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(measureTime);
+        dest.writeFloat(weight);
+        dest.writeInt(weightState);
+        dest.writeInt(height);
+        dest.writeInt(heightState);
+        dest.writeLong(createdAt);
     }
 }

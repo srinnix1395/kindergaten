@@ -146,7 +146,9 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
         mPlayer = new MediaPlayer();
         mPlayer.setDisplay(mSurfaceHolder);
         mPlayer.setOnPreparedListener(mediaPlayer -> {
-            mPlayer.start();
+            if (!mPlayer.isPlaying()) {
+                mPlayer.start();
+            }
             UiUtils.hideProgressBar(pbLoading);
         });
         mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {

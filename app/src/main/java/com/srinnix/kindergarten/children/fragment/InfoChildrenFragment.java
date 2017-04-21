@@ -22,7 +22,7 @@ import com.srinnix.kindergarten.children.presenter.InfoChildrenPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.model.Child;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -99,8 +99,8 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
             public void onLoadMore() {
                 DebugLog.i("on load more");
                 int size = mListChildrenHealth.size();
-                if (size > 1 && mListChildrenHealth.get(size - 2) instanceof Health) {
-                    mPresenter.getTimelineChildren(((Health) mListChildrenHealth.get(size - 1)).getCreatedAt());
+                if (size > 1 && mListChildrenHealth.get(size - 2) instanceof HealthTotal) {
+                    mPresenter.getTimelineChildren(((HealthTotal) mListChildrenHealth.get(size - 1)).getCreatedAt());
                 }
             }
         };
@@ -149,7 +149,7 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
     }
 
     @Override
-    public void onLoadChildrenTimeLine(ArrayList<Health> data) {
+    public void onLoadChildrenTimeLine(ArrayList<HealthTotal> data) {
         int sizeNewData = data.size();
         if (sizeNewData > 0) {
             data.get(sizeNewData - 1).setDisplayLine(false);
@@ -165,8 +165,8 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
             if (sizeNewData > 0) {
                 sizeTotal = mListChildrenHealth.size();
 
-                if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof Health) {
-                    ((Health) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
+                if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotal) {
+                    ((HealthTotal) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
                     mHealthChildrenAdapter.notifyItemChanged(sizeTotal - 1, true);
                 }
 
@@ -174,8 +174,8 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
                 mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal, data.size());
             }
         } else {
-            if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof Health) {
-                ((Health) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
+            if (sizeTotal > 1 && mListChildrenHealth.get(sizeTotal - 1) instanceof HealthTotal) {
+                ((HealthTotal) mListChildrenHealth.get(sizeTotal - 1)).setDisplayLine(true);
                 mHealthChildrenAdapter.notifyItemChanged(sizeTotal - 1, true);
             }
 

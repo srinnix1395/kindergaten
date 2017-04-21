@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.KinderApplication;
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
@@ -297,6 +298,9 @@ public class DetailChatPresenter extends BasePresenter {
         if (tvStatus != null) {
             tvStatus.setText(StringUtil.getStatus(mContext,
                     message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE));
+
+            tvStatus.setCompoundDrawablesWithIntrinsicBounds(StringUtil.getDrawableState(
+                    message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE), 0, 0, 0);
         }
 
         if (!listMessage.isEmpty()) {
@@ -316,6 +320,7 @@ public class DetailChatPresenter extends BasePresenter {
 
         if (tvStatus != null) {
             tvStatus.setText(StringUtil.getStatus(mContext, ChatConstant.STATUS_UNDEFINED));
+            tvStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         if (!listMessage.isEmpty()) {
@@ -334,9 +339,11 @@ public class DetailChatPresenter extends BasePresenter {
         }
 
         if (arrayList.contains(mFriendId)) {
-            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_ONLINE));
+            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_ONLINE)
+                    , R.drawable.ic_state_online);
         } else {
-            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_OFFLINE));
+            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_OFFLINE)
+                    , R.drawable.ic_state_offline);
         }
     }
 

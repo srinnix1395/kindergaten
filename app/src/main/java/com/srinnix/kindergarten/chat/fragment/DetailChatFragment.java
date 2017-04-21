@@ -148,6 +148,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         tvName.setText(name);
         tvStatus.setText(StringUtil.getStatus(mContext, status));
+        tvStatus.setCompoundDrawablesWithIntrinsicBounds(StringUtil.getDrawableState(status), 0, 0, 0);
     }
 
     @Override
@@ -317,8 +318,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     @Override
-    public void setStatus(String status) {
+    public void setStatus(String status, int resState) {
         tvStatus.setText(status);
+        tvStatus.setCompoundDrawablesWithIntrinsicBounds(resState, 0, 0, 0);
     }
 
     public boolean isRecyclerScrollable(RecyclerView recyclerView) {

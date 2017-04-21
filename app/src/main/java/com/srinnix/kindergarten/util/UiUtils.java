@@ -136,7 +136,7 @@ public class UiUtils {
             }
         };
 
-//        a.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+//        Health.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
         v.startAnimation(a);
     }
@@ -161,7 +161,7 @@ public class UiUtils {
             }
         };
 
-//        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+//        Health.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
 
         v.startAnimation(a);
@@ -192,7 +192,7 @@ public class UiUtils {
             }
         };
 
-//        a.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+//        Health.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
         v.startAnimation(a);
     }
@@ -224,7 +224,7 @@ public class UiUtils {
             }
         };
 
-//        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+//        Health.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
 
         v.startAnimation(a);

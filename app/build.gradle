@@ -74,6 +74,7 @@ dependencies {
     //ui
     compile 'com.roughike:bottom-bar:2.2.0'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:2.2.5'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
 
 }
 

@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -67,7 +68,7 @@ public class BulletinBoardPresenter extends BasePresenter {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             ((LoadingItem) arrayList.get(arrayList.size() - 1)).setLoadingState(LoadingItem.STATE_ERROR);
 
-            //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
+            //To fix warning: Scroll callbacks might be run during Health measure & layout pass where you cannot change the RecyclerView data.
             rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -76,7 +77,7 @@ public class BulletinBoardPresenter extends BasePresenter {
         if (((LoadingItem) arrayList.get(arrayList.size() - 1)).getLoadingState() == LoadingItem.STATE_ERROR) {
             ((LoadingItem) arrayList.get(arrayList.size() - 1)).setLoadingState(LoadingItem.STATE_IDLE_AND_LOADING);
 
-            //To fix warning: Scroll callbacks might be run during a measure & layout pass where you cannot change the RecyclerView data.
+            //To fix warning: Scroll callbacks might be run during Health measure & layout pass where you cannot change the RecyclerView data.
             rvListPost.post(() -> postAdapter.notifyItemChanged(arrayList.size() - 1));
         }
 
@@ -296,7 +297,12 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
     public void onClickShare(Post post) {
-
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "Here is the share content body";
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        mContext.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     public void updateNumberComment(MessageNumberComment message, ArrayList<Object> arrPost) {

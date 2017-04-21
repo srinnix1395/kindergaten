@@ -4,11 +4,12 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Comment;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.model.Teacher;
+import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.request.model.ImageResponse;
@@ -126,9 +127,9 @@ public interface ApiService {
                                                    @Query("_id_child") String id);
 
     @GET(AppConstant.API_GET_HEALTH_INDEX_CHILDREN)
-    Observable<ApiResponse<ArrayList<Health>>> getTimelineChildren(@Header("x-access-token") String token,
-                                                                   @Query("_id_child") String childId,
-                                                                   @Query("time_prev") long time);
+    Observable<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(@Header("x-access-token") String token,
+                                                                        @Query("_id_child") String childId,
+                                                                        @Query("time_prev") long time);
 
 
     @GET(AppConstant.API_GET_LIST_CHILDREN)
@@ -136,4 +137,7 @@ public interface ApiService {
                                                               @Query("_id_class") String classId);
 
 
+    @GET(AppConstant.API_GET_ACCOUNT_INFO)
+    Observable<ApiResponse<User>> getAccountInfo(@Header("x-access-token") String token,
+                                                 @Query("_id_user") String idUser);
 }

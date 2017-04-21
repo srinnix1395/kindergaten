@@ -2,7 +2,7 @@ package com.srinnix.kindergarten.children.helper;
 
 import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.model.Child;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
@@ -49,7 +49,7 @@ public class ChildrenHelper {
 
     }
 
-    public void getTimelineChildren(String token, String idChildren, long time, ResponseListener<ArrayList<Health>> listener) {
+    public void getTimelineChildren(String token, String idChildren, long time, ResponseListener<ArrayList<HealthTotal>> listener) {
         if (listener == null) {
             return;
         }

@@ -7,15 +7,18 @@ import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
+import com.srinnix.kindergarten.children.fragment.ChartFragment;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
 
@@ -86,9 +89,9 @@ public class InfoChildrenPresenter extends BasePresenter {
         }
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
-        mHelper.getTimelineChildren(token, idChild, time, new ResponseListener<ArrayList<Health>>() {
+        mHelper.getTimelineChildren(token, idChild, time, new ResponseListener<ArrayList<HealthTotal>>() {
             @Override
-            public void onSuccess(ApiResponse<ArrayList<Health>> response) {
+            public void onSuccess(ApiResponse<ArrayList<HealthTotal>> response) {
                 if (response == null) {
                     onFail(new NullPointerException());
                     return;
@@ -110,7 +113,18 @@ public class InfoChildrenPresenter extends BasePresenter {
     }
 
     public void onClickIndex(ArrayList<Object> mListChildrenHealth, int position) {
-        // TODO: 4/15/2017 index
+        ArrayList<Health> listHealth = new ArrayList<>();
+        for (Object o : mListChildrenHealth) {
+            if (o instanceof HealthTotal && ((HealthTotal) o).getWeight() != AppConstant.UNSPECIFIED) {
+                listHealth.add((Health) o);
+            }
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(AppConstant.KEY_HEALTH, listHealth);
+
+        ViewManager.getInstance().addFragment(new ChartFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     @Override

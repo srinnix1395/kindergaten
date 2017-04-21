@@ -24,6 +24,7 @@ import com.srinnix.kindergarten.clazz.presenter.DetailClassPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
+import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LoadingItem;
@@ -32,6 +33,9 @@ import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -76,6 +80,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @BindView(R.id.image_children)
     ImageView imvMember;
+
+    @BindView(R.id.textview_learn_schedule)
+    TextView tvLearnSchedule;
 
     ImageView imvIcon1;
     TextView tvName1;
@@ -153,6 +160,12 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             imvChat3.setVisibility(View.GONE);
         }
 
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
+            tvLearnSchedule.setVisibility(View.VISIBLE);
+        } else {
+            tvLearnSchedule.setVisibility(View.GONE);
+        }
+
         rvMember.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         rvMember.setAdapter(childrenAdapter);
 
@@ -189,7 +202,31 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         return mPresenter;
     }
 
-    @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3})
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void onEventLoginSuccesfully(MessageLoginSuccessfully message){
+        tvLearnSchedule.setVisibility(View.VISIBLE);
+
+        // TODO: 4/20/2017 get list children
+    }
+
+    @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,
+            R.id.textview_timetable1, R.id.textview_play_schedule})
     void onClickTeachers(View view) {
         switch (view.getId()) {
             case R.id.rel_teacher_1: {
@@ -202,6 +239,14 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
             }
             case R.id.rel_teacher_3: {
                 mPresenter.onClickTeacher(getChildFragmentManager(), 2);
+                break;
+            }
+            case R.id.textview_timetable1: {
+                mPresenter.onClickTimeTable();
+                break;
+            }
+            case R.id.textview_play_schedule: {
+                mPresenter.onClickPlaySchedule();
                 break;
             }
         }

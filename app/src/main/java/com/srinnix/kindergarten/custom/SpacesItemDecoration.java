@@ -2,7 +2,7 @@ package com.srinnix.kindergarten.custom;
 
 /*
 
-Decorator which adds spacing around the tiles in a Grid layout RecyclerView. Apply to a RecyclerView with:
+Decorator which adds spacing around the tiles in Health Grid layout RecyclerView. Apply to Health RecyclerView with:
 
     SpacesItemDecoration decoration = new SpacesItemDecoration(16);
     mRecyclerView.addItemDecoration(decoration);

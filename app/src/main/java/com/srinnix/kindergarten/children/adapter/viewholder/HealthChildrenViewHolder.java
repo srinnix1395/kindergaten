@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.Locale;
@@ -104,31 +104,31 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bindData(Health health, int position) {
+    public void bindData(HealthTotal healthTotal, int position) {
         this.position = position;
 
-        tvTime.setText(health.getMeasureTime());
+        tvTime.setText(healthTotal.getMeasureTime());
 
-        if (health.getWeight() == AppConstant.UNSPECIFIED ||
-                health.getHeight() == AppConstant.UNSPECIFIED) {
+        if (healthTotal.getWeight() == AppConstant.UNSPECIFIED ||
+                healthTotal.getHeight() == AppConstant.UNSPECIFIED) {
             layoutWeight.setVisibility(View.GONE);
             layoutHeight.setVisibility(View.GONE);
         } else {
             layoutWeight.setVisibility(View.VISIBLE);
 
-            tvWeight.setText(String.format(Locale.getDefault(), "%.1f kg", health.getWeight()));
-            if (health.getWeightState() == AppConstant.STATE_WEIGHT_NORMAL) {
+            tvWeight.setText(String.format(Locale.getDefault(), "%.1f kg", healthTotal.getWeight()));
+            if (healthTotal.getWeightState() == AppConstant.STATE_WEIGHT_NORMAL) {
                 tvWeightState.setVisibility(View.GONE);
             } else {
                 tvWeightState.setVisibility(View.VISIBLE);
-                tvWeightState.setText(health.getWeightState() == AppConstant.STATE_WEIGHT_OBESE ?
+                tvWeightState.setText(healthTotal.getWeightState() == AppConstant.STATE_WEIGHT_OBESE ?
                         R.string.obese : R.string.malnutrition);
             }
 
             layoutHeight.setVisibility(View.VISIBLE);
 
-            tvHeight.setText(String.format(Locale.getDefault(), "%d cm", health.getHeight()));
-            if (health.getHeightState() == AppConstant.STATE_HEIGHT_NORMAL) {
+            tvHeight.setText(String.format(Locale.getDefault(), "%d cm", healthTotal.getHeight()));
+            if (healthTotal.getHeightState() == AppConstant.STATE_HEIGHT_NORMAL) {
                 tvHeightState.setVisibility(View.GONE);
             } else {
                 tvHeightState.setVisibility(View.VISIBLE);
@@ -136,15 +136,15 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
             }
         }
 
-        if (health.getResult() == AppConstant.UNSPECIFIED) {
+        if (healthTotal.getResult() == AppConstant.UNSPECIFIED) {
             layoutHealth.setVisibility(View.GONE);
         } else {
             layoutHealth.setVisibility(View.VISIBLE);
             tvResult.setText(String.format(Locale.getDefault(), itemView.getContext().getString(R.string.type_result)
-                    , health.getResult()));
+                    , healthTotal.getResult()));
 
-            if (health.getEyes() != null) {
-                tvEyes.setText(health.getEyes());
+            if (healthTotal.getEyes() != null) {
+                tvEyes.setText(healthTotal.getEyes());
 
                 tvEyes.setVisibility(View.VISIBLE);
                 tvEyesTitle.setVisibility(View.VISIBLE);
@@ -153,8 +153,8 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
                 tvEyesTitle.setVisibility(View.GONE);
             }
 
-            if (health.getEnt() != null) {
-                tvEnt.setText(health.getEnt());
+            if (healthTotal.getEnt() != null) {
+                tvEnt.setText(healthTotal.getEnt());
 
                 tvEnt.setVisibility(View.VISIBLE);
                 tvEntTitle.setVisibility(View.VISIBLE);
@@ -163,8 +163,8 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
                 tvEntTitle.setVisibility(View.GONE);
             }
 
-            if (health.getTooth() != null) {
-                tvTooth.setText(health.getTooth());
+            if (healthTotal.getTooth() != null) {
+                tvTooth.setText(healthTotal.getTooth());
 
                 tvTooth.setVisibility(View.VISIBLE);
                 tvToothTitle.setVisibility(View.VISIBLE);
@@ -173,8 +173,8 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
                 tvToothTitle.setVisibility(View.GONE);
             }
 
-            if (health.getOthers() != null) {
-                tvOthers.setText(health.getOthers());
+            if (healthTotal.getOthers() != null) {
+                tvOthers.setText(healthTotal.getOthers());
 
                 tvOthers.setVisibility(View.VISIBLE);
                 tvOtherTitle.setVisibility(View.VISIBLE);
@@ -184,7 +184,7 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
             }
         }
 
-        if (health.getResult() != AppConstant.UNSPECIFIED && health.getWeight() == AppConstant.UNSPECIFIED) {
+        if (healthTotal.getResult() != AppConstant.UNSPECIFIED && healthTotal.getWeight() == AppConstant.UNSPECIFIED) {
             imvShowMore.setVisibility(View.GONE);
             layoutHealthContent.setVisibility(View.VISIBLE);
             canExpand = false;
@@ -194,7 +194,7 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
             canExpand = true;
         }
 
-        bindViewDivider(health.isDisplayLine());
+        bindViewDivider(healthTotal.isDisplayLine());
     }
 
     public void bindViewDivider(Boolean isShowDivider) {
