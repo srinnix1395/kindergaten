@@ -82,7 +82,7 @@
     <string name="ent">• Tai mũi họng:</string>
     <string name="others">• Bệnh khác:</string>
     <string name="tooth">• Răng:</string>
-    <string name="type_result">Sức khỏe loại %d</string>
+    <string name="type_result">sức khỏe loại %d</string>
     <string name="password_reset">Hãy kiểm tra email và\\nđăng nhập lại</string>
     <string name="account">Tài khoản</string>
     <string name="learch_and_play_time">Lịch sinh hoạt</string>

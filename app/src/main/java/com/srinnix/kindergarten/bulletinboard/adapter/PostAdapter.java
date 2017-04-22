@@ -80,7 +80,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (position == arrPost.size() - 1) {
+        if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData(((LoadingItem) arrPost.get(position)));
         } else {
             ((PostedViewHolder) holder).bindData(((Post) arrPost.get(position)), position);

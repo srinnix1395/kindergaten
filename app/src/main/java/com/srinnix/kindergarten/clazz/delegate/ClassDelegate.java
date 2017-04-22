@@ -15,5 +15,5 @@ public interface ClassDelegate extends BaseDelegate {
 
     void onLoadError(int resError);
 
-    void onLoadImage(ArrayList<Image> data);
+    void onLoadImage(ArrayList<Image> data, boolean isLoadImageFirst);
 }

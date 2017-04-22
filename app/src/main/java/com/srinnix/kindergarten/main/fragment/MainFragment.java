@@ -80,6 +80,10 @@ public class MainFragment extends BaseFragment implements MainDelegate {
                 mPresenter.signOut();
                 break;
             }
+            case R.id.menu_item_account:{
+                mPresenter.onClickAccount();
+                break;
+            }
             case R.id.menu_item_about: {
 
                 break;
@@ -143,7 +147,7 @@ public class MainFragment extends BaseFragment implements MainDelegate {
 
     public void closeDrawer() {
         if (mDrawer.isDrawerOpen(Gravity.RIGHT)) {
-            mDrawer.closeDrawer(Gravity.RIGHT);
+            mDrawer.closeDrawer(Gravity.RIGHT, false);
         }
     }
 

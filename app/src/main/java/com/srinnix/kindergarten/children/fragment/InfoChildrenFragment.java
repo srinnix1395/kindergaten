@@ -99,6 +99,9 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
             public void onLoadMore() {
                 DebugLog.i("on load more");
                 int size = mListChildrenHealth.size();
+                if (mListChildrenHealth.get(size - 1) instanceof HealthTotal) {
+                    return;
+                }
                 if (size > 1 && mListChildrenHealth.get(size - 2) instanceof HealthTotal) {
                     mPresenter.getTimelineChildren(((HealthTotal) mListChildrenHealth.get(size - 2)).getCreatedAt());
                 }

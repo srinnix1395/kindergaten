@@ -22,6 +22,7 @@ import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
+import com.srinnix.kindergarten.setting.fragment.AccountFragment;
 import com.srinnix.kindergarten.setting.fragment.SettingFragment;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -206,6 +207,18 @@ public class MainPresenter extends BasePresenter {
         KinderApplication.getInstance().getSocketUtil().connect(mContext);
     }
 
+    public void removeUnUsedFragment(FragmentManager manager) {
+        Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
+        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS) {
+            manager.beginTransaction().remove(fragment).commit();
+        }
+    }
+
+    public void onClickAccount() {
+        ViewManager.getInstance().addFragment(new AccountFragment(), null,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -214,10 +227,4 @@ public class MainPresenter extends BasePresenter {
         }
     }
 
-    public void removeUnUsedFragment(FragmentManager manager) {
-        Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
-        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS) {
-            manager.beginTransaction().remove(fragment).commit();
-        }
-    }
 }

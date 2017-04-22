@@ -10,6 +10,7 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.BulletinBoardPresenter;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.messageeventbus.MessageLogout;
@@ -38,8 +39,8 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     RecyclerView rvListPost;
 
     private BulletinBoardPresenter mPresenter;
-    private PostAdapter postAdapter;
-    private ArrayList<Object> arrPost;
+    private PostAdapter mPostAdapter;
+    private ArrayList<Object> mListPost;
 
     @Override
     protected int getLayoutId() {
@@ -49,42 +50,42 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @Override
     protected void initData() {
         super.initData();
-        arrPost = new ArrayList<>();
-        arrPost.add(new LoadingItem());
+        mListPost = new ArrayList<>();
+        mListPost.add(new LoadingItem());
 
-        postAdapter = new PostAdapter(arrPost,
-                () -> mPresenter.onLoadMore(rvListPost, arrPost, postAdapter),
+        mPostAdapter = new PostAdapter(mListPost,
+                () -> mPresenter.onLoadMore(rvListPost, mListPost, mPostAdapter),
                 new PostAdapter.PostListener() {
                     @Override
                     public void onClickLike(int position) {
-                        mPresenter.onClickLike(arrPost, (Post) arrPost.get(position));
+                        mPresenter.onClickLike(mListPost, (Post) mListPost.get(position));
                     }
 
                     @Override
                     public void onClickNumberLike(int position) {
-                        mPresenter.onClickNumberLike(getChildFragmentManager(), ((Post) arrPost.get(position)));
+                        mPresenter.onClickNumberLike(getChildFragmentManager(), ((Post) mListPost.get(position)));
                     }
 
                     @Override
                     public void onClickImage(int position) {
-                        mPresenter.onClickImages((Post) arrPost.get(position));
+                        mPresenter.onClickImages((Post) mListPost.get(position));
                     }
 
                     @Override
                     public void onClickComment(int position, boolean isShowKeyboard) {
-                        mPresenter.onClickComment(((Post) arrPost.get(position)));
+                        mPresenter.onClickComment(((Post) mListPost.get(position)));
                     }
 
                     @Override
                     public void onClickShare(int position) {
-                        mPresenter.onClickShare(((Post) arrPost.get(position)));
+                        mPresenter.onClickShare(((Post) mListPost.get(position)));
                     }
                 });
     }
 
     @Override
     protected void initChildView() {
-        rvListPost.setAdapter(postAdapter);
+        rvListPost.setAdapter(mPostAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvListPost.setLayoutManager(linearLayoutManager);
@@ -92,11 +93,15 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
-                mPresenter.onLoadMore(rvListPost, arrPost, postAdapter);
+                int size = mListPost.size();
+                if (mListPost.get(size - 1) instanceof Post) {
+                    return;
+                }
+                mPresenter.onLoadMore(rvListPost, mListPost, mPostAdapter);
             }
         });
 
-        refreshLayout.setOnRefreshListener(() -> mPresenter.refresh(refreshLayout, arrPost));
+        refreshLayout.setOnRefreshListener(() -> mPresenter.refresh(refreshLayout, mListPost));
     }
 
     @Override
@@ -123,39 +128,50 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
-        mPresenter.refresh(refreshLayout, arrPost);
+        mPresenter.refresh(refreshLayout, mListPost);
     }
 
     @Subscribe
     public void onEventNumberComment(MessageNumberComment message) {
-        mPresenter.updateNumberComment(message, arrPost);
+        mPresenter.updateNumberComment(message, mListPost);
     }
 
     @Subscribe
     public void onEventLogout(MessageLogout message) {
-        mPresenter.logout(arrPost);
+        mPresenter.logout(mListPost);
     }
 
     @Override
-    public void updateSchoolBoard(ArrayList<Post> arrayList, boolean isLoadFirst) {
-        int size = arrPost.size();
-        if (size == 0) {
-            //// TODO: 3/13/2017 khi không còn tin nào
+    public void updateSchoolBoard(ArrayList<Post> data, boolean isLoadFirst) {
+        int sizeNewData = data.size();
+        int sizeTotal = mListPost.size();
+
+        if (sizeNewData < AppConstant.ITEM_POST_PER_PAGE) {
+            if (!mListPost.isEmpty() && mListPost.get(sizeTotal - 1) instanceof LoadingItem) {
+                mListPost.remove(sizeTotal - 1);
+                mPostAdapter.notifyItemRemoved(sizeTotal - 1);
+            }
+            if (sizeNewData > 0) {
+                sizeTotal = mListPost.size();
+
+                mListPost.addAll(data);
+                mPostAdapter.notifyItemRangeInserted(sizeTotal, data.size());
+            }
         } else {
-            arrPost.addAll(size - 1, arrayList);
-            postAdapter.notifyItemRangeInserted(size - 1, arrayList.size());
+            mListPost.addAll(sizeTotal - 1, data);
+            mPostAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
         }
 
-        if (isLoadFirst) {
+        if (isLoadFirst && !mListPost.isEmpty()) {
             rvListPost.scrollToPosition(0);
         }
     }
 
     @Override
     public void setErrorItemLoading() {
-        int size = arrPost.size();
-        ((LoadingItem) arrPost.get(size - 1)).setLoadingState(LoadingItem.STATE_ERROR);
-        postAdapter.notifyItemChanged(size - 1);
+        int size = mListPost.size();
+        ((LoadingItem) mListPost.get(size - 1)).setLoadingState(LoadingItem.STATE_ERROR);
+        mPostAdapter.notifyItemChanged(size - 1);
 
         AlertUtils.showToast(mContext, R.string.error_post);
     }
@@ -170,7 +186,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         ArrayList<Object> payloads = new ArrayList<>();
         payloads.add(like);
         payloads.add(numberOfLikes);
-        postAdapter.notifyItemChanged(position, payloads);
+        mPostAdapter.notifyItemChanged(position, payloads);
     }
 
     @Override
@@ -185,13 +201,13 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
         if (!data.isEmpty()) {
             int j = data.size();
-            for (int i = arrPost.size() - 1; i >= 1; i--) {
+            for (int i = mListPost.size() - 1; i >= 1; i--) {
                 if (j == 0) {
                     break;
                 }
-                if (arrPost.get(i) instanceof Post && data.contains(((Post) arrPost.get(i)).getId())) {
-                    ((Post) arrPost.get(i)).setUserLike(true);
-                    postAdapter.notifyItemChanged(i, true);
+                if (mListPost.get(i) instanceof Post && data.contains(((Post) mListPost.get(i)).getId())) {
+                    ((Post) mListPost.get(i)).setUserLike(true);
+                    mPostAdapter.notifyItemChanged(i, true);
                     j--;
                 }
             }
@@ -203,12 +219,12 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Override
     public void updateNumberComment(int position, int numberOfComments) {
-        postAdapter.notifyItemChanged(position, numberOfComments);
+        mPostAdapter.notifyItemChanged(position, numberOfComments);
     }
 
     @Override
     public void updateLogout() {
-        postAdapter.notifyItemRangeChanged(0, arrPost.size() - 1, false);
+        mPostAdapter.notifyItemRangeChanged(0, mListPost.size() - 1, false);
 
     }
 }

@@ -1,10 +1,11 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
-import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.transition.TransitionInflater;
 import android.view.View;
@@ -94,6 +95,9 @@ public class PreviewImageFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
+        pbLoading.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_ATOP);
+
         if (image.isVideo()) {
             imvImage.setVisibility(View.GONE);
             videoView.setVisibility(View.VISIBLE);
@@ -137,8 +141,9 @@ public class PreviewImageFragment extends BaseFragment {
 
     private void playVideo() {
         try {
+            imvPlay.setVisibility(View.GONE);
+
             UiUtils.showProgressBar(pbLoading);
-            getActivity().getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
             Uri video = Uri.parse(image.getUrl());
             videoView.setMediaController(mediaController);

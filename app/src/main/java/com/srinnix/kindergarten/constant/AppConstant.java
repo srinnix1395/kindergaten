@@ -11,6 +11,8 @@ public class AppConstant {
     public static final int ITEM_COMMENT_PER_PAGE = 15;
     public static final int ITEM_LIKE_PER_PAGE = 20;
     public static final int ITEM_HEALTH_PER_PAGE = 6;
+    public static final int ITEM_POST_PER_PAGE = 5;
+    public static final int ITEM_IMAGE_PER_PAGE = 1;
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";

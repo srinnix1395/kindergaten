@@ -9,6 +9,8 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
  */
 
 public class AccountFragment extends BaseFragment {
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_account;

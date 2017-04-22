@@ -49,6 +49,7 @@ public class DetailClassPresenter extends BasePresenter {
     private ClassResponse classResponse;
     private ClassHelper mHelper;
     private String classId;
+    private boolean isLoadImageFirst = true;
 
     public DetailClassPresenter(BaseDelegate mClassDelegate) {
         super(mClassDelegate);
@@ -178,7 +179,10 @@ public class DetailClassPresenter extends BasePresenter {
                 }
 
                 if (response.getData() != null) {
-                    mClassDelegate.onLoadImage(response.getData().getArrayList());
+                    mClassDelegate.onLoadImage(response.getData().getArrayList(), isLoadImageFirst);
+                    if (isLoadImageFirst) {
+                        isLoadImageFirst = false;
+                    }
                 }
             }
 

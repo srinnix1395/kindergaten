@@ -26,13 +26,10 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         if (value - Math.floor(value) > 0) {
-            return "";
+            return "3";
         }
 
         String measureTime = ((Health) entryWeight.get((int) value).getData()).getMeasureTime();
-//
-//        String[] split = measureTime.split("/");
-
         return StringUtil.getTimeHealthIndex(measureTime);
     }
 }

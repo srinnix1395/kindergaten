@@ -4,7 +4,8 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="#000">
+             android:background="#000"
+             android:clickable="true">
 
     <it.sephiroth.android.library.imagezoom.ImageViewTouch
         android:id="@+id/touch_image_view"
@@ -29,7 +30,7 @@
         android:id="@+id/imageview_play_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80ffffff"
+        android:background="#80000000"
         android:scaleType="center"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_play"/>

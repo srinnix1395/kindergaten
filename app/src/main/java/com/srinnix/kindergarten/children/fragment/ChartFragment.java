@@ -21,6 +21,7 @@ import com.srinnix.kindergarten.custom.MarkerViewChart;
 import com.srinnix.kindergarten.model.Health;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 
@@ -95,6 +96,11 @@ public class ChartFragment extends BaseFragment {
         dataSet.setValueTextSize(10);
         dataSet.setHighLightColor(ContextCompat.getColor(mContext, resColorHighlight));
         dataSet.setDrawHighlightIndicators(false);
+        if (typeData == AppConstant.TYPE_WEIGHT) {
+            dataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> String.format(Locale.getDefault(), "%.1f", value));
+        } else {
+            dataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> String.valueOf(((int) value)));
+        }
 
         LineData lineData = new LineData(dataSet);
 
@@ -105,6 +111,7 @@ public class ChartFragment extends BaseFragment {
         xAxis.setAxisLineColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
         xAxis.setTextSize(9);
         xAxis.setValueFormatter(new DayAxisValueFormatter(entries));
+        xAxis.setGranularity(1f);
 
         YAxis axisLeft = chart.getAxisLeft();
         axisLeft.setDrawAxisLine(false);
@@ -131,8 +138,8 @@ public class ChartFragment extends BaseFragment {
         chart.setData(lineData);
         chart.animateX(375, Easing.EasingOption.EaseInBack);
 
-        chart.setVisibleXRangeMaximum(6);
-//        chart.moveViewToX(entries.size() - 1);
+        chart.setVisibleXRangeMaximum(5);
+        chart.moveViewToX(5);
     }
 
     @Override

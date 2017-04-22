@@ -47,6 +47,11 @@ public class Health implements Parcelable{
         heightState = AppConstant.UNSPECIFIED;
     }
 
+    public Health(int i, String time) {
+        heightState = i;
+        measureTime = time;
+    }
+
     protected Health(Parcel in) {
         id = in.readString();
         measureTime = in.readString();

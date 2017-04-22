@@ -67,7 +67,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     TextView tvClassName;
 
     @BindView(R.id.recyclerview_image_class)
-    RecyclerView rvImageClass;
+    RecyclerView rvListImage;
 
     @BindView(R.id.view_line_member)
     View viewLineMember;
@@ -98,7 +98,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     private DetailClassPresenter mPresenter;
 
-    private ArrayList<Object> listImage;
+    private ArrayList<Object> mListImage;
     private ImageAdapter mImageAdapter;
 
     private ArrayList<Child> childArrayList;
@@ -113,7 +113,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_detail_class1;
+        return R.layout.fragment_detail_class;
     }
 
     @Override
@@ -123,10 +123,10 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID
                 , position -> mPresenter.onClickChildViewHolder(childArrayList.get(position).getId()));
 
-        listImage = new ArrayList<>();
-        listImage.add(new LoadingItem());
-        mImageAdapter = new ImageAdapter(listImage,
-                (position, sharedTransitionView) -> mPresenter.onClickImage(DetailClassFragment.this, sharedTransitionView, ((Image) listImage.get(position))));
+        mListImage = new ArrayList<>();
+        mListImage.add(new LoadingItem());
+        mImageAdapter = new ImageAdapter(mListImage,
+                (position, sharedTransitionView) -> mPresenter.onClickImage(DetailClassFragment.this, sharedTransitionView, ((Image) mListImage.get(position))));
     }
 
     @Override
@@ -169,28 +169,33 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         rvMember.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         rvMember.setAdapter(childrenAdapter);
 
-        rvImageClass.setAdapter(mImageAdapter);
+        rvListImage.setAdapter(mImageAdapter);
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 3);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (listImage.get(position) instanceof LoadingItem) {
+                if (mListImage.get(position) instanceof LoadingItem) {
                     return 3;
                 }
                 return 1;
             }
         });
-        rvImageClass.setLayoutManager(layoutManager);
-        rvImageClass.addOnScrollListener(new EndlessScrollDownListener(layoutManager) {
+        rvListImage.setLayoutManager(layoutManager);
+        rvListImage.addOnScrollListener(new EndlessScrollDownListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
-                mPresenter.getImage(listImage);
+                int size = mListImage.size();
+                if (mListImage.get(size - 1) instanceof Image) {
+                    return;
+                }
+
+                mPresenter.getImage(mListImage);
             }
         });
         SpacesItemDecoration decoration = new SpacesItemDecoration(mImageAdapter, UiUtils.dpToPixel(mContext, 2), 3);
-        rvImageClass.addItemDecoration(decoration);
+        rvListImage.addItemDecoration(decoration);
 
         pbClass.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary)
                 , PorterDuff.Mode.SRC_ATOP);
@@ -338,19 +343,28 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     }
 
     @Override
-    public void onLoadImage(ArrayList<Image> data) {
-        int size = listImage.size();
-        if (data.isEmpty()) {
-            listImage.remove(size - 1);
-            mImageAdapter.notifyItemRemoved(size - 1);
-            return;
+    public void onLoadImage(ArrayList<Image> data, boolean isLoadImageFirst) {
+        int sizeNewData = data.size();
+        int sizeTotal = mListImage.size();
+
+        if (sizeNewData < AppConstant.ITEM_IMAGE_PER_PAGE) {
+            if (!mListImage.isEmpty() && mListImage.get(sizeTotal - 1) instanceof LoadingItem) {
+                mListImage.remove(sizeTotal - 1);
+                mImageAdapter.notifyItemRemoved(sizeTotal - 1);
+            }
+            if (sizeNewData > 0) {
+                sizeTotal = mListImage.size();
+
+                mListImage.addAll(data);
+                mImageAdapter.notifyItemRangeInserted(sizeTotal, data.size());
+            }
+        } else {
+            mListImage.addAll(sizeTotal - 1, data);
+            mImageAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
         }
 
-        listImage.addAll(size - 1, data);
-        mImageAdapter.notifyItemRangeInserted(size - 1, data.size());
-
-        if (listImage.size() - data.size() == 1) {
-            rvImageClass.smoothScrollToPosition(0);
+        if (isLoadImageFirst && !mListImage.isEmpty()) {
+            rvListImage.scrollToPosition(0);
         }
     }
 }
