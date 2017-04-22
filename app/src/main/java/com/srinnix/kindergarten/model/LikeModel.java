@@ -12,11 +12,11 @@ public class LikeModel {
     @Expose
     private String idUser;
 
-    @SerializedName("name")
+    @SerializedName("name_user")
     @Expose
     private String name;
 
-    @SerializedName("image")
+    @SerializedName("image_user")
     @Expose
     private String image;
 

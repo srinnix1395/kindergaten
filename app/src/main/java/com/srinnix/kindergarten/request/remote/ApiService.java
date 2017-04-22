@@ -67,8 +67,8 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<ApiResponse<LikeResponse>> likePost(@Header("x-access-token") String token,
                                                    @Field("_id_user") String idUser,
-                                                   @Field("name") String name,
-                                                   @Field("image") String image,
+                                                   @Field("name_user") String name,
+                                                   @Field("image_user") String image,
                                                    @Field("account_type") int accountType,
                                                    @Field("_id_post") String idPost);
 
@@ -83,7 +83,7 @@ public interface ApiService {
                                                                     @Query("time_prev_like") long timePrevLike);
 
     @GET(AppConstant.API_GET_COMMENT)
-    Observable<ApiResponse<ArrayList<Comment>>> getComment(@Query("_id_object") String idPost,
+    Observable<ApiResponse<ArrayList<Comment>>> getComment(@Query("_id_post") String idPost,
                                                            @Query("time_prev_comment") long timeLastComment);
 
     @POST(AppConstant.API_INSERT_COMMENT)

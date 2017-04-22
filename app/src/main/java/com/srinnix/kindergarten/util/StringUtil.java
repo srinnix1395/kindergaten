@@ -83,14 +83,21 @@ public class StringUtil {
         String[] namesChild = children.getName().split(" ");
         int sizeChild = namesChild.length;
 
+        String middleName;
+        if (namesParent[size - 2].equalsIgnoreCase("thị") ||
+                namesParent[size - 2].equalsIgnoreCase("văn")) {
+            middleName = "";
+        } else {
+            middleName = " " + namesParent[size - 2];
+        }
+
         if (contact.getGender().equals(AppConstant.MALE)) {
-            return String.format("%s %s %s - %s %s %s", context.getString(R.string.Mr),
-                    namesParent[size - 2], namesParent[size - 1], context.getString(R.string.baby),
+            return String.format("%s%s %s - %s %s %s", context.getString(R.string.Mr),
+                    middleName, namesParent[size - 1], context.getString(R.string.baby),
                     namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
         } else {
-            return String.format("%s %s %s - %s %s %s", context.getString(R.string.Ms),
-                    namesParent[size - 2].equalsIgnoreCase("thị") ? "" : namesParent[size - 2]
-                    , namesParent[size - 1], context.getString(R.string.baby),
+            return String.format("%s%s %s - %s %s %s", context.getString(R.string.Ms),
+                    middleName, namesParent[size - 1], context.getString(R.string.baby),
                     namesChild[sizeChild - 2], namesChild[sizeChild - 1]).trim();
         }
 
