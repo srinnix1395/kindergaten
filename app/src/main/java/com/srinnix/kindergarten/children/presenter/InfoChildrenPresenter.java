@@ -34,6 +34,7 @@ public class InfoChildrenPresenter extends BasePresenter {
     private ChildrenDelegate mChildrenDelegate;
     private ChildrenHelper mHelper;
     private String idChild;
+    private boolean isLoadTimelineFirst = true;
 
     public InfoChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
@@ -102,21 +103,27 @@ public class InfoChildrenPresenter extends BasePresenter {
                     return;
                 }
 
-                mChildrenDelegate.onLoadChildrenTimeLine(response.getData());
+                mChildrenDelegate.onLoadChildrenTimeLine(response.getData(), isLoadTimelineFirst);
+                if (isLoadTimelineFirst) {
+                    isLoadTimelineFirst = false;
+                }
             }
 
             @Override
             public void onFail(Throwable throwable) {
-
+                ErrorUtil.handleException(mContext, throwable);
             }
         });
     }
 
-    public void onClickIndex(ArrayList<Object> mListChildrenHealth, int position) {
+    public void onClickIndex(ArrayList<Object> mListChildrenHealth) {
         ArrayList<Health> listHealth = new ArrayList<>();
         for (Object o : mListChildrenHealth) {
             if (o instanceof HealthTotal && ((HealthTotal) o).getWeight() != AppConstant.UNSPECIFIED) {
-                listHealth.add((Health) o);
+                listHealth.add(0, (Health) o);
+                if (listHealth.size() == 12) {
+                    break;
+                }
             }
         }
 

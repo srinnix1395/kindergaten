@@ -35,6 +35,6 @@
     <color name="colorPrimaryFade">#4D6580d4</color>
     <color name="colorOrange">#ff9e68</color>
     <color name="color_pressed">#40000000</color>
-    <color name="colorGridChart">#f2f2f7</color>
+    <color name="colorGridChart">#f2f2f5</color>
 
 </resources>

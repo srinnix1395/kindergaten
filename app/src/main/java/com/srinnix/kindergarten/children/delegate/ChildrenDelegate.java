@@ -16,5 +16,5 @@ public interface ChildrenDelegate extends BaseDelegate {
 
     void onLoadChildren(Child child);
 
-    void onLoadChildrenTimeLine(ArrayList<HealthTotal> data);
+    void onLoadChildrenTimeLine(ArrayList<HealthTotal> data, boolean isLoadTimelineFirst);
 }

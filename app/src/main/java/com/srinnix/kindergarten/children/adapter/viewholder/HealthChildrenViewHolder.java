@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.HealthTotal;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.Locale;
@@ -87,7 +88,6 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     TextView tvOthers;
 
     private OnClickViewHolderListener listener;
-    private int position;
     private boolean isDisplayHealthContent;
     private boolean canExpand;
 
@@ -104,10 +104,8 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bindData(HealthTotal healthTotal, int position) {
-        this.position = position;
-
-        tvTime.setText(healthTotal.getMeasureTime());
+    public void bindData(HealthTotal healthTotal) {
+        tvTime.setText(StringUtil.getTimeHealthIndex(healthTotal.getMeasureTime()));
 
         if (healthTotal.getWeight() == AppConstant.UNSPECIFIED ||
                 healthTotal.getHeight() == AppConstant.UNSPECIFIED) {
@@ -208,7 +206,7 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     @OnClick({R.id.layout_weight, R.id.layout_height})
     public void onClickIndex() {
         if (listener != null) {
-            listener.onClickIndex(position);
+            listener.onClickIndex();
         }
     }
 
@@ -231,6 +229,6 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
 
 
     public interface OnClickViewHolderListener {
-        void onClickIndex(int position);
+        void onClickIndex();
     }
 }

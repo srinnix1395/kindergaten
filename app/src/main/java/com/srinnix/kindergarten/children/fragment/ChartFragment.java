@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -11,13 +12,12 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.DayAxisValueFormatter;
+import com.srinnix.kindergarten.custom.MarkerViewChart;
 import com.srinnix.kindergarten.model.Health;
 
 import java.util.ArrayList;
@@ -74,20 +74,12 @@ public class ChartFragment extends BaseFragment {
             onBackPressed();
         });
 
-
-        initChart(chartHeight, entryHeight, R.string.height);
-
-//        entryWeight.add(new Entry(0, 11.5f));
-//        entryWeight.add(new Entry(1, 12.3f));
-//        entryWeight.add(new Entry(2, 11.9f));
-//        entryWeight.add(new Entry(3, 13.0f));
-//        entryWeight.add(new Entry(4, 13.4f));
-//        entryWeight.add(new Entry(5, 13.5f));
-//        entryWeight.add(new Entry(6, 14.9f));
-        initChart(chartWeight, entryWeight, R.string.weight);
+        initChart(chartHeight, entryHeight, R.string.height, R.color.colorAccent, AppConstant.TYPE_HEIGHT);
+        initChart(chartWeight, entryWeight, R.string.weight, R.color.colorOrange, AppConstant.TYPE_WEIGHT);
     }
 
-    private void initChart(LineChart chart, ArrayList<Entry> entries, int resLabel) {
+    private void initChart(LineChart chart, ArrayList<Entry> entries, int resLabel,
+                           int resColorHighlight, int typeData) {
         if (entries.isEmpty()) {
             return;
         }
@@ -101,6 +93,8 @@ public class ChartFragment extends BaseFragment {
         dataSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorOrange));
         dataSet.setValueTextColor(ContextCompat.getColor(mContext, R.color.colorPrimaryText));
         dataSet.setValueTextSize(10);
+        dataSet.setHighLightColor(ContextCompat.getColor(mContext, resColorHighlight));
+        dataSet.setDrawHighlightIndicators(false);
 
         LineData lineData = new LineData(dataSet);
 
@@ -109,12 +103,14 @@ public class ChartFragment extends BaseFragment {
         xAxis.setDrawGridLines(false);
         xAxis.setAxisLineWidth(1.5f);
         xAxis.setAxisLineColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
+        xAxis.setTextSize(9);
         xAxis.setValueFormatter(new DayAxisValueFormatter(entries));
 
         YAxis axisLeft = chart.getAxisLeft();
         axisLeft.setDrawAxisLine(false);
         axisLeft.setGridColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
         axisLeft.setGridLineWidth(1.5f);
+        axisLeft.setTextSize(9);
 
         YAxis axisRight = chart.getAxisRight();
         axisRight.setDrawAxisLine(false);
@@ -122,25 +118,21 @@ public class ChartFragment extends BaseFragment {
         axisRight.setGridColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
         axisRight.setGridLineWidth(1.5f);
 
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setScaleYEnabled(false);
+        chart.setScaleXEnabled(false);
         chart.setDrawGridBackground(false);
-        chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
+        chart.setMarker(new MarkerViewChart(mContext, R.layout.view_marker, typeData));
         chart.setNoDataTextColor(ContextCompat.getColor(mContext, R.color.colorPrimaryText));
         chart.setNoDataText("Không có dữ liệu");
         Description description = new Description();
         description.setText("");
         chart.setDescription(description);
         chart.setData(lineData);
-        chart.invalidate();
+        chart.animateX(375, Easing.EasingOption.EaseInBack);
+
+        chart.setVisibleXRangeMaximum(6);
+//        chart.moveViewToX(entries.size() - 1);
     }
 
     @Override

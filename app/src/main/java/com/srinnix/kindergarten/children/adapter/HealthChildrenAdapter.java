@@ -69,7 +69,7 @@ public class HealthChildrenAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
         } else {
-            ((HealthChildrenViewHolder) holder).bindData((HealthTotal) arrayList.get(position), position);
+            ((HealthChildrenViewHolder) holder).bindData((HealthTotal) arrayList.get(position));
         }
     }
 

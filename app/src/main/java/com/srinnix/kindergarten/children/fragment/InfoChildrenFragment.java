@@ -87,8 +87,8 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
 
         mListChildrenHealth = new ArrayList<>();
         mListChildrenHealth.add(new LoadingItem());
-        mHealthChildrenAdapter = new HealthChildrenAdapter(mListChildrenHealth, position -> {
-            mPresenter.onClickIndex(mListChildrenHealth, position);
+        mHealthChildrenAdapter = new HealthChildrenAdapter(mListChildrenHealth, () -> {
+            mPresenter.onClickIndex(mListChildrenHealth);
         });
         rvHealthChildren.setAdapter(mHealthChildrenAdapter);
 
@@ -100,7 +100,7 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
                 DebugLog.i("on load more");
                 int size = mListChildrenHealth.size();
                 if (size > 1 && mListChildrenHealth.get(size - 2) instanceof HealthTotal) {
-                    mPresenter.getTimelineChildren(((HealthTotal) mListChildrenHealth.get(size - 1)).getCreatedAt());
+                    mPresenter.getTimelineChildren(((HealthTotal) mListChildrenHealth.get(size - 2)).getCreatedAt());
                 }
             }
         };
@@ -149,7 +149,7 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
     }
 
     @Override
-    public void onLoadChildrenTimeLine(ArrayList<HealthTotal> data) {
+    public void onLoadChildrenTimeLine(ArrayList<HealthTotal> data, boolean isLoadTimelineFirst) {
         int sizeNewData = data.size();
         if (sizeNewData > 0) {
             data.get(sizeNewData - 1).setDisplayLine(false);
@@ -181,6 +181,10 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
 
             mListChildrenHealth.addAll(sizeTotal - 1, data);
             mHealthChildrenAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
+        }
+
+        if (isLoadTimelineFirst && !mListChildrenHealth.isEmpty()) {
+            rvHealthChildren.smoothScrollToPosition(0);
         }
     }
 }

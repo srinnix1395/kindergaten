@@ -85,6 +85,7 @@ public class AppConstant {
     public static final String KEY_LIKE = "KEY_LIKE";
     public static final String KEY_TRANSITION = "KEY_TRANSITION";
     public static final String KEY_HEALTH = "KEY_HEALTH";
+    public static final String KEY_POSITION = "KEY_POSITION";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -102,4 +103,7 @@ public class AppConstant {
     public static final int STATE_HEIGHT_STUNTED = 2;
 
     public static final int UNSPECIFIED = -1;
+
+    public static final int TYPE_WEIGHT = 1;
+    public static final int TYPE_HEIGHT = 2;
 }

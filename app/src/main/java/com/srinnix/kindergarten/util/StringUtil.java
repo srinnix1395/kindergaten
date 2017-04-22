@@ -213,4 +213,8 @@ public class StringUtil {
             }
         }
     }
+
+    public static String getTimeHealthIndex(String measureTime) {
+        return measureTime.substring(measureTime.indexOf("/") + 1);
+    }
 }
