@@ -93,4 +93,6 @@
     <string name="weight">Cân nặng</string>
     <string name="height">Chiều cao</string>
     <string name="normal">Bình thường</string>
+    <string name="post">Đăng</string>
+    <string name="post_content">Nội dung bản tin</string>
 </resources>

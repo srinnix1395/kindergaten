@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
-import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.PostViewHolder;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.PostedViewHolder;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
@@ -37,10 +36,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case VIEW_TYPE_POST: {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
-                return new PostViewHolder(view);
-            }
             case VIEW_TYPE_POSTED: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted, parent, false);
                 return new PostedViewHolder(view, mPostListener, viewType);

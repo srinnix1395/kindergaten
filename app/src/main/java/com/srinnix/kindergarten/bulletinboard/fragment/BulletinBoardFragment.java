@@ -1,8 +1,12 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
@@ -19,6 +23,7 @@ import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,6 +31,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -37,6 +43,9 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @BindView(R.id.recyclerview_schoolboard)
     RecyclerView rvListPost;
+
+    @BindView(R.id.floatbutton_post)
+    FloatingActionButton fabPost;
 
     private BulletinBoardPresenter mPresenter;
     private PostAdapter mPostAdapter;
@@ -85,11 +94,29 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Override
     protected void initChildView() {
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn() &&
+                SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
+            fabPost.setVisibility(View.VISIBLE);
+        }
+
         rvListPost.setAdapter(mPostAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         rvListPost.setLayoutManager(linearLayoutManager);
         rvListPost.addOnScrollListener(new EndlessScrollDownListener(linearLayoutManager) {
+            Handler handlerFab = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    fabPost.animate()
+                            .alpha(1f)
+                            .translationY(0)
+                            .setInterpolator(new FastOutSlowInInterpolator())
+                            .setDuration(200)
+                            .start();
+                }
+            };
+
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
@@ -98,6 +125,25 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                     return;
                 }
                 mPresenter.onLoadMore(rvListPost, mListPost, mPostAdapter);
+            }
+
+            @Override
+            public void onStateChanged(int newState) {
+                super.onStateChanged(newState);
+                if (fabPost.getVisibility() != View.VISIBLE) {
+                    return;
+                }
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    handlerFab.removeCallbacks(runnable);
+                    fabPost.animate()
+                            .translationY(fabPost.getHeight() / 2)
+                            .alpha(0f)
+                            .setInterpolator(new FastOutSlowInInterpolator())
+                            .setDuration(200)
+                            .start();
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    handlerFab.postDelayed(runnable, 1500);
+                }
             }
         });
 
@@ -126,8 +172,17 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         }
     }
 
+    @OnClick(R.id.floatbutton_post)
+    void onClickPost(){
+        mPresenter.onClickAddPost();
+    }
+
     @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
+        if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS
+                && fabPost.getVisibility() != View.VISIBLE) {
+            fabPost.setVisibility(View.VISIBLE);
+        }
         mPresenter.refresh(refreshLayout, mListPost);
     }
 

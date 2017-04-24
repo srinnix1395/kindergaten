@@ -58,5 +58,14 @@ public abstract class EndlessScrollDownListener extends RecyclerView.OnScrollLis
         }
     }
 
+    @Override
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        onStateChanged(newState);
+    }
+
+    public void onStateChanged(int newState) {
+
+    }
     public abstract void onLoadMore();
 }

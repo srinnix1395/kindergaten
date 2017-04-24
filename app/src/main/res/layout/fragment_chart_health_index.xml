@@ -21,15 +21,15 @@
             android:id="@+id/imageview_height"
             android:layout_width="@dimen/icon_medium_size"
             android:layout_height="@dimen/item_size"
-            android:layout_marginLeft="@dimen/margin_horizontal"
-            android:layout_marginRight="@dimen/padding_drawable_high"
+            android:layout_marginEnd="@dimen/padding_drawable_high"
+            android:layout_marginStart="@dimen/margin_horizontal"
             android:src="@drawable/image_height"/>
 
         <TextView
             android:id="@+id/textview_height"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_size"
-            android:layout_toRightOf="@+id/imageview_height"
+            android:layout_toEndOf="@+id/imageview_height"
             android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
             android:text="@string/height"
@@ -59,15 +59,15 @@
             android:id="@+id/imageview_weight"
             android:layout_width="@dimen/icon_medium_size"
             android:layout_height="@dimen/item_size"
-            android:layout_marginLeft="@dimen/margin_horizontal"
-            android:layout_marginRight="@dimen/padding_drawable_high"
+            android:layout_marginEnd="@dimen/padding_drawable_high"
+            android:layout_marginStart="@dimen/margin_horizontal"
             android:src="@drawable/image_weight"/>
 
         <TextView
             android:id="@+id/textview_weight"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_size"
-            android:layout_toRightOf="@+id/imageview_weight"
+            android:layout_toEndOf="@+id/imageview_weight"
             android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
             android:text="@string/weight"

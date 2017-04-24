@@ -23,11 +23,13 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private ImageAdapter mImageAdapter;
     private final int mSpace;
     private final int spanCount;
+    private boolean includeEdge;
 
-    public SpacesItemDecoration(ImageAdapter mImageAdapter, int space, int spanCount) {
+    public SpacesItemDecoration(ImageAdapter mImageAdapter, int space, int spanCount, boolean includeEdge) {
         this.mImageAdapter = mImageAdapter;
         this.mSpace = space;
         this.spanCount = spanCount;
+        this.includeEdge = includeEdge;
     }
 
     @Override
@@ -39,10 +41,22 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
         int column = position % spanCount; // item column
 
-        outRect.left = column * mSpace / spanCount; // column * ((1f / spanCount) * mSpace)
-        outRect.right = mSpace - (column + 1) * mSpace / spanCount; // mSpace - (column + 1) * ((1f /    spanCount) * mSpace)
-        if (position >= spanCount) {
-            outRect.top = mSpace; // item top
+        if (includeEdge) {
+            outRect.left = mSpace - column * mSpace / spanCount; // mSpace - column * ((1f / spanCount) * mSpace)
+            outRect.right = (column + 1) * mSpace / spanCount; // (column + 1) * ((1f / spanCount) * mSpace)
+
+            if (position < spanCount) { // top edge
+                outRect.top = mSpace;
+            }
+            outRect.bottom = mSpace; // item bottom
+        } else {
+            outRect.left = column * mSpace / spanCount; // column * ((1f / spanCount) * mSpace)
+            outRect.right = mSpace - (column + 1) * mSpace / spanCount; // mSpace - (column + 1) * ((1f /    spanCount) * mSpace)
+            if (position >= spanCount) {
+                outRect.top = mSpace; // item top
+            }
         }
+
+
     }
 }

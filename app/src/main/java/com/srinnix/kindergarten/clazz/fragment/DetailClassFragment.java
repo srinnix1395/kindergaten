@@ -194,7 +194,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
                 mPresenter.getImage(mListImage);
             }
         });
-        SpacesItemDecoration decoration = new SpacesItemDecoration(mImageAdapter, UiUtils.dpToPixel(mContext, 2), 3);
+        SpacesItemDecoration decoration = new SpacesItemDecoration(mImageAdapter, UiUtils.dpToPixel(mContext, 2), 3, false);
         rvListImage.addItemDecoration(decoration);
 
         pbClass.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary)

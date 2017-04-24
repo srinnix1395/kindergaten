@@ -1,0 +1,137 @@
+package com.srinnix.kindergarten.bulletinboard.fragment;
+
+import android.graphics.Color;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.TextView;
+
+import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.fragment.BaseFragment;
+import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
+import com.srinnix.kindergarten.bulletinboard.presenter.PostPresenter;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+
+/**
+ * Created by anhtu on 4/24/2017.
+ */
+
+public class PostFragment extends BaseFragment {
+    @BindView(R.id.toolbar_post)
+    Toolbar toolbar;
+
+    @BindView(R.id.textview_post)
+    TextView tvPost;
+
+    @BindView(R.id.textview_content)
+    TextView tvContent;
+
+    @BindView(R.id.recycler_view_image)
+    RecyclerView rvImages;
+
+    private ArrayList<String> mListImage;
+    private ImagePostAdapter mAdapter;
+    private PostPresenter mPresenter;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_post;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mListImage = new ArrayList<>();
+        mAdapter = new ImagePostAdapter(mListImage, position -> {
+            mListImage.remove(position);
+            mAdapter.notifyItemRemoved(position);
+
+            if (mListImage.isEmpty()) {
+                rvImages.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    protected void initChildView() {
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("Đăng vào bảng tin");
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(view -> onBackPressed());
+
+        tvPost.setEnabled(false);
+        tvPost.setTextColor(Color.parseColor("#80ffffff"));
+
+        tvContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    tvPost.setEnabled(true);
+                    tvPost.setTextColor(Color.parseColor("#ffffff"));
+                } else {
+                    tvPost.setEnabled(false);
+                    tvPost.setTextColor(Color.parseColor("#80ffffff"));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        rvImages.setVisibility(View.GONE);
+        rvImages.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        rvImages.setAdapter(mAdapter);
+    }
+
+    @OnClick({R.id.textview_post, R.id.imageview_image})
+    void onClick(View v){
+        switch (v.getId()) {
+            case R.id.textview_post:{
+                mPresenter.onClickPost(tvContent.getText());
+                break;
+            }
+            case R.id.imageview_image:{
+                mPresenter.onClickImage();
+                break;
+            }
+            case R.id.imageview_video:{
+                mPresenter.onClickVideo();
+                break;
+            }
+            case R.id.imageview_facebook:{
+                mPresenter.onClickFacebook();
+                break;
+            }
+            case R.id.imageview_schedule:{
+                mPresenter.onClickSchedule();
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected BasePresenter initPresenter() {
+        mPresenter = new PostPresenter(this);
+        return mPresenter;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+}

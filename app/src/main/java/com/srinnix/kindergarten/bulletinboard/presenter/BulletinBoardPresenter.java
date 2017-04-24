@@ -15,6 +15,7 @@ import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.fragment.CommentFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.LikeDialogFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.PostFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
@@ -329,12 +330,15 @@ public class BulletinBoardPresenter extends BasePresenter {
         mBoardDelegate.updateLogout();
     }
 
+    public void onClickAddPost() {
+        ViewManager.getInstance().addFragment(new PostFragment(), null,
+                R.anim.translate_down_to_up, R.anim.translate_up_to_down);
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.clear();
         }
     }
-
-
 }

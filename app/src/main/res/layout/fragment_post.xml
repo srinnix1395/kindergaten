@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/textview_post"
+            style="?android:textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/post"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/textview_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="@string/post_content"
+        android:padding="@dimen/margin_horizontal_low"
+        android:textSize="20sp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_image"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        tools:listitem="@layout/item_image_class"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorDividerColor"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size">
+
+        <ImageView
+            android:id="@+id/imageview_image"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_images_post"/>
+
+        <ImageView
+            android:id="@+id/imageview_video"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_toEndOf="@+id/imageview_image"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_video_post"/>
+
+        <ImageView
+            android:id="@+id/imageview_schedule"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_alignParentEnd="true"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_schedule"/>
+
+        <ImageView
+            android:id="@+id/imageview_facebook"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_toStartOf="@+id/imageview_setting"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_facebook"/>
+
+
+    </RelativeLayout>
+</LinearLayout>
