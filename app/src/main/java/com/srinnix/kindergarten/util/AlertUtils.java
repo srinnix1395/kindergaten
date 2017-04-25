@@ -65,6 +65,20 @@ public class AlertUtils {
         return dialog;
     }
 
+    public static void showDialogCancelPost(Context mContext, OnClickListener listener) {
+        new AlertDialog.Builder(mContext)
+                .setTitle(R.string.confirm)
+                .setMessage(R.string.message_cancel_post)
+                .setPositiveButton(R.string.next, (dialog, which) -> {
+                    if (listener != null) {
+                        listener.onClick();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
     public interface OnClickListener {
         void onClick();
     }

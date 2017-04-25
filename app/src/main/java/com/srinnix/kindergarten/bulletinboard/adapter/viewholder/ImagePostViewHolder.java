@@ -21,16 +21,13 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
 
     private OnClickViewHolderListener listener;
 
-    private int position;
-
     public ImagePostViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.listener = listener;
     }
 
-    public void bindData(String uri, int position) {
-        this.position = position;
+    public void bindData(String uri) {
 
         Glide.with(itemView.getContext())
                 .load(uri)
@@ -43,7 +40,7 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.imageview_remove)
     void onClickRemove() {
         if (listener != null) {
-            listener.onClickRemove(position);
+            listener.onClickRemove(getAdapterPosition());
         }
     }
 

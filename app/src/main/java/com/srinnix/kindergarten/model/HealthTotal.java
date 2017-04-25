@@ -8,7 +8,36 @@ import com.srinnix.kindergarten.constant.AppConstant;
  * Created by anhtu on 4/11/2017.
  */
 
-public class HealthTotal extends Health{
+public class HealthTotal {
+
+    @SerializedName("_id")
+    @Expose
+    private String id;
+
+    @SerializedName("measurement_time")
+    @Expose
+    private String measureTime;
+
+    @SerializedName("weight")
+    @Expose
+    private float weight;
+
+    @SerializedName("weight_state")
+    @Expose
+    private int weightState;
+
+    @SerializedName("height")
+    @Expose
+    private int height;
+
+    @SerializedName("height_state")
+    @Expose
+    private int heightState;
+
+    @SerializedName("created_at")
+    @Expose
+    private long createdAt;
+
     @SerializedName("eyes")
     @Expose
     private String eyes;
@@ -32,8 +61,39 @@ public class HealthTotal extends Health{
     private boolean isDisplayLine = true;
 
     public HealthTotal() {
-        super();
+        weight = AppConstant.UNSPECIFIED;
+        weightState = AppConstant.UNSPECIFIED;
+        height = AppConstant.UNSPECIFIED;
+        heightState = AppConstant.UNSPECIFIED;
         result = AppConstant.UNSPECIFIED;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getMeasureTime() {
+        return measureTime;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public int getWeightState() {
+        return weightState;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getHeightState() {
+        return heightState;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
     }
 
     public String getEyes() {

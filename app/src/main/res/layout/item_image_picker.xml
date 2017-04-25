@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.srinnix.kindergarten.custom.SquareItemLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,17 +11,9 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-    <View
+    <ImageView
+        android:id="@+id/imageview_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_image_class"/>
-
-    <ImageView
-        android:id="@+id/imageview_video"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/margin_horizontal"
-        android:layout_marginTop="@dimen/margin_horizontal"
-        app:srcCompat="@drawable/ic_camera"/>
+        tools:src="@drawable/background_item_image_picker"/>
 </com.srinnix.kindergarten.custom.SquareItemLayout>

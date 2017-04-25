@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="measureType">
+        <enum name="Width" value="1"/>
+        <enum name="Height" value="2"/>
+    </attr>
+
+    <declare-styleable name="SquareItemLayout">
+        <attr name="measureType"/>
+    </declare-styleable>
+
+</resources>

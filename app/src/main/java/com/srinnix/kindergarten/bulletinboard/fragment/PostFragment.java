@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,12 @@ import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
 import com.srinnix.kindergarten.bulletinboard.presenter.PostPresenter;
+import com.srinnix.kindergarten.custom.SpacesItemDecoration;
+import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
+import com.srinnix.kindergarten.util.AlertUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -54,8 +61,14 @@ public class PostFragment extends BaseFragment {
             mListImage.remove(position);
             mAdapter.notifyItemRemoved(position);
 
-            if (mListImage.isEmpty()) {
+            if (!mListImage.isEmpty()) {
                 rvImages.setVisibility(View.GONE);
+
+                tvPost.setEnabled(true);
+                tvPost.setTextColor(Color.parseColor("#ffffff"));
+            } else {
+                tvPost.setEnabled(false);
+                tvPost.setTextColor(Color.parseColor("#80ffffff"));
             }
         });
     }
@@ -94,30 +107,34 @@ public class PostFragment extends BaseFragment {
         });
 
         rvImages.setVisibility(View.GONE);
-        rvImages.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         rvImages.setAdapter(mAdapter);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1, LinearLayoutManager.HORIZONTAL, false);
+        rvImages.setLayoutManager(gridLayoutManager);
+
+        rvImages.addItemDecoration(new SpacesItemDecoration(mContext, mAdapter, 2, 1, true));
     }
 
     @OnClick({R.id.textview_post, R.id.imageview_image})
-    void onClick(View v){
+    void onClick(View v) {
         switch (v.getId()) {
-            case R.id.textview_post:{
+            case R.id.textview_post: {
                 mPresenter.onClickPost(tvContent.getText());
                 break;
             }
-            case R.id.imageview_image:{
+            case R.id.imageview_image: {
                 mPresenter.onClickImage();
                 break;
             }
-            case R.id.imageview_video:{
+            case R.id.imageview_video: {
                 mPresenter.onClickVideo();
                 break;
             }
-            case R.id.imageview_facebook:{
+            case R.id.imageview_facebook: {
                 mPresenter.onClickFacebook();
                 break;
             }
-            case R.id.imageview_schedule:{
+            case R.id.imageview_schedule: {
                 mPresenter.onClickSchedule();
                 break;
             }
@@ -131,7 +148,47 @@ public class PostFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void onEventPickImageLocal(MessageImageLocal message) {
+        if (rvImages.getVisibility() != View.VISIBLE) {
+            rvImages.setVisibility(View.VISIBLE);
+        }
+        int size = mListImage.size();
+
+        mListImage.addAll(message.mListImage);
+        mAdapter.notifyItemRangeInserted(size, message.mListImage.size());
+
+        if (!mListImage.isEmpty()) {
+            tvPost.setEnabled(true);
+            tvPost.setTextColor(Color.parseColor("#ffffff"));
+        } else {
+            tvPost.setEnabled(false);
+            tvPost.setTextColor(Color.parseColor("#80ffffff"));
+        }
+    }
+
+    @Override
     public void onBackPressed() {
+        if (tvContent.getText().length() > 0 || !mListImage.isEmpty()) {
+            AlertUtils.showDialogCancelPost(mContext, super::onBackPressed);
+            return;
+        }
+
         super.onBackPressed();
     }
 }

@@ -19,6 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.srinnix.kindergarten.constant.AppConstant.TYPE_HEIGHT;
+
 /**
  * Created by anhtu on 3/8/2017.
  */
@@ -204,9 +206,9 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
     }
 
     @OnClick({R.id.layout_weight, R.id.layout_height})
-    public void onClickIndex() {
+    public void onClickIndex(View v) {
         if (listener != null) {
-            listener.onClickIndex();
+            listener.onClickIndex(v.getId() == R.id.layout_weight ? AppConstant.TYPE_WEIGHT : TYPE_HEIGHT);
         }
     }
 
@@ -227,8 +229,7 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-
     public interface OnClickViewHolderListener {
-        void onClickIndex();
+        void onClickIndex(int type);
     }
 }

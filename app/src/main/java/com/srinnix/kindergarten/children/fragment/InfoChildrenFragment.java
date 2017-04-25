@@ -87,8 +87,8 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
 
         mListChildrenHealth = new ArrayList<>();
         mListChildrenHealth.add(new LoadingItem());
-        mHealthChildrenAdapter = new HealthChildrenAdapter(mListChildrenHealth, () -> {
-            mPresenter.onClickIndex(mListChildrenHealth);
+        mHealthChildrenAdapter = new HealthChildrenAdapter(mListChildrenHealth, (int type) -> {
+            mPresenter.onClickIndex(mListChildrenHealth, type);
         });
         rvHealthChildren.setAdapter(mHealthChildrenAdapter);
 

@@ -30,9 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:background="?attr/selectableItemBackground"
+        android:background="?selectableItemBackground"
         android:clickable="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_edit"/>
 </android.support.design.widget.CoordinatorLayout>

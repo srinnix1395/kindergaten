@@ -100,6 +100,8 @@ public interface ApiService {
     Observable<ApiResponse<ArrayList<String>>> getListLike(@Header("x-access-token") String token,
                                                            @Query("_id_user") String userId,
                                                            @Query("list_post") List<String> createdAt);
+    @POST(AppConstant.API_INSERT_POST)
+    Observable<ApiResponse<Post>> insertPost(@Header("x-access-token") String token);
 
     //POST END
 
@@ -140,4 +142,5 @@ public interface ApiService {
     @GET(AppConstant.API_GET_ACCOUNT_INFO)
     Observable<ApiResponse<User>> getAccountInfo(@Header("x-access-token") String token,
                                                  @Query("_id_user") String idUser);
+
 }

@@ -31,6 +31,7 @@ public class AppConstant {
     public static final String API_GET_LIST_LIKE = "post/getListLike";
     public static final String API_GET_COMMENT = "post/getComment";
     public static final String API_INSERT_COMMENT = "post/insertComment";
+    public static final String API_INSERT_POST = "post/insert";
 
     public static final String API_GET_LIST_CLASS = "class/getList";
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";
@@ -88,6 +89,7 @@ public class AppConstant {
     public static final String KEY_TRANSITION = "KEY_TRANSITION";
     public static final String KEY_HEALTH = "KEY_HEALTH";
     public static final String KEY_POSITION = "KEY_POSITION";
+    public static final String KEY_HEALTH_TYPE = "KEY_HEALTH_TYPE";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 

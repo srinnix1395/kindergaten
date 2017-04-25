@@ -13,21 +13,23 @@ Source: http://blog.grafixartist.com/pinterest-masonry-layout-staggered-grid/
 
 */
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.srinnix.kindergarten.clazz.adapter.ImageAdapter;
+import com.srinnix.kindergarten.util.UiUtils;
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-    private ImageAdapter mImageAdapter;
+    private RecyclerView.Adapter adapter;
     private final int mSpace;
     private final int spanCount;
     private boolean includeEdge;
 
-    public SpacesItemDecoration(ImageAdapter mImageAdapter, int space, int spanCount, boolean includeEdge) {
-        this.mImageAdapter = mImageAdapter;
-        this.mSpace = space;
+    public SpacesItemDecoration(Context mContext, RecyclerView.Adapter adapter, int space, int spanCount, boolean includeEdge) {
+        this.adapter = adapter;
+        this.mSpace = UiUtils.dpToPixel(mContext, space);
         this.spanCount = spanCount;
         this.includeEdge = includeEdge;
     }
@@ -35,7 +37,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
-        if (mImageAdapter.getItemViewType(position) == ImageAdapter.VIEW_TYPE_LOADING) {
+        if (adapter.getItemViewType(position) == ImageAdapter.VIEW_TYPE_LOADING) {
             return;
         }
 

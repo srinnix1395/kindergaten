@@ -3,7 +3,7 @@ package com.srinnix.kindergarten.custom;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthCompact;
 import com.srinnix.kindergarten.util.StringUtil;
 
 import java.util.ArrayList;
@@ -17,19 +17,19 @@ import java.util.ArrayList;
  */
 public class DayAxisValueFormatter implements IAxisValueFormatter {
 
-    private final ArrayList<Entry> entryWeight;
+    private final ArrayList<Entry> entries;
 
-    public DayAxisValueFormatter(ArrayList<Entry> entryWeight) {
-        this.entryWeight = entryWeight;
+    public DayAxisValueFormatter(ArrayList<Entry> entries) {
+        this.entries = entries;
     }
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         if (value - Math.floor(value) > 0) {
-            return "3";
+            return "";
         }
 
-        String measureTime = ((Health) entryWeight.get((int) value).getData()).getMeasureTime();
+        String measureTime = ((HealthCompact) entries.get((int) value).getData()).getTime();
         return StringUtil.getTimeHealthIndex(measureTime);
     }
 }

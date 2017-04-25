@@ -10,7 +10,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthTotal;
 
 /**
  * Created by anhtu on 4/22/2017.
@@ -33,7 +33,7 @@ public class MarkerViewChart extends MarkerView implements IMarker {
     public void refreshContent(Entry e, Highlight highlight) {
         int state;
         if (typeData == AppConstant.TYPE_WEIGHT) {
-            state = ((Health) e.getData()).getWeightState();
+            state = ((HealthTotal) e.getData()).getWeightState();
             switch (state) {
                 case AppConstant.STATE_WEIGHT_NORMAL: {
                     tvState.setText(R.string.normal);
@@ -49,7 +49,7 @@ public class MarkerViewChart extends MarkerView implements IMarker {
                 }
             }
         } else {
-            state = ((Health) e.getData()).getHeightState();
+            state = ((HealthTotal) e.getData()).getHeightState();
             switch (state) {
                 case AppConstant.STATE_HEIGHT_NORMAL: {
                     tvState.setText(R.string.normal);

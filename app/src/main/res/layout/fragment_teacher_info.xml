@@ -76,39 +76,9 @@
             tools:text="Tốt nhiệp trường cao đẳng sư phạm trung ương\nGiaso viên dạy giỏi"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/layout_retry"
+    <include
+        layout="@layout/layout_retry"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
-
-        <ImageView
-            android:id="@+id/imageview_retry"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_centerInParent="true"
-            android:padding="4dp"
-            android:src="@drawable/btn_loading"
-            android:visibility="gone"/>
-
-        <ProgressBar
-            android:id="@+id/progressbar_loading"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="@dimen/margin_vertical"
-            android:layout_marginTop="@dimen/margin_vertical"
-            android:padding="4.5dp"/>
-
-        <TextView
-            android:id="@+id/textview_retry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageview_retry"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="5dp"
-            android:text="@string/cant_connect"
-            android:visibility="gone"/>
-
-    </RelativeLayout>
-
+        android:layout_height="300dp"
+        android:visibility="gone"/>
 </RelativeLayout>

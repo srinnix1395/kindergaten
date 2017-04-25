@@ -95,4 +95,11 @@
     <string name="normal">Bình thường</string>
     <string name="post">Đăng</string>
     <string name="post_content">Nội dung bản tin</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="next">Tiếp tục</string>
+    <string name="message_cancel_post">Bạn sẽ từ bỏ những thông tin vừa định đăng?</string>
+    <string name="tap_to_select_image">Chạm để chọn ảnh</string>
+    <string name="image">ảnh</string>
+    <string name="photo_camera">Máy ảnh</string>
+    <string name="add">Thêm</string>
 </resources>

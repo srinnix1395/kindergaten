@@ -31,7 +31,7 @@ public class ImagePostAdapter extends RecyclerView.Adapter<ImagePostViewHolder> 
 
     @Override
     public void onBindViewHolder(ImagePostViewHolder holder, int position) {
-        holder.bindData(listImage.get(position), position);
+        holder.bindData(listImage.get(position));
     }
 
     @Override

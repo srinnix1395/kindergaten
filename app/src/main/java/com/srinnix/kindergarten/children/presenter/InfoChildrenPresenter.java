@@ -1,24 +1,25 @@
 package com.srinnix.kindergarten.children.presenter;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.activity.ChartActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
-import com.srinnix.kindergarten.children.fragment.ChartFragment;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
-import com.srinnix.kindergarten.model.Health;
+import com.srinnix.kindergarten.model.HealthCompact;
 import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
-import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
 
@@ -116,22 +117,44 @@ public class InfoChildrenPresenter extends BasePresenter {
         });
     }
 
-    public void onClickIndex(ArrayList<Object> mListChildrenHealth) {
-        ArrayList<Health> listHealth = new ArrayList<>();
-        for (Object o : mListChildrenHealth) {
-            if (o instanceof HealthTotal && ((HealthTotal) o).getWeight() != AppConstant.UNSPECIFIED) {
-                listHealth.add(0, (Health) o);
-                if (listHealth.size() == 12) {
-                    break;
+    public void onClickIndex(ArrayList<Object> mListChildrenHealth, int type) {
+        ArrayList<HealthCompact> listHealth = new ArrayList<>();
+
+        if (type == AppConstant.TYPE_HEIGHT) {
+            for (Object o : mListChildrenHealth) {
+                if (o instanceof HealthTotal && ((HealthTotal) o).getWeight() != AppConstant.UNSPECIFIED) {
+                    listHealth.add(0, new HealthCompact(((HealthTotal) o).getHeight(),
+                            ((HealthTotal) o).getHeightState(),
+                            ((HealthTotal) o).getMeasureTime()));
+                    if (listHealth.size() == 12) {
+                        break;
+                    }
+                }
+            }
+        } else {
+            for (Object o : mListChildrenHealth) {
+                if (o instanceof HealthTotal && ((HealthTotal) o).getWeight() != AppConstant.UNSPECIFIED) {
+                    listHealth.add(0, new HealthCompact(((HealthTotal) o).getWeight(),
+                            ((HealthTotal) o).getWeightState(),
+                            ((HealthTotal) o).getMeasureTime()));
+                    if (listHealth.size() == 12) {
+                        break;
+                    }
                 }
             }
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(AppConstant.KEY_HEALTH, listHealth);
+        Intent myIntent = new Intent(mContext, ChartActivity.class);
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext, R.anim.translate_right_to_left, R.anim.translate_left_to_right);
 
-        ViewManager.getInstance().addFragment(new ChartFragment(), bundle,
-                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        Bundle bundle = options.toBundle();
+        bundle.putParcelableArrayList(AppConstant.KEY_HEALTH, listHealth);
+        bundle.putInt(AppConstant.KEY_HEALTH_TYPE, type);
+
+        mContext.startActivity(myIntent, bundle);
+
+//        ViewManager.getInstance().addFragment(new ChartFragment(), bundle,
+//                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     @Override

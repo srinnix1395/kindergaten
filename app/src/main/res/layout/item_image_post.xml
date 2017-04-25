@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:measureType="Height">
 
     <ImageView
         android:id="@+id/imageview_image"
@@ -13,14 +14,13 @@
 
     <ImageView
         android:id="@+id/imageview_remove"
-        android:layout_width="@dimen/item_size"
-        android:layout_height="@dimen/item_size"
-        android:layout_alignParentEnd="true"
+        android:layout_width="@dimen/icon_medium_size"
+        android:layout_height="@dimen/icon_medium_size"
+        android:layout_gravity="end"
         android:layout_marginEnd="@dimen/margin_horizontal_low"
         android:layout_marginTop="@dimen/margin_horizontal_low"
-        android:background="@drawable/background_image_post"
         android:clickable="true"
         android:foreground="?selectableItemBackgroundBorderless"
         android:scaleType="center"
-        app:srcCompat="@drawable/ic_close"/>
+        app:srcCompat="@drawable/image_close"/>
 </com.srinnix.kindergarten.custom.SquareItemLayout>
