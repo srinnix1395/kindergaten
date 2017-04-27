@@ -1,9 +1,7 @@
 package com.srinnix.kindergarten.custom;
 
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.srinnix.kindergarten.model.HealthCompact;
 import com.srinnix.kindergarten.util.StringUtil;
 
 import java.util.ArrayList;
@@ -17,10 +15,10 @@ import java.util.ArrayList;
  */
 public class DayAxisValueFormatter implements IAxisValueFormatter {
 
-    private final ArrayList<Entry> entries;
+    private final ArrayList<String> times;
 
-    public DayAxisValueFormatter(ArrayList<Entry> entries) {
-        this.entries = entries;
+    public DayAxisValueFormatter(ArrayList<String> times) {
+        this.times = times;
     }
 
     @Override
@@ -29,7 +27,6 @@ public class DayAxisValueFormatter implements IAxisValueFormatter {
             return "";
         }
 
-        String measureTime = ((HealthCompact) entries.get((int) value).getData()).getTime();
-        return StringUtil.getTimeHealthIndex(measureTime);
+        return StringUtil.getTimeHealthIndex(times.get((int) value));
     }
 }

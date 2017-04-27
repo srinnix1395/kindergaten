@@ -16,7 +16,7 @@ public class AppConstant {
 
     //API START
 //    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.0.102:8080/";
+    public static final String BASE_URL = "http://192.168.137.1:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
@@ -28,10 +28,11 @@ public class AppConstant {
     public static final String API_LIKE_POST = "post/like";
     public static final String API_UNLIKE_POST = "post/unlike";
     public static final String API_GET_LIST_NUMBER_LIKE = "post/getListNumberLike";
-    public static final String API_GET_LIST_LIKE = "post/getListLike";
+    public static final String API_GET_NEW_POST = "post/getNewPost";
     public static final String API_GET_COMMENT = "post/getComment";
     public static final String API_INSERT_COMMENT = "post/insertComment";
     public static final String API_INSERT_POST = "post/insert";
+    public static final String API_GET_IMPORTANT_POST = "post/getImportantPost";
 
     public static final String API_GET_LIST_CLASS = "class/getList";
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";
@@ -90,6 +91,8 @@ public class AppConstant {
     public static final String KEY_HEALTH = "KEY_HEALTH";
     public static final String KEY_POSITION = "KEY_POSITION";
     public static final String KEY_HEALTH_TYPE = "KEY_HEALTH_TYPE";
+    public static final String KEY_GENDER = "KEY_GENDER";
+    public static final String KEY_DOB = "KEY_DOB";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 

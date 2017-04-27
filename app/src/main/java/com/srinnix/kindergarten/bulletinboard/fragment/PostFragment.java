@@ -8,16 +8,25 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
+import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.PostPresenter;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
+import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
+import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.util.AlertUtils;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,20 +40,29 @@ import butterknife.OnClick;
  * Created by anhtu on 4/24/2017.
  */
 
-public class PostFragment extends BaseFragment {
+public class PostFragment extends BaseFragment implements PostDelegate {
     @BindView(R.id.toolbar_post)
     Toolbar toolbar;
 
     @BindView(R.id.textview_post)
     TextView tvPost;
 
-    @BindView(R.id.textview_content)
-    TextView tvContent;
+    @BindView(R.id.edittext_content)
+    EditText etContent;
 
     @BindView(R.id.recycler_view_image)
     RecyclerView rvImages;
 
-    private ArrayList<String> mListImage;
+    @BindView(R.id.radio_normal)
+    RadioButton radioNormal;
+
+    @BindView(R.id.progressbar_loading)
+    ProgressBar pbLoading;
+
+    @BindView(R.id.imageview_success)
+    ImageView imvSuccess;
+
+    private ArrayList<ImageLocal> mListImage;
     private ImagePostAdapter mAdapter;
     private PostPresenter mPresenter;
 
@@ -62,11 +80,11 @@ public class PostFragment extends BaseFragment {
             mAdapter.notifyItemRemoved(position);
 
             if (!mListImage.isEmpty()) {
-                rvImages.setVisibility(View.GONE);
-
                 tvPost.setEnabled(true);
                 tvPost.setTextColor(Color.parseColor("#ffffff"));
             } else {
+                rvImages.setVisibility(View.GONE);
+
                 tvPost.setEnabled(false);
                 tvPost.setTextColor(Color.parseColor("#80ffffff"));
             }
@@ -83,7 +101,7 @@ public class PostFragment extends BaseFragment {
         tvPost.setEnabled(false);
         tvPost.setTextColor(Color.parseColor("#80ffffff"));
 
-        tvContent.addTextChangedListener(new TextWatcher() {
+        etContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -91,7 +109,7 @@ public class PostFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                if (s.length() > 0 || !mListImage.isEmpty()) {
                     tvPost.setEnabled(true);
                     tvPost.setTextColor(Color.parseColor("#ffffff"));
                 } else {
@@ -119,11 +137,13 @@ public class PostFragment extends BaseFragment {
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.textview_post: {
-                mPresenter.onClickPost(tvContent.getText());
+                tvPost.setVisibility(View.GONE);
+                UiUtils.showProgressBar(pbLoading);
+                mPresenter.onClickPost(etContent.getText().toString(), mListImage, radioNormal.isChecked());
                 break;
             }
             case R.id.imageview_image: {
-                mPresenter.onClickImage();
+                mPresenter.onClickImage(mListImage);
                 break;
             }
             case R.id.imageview_video: {
@@ -168,10 +188,14 @@ public class PostFragment extends BaseFragment {
         if (rvImages.getVisibility() != View.VISIBLE) {
             rvImages.setVisibility(View.VISIBLE);
         }
-        int size = mListImage.size();
 
+        int sizeTotal = mListImage.size();
+        if (sizeTotal > 0) {
+            mListImage.clear();
+            mAdapter.notifyItemRangeRemoved(0, sizeTotal);
+        }
         mListImage.addAll(message.mListImage);
-        mAdapter.notifyItemRangeInserted(size, message.mListImage.size());
+        mAdapter.notifyItemRangeInserted(0, message.mListImage.size());
 
         if (!mListImage.isEmpty()) {
             tvPost.setEnabled(true);
@@ -184,11 +208,25 @@ public class PostFragment extends BaseFragment {
 
     @Override
     public void onBackPressed() {
-        if (tvContent.getText().length() > 0 || !mListImage.isEmpty()) {
+        if (etContent.getText().length() > 0 || !mListImage.isEmpty()) {
             AlertUtils.showDialogCancelPost(mContext, super::onBackPressed);
             return;
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    public void onFail() {
+        UiUtils.hideProgressBar(pbLoading);
+        tvPost.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSuccess(Post data) {
+        UiUtils.hideProgressBar(pbLoading);
+        imvSuccess.setVisibility(View.VISIBLE);
+
+        EventBus.getDefault().post(new MessagePostSuccessfully(data));
     }
 }

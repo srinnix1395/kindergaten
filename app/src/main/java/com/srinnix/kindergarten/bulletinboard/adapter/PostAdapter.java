@@ -78,7 +78,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData(((LoadingItem) arrPost.get(position)));
         } else {
-            ((PostedViewHolder) holder).bindData(((Post) arrPost.get(position)), position);
+            ((PostedViewHolder) holder).bindData(((Post) arrPost.get(position)));
         }
     }
 

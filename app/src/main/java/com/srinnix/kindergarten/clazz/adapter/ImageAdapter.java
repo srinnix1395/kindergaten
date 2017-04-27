@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
-import com.srinnix.kindergarten.clazz.adapter.viewholder.ImageViewHolder;
+import com.srinnix.kindergarten.clazz.adapter.viewholder.ImageClassViewHolder;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LoadingItem;
 
@@ -39,7 +39,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             viewHolder = new LoadingViewHolder(view, null);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_class, parent, false);
-            viewHolder = new ImageViewHolder(view, listener);
+            viewHolder = new ImageClassViewHolder(view, listener);
         }
         return viewHolder;
     }
@@ -47,8 +47,8 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        if (holder instanceof ImageViewHolder) {
-            ((ImageViewHolder) holder).onDestroy();
+        if (holder instanceof ImageClassViewHolder) {
+            ((ImageClassViewHolder) holder).onDestroy();
         }
     }
 
@@ -57,7 +57,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
         } else {
-            ((ImageViewHolder) holder).bindData(((Image) arrayList.get(position)), position);
+            ((ImageClassViewHolder) holder).bindData(((Image) arrayList.get(position)), position);
         }
     }
 

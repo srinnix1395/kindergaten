@@ -77,7 +77,7 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
     }
 
     private void initCamera() {
-        url = "rtsp://192.168.0.104:1935/live/myStream";
+        url = "rtsp://192.168.137.1:1935/live/myStream";
 
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);

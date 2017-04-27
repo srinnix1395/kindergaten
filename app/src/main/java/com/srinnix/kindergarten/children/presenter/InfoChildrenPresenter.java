@@ -10,6 +10,7 @@ import com.srinnix.kindergarten.base.activity.ChartActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
+import com.srinnix.kindergarten.children.fragment.ChartFragment;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
@@ -20,6 +21,7 @@ import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,7 @@ public class InfoChildrenPresenter extends BasePresenter {
     private ChildrenHelper mHelper;
     private String idChild;
     private boolean isLoadTimelineFirst = true;
+    private Child infoChild;
 
     public InfoChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
@@ -73,7 +76,8 @@ public class InfoChildrenPresenter extends BasePresenter {
                     return;
                 }
 
-                mChildrenDelegate.onLoadChildren(response.getData());
+                infoChild = response.getData();
+                mChildrenDelegate.onLoadChildren(infoChild);
             }
 
             @Override
@@ -118,6 +122,9 @@ public class InfoChildrenPresenter extends BasePresenter {
     }
 
     public void onClickIndex(ArrayList<Object> mListChildrenHealth, int type) {
+        if (infoChild == null) {
+            return;
+        }
         ArrayList<HealthCompact> listHealth = new ArrayList<>();
 
         if (type == AppConstant.TYPE_HEIGHT) {
@@ -148,13 +155,15 @@ public class InfoChildrenPresenter extends BasePresenter {
         ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext, R.anim.translate_right_to_left, R.anim.translate_left_to_right);
 
         Bundle bundle = options.toBundle();
+        bundle.putBoolean(AppConstant.KEY_GENDER, infoChild.getGender().equalsIgnoreCase("Nam"));
+        bundle.putString(AppConstant.KEY_DOB, infoChild.getDOB());
         bundle.putParcelableArrayList(AppConstant.KEY_HEALTH, listHealth);
         bundle.putInt(AppConstant.KEY_HEALTH_TYPE, type);
 
-        mContext.startActivity(myIntent, bundle);
+//        mContext.startActivity(myIntent, bundle);
 
-//        ViewManager.getInstance().addFragment(new ChartFragment(), bundle,
-//                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        ViewManager.getInstance().addFragment(new ChartFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     @Override

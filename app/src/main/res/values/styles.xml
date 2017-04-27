@@ -52,6 +52,10 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="CancelPostDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">@color/colorThirdText</item>
+    </style>
+
     <!--chat-->
 
 

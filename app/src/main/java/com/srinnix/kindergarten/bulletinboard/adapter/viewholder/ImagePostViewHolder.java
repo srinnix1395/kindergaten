@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.model.ImageLocal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,10 +28,9 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-    public void bindData(String uri) {
-
+    public void bindData(ImageLocal image) {
         Glide.with(itemView.getContext())
-                .load(uri)
+                .load(image.getPath())
                 .placeholder(R.drawable.dummy_image)
                 .error(R.drawable.image_error)
                 .thumbnail(0.5f)

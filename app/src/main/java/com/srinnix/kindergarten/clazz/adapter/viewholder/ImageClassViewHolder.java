@@ -23,7 +23,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by anhtu on 2/20/2017.
  */
 
-public class ImageViewHolder extends RecyclerView.ViewHolder {
+public class ImageClassViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_image)
     ImageView imvImage;
 
@@ -34,7 +34,7 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
     private ImageAdapter.OnClickImageListener listener;
     private int position;
 
-    public ImageViewHolder(View itemView, ImageAdapter.OnClickImageListener listener) {
+    public ImageClassViewHolder(View itemView, ImageAdapter.OnClickImageListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.listener = listener;

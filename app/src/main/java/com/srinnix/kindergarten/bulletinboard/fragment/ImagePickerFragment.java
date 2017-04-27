@@ -22,6 +22,7 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.ImagePickerAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.ImagePickerDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.ImagePickerPresenter;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -58,9 +59,23 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     private ArrayList<ImageLocal> mListImage;
     private ImagePickerPresenter mPresenter;
 
+    private ArrayList<Long> mListImageSelected = new ArrayList<>();
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_image_picker;
+    }
+
+    @Override
+    protected void getData() {
+        super.getData();
+        ArrayList<ImageLocal> arrayList = getArguments().getParcelableArrayList(AppConstant.KEY_IMAGE);
+        if (arrayList != null) {
+            for (ImageLocal imageLocal : arrayList) {
+                mListImageSelected.add(imageLocal.getId());
+            }
+        }
+
     }
 
     @Override
@@ -68,7 +83,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         super.initData();
         mListImage = new ArrayList<>();
         mImageAdapter = new ImagePickerAdapter(mListImage, position -> mPresenter.onClickImage(mListImage, position));
-        mPresenter.checkPermission(getActivity());
+        mPresenter.checkPermissionStorage(getActivity(), mListImageSelected);
     }
 
     @Override
@@ -113,11 +128,17 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == ImagePickerPresenter.PERMISSIONS_REQUEST_READ_EXTERNAL) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                mPresenter.getImage();
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case ImagePickerPresenter.PERMISSIONS_REQUEST_READ_EXTERNAL: {
+                    mPresenter.getImage(mListImageSelected);
+                    break;
+                }
+                case ImagePickerPresenter.PERMISSIONS_REQUEST_CAMERA: {
+                    mPresenter.openCamera(this);
+                    break;
+                }
             }
         }
     }
@@ -127,9 +148,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ImagePickerPresenter.REQUEST_CODE_TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
-            mListImage.add(0, new ImageLocal(1, "abc", mPresenter.mCurrentPhotoPath, false));
-            mImageAdapter.notifyItemInserted(0);
-            mPresenter.capturedImage();
+            mPresenter.displayImage(mListImage);
         }
     }
 
@@ -169,6 +188,18 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         mListImage.addAll(imageLocals);
         mImageAdapter.notifyItemRangeInserted(0, imageLocals.size());
 
+        rvListImage.scrollToPosition(0);
+
+        if (mListImageSelected.isEmpty()) {
+            toolbar.setTitle(R.string.tap_to_select_image);
+        } else {
+            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s", mListImageSelected.size(), mContext.getString(R.string.image)));
+        }
+    }
+
+    @Override
+    public void insertImageLocal(int position) {
+        mImageAdapter.notifyItemInserted(position);
         rvListImage.scrollToPosition(0);
     }
 }

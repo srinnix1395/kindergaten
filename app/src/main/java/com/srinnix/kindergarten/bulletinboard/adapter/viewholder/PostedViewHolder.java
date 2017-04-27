@@ -55,7 +55,6 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     View viewLine;
 
     private PostAdapter.PostListener mPostListener;
-    private int position;
 
     public PostedViewHolder(View view, PostAdapter.PostListener postListener, int viewType) {
         super(view);
@@ -63,8 +62,7 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         mPostListener = postListener;
     }
 
-    public void bindData(Post post, int position) {
-        this.position = position;
+    public void bindData(Post post) {
 
         switch (post.getType()) {
             case AppConstant.POST_NORMAL: {
@@ -127,28 +125,28 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.imageview_share)
     void onClickShare() {
         if (mPostListener != null) {
-            mPostListener.onClickShare(position);
+            mPostListener.onClickShare(getAdapterPosition());
         }
     }
 
     @OnClick(R.id.imageview_like)
     void onClickLike() {
         if (mPostListener != null) {
-            mPostListener.onClickLike(position);
+            mPostListener.onClickLike(getAdapterPosition());
         }
     }
 
     @OnClick(R.id.textview_number_like)
     void onClickNumberLike() {
         if (mPostListener != null) {
-            mPostListener.onClickNumberLike(position);
+            mPostListener.onClickNumberLike(getAdapterPosition());
         }
     }
 
     @OnClick(R.id.imageview_first_image)
     void onClickImage() {
         if (mPostListener != null) {
-            mPostListener.onClickImage(position);
+            mPostListener.onClickImage(getAdapterPosition());
         }
     }
 
@@ -159,11 +157,11 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         }
         switch (v.getId()) {
             case R.id.imageview_comment: {
-                mPostListener.onClickComment(position, true);
+                mPostListener.onClickComment(getAdapterPosition(), true);
                 break;
             }
             case R.id.textview_number_comment: {
-                mPostListener.onClickComment(position, false);
+                mPostListener.onClickComment(getAdapterPosition(), false);
                 break;
             }
         }

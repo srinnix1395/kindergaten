@@ -102,4 +102,9 @@
     <string name="image">ảnh</string>
     <string name="photo_camera">Máy ảnh</string>
     <string name="add">Thêm</string>
+    <string name="error_no_camera">Không có camera</string>
+    <string name="error_create_image_file">Đã có lỗi khi tạo file</string>
+    <string name="normal_notification">Thông báo thường</string>
+    <string name="important_notification">Thông báo quan trọng</string>
+    <string name="post_success">Đăng thành công</string>
 </resources>

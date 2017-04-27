@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.children.fragment;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 
@@ -39,20 +40,29 @@ public class ChartFragment extends BaseFragment {
     Toolbar toolbar;
 
     private ArrayList<Entry> entries;
+    private ArrayList<String> times;
+
     private int type;
+    private boolean isMale;
+    private String DOB;
 
     @Override
     protected void getData() {
         super.getData();
-        ArrayList<HealthCompact> listHealth = getArguments().getParcelableArrayList(AppConstant.KEY_HEALTH);
-        type = getArguments().getInt(AppConstant.KEY_HEALTH_TYPE);
+        Bundle bundle = getArguments();
+        ArrayList<HealthCompact> listHealth = bundle.getParcelableArrayList(AppConstant.KEY_HEALTH);
+        type = bundle.getInt(AppConstant.KEY_HEALTH_TYPE);
+        isMale = bundle.getBoolean(AppConstant.KEY_GENDER);
+        DOB = bundle.getString(AppConstant.KEY_DOB);
 
         entries = new ArrayList<>();
+        times = new ArrayList<>();
 
         if (listHealth != null) {
             int i = 0;
             for (HealthCompact health : listHealth) {
-                entries.add(new Entry(i, health.getValue(), health));
+                times.add(health.getTime());
+                entries.add(new Entry(i, health.getValue()));
                 i++;
             }
         }
@@ -119,7 +129,7 @@ public class ChartFragment extends BaseFragment {
         xAxis.setAxisLineWidth(1.5f);
         xAxis.setAxisLineColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
         xAxis.setTextSize(9);
-        xAxis.setValueFormatter(new DayAxisValueFormatter(entries));
+        xAxis.setValueFormatter(new DayAxisValueFormatter(times));
         xAxis.setGranularity(1f);
 
         YAxis axisLeft = chart.getAxisLeft();

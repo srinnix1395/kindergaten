@@ -21,11 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 /**
@@ -96,14 +100,25 @@ public interface ApiService {
                                                    @Field("account_type") int accountType,
                                                    @Field("comment") String comment);
 
-    @GET(AppConstant.API_GET_LIST_LIKE)
-    Observable<ApiResponse<ArrayList<String>>> getListLike(@Header("x-access-token") String token,
-                                                           @Query("_id_user") String userId,
-                                                           @Query("list_post") List<String> createdAt);
+    @GET(AppConstant.API_GET_NEW_POST)
+    Observable<ApiResponse<PostResponse>> getNewPost(@Header("x-access-token") String token,
+                                                     @Query("is_user_signed_in") boolean isUserSignIn,
+                                                     @Query("_id_user") String userId,
+                                                     @Query("time") long listId);
+
+    @GET(AppConstant.API_GET_IMPORTANT_POST)
+    Observable<ApiResponse<PostResponse>> getImportantPost(@Header("x-access-token") String token,
+                                                           @Query("_id_user") String userId);
+
+    @Multipart
     @POST(AppConstant.API_INSERT_POST)
-    Observable<ApiResponse<Post>> insertPost(@Header("x-access-token") String token);
+    Observable<ApiResponse<Post>> insertPost(@Header("x-access-token") String token,
+                                             @Part("content") RequestBody content,
+                                             @Part List<MultipartBody.Part> listImage,
+                                             @Part("noti_type") RequestBody notiType);
 
     //POST END
+
 
     @GET(AppConstant.API_GET_LIST_CLASS)
     Observable<ApiResponse<ArrayList<Class>>> getListClass();

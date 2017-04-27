@@ -48,7 +48,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImageLocalViewHolde
 
     @Override
     public void onBindViewHolder(ImageLocalViewHolder holder, int position) {
-        holder.bindData(arrayList.get(position), position);
+        holder.bindData(arrayList.get(position));
     }
 
     @Override

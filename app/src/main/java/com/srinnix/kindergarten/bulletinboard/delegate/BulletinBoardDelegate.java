@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.bulletinboard.delegate;
 
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.request.model.PostResponse;
 
 import java.util.ArrayList;
 
@@ -16,9 +17,11 @@ public interface BulletinBoardDelegate extends BaseDelegate {
 
     void handleLikePost(Integer integer, boolean like, int numberOfLikes);
 
-    void onRefreshResult(boolean result, ArrayList<String> data);
+    void onRefreshResult(boolean result, PostResponse data);
 
     void updateNumberComment(int position, int numberOfComments);
 
     void updateLogout();
+
+    void onGetImportantPost(boolean result, PostResponse data);
 }

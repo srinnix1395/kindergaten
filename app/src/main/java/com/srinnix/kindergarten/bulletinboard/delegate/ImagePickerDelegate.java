@@ -15,4 +15,6 @@ public interface ImagePickerDelegate extends BaseDelegate{
     void onLoadFail(int resError);
 
     void onLoadSuccess(ArrayList<ImageLocal> imageLocals);
+
+    void insertImageLocal(int position);
 }

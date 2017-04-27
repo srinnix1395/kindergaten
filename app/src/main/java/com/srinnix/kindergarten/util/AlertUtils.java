@@ -2,6 +2,8 @@ package com.srinnix.kindergarten.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,7 +45,7 @@ public class AlertUtils {
         toast.show();
     }
 
-    public static void showAlertDialog(Context context, int resTitle, int resMessage, int resNegative, OnClickListener listener){
+    public static void showAlertDialog(Context context, int resTitle, int resMessage, int resNegative, OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setTitle(resTitle)
                 .setMessage(resMessage)
@@ -66,17 +68,21 @@ public class AlertUtils {
     }
 
     public static void showDialogCancelPost(Context mContext, OnClickListener listener) {
-        new AlertDialog.Builder(mContext)
+        AlertDialog dialog1 = new AlertDialog.Builder(mContext, R.style.CancelPostDialogStyle)
                 .setTitle(R.string.confirm)
                 .setMessage(R.string.message_cancel_post)
+                .setCancelable(false)
                 .setPositiveButton(R.string.next, (dialog, which) -> {
                     if (listener != null) {
                         listener.onClick();
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
-                .create()
-                .show();
+                .create();
+
+        dialog1.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimaryText));
+        dialog1.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimaryText));
+        dialog1.show();
     }
 
     public interface OnClickListener {

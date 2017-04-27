@@ -106,6 +106,7 @@ public class UiUtils {
 
             bitmap = mediaMetadataRetriever.getFrameAtTime();
         } catch (Exception e) {
+            DebugLog.e("lsadkfj;alskdjas;ldkfj");
             ErrorUtil.handleException(e);
         } finally {
             if (mediaMetadataRetriever != null) {

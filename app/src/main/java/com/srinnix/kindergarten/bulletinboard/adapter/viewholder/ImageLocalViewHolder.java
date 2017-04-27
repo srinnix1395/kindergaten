@@ -22,21 +22,17 @@ public class ImageLocalViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_alpha)
     ImageView imvAlpha;
 
-    private int position;
-
     public ImageLocalViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onClick(position);
+                listener.onClick(getAdapterPosition());
             }
         });
     }
 
-    public void bindData(ImageLocal image, int position) {
-        this.position = position;
-
+    public void bindData(ImageLocal image) {
         Glide.with(itemView.getContext())
                 .load(image.getPath())
                 .placeholder(R.drawable.dummy_image)

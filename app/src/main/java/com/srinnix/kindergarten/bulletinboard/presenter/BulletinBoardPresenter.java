@@ -23,6 +23,7 @@ import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
+import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -31,7 +32,6 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -240,7 +240,8 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
     public void refresh(SwipeRefreshLayout refreshLayout, ArrayList<Object> arrPost) {
-        if (arrPost.size() <= 1) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
         }
 
@@ -248,16 +249,20 @@ public class BulletinBoardPresenter extends BasePresenter {
             refreshLayout.setRefreshing(true);
         }
 
-        String token = SharedPreUtils.getInstance(mContext).getToken();
-        String userId = SharedPreUtils.getInstance(mContext).getUserID();
-
-        List<String> listId = new ArrayList<>();
-        for (int i = 0, size = arrPost.size(); i < size - 1; i++) {
-            listId.add(((Post) arrPost.get(i)).getId());
+        SharedPreUtils preUtils = SharedPreUtils.getInstance(mContext);
+        String token = null;
+        String userId = null;
+        boolean userSignedIn = preUtils.isUserSignedIn();
+        if (userSignedIn) {
+            token = preUtils.getToken();
+            userId = preUtils.getUserID();
         }
-        mHelper.getListLike(token, userId, listId, new ResponseListener<ArrayList<String>>() {
+
+        long timePrev = arrPost.get(0) instanceof LoadingItem ? System.currentTimeMillis() : ((Post) arrPost.get(0)).getCreatedAt();
+
+        mHelper.getNewPost(userSignedIn, token, userId, timePrev, new ResponseListener<PostResponse>() {
             @Override
-            public void onSuccess(ApiResponse<ArrayList<String>> response) {
+            public void onSuccess(ApiResponse<PostResponse> response) {
                 if (response == null) {
                     ErrorUtil.handleException(mContext, new NullPointerException());
                     mBoardDelegate.onRefreshResult(false, null);
@@ -271,6 +276,45 @@ public class BulletinBoardPresenter extends BasePresenter {
                 }
 
                 mBoardDelegate.onRefreshResult(true, response.getData());
+            }
+
+            @Override
+            public void onFail(Throwable throwable) {
+                ErrorUtil.handleException(mContext, throwable);
+                mBoardDelegate.onRefreshResult(false, null);
+            }
+        });
+    }
+
+    public void getPostAfterLogin(SwipeRefreshLayout refreshLayout) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            AlertUtils.showToast(mContext, R.string.noInternetConnection);
+            return;
+        }
+
+        if (!refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(true);
+        }
+
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+        String userId = SharedPreUtils.getInstance(mContext).getUserID();
+
+        mHelper.getImportantPost(token, userId, new ResponseListener<PostResponse>() {
+            @Override
+            public void onSuccess(ApiResponse<PostResponse> response) {
+                if (response == null) {
+                    ErrorUtil.handleException(mContext, new NullPointerException());
+                    mBoardDelegate.onRefreshResult(false, null);
+                    return;
+                }
+
+                if (response.result == ApiResponse.RESULT_NG) {
+                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    mBoardDelegate.onRefreshResult(false, null);
+                    return;
+                }
+
+                mBoardDelegate.onGetImportantPost(true, response.getData());
             }
 
             @Override
@@ -314,8 +358,6 @@ public class BulletinBoardPresenter extends BasePresenter {
                 break;
             }
         }
-
-
     }
 
     public void logout(ArrayList<Object> arrPost) {
@@ -341,4 +383,6 @@ public class BulletinBoardPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
+
+
 }

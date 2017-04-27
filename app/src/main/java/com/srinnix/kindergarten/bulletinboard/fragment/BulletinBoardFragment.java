@@ -19,8 +19,10 @@ import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
+import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -173,7 +175,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @OnClick(R.id.floatbutton_post)
-    void onClickPost(){
+    void onClickPost() {
         mPresenter.onClickAddPost();
     }
 
@@ -183,12 +185,20 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                 && fabPost.getVisibility() != View.VISIBLE) {
             fabPost.setVisibility(View.VISIBLE);
         }
-        mPresenter.refresh(refreshLayout, mListPost);
+        mPresenter.getPostAfterLogin(refreshLayout);
     }
 
     @Subscribe
     public void onEventNumberComment(MessageNumberComment message) {
         mPresenter.updateNumberComment(message, mListPost);
+    }
+
+    @Subscribe
+    public void onEventPostSuccessfully(MessagePostSuccessfully message) {
+        mListPost.add(0, message.post);
+        mPostAdapter.notifyItemInserted(0);
+
+        rvListPost.scrollToPosition(0);
     }
 
     @Subscribe
@@ -245,28 +255,35 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void onRefreshResult(boolean result, ArrayList<String> data) {
+    public void onRefreshResult(boolean result, PostResponse data) {
         if (!result) {
-
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);
             }
             return;
         }
 
-        if (!data.isEmpty()) {
-            int j = data.size();
-            for (int i = mListPost.size() - 1; i >= 1; i--) {
-                if (j == 0) {
+        if (!data.getListPost().isEmpty()) {
+            ArrayList<Post> listPost = data.getListPost();
+
+            int i = 0;
+            for (Post post : listPost) {
+                if (i == data.getListLikes().size()) {
                     break;
                 }
-                if (mListPost.get(i) instanceof Post && data.contains(((Post) mListPost.get(i)).getId())) {
-                    ((Post) mListPost.get(i)).setUserLike(true);
-                    mPostAdapter.notifyItemChanged(i, true);
-                    j--;
+
+                if (data.getListLikes().contains(post.getId())) {
+                    post.setUserLike(true);
+                    i++;
                 }
             }
+
+            mListPost.add(0, listPost);
+            mPostAdapter.notifyItemRangeInserted(0, listPost.size());
+
+            rvListPost.scrollToPosition(0);
         }
+
         if (refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(false);
         }
@@ -280,6 +297,48 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     @Override
     public void updateLogout() {
         mPostAdapter.notifyItemRangeChanged(0, mListPost.size() - 1, false);
+    }
 
+    @Override
+    public void onGetImportantPost(boolean result, PostResponse data) {
+        if (!result) {
+            if (refreshLayout.isRefreshing()) {
+                refreshLayout.setRefreshing(false);
+            }
+            return;
+        }
+
+        if (!data.getListPost().isEmpty()) {
+            ArrayList<Post> listPost = data.getListPost();
+
+            int i = 0;
+            for (Post post : listPost) {
+                if (i == data.getListLikes().size()) {
+                    break;
+                }
+
+                if (data.getListLikes().contains(post.getId())) {
+                    post.setUserLike(true);
+                    i++;
+                }
+            }
+
+            for (int j = 0, size = mListPost.size(); j < size; j++) {
+                if (listPost.isEmpty()) {
+                    break;
+                }
+
+                if (mListPost.get(j) instanceof Post && listPost.get(0).getCreatedAt() >= ((Post) mListPost.get(j)).getCreatedAt()) {
+                    mListPost.add(j, listPost.get(0));
+                    mPostAdapter.notifyItemInserted(j);
+                    size++;
+                    listPost.remove(0);
+                }
+            }
+        }
+
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(false);
+        }
     }
 }

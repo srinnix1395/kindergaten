@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.ImagePostViewHolder;
+import com.srinnix.kindergarten.model.ImageLocal;
 
 import java.util.ArrayList;
 
@@ -15,10 +16,10 @@ import java.util.ArrayList;
  */
 
 public class ImagePostAdapter extends RecyclerView.Adapter<ImagePostViewHolder> {
-    private ArrayList<String> listImage;
+    private ArrayList<ImageLocal> listImage;
     private ImagePostViewHolder.OnClickViewHolderListener listener;
 
-    public ImagePostAdapter(ArrayList<String> listImage, ImagePostViewHolder.OnClickViewHolderListener listener) {
+    public ImagePostAdapter(ArrayList<ImageLocal> listImage, ImagePostViewHolder.OnClickViewHolderListener listener) {
         this.listImage = listImage;
         this.listener = listener;
     }

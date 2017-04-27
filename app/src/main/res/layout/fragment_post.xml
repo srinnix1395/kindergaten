@@ -5,14 +5,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#fafafa"
+              android:clickable="true"
               android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:gravity="end">
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/textview_post"
@@ -29,14 +29,56 @@
             android:textSize="16sp"
             android:textStyle="bold"/>
 
+        <ProgressBar
+            android:id="@+id/progressbar_loading"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:padding="4.5dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imageview_success"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:padding="4.5dp"
+            android:scaleType="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_mark"/>
     </android.support.v7.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/textview_content"
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_normal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/normal_notification"/>
+
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/important_notification"/>
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/edittext_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2.5"
+        android:background="@null"
         android:clickable="true"
+        android:gravity="top"
         android:hint="@string/post_content"
         android:padding="@dimen/margin_horizontal_low"
         android:textSize="20sp"/>
