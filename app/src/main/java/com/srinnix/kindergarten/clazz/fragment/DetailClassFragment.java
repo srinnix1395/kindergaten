@@ -231,9 +231,15 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     }
 
     @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,
-            R.id.textview_timetable1, R.id.textview_play_schedule})
+            R.id.textview_timetable1, R.id.textview_play_schedule, R.id.layout_retry})
     void onClickTeachers(View view) {
         switch (view.getId()) {
+            case R.id.layout_retry:{
+                relRetry.setVisibility(View.GONE);
+                UiUtils.showProgressBar(pbClass);
+                mPresenter.onClickRetry();
+                break;
+            }
             case R.id.rel_teacher_1: {
                 mPresenter.onClickTeacher(getChildFragmentManager(), 0);
                 break;

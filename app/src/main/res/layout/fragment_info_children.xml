@@ -42,7 +42,6 @@
                         android:layout_height="@dimen/size_image_avatar"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="@dimen/margin_info_children"
-                        android:layout_marginTop="@dimen/margin_info_children"
                         app:cardCornerRadius="@dimen/radius_card_view_high"
                         app:cardElevation="0dp">
 

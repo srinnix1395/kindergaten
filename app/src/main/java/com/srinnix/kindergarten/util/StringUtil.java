@@ -27,13 +27,13 @@ import java.util.Locale;
  */
 
 public class StringUtil {
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private static final long DAY_MILLIS = 24 * HOUR_MILLIS;
-    private static final long WEEK_MILLIS = 24 * 7 * HOUR_MILLIS;
-    private static final long MONTH_MILLIS = DAY_MILLIS * 30;
-    private static final long YEAR_MILLIS = 365 * DAY_MILLIS;
+    public static final int SECOND_MILLIS = 1000;
+    public static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    public static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    public static final long DAY_MILLIS = 24 * HOUR_MILLIS;
+    public static final long WEEK_MILLIS = 24 * 7 * HOUR_MILLIS;
+    public static final long MONTH_MILLIS = DAY_MILLIS * 30;
+    public static final long YEAR_MILLIS = 365 * DAY_MILLIS;
 
     public static String md5(String s) {
         try {

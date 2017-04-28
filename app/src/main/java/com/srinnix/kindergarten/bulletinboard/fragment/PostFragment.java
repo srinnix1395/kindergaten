@@ -228,5 +228,6 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         imvSuccess.setVisibility(View.VISIBLE);
 
         EventBus.getDefault().post(new MessagePostSuccessfully(data));
+        super.onBackPressed();
     }
 }

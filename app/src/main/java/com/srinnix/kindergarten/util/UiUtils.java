@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
+
+import com.srinnix.kindergarten.R;
 
 import java.util.HashMap;
 
@@ -93,7 +96,7 @@ public class UiUtils {
             return;
         }
 
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         progressBar.setEnabled(false);
     }
 
@@ -106,12 +109,14 @@ public class UiUtils {
 
             bitmap = mediaMetadataRetriever.getFrameAtTime();
         } catch (Exception e) {
-            DebugLog.e("lsadkfj;alskdjas;ldkfj");
             ErrorUtil.handleException(e);
         } finally {
             if (mediaMetadataRetriever != null) {
                 mediaMetadataRetriever.release();
             }
+        }
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
         }
         return bitmap;
     }

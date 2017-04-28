@@ -12,7 +12,7 @@
         android:id="@+id/layout_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar_layout"
@@ -176,10 +176,10 @@
                         android:id="@+id/textview_timetable1"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/item_size"
-                        android:layout_marginStart="24dp"
                         android:background="?selectableItemBackground"
                         android:clickable="true"
                         android:gravity="center_vertical"
+                        android:paddingStart="24dp"
                         android:text="@string/timetable"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/image_timetable"/>
@@ -188,10 +188,10 @@
                         android:id="@+id/textview_play_schedule"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/item_size"
-                        android:layout_marginStart="24dp"
                         android:background="?selectableItemBackground"
                         android:clickable="true"
                         android:gravity="center_vertical"
+                        android:paddingStart="24dp"
                         android:text="@string/play_schedule"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textview_timetable1"/>
@@ -200,10 +200,10 @@
                         android:id="@+id/textview_learn_schedule"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/item_size"
-                        android:layout_marginStart="24dp"
                         android:background="?selectableItemBackground"
                         android:clickable="true"
                         android:gravity="center_vertical"
+                        android:paddingStart="24dp"
                         android:text="@string/learn_schedule"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textview_play_schedule"/>

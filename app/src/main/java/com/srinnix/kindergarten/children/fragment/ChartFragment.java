@@ -21,6 +21,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.DayAxisValueFormatter;
 import com.srinnix.kindergarten.custom.MarkerViewChart;
 import com.srinnix.kindergarten.model.HealthCompact;
+import com.srinnix.kindergarten.util.DbUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -44,7 +45,8 @@ public class ChartFragment extends BaseFragment {
 
     private int type;
     private boolean isMale;
-    private String DOB;
+    private int startMonth;
+    private int endMonth;
 
     @Override
     protected void getData() {
@@ -53,7 +55,6 @@ public class ChartFragment extends BaseFragment {
         ArrayList<HealthCompact> listHealth = bundle.getParcelableArrayList(AppConstant.KEY_HEALTH);
         type = bundle.getInt(AppConstant.KEY_HEALTH_TYPE);
         isMale = bundle.getBoolean(AppConstant.KEY_GENDER);
-        DOB = bundle.getString(AppConstant.KEY_DOB);
 
         entries = new ArrayList<>();
         times = new ArrayList<>();
@@ -62,10 +63,13 @@ public class ChartFragment extends BaseFragment {
             int i = 0;
             for (HealthCompact health : listHealth) {
                 times.add(health.getTime());
-                entries.add(new Entry(i, health.getValue()));
+                entries.add(new Entry(i, health.getValue(), health));
                 i++;
             }
         }
+
+        startMonth = DbUtils.setupMonth(bundle.getString(AppConstant.KEY_DOB), times.get(0));
+        endMonth = DbUtils.setupMonth(bundle.getString(AppConstant.KEY_DOB), times.get(times.size() - 1));
     }
 
     @Override
@@ -94,11 +98,22 @@ public class ChartFragment extends BaseFragment {
             return;
         }
 
+        LineData lineData = new LineData();
+
         LineDataSet dataSet;
         if (type == AppConstant.TYPE_HEIGHT) {
             dataSet = new LineDataSet(entries, mContext.getString(R.string.height));
+
+            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_N2_SD_MALE : DbUtils.HEIGHT_N2_SD_FEMALE, startMonth, endMonth), "-1"));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_0_SD_MALE : DbUtils.HEIGHT_0_SD_FEMALE, startMonth, endMonth), "0"));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_P2_SD_MALE : DbUtils.HEIGHT_P2_SD_FEMALE, startMonth, endMonth), "1"));
+
         } else {
             dataSet = new LineDataSet(entries, mContext.getString(R.string.weight));
+
+            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_N2_SD_MALE : DbUtils.WEIGHT_N2_SD_FEMALE, startMonth, endMonth), "-1"));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_0_SD_MALE : DbUtils.WEIGHT_0_SD_FEMALE, startMonth, endMonth), "0"));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_P2_SD_MALE : DbUtils.WEIGHT_P2_SD_FEMALE, startMonth, endMonth), "1"));
         }
 
         dataSet.setLineWidth(1.75f);
@@ -120,8 +135,7 @@ public class ChartFragment extends BaseFragment {
         } else {
             dataSet.setValueFormatter((value, entry, dataSetIndex, viewPortHandler) -> String.valueOf(((int) value)));
         }
-
-        LineData lineData = new LineData(dataSet);
+        lineData.addDataSet(dataSet);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -156,6 +170,18 @@ public class ChartFragment extends BaseFragment {
         chart.setDescription(description);
         chart.setData(lineData);
         chart.animateX(375, Easing.EasingOption.EaseInBack);
+    }
+
+    private LineDataSet createStandardDataSet(ArrayList<Entry> entries, String label) {
+        LineDataSet dataSet = new LineDataSet(entries, label);
+        dataSet.setLineWidth(1.75f);
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawValues(false);
+
+        dataSet.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary), 128);
+        dataSet.setDrawHighlightIndicators(false);
+
+        return dataSet;
     }
 
     @Override

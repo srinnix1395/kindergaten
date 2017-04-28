@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
+
         android:id="@+id/imageview_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/margin_horizontal"
-        android:layout_marginTop="@dimen/margin_horizontal"
+        android:layout_marginEnd="@dimen/margin_horizontal_low"
+        android:layout_marginTop="@dimen/margin_horizontal_low"
         app:srcCompat="@drawable/ic_camera"/>
 </com.srinnix.kindergarten.custom.SquareItemLayout>

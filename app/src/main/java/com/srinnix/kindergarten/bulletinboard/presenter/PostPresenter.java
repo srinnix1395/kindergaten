@@ -58,7 +58,7 @@ public class PostPresenter extends BasePresenter {
                     return;
                 }
 
-                if (response.error.code == ApiResponse.RESULT_NG) {
+                if (response.result == ApiResponse.RESULT_NG) {
                     ErrorUtil.handleErrorApi(mContext, response.error);
                     mPostDelegate.onFail();
                 }

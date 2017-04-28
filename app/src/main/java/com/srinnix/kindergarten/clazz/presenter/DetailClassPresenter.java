@@ -1,9 +1,7 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewCompat;
 import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
@@ -69,10 +67,10 @@ public class DetailClassPresenter extends BasePresenter {
     @Override
     public void onStart() {
         super.onStart();
-        getClassInfo(classId);
+        getClassInfo();
     }
 
-    private void getClassInfo(String classId) {
+    private void getClassInfo() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             mClassDelegate.onLoadError(R.string.noInternetConnection);
             return;
@@ -86,7 +84,8 @@ public class DetailClassPresenter extends BasePresenter {
 
             @Override
             public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
+                ErrorUtil.handleException(throwable);
+                mClassDelegate.onLoadError(R.string.error_common);
             }
         });
     }
@@ -199,21 +198,26 @@ public class DetailClassPresenter extends BasePresenter {
 
 
     public void onClickImage(DetailClassFragment fragmentOne, ImageView sharedTransitionView, Image image) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            PreviewImageFragment fragmentTwo = PreviewImageFragment.newInstance(image, ViewCompat.getTransitionName(sharedTransitionView));
-
-            fragmentOne.getFragmentManager().beginTransaction()
-                    .addSharedElement(sharedTransitionView, ViewCompat.getTransitionName(sharedTransitionView))
-                    .addToBackStack(fragmentTwo.getClass().getName())
-                    .add(R.id.layout_content, fragmentTwo)
-                    .commit();
-
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            PreviewImageFragment fragmentTwo = PreviewImageFragment.newInstance(image, ViewCompat.getTransitionName(sharedTransitionView));
+//
+//            fragmentOne.getFragmentManager().beginTransaction()
+//                    .addSharedElement(sharedTransitionView, ViewCompat.getTransitionName(sharedTransitionView))
+//                    .addToBackStack(fragmentTwo.getClass().getName())
+//                    .add(R.id.layout_content, fragmentTwo)
+//                    .commit();
+//
+//        } else {
             Bundle bundle = new Bundle();
             bundle.putParcelable(AppConstant.KEY_IMAGE, image);
 
-            ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle);
-        }
+            ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle,
+                    R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+//        }
+    }
+
+    public void onClickRetry() {
+        getClassInfo();
     }
 
     @Override
@@ -230,4 +234,6 @@ public class DetailClassPresenter extends BasePresenter {
     public void onClickPlaySchedule() {
 
     }
+
+
 }

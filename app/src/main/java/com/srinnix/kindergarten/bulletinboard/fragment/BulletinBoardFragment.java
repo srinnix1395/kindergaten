@@ -144,7 +144,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                             .setDuration(200)
                             .start();
                 } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    handlerFab.postDelayed(runnable, 1500);
+                    handlerFab.postDelayed(runnable, 1000);
                 }
             }
         });
@@ -278,7 +278,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                 }
             }
 
-            mListPost.add(0, listPost);
+            mListPost.addAll(0, listPost);
             mPostAdapter.notifyItemRangeInserted(0, listPost.size());
 
             rvListPost.scrollToPosition(0);

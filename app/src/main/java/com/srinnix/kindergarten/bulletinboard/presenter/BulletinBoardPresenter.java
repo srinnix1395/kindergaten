@@ -329,7 +329,8 @@ public class BulletinBoardPresenter extends BasePresenter {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_IMAGE, post.getListImage());
 
-        ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle);
+        ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void onClickComment(Post post) {

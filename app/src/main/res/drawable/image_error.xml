@@ -7,9 +7,9 @@
     </item>
 
     <item
-        android:top="6dp"
-        android:bottom="6dp"
-        android:start="6dp"
-        android:end="6dp"
+        android:top="7dp"
+        android:bottom="7dp"
+        android:left="7dp"
+        android:right="7dp"
         android:drawable="@drawable/ic_close_gray"/>
 </layer-list>

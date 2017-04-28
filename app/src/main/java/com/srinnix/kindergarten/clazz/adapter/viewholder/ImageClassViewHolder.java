@@ -1,5 +1,7 @@
 package com.srinnix.kindergarten.clazz.adapter.viewholder;
 
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -9,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.clazz.adapter.ImageAdapter;
 import com.srinnix.kindergarten.model.Image;
+import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
@@ -45,21 +48,21 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
         ViewCompat.setTransitionName(imvImage, "image_" + position);
 
         if (image.isVideo()) {
+            imvVideo.setVisibility(View.VISIBLE);
+            if (!ServiceUtils.isNetworkAvailable(itemView.getContext())) {
+                imvImage.setImageResource(R.drawable.dummy_image);
+                return;
+            }
             disposable = Single.fromCallable(() -> {
                 try {
                     return UiUtils.retrieveVideoFrameFromVideo(image.getUrl());
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
-                return null;
+                return BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(bitmap -> {
-                        if (bitmap != null) {
-                            imvImage.setImageBitmap(bitmap);
-                        }
-                    });
-            imvVideo.setVisibility(View.VISIBLE);
+                    .subscribe(bitmap -> imvImage.setImageBitmap(bitmap));
         } else {
             Glide.with(itemView.getContext())
                     .load(image.getUrl())

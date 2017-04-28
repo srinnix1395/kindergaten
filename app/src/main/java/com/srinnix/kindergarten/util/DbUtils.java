@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.util;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by anhtu on 4/27/2017.
@@ -261,5 +262,19 @@ public class DbUtils {
         }
 
         return arrayList;
+    }
+
+    public static int setupMonth(String DOB, String timeCal) {
+        String[] timesDOB = DOB.split("/");
+        String[] timesStart = timeCal.split("/");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Integer.parseInt(timesStart[2]), Integer.parseInt(timesStart[1]) - 1, Integer.parseInt(timesStart[0]));
+        long startMillis = calendar.getTimeInMillis();
+
+        calendar.set(Integer.parseInt(timesDOB[2]), Integer.parseInt(timesDOB[1]) - 1, Integer.parseInt(timesDOB[0]));
+        long dobMillis = calendar.getTimeInMillis();
+
+        return (int) ((startMillis - dobMillis) / StringUtil.MONTH_MILLIS);
     }
 }
