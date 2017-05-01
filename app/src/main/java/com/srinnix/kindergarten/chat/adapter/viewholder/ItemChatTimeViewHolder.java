@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.util.StringUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +23,7 @@ public class ItemChatTimeViewHolder extends RecyclerView.ViewHolder {
 		ButterKnife.bind(this, itemView);
 	}
 	
-	public void bindData(String time) {
-		tvTime.setText(time);
+	public void bindData(long time) {
+		tvTime.setText(StringUtil.getTimeAgo(itemView.getContext(),time));
 	}
 }

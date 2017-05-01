@@ -56,14 +56,23 @@ public class ClassListFragment extends BaseFragment implements ClassListDelegate
     @Override
     protected void initChildView() {
         mRvListClass.setLayoutManager(new LinearLayoutManager(mContext));
-
-        mListClass = new ArrayList<>();
-        mAdapter = new ClassAdapter(mListClass, position -> mPresenter.onClickClass(mListClass.get(position)));
         mRvListClass.setAdapter(mAdapter);
 
         pbLoading.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(mContext, R.color.colorPrimary),
                 PorterDuff.Mode.SRC_ATOP);
+
+        if (!isFirst) {
+            mRvListClass.setVisibility(View.VISIBLE);
+            UiUtils.hideProgressBar(pbLoading);
+        }
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mListClass = new ArrayList<>();
+        mAdapter = new ClassAdapter(mListClass, position -> mPresenter.onClickClass(mListClass.get(position)));
     }
 
     @Override
@@ -83,6 +92,9 @@ public class ClassListFragment extends BaseFragment implements ClassListDelegate
 
         relRetry.setVisibility(View.INVISIBLE);
 
+        if (mRvListClass.getVisibility() != View.VISIBLE) {
+            mRvListClass.setVisibility(View.VISIBLE);
+        }
         if (!mListClass.isEmpty()) {
             mListClass.clear();
         }

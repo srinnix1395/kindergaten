@@ -277,7 +277,7 @@ public class ItemChatAnimator extends SimpleItemAnimator {
      * <li>
      * If you are not overriding {@link #animateChange(ViewHolder, ViewHolder, int, int, int, int)},
      * then DefaultItemAnimator will call {@link #animateMove(ViewHolder, int, int, int, int)} and
-     * run a move animation instead.
+     * run Health move animation instead.
      * </li>
      * </ul>
      */

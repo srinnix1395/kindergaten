@@ -1,17 +1,14 @@
 package com.srinnix.kindergarten.chat.adapter.viewholder;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.chat.adapter.ShowTimeListener;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
@@ -36,52 +33,14 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_heart)
     ImageView imvHeart;
 
-    private ValueAnimator mAnimatorIn;
-    private ValueAnimator mAnimatorOut;
-    private int position;
+    private boolean isShowTime;
 
-    private int heightTimeExpand;
-    private ShowTimeListener mShowTimeListener;
-
-    public ItemChatRightViewHolder(View itemView, ShowTimeListener mShowTimeListener) {
+    public ItemChatRightViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-
-        heightTimeExpand = UiUtils.dpToPixel(itemView.getContext(), 18f);
-
-        mAnimatorIn = ValueAnimator.ofInt(0, heightTimeExpand);
-        mAnimatorIn.addUpdateListener(valueAnimator1 -> {
-            tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
-            tvTime.requestLayout();
-        });
-        mAnimatorIn.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                tvMessage.getBackground().setLevel(2);
-            }
-        });
-        mAnimatorIn.setDuration(300);
-
-        mAnimatorOut = ValueAnimator.ofInt(heightTimeExpand, 0);
-        mAnimatorOut.addUpdateListener(valueAnimator1 -> {
-            tvTime.getLayoutParams().height = (int) valueAnimator1.getAnimatedValue();
-            tvTime.requestLayout();
-        });
-        mAnimatorOut.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                tvMessage.getBackground().setLevel(1);
-            }
-        });
-        mAnimatorOut.setDuration(300);
-
-        this.mShowTimeListener = mShowTimeListener;
     }
 
-    public void bindData(Message message, int position) {
-        this.position = position;
+    public void bindData(Message message) {
 
         if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
             tvMessage.setText("");
@@ -94,13 +53,8 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
             tvMessage.setVisibility(View.VISIBLE);
             imvHeart.setVisibility(View.INVISIBLE);
         }
-        tvTime.setText(UiUtils.convertDateTime(message.getCreatedAt()));
+        tvTime.setText(StringUtil.getTimeAgoComment(itemView.getContext(), message.getCreatedAt()));
 
-//        if (message.isShowTime()) {
-//            mAnimatorIn.start();
-//        } else {
-//            mAnimatorOut.start();
-//        }
         bindStatusMessage(message.getStatus());
     }
 
@@ -129,8 +83,13 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.textview_itemchatright_message)
     void onClickMessage() {
-        if (mShowTimeListener != null) {
-            mShowTimeListener.onClickMessage(position);
+        if (isShowTime) {
+            UiUtils.collapse(tvTime);
+            isShowTime = false;
+        } else {
+            UiUtils.expand(tvTime);
+            isShowTime = true;
+
         }
     }
 }

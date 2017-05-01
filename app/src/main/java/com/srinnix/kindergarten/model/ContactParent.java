@@ -16,11 +16,12 @@ public class ContactParent extends Contact {
     @Expose
     private ArrayList<Child> children;
 
-    public ContactParent(String id, String name, String gender, ArrayList<Child> children) {
+    public ContactParent(String id, String name, String gender, ArrayList<Child> children, boolean isMyClass) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.children = children;
+        this.isMyClass = isMyClass;
     }
 
     public ContactParent() {

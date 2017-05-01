@@ -1,0 +1,231 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_icon"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        app:cardCornerRadius="@dimen/radius_card_view"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageview_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/textview_class_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_toRightOf="@id/cardview_icon"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintStart_toEndOf="@+id/cardview_icon"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        tools:text="Lớp chồi 4"/>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorDividerColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginTop="6dp"
+        android:drawableLeft="@drawable/ic_user"
+        android:drawablePadding="6dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/margin_horizontal"
+        android:text="@string/teacher"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="10dp"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="54dp"/>
+
+    <include
+        android:id="@+id/rel_teacher_1"
+        layout="@layout/item_teacher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+
+    <include
+        android:id="@+id/rel_teacher_2"
+        layout="@layout/item_teacher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/rel_teacher_1"/>
+
+    <include
+        android:id="@+id/rel_teacher_3"
+        layout="@layout/item_teacher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/rel_teacher_2"/>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:layout_marginRight="@dimen/margin_horizontal"
+        android:layout_marginTop="@dimen/margin_vertical_post"
+        android:background="@color/colorDividerColor"
+        app:layout_constraintTop_toBottomOf="@+id/rel_teacher_3"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="64dp"/>
+
+    <ImageView
+        android:id="@+id/image_timetable"
+        android:layout_width="@dimen/icon_medium_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/image_time_table"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view2"/>
+
+    <TextView
+        android:id="@+id/textview_timetable"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:text="@string/learch_and_play_time"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/image_timetable"
+        app:layout_constraintTop_toTopOf="@+id/image_timetable"/>
+
+    <TextView
+        android:id="@+id/textview_timetable1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="@dimen/margin_horizontal"
+        android:gravity="center_vertical"
+        android:text="@string/timetable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_timetable"/>
+
+    <TextView
+        android:id="@+id/textview_play_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="@dimen/margin_horizontal"
+        android:gravity="center_vertical"
+        android:text="@string/play_schedule"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_timetable1"/>
+
+    <TextView
+        android:id="@+id/textview_learn_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="@dimen/margin_horizontal"
+        android:gravity="center_vertical"
+        android:text="@string/learn_schedule"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_play_schedule"/>
+
+    <View
+        android:id="@+id/view_line_timetable"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="@dimen/margin_vertical_post"
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:layout_marginRight="@dimen/margin_horizontal"
+        android:layout_marginTop="6dp"
+        android:background="@color/colorDividerColor"
+        app:layout_constraintTop_toBottomOf="@+id/textview_learn_schedule"/>
+
+    <ImageView
+        android:id="@+id/image_children"
+        android:layout_width="@dimen/icon_medium_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/image_children_crawl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view_line_timetable"/>
+
+    <TextView
+        android:id="@+id/textview_member"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:text="@string/class_member"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/image_children"
+        app:layout_constraintTop_toTopOf="@+id/image_children"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_member_class"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/image_children"/>
+
+    <View
+        android:id="@+id/view_line_member"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginBottom="@dimen/margin_vertical_post"
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:layout_marginRight="@dimen/margin_horizontal"
+        android:layout_marginTop="6dp"
+        android:background="@color/colorDividerColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview_member_class"/>
+
+</android.support.constraint.ConstraintLayout>

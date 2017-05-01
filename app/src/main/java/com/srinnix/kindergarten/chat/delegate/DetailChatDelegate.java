@@ -14,7 +14,7 @@ public interface DetailChatDelegate extends BaseDelegate{
 
     void changeDataMessage(int position);
 
-    void loadMessageSuccess(ArrayList<Message> arrayList, boolean isLoadingDataFirst);
+    void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst);
 
     void loadMessageFail(boolean isLoadingDataFirst);
 
@@ -24,5 +24,5 @@ public interface DetailChatDelegate extends BaseDelegate{
 
     void changeDataMessage(int position, int statusMessagePayload);
 
-    void setStatus(String status);
+    void setStatus(String status, int ic_state_online);
 }

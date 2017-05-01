@@ -184,7 +184,7 @@ public class SocketUtil {
                 message.setMessage(jsonObject.getString(ChatConstant.MESSAGE));
                 message.setCreatedAt(jsonObject.getLong(ChatConstant.CREATED_AT));
                 message.setStatus(ChatConstant.FRIEND_RECEIVED);
-                message.setDisplayIcon(true);
+//                message.setDisplayIcon(true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

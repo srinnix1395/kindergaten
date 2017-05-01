@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_news"
+        android:checked="false"
+        android:icon="@drawable/ic_new_selected"
+        android:title="@string/newFeed"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_item_class"
+        android:checked="false"
+        android:icon="@drawable/ic_class_selected"
+        android:title="@string/aClass"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_item_camera"
+        android:checked="false"
+        android:icon="@drawable/ic_camera_selected"
+        android:title="@string/camera"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_item_children"
+        android:enabled="false"
+        android:icon="@drawable/ic_children_selected"
+        android:title="@string/children"
+        app:showAsAction="always"/>
+
+</menu>

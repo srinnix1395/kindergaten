@@ -20,8 +20,6 @@ public class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int TYPE_LINEAR = 0;
     public static final int TYPE_GRID = 1;
 
-    private static final int SIZE_GRID_LAYOUT = 12;
-
     private ArrayList<Child> arrayList;
     private int layoutType;
     private OnClickChildListener listener;
@@ -46,26 +44,18 @@ public class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (layoutType == TYPE_LINEAR) {
-            ((ChildrenLinearViewHolder) holder).bindData(arrayList.get(position));
+            ((ChildrenLinearViewHolder) holder).bindData(arrayList.get(position), position);
         } else {
-            ((ChildrenGridViewHolder) holder).bindData(arrayList.get(position));
+            ((ChildrenGridViewHolder) holder).bindData(arrayList.get(position), position);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (layoutType == TYPE_LINEAR) {
-            return arrayList.size();
-        }
-
-        if (arrayList.size() < 12) {
-            return arrayList.size();
-        }
-
-        return SIZE_GRID_LAYOUT;
+        return arrayList.size();
     }
 
     public interface OnClickChildListener{
-        void onClick(String id);
+        void onClick(int position);
     }
 }

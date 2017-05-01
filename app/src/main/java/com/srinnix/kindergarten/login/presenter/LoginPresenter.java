@@ -7,11 +7,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
-import com.srinnix.kindergarten.login.fragment.ForgetPasswordFragment;
+import com.srinnix.kindergarten.login.fragment.ForgotPasswordFragment;
 import com.srinnix.kindergarten.login.helper.LoginHelper;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
@@ -45,6 +46,11 @@ public class LoginPresenter extends BasePresenter {
 
     public void login(FragmentActivity activity, String email, String password, ProgressBar pbLoading,
                       Button btnLogin) {
+
+        UiUtils.hideKeyboard(activity);
+        UiUtils.showProgressBar(pbLoading);
+        btnLogin.setEnabled(false);
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -55,13 +61,9 @@ public class LoginPresenter extends BasePresenter {
             return;
         }
 
-        UiUtils.hideKeyboard(activity);
-        UiUtils.showProgressBar(pbLoading);
-        btnLogin.setEnabled(false);
-
-        mLoginHelper.login(email, StringUtil.md5(password), new LoginHelper.LoginListener() {
+        mLoginHelper.login(email, StringUtil.md5(password), new ResponseListener<LoginResponse>() {
             @Override
-            public void onResponseSuccess(ApiResponse<LoginResponse> response) {
+            public void onSuccess(ApiResponse<LoginResponse> response) {
                 if (response == null) {
                     DebugLog.e(ErrorConstant.RESPONSE_NULL);
                     return;
@@ -72,14 +74,13 @@ public class LoginPresenter extends BasePresenter {
                     return;
                 }
 
-                SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser());
-                mLoginHelper.insertContact(mRealm, response.getData().getContacts(), mLoginDelegate);
+                SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser(), response.getData().getChildren());
+                mLoginHelper.insertData(mRealm, response.getData().getChildren(), response.getData().getContacts(), mLoginDelegate);
             }
 
             @Override
-            public void onResponseFail(Throwable throwable) {
-                AlertUtils.showToast(mContext, R.string.commonError);
-                DebugLog.e(throwable.getMessage());
+            public void onFail(Throwable throwable) {
+                ErrorUtil.handleException(mContext, throwable);
             }
 
             @Override
@@ -91,7 +92,7 @@ public class LoginPresenter extends BasePresenter {
     }
 
     public void handleForgetPassword() {
-        ViewManager.getInstance().addFragment(new ForgetPasswordFragment());
+        ViewManager.getInstance().addFragment(new ForgotPasswordFragment());
     }
 
     public void handleDestroy(String email) {

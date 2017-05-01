@@ -25,15 +25,19 @@ public class Contact implements Parcelable {
     @Expose
     protected String gender;
 
+    protected boolean isMyClass;
+
     protected int status = ChatConstant.STATUS_UNDEFINED;
 
     public Contact() {
+        isMyClass = false;
     }
 
     protected Contact(Parcel in) {
         id = in.readString();
         name = in.readString();
         gender = in.readString();
+        isMyClass = in.readByte() != 0;
         status = in.readInt();
     }
 
@@ -81,6 +85,14 @@ public class Contact implements Parcelable {
         this.gender = gender;
     }
 
+    public boolean isMyClass() {
+        return isMyClass;
+    }
+
+    public void setMyClass(boolean myClass) {
+        isMyClass = myClass;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -91,6 +103,7 @@ public class Contact implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(gender);
+        dest.writeByte((byte) (isMyClass ? 1 : 0));
         dest.writeInt(status);
     }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        activeColor="@color/colorPrimary"
+        icon="@drawable/ic_new_selected"
+        id="@+id/menu_item_news"
+        inActiveColor="@color/colorGrayIconBottomBar"
+        title="@string/newFeed"/>
+    <tab
+        activeColor="@color/colorPrimary"
+        icon="@drawable/ic_class_selected"
+        id="@+id/menu_item_class"
+        inActiveColor="@color/colorGrayIconBottomBar"
+        title="@string/aClass"/>
+
+    <tab
+        activeColor="@color/colorPrimary"
+        icon="@drawable/ic_camera_selected"
+        id="@+id/menu_item_camera"
+        inActiveColor="@color/colorGrayIconBottomBar"
+        title="@string/camera"/>
+
+    <tab
+        activeColor="@color/colorPrimary"
+        icon="@drawable/ic_children_selected"
+        id="@+id/menu_item_children"
+        inActiveColor="@color/colorGrayIconBottomBar"
+        title="@string/children"/>
+</tabs>

@@ -1,8 +1,8 @@
 package com.srinnix.kindergarten.clazz.helper;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import java.util.ArrayList;
@@ -24,24 +24,14 @@ public class ClassListHelper {
         mDisposable = disposable;
     }
 
-    public void getListClass(ClassResponseListener listener) {
+    public void getListClass(ResponseListener<ArrayList<Class>> listener) {
+        if (listener == null) {
+            return;
+        }
         mDisposable.add(mApi.getListClass()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    if (listener != null) {
-                        listener.onLoadSuccess(response);
-                    }
-                }, throwable -> {
-                    if (listener != null) {
-                        listener.onLoadError(throwable);
-                    }
-                }));
-    }
-
-    public interface ClassResponseListener {
-        void onLoadSuccess(ApiResponse<ArrayList<Class>> response);
-
-        void onLoadError(Throwable throwable);
+                .doFinally(listener::onFinally)
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 }

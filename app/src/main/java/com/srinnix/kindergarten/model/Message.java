@@ -42,16 +42,33 @@ public class Message extends RealmObject {
     @Expose
     private int status;
 
+    @SerializedName("is_seen")
+    @Expose
+    private boolean isSeen;
+
     @Ignore
     private boolean isTypingMessage;
 
-    private boolean isDisplayIcon;
+//    @Ignore
+//    private boolean isDisplayIcon;
+
 
     public Message() {
     }
 
+//    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status
+//            , boolean isTypingMessage, boolean isDisplayIcon) {
+//        this.id = id;
+//        this.idSender = idSender;
+//        this.idReceiver = idReceiver;
+//        this.message = message;
+//        this.createdAt = createdAt;
+//        this.status = status;
+//        this.isTypingMessage = isTypingMessage;
+//        this.isDisplayIcon = isDisplayIcon;
+//    }
     public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status
-            , boolean isTypingMessage, boolean isDisplayIcon) {
+            , boolean isTypingMessage) {
         this.id = id;
         this.idSender = idSender;
         this.idReceiver = idReceiver;
@@ -59,7 +76,6 @@ public class Message extends RealmObject {
         this.createdAt = createdAt;
         this.status = status;
         this.isTypingMessage = isTypingMessage;
-        this.isDisplayIcon = isDisplayIcon;
     }
 
     public Message(Message messageSample) {
@@ -70,7 +86,6 @@ public class Message extends RealmObject {
         this.createdAt = messageSample.getCreatedAt();
         this.status = messageSample.getStatus();
         this.isTypingMessage = messageSample.isTypingMessage();
-        this.isDisplayIcon = messageSample.isDisplayIcon();
     }
 
     public String getId() {
@@ -137,11 +152,19 @@ public class Message extends RealmObject {
         this.conversationId = conversationId;
     }
 
-    public boolean isDisplayIcon() {
-        return isDisplayIcon;
+//    public boolean isDisplayIcon() {
+//        return isDisplayIcon;
+//    }
+//
+//    public void setDisplayIcon(boolean displayIcon) {
+//        isDisplayIcon = displayIcon;
+//    }
+
+    public boolean isSeen() {
+        return isSeen;
     }
 
-    public void setDisplayIcon(boolean displayIcon) {
-        isDisplayIcon = displayIcon;
+    public void setSeen(boolean seen) {
+        isSeen = seen;
     }
 }

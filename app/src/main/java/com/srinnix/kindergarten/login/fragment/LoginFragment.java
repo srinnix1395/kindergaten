@@ -91,9 +91,6 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
         });
 
 
-//        pbLoading.getIndeterminateDrawable().setColorFilter(
-//                ContextCompat.getColor(mContext, R.color.colorWhiteFade),
-//                PorterDuff.Mode.SRC_ATOP);
         UiUtils.hideProgressBar(pbLoading);
     }
 

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_horizontal"
+                android:paddingRight="@dimen/margin_horizontal_low">
+
+    <TextView
+        android:id="@+id/textview_time"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        tools:text="07/09/2017"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_mark"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_horizontal_low"
+        android:layout_marginRight="@dimen/margin_horizontal_low"
+        android:layout_toRightOf="@+id/textview_time">
+
+        <View
+            android:id="@+id/view_time_line"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"/>
+
+        <ImageView
+            android:id="@+id/imageview_mark"
+            android:layout_width="@dimen/icon_small_size"
+            android:layout_height="@dimen/icon_small_size"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:background="#fafafa"
+            app:srcCompat="@drawable/ic_circle"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_weight"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_below="@+id/layout_height"
+        android:layout_toRightOf="@+id/layout_mark"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/imageview_weight"
+            android:layout_width="@dimen/icon_small_size"
+            android:layout_height="@dimen/icon_small_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_horizontal_low"
+            android:layout_marginRight="@dimen/margin_horizontal_low"
+            android:src="@drawable/image_weight"/>
+
+        <TextView
+            android:id="@+id/textview_weight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/imageview_weight"
+            android:gravity="center_vertical"
+            tools:text="20 kg"/>
+
+        <TextView
+            android:id="@+id/textview_weight_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/background_state_weight"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/colorWhite"
+            tools:text="Suy dinh dưỡng"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_height"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_toRightOf="@+id/layout_mark"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/imageview_height"
+            android:layout_width="@dimen/icon_small_size"
+            android:layout_height="@dimen/icon_small_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_horizontal_low"
+            android:layout_marginRight="@dimen/margin_horizontal_low"
+            android:src="@drawable/image_height"/>
+
+        <TextView
+            android:id="@+id/textview_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/imageview_height"
+            android:gravity="center_vertical"
+            tools:text="162 cm"/>
+
+        <TextView
+            android:id="@+id/textview_height_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/background_state_height"
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/colorWhite"
+            tools:text="Thấp còi"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_health"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_below="@+id/layout_weight"
+        android:layout_toRightOf="@+id/layout_mark"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
+
+        <ImageView
+            android:layout_width="@dimen/icon_small_size"
+            android:layout_height="@dimen/icon_small_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_horizontal_low"
+            android:layout_marginRight="@dimen/margin_horizontal_low"
+            android:src="@drawable/image_health"/>
+
+        <TextView
+            android:id="@+id/textview_health"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/health_overview"/>
+
+        <ImageView
+            android:id="@+id/imageview_show_more"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:scaleType="center"
+            android:src="@drawable/image_show_more"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_health_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/layout_health"
+        android:layout_below="@+id/layout_health"
+        android:paddingBottom="8dp"
+        android:paddingLeft="14dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textview_result_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result"/>
+
+        <TextView
+            android:id="@+id/textview_result_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/textview_result_title"
+            android:text="Sức khỏe loại 1"/>
+
+        <TextView
+            android:id="@+id/textview_eyes_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_result_title"
+            android:layout_marginTop="2dp"
+            android:text="@string/eyes"/>
+
+        <TextView
+            android:id="@+id/textview_eyes_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textview_eyes_title"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/textview_eyes_title"
+            android:text="cận thị"/>
+
+        <TextView
+            android:id="@+id/textview_ent_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_eyes_title"
+            android:layout_marginTop="2dp"
+            android:text="@string/ent"/>
+
+        <TextView
+            android:id="@+id/textview_ent_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textview_ent_title"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/textview_ent_title"
+            android:text="thối tai"/>
+
+        <TextView
+            android:id="@+id/textview_tooth_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_ent_title"
+            android:layout_marginTop="2dp"
+            android:text="@string/tooth"/>
+
+        <TextView
+            android:id="@+id/textview_tooth_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textview_tooth_title"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/textview_tooth_title"
+            android:text="sâu răng"/>
+
+        <TextView
+            android:id="@+id/textview_others_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_tooth_title"
+            android:layout_marginTop="2dp"
+            android:text="@string/others"/>
+
+        <TextView
+            android:id="@+id/textview_others_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textview_others_title"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/textview_others_title"
+            android:text="béo phì"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/layout_health_content"
+        android:layout_marginLeft="@dimen/margin_horizontal_low"
+        android:layout_toRightOf="@+id/layout_mark"
+        android:background="@color/colorDividerColor"/>
+
+</RelativeLayout>

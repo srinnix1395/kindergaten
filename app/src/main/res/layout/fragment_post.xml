@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#fafafa"
+              android:clickable="true"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/textview_post"
+            style="?android:textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/post"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <ProgressBar
+            android:id="@+id/progressbar_loading"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:padding="4.5dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imageview_success"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:padding="4.5dp"
+            android:scaleType="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_mark"/>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

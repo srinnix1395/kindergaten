@@ -24,80 +24,43 @@ public class User {
     @Expose
     private int accountType;
 
-    @SerializedName("_id_school")
-    @Expose
-    private String idSchool;
-
     @SerializedName("_id_class")
     @Expose
     private String idClass;
+
+    @SerializedName("image")
+    @Expose
+    private String image;
 
     @SerializedName("token")
     @Expose
     private String token;
 
-    public User(String id, String email, String name, int accountType, String idSchool, String token) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.accountType = accountType;
-        this.idSchool = idSchool;
-        this.token = token;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(int accountType) {
-        this.accountType = accountType;
-    }
-
-    public String getIdSchool() {
-        return idSchool;
-    }
-
-    public void setIdSchool(String idSchool) {
-        this.idSchool = idSchool;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getIdClass() {
         return idClass;
     }
 
-    public void setIdClass(String idClass) {
-        this.idClass = idClass;
+    public String getImage() {
+        return image;
     }
 }

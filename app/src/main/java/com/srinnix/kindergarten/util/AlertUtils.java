@@ -1,8 +1,8 @@
 package com.srinnix.kindergarten.util;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.support.design.widget.Snackbar;
+import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.login.activity.LoginActivity;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -21,32 +20,12 @@ import com.srinnix.kindergarten.login.activity.LoginActivity;
 
 public class AlertUtils {
 
-    public static void showSnackBarNoInternet(View view) {
-        final Snackbar snackbar = Snackbar.make(view, R.string.noInternetConnection, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.close, v -> snackbar.dismiss());
-        snackbar.setActionTextColor(ContextCompat.getColor(view.getContext(), R.color.colorPrimary));
-        snackbar.show();
-    }
-
     public static void showToast(Context context, int resID) {
         Toast.makeText(context, context.getString(resID), Toast.LENGTH_SHORT).show();
     }
 
     public static void showToast(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public static void showDialogToLogin(Context mContext, int resString) {
-        AlertDialog dialog = new AlertDialog.Builder(mContext)
-                .setMessage(resString)
-                .setCancelable(false)
-                .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton(R.string.OK, (dialogInterface, i) -> {
-                    Intent intent = new Intent(mContext, LoginActivity.class);
-                    mContext.startActivity(intent);
-                })
-                .create();
-        dialog.show();
     }
 
     public static void showToastSuccess(Context context, int resIcon, int resString) {
@@ -65,4 +44,40 @@ public class AlertUtils {
 
         toast.show();
     }
+
+    public static void showAlertDialog(Context context, int resTitle, int resMessage, int resNegative, DialogInterface.OnClickListener listener) {
+        new AlertDialog.Builder(context)
+                .setTitle(resTitle)
+                .setMessage(resMessage)
+                .setNegativeButton(resNegative, listener)
+                .create()
+                .show();
+    }
+
+    public static ProgressDialog showDialogSignOut(Context context, int resMessage) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setIndeterminate(true);
+        dialog.setMessage(context.getString(resMessage));
+        dialog.show();
+        return dialog;
+    }
+
+    public static void showDialogCancelPost(Context mContext, DialogInterface.OnClickListener listener) {
+        AlertDialog dialog1 = new AlertDialog.Builder(mContext, R.style.CancelPostDialogStyle)
+                .setTitle(R.string.confirm)
+                .setMessage(R.string.message_cancel_post)
+                .setCancelable(false)
+                .setPositiveButton(R.string.next, listener)
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                .create();
+
+        dialog1.setOnShowListener(dialog -> {
+            dialog1.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            dialog1.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimaryText));
+
+        });
+
+        dialog1.show();
+    }
+
 }

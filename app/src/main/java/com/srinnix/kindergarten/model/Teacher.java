@@ -32,10 +32,6 @@ public class Teacher {
     @Expose
     private String achievement;
 
-    @SerializedName("_id_class")
-    @Expose
-    private String classId;
-
     @SerializedName("class_name")
     @Expose
     private String className;
@@ -58,10 +54,6 @@ public class Teacher {
 
     public String getAchievement() {
         return achievement;
-    }
-
-    public String getClassId() {
-        return classId;
     }
 
     public String getGender() {

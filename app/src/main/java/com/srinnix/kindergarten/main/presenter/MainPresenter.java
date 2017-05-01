@@ -1,10 +1,9 @@
 package com.srinnix.kindergarten.main.presenter;
 
-import android.content.Intent;
-import android.support.design.widget.TabLayout;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -15,15 +14,19 @@ import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.camera.fragment.CameraFragment;
 import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
+import com.srinnix.kindergarten.children.fragment.ChildrenListFragment;
+import com.srinnix.kindergarten.clazz.fragment.ClassListFragment;
+import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.login.activity.LoginActivity;
-import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
-import com.srinnix.kindergarten.setting.activity.SettingActivity;
+import com.srinnix.kindergarten.setting.fragment.AccountFragment;
+import com.srinnix.kindergarten.setting.fragment.SettingFragment;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import io.reactivex.disposables.Disposable;
 
@@ -33,38 +36,114 @@ import io.reactivex.disposables.Disposable;
 
 public class MainPresenter extends BasePresenter {
 
-    private int currentPosition = 0;
-
-    private MainDelegate mMainDelegate;
     private boolean isFirstOpenMenuChat = true;
     private Disposable mDisposable;
+    private int currentPosition = 5;
+    private int accountType;
 
     public MainPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-        mMainDelegate = (MainDelegate) mDelegate;
-    }
-
-    public void startActivityLogin() {
-        Intent intent = new Intent(mContext, LoginActivity.class);
-        mContext.startActivity(intent);
+        accountType = SharedPreUtils.getInstance(mContext).getAccountType();
     }
 
     public void startActivitySetting() {
-        Intent intent = new Intent(mContext, SettingActivity.class);
-        mContext.startActivity(intent);
+        ViewManager.getInstance().addFragment(new SettingFragment(), null,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
-    public void changeTabIcon(Toolbar toolbar, TabLayout tabLayout, int position) {
-        if (tabLayout == null || tabLayout.getTabAt(position) == null
-                || tabLayout.getTabAt(currentPosition) == null) {
-            return;
+    public void changeTabIcon(FragmentManager fragmentManager, int tabId) {
+        switch (tabId) {
+            case R.id.menu_item_news: {
+                if (currentPosition == AppConstant.FRAGMENT_BULLETIN_BOARD) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_class: {
+                if (currentPosition == AppConstant.FRAGMENT_CLASS) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_camera: {
+                if (currentPosition == AppConstant.FRAGMENT_CAMERA) {
+                    return;
+                }
+                break;
+            }
+            case R.id.menu_item_children: {
+                if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
+                    return;
+                }
+                break;
+            }
+        }
+        Fragment fragmentShow = null;
+
+        Fragment fragmentHide = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (fragmentHide != null) {
+            transaction.hide(fragmentHide);
         }
 
-        toolbar.setTitle(AppConstant.TITLE_TAB[position]);
+        switch (tabId) {
+            case R.id.menu_item_news: {
+                currentPosition = AppConstant.FRAGMENT_BULLETIN_BOARD;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                transaction.setCustomAnimations(R.anim.anim_show, 0);
+                break;
+            }
+            case R.id.menu_item_class: {
+                currentPosition = AppConstant.FRAGMENT_CLASS;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                if (fragmentShow == null) {
+                    fragmentShow = initClassFragment();
+                    transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                } else {
+                    transaction.setCustomAnimations(R.anim.anim_show, 0);
+                }
+                break;
+            }
+            case R.id.menu_item_camera: {
+                currentPosition = AppConstant.FRAGMENT_CAMERA;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                if (fragmentShow == null) {
+                    fragmentShow = new CameraFragment();
+                    transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                } else {
+                    transaction.setCustomAnimations(R.anim.anim_show, 0);
+                }
+                break;
+            }
+            case R.id.menu_item_children: {
+                currentPosition = AppConstant.FRAGMENT_CHILDREN;
+                fragmentShow = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+                if (fragmentShow == null) {
+                    fragmentShow = new ChildrenListFragment();
+                    transaction.add(R.id.frame_layout_main, fragmentShow, String.valueOf(currentPosition));
+                } else {
+                    transaction.setCustomAnimations(R.anim.anim_show, 0);
+                }
+                break;
+            }
+        }
 
-        tabLayout.getTabAt(position).setIcon(AppConstant.ICON_TAB_SELECTED[position]);
-        tabLayout.getTabAt(currentPosition).setIcon(AppConstant.ICON_TAB_UNSELECTED[currentPosition]);
-        currentPosition = position;
+        if (fragmentShow == null) {
+            return;
+        }
+        transaction.show(fragmentShow);
+        transaction.commit();
+    }
+
+    private Fragment initClassFragment() {
+        if (accountType == AppConstant.ACCOUNT_TEACHERS) {
+            String classId = SharedPreUtils.getInstance(mContext).getClassId();
+            Bundle bundle = new Bundle();
+            bundle.putString(AppConstant.KEY_CLASS, classId);
+            return DetailClassFragment.newInstance(bundle);
+        } else {
+            return new ClassListFragment();
+        }
     }
 
     public void onClickMenuItemChat(Fragment mainFragment, DrawerLayout drawerLayout) {
@@ -81,19 +160,22 @@ public class MainPresenter extends BasePresenter {
                 transaction.commit();
 
                 isFirstOpenMenuChat = false;
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED);
             }
             drawerLayout.openDrawer(Gravity.RIGHT);
         }
     }
 
-    public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout, ViewPager viewPager) {
+    public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout) {
         if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             drawerLayout.closeDrawer(Gravity.RIGHT);
             return;
         }
 
-        if (viewPager.getCurrentItem() != 0) {
-            viewPager.setCurrentItem(0, true);
+        if (currentPosition == AppConstant.FRAGMENT_CHILDREN) {
+            ChildrenListFragment fragmentChildren = (ChildrenListFragment) mainFragment
+                    .getChildFragmentManager().findFragmentByTag(String.valueOf(currentPosition));
+            fragmentChildren.onBackPressed();
             return;
         }
 
@@ -113,21 +195,23 @@ public class MainPresenter extends BasePresenter {
         }
     }
 
-    public void signOut() {
-        // TODO: 3/20/2017 sign out
-    }
-
-    public void setupDrawerLayout(DrawerLayout mDrawer) {
-        if (!SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-    }
-
     public void loginSuccessfully(Toolbar mToolbar) {
         mToolbar.getMenu().clear();
         mToolbar.inflateMenu(R.menu.main_menu_signed_in);
 
         KinderApplication.getInstance().getSocketUtil().connect(mContext);
+    }
+
+    public void removeUnUsedFragment(FragmentManager manager) {
+        Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
+        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS ) {
+            manager.beginTransaction().remove(fragment).commit();
+        }
+    }
+
+    public void onClickAccount() {
+        ViewManager.getInstance().addFragment(new AccountFragment(), null,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     @Override
@@ -137,4 +221,5 @@ public class MainPresenter extends BasePresenter {
             mDisposable.dispose();
         }
     }
+
 }

@@ -19,7 +19,6 @@
     </style>
 
 
-
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash_activity</item>
     </style>
@@ -53,6 +52,13 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="CancelPostDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">@color/colorSecondaryText</item>
+    </style>
+
+    <style name="RadioButtonStyle" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+    </style>
 
     <!--chat-->
 

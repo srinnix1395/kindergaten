@@ -17,6 +17,7 @@ public class ContactTeacherRealm extends RealmObject {
     private String gender;
     private String image;
     private String className;
+    private boolean isMyClass;
 
     public ContactTeacherRealm() {
     }
@@ -27,6 +28,7 @@ public class ContactTeacherRealm extends RealmObject {
         gender = contact.getGender();
         image = contact.getImage();
         className = contact.getClassName();
+        isMyClass = contact.isMyClass();
     }
 
     public String getId() {

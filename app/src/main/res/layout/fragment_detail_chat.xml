@@ -4,6 +4,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#fafafa"
+                android:clickable="true"
                 android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -31,6 +33,7 @@
                 android:id="@+id/textview_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/padding_drawable"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
                 tools:text="Đang online"/>
@@ -65,12 +68,12 @@
             android:background="@color/colorDividerColor"/>
 
         <!--<ImageView-->
-            <!--android:id="@+id/imageview_icon"-->
-            <!--android:layout_width="@dimen/width_icon_fragment_chat"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:foreground="?selectableItemBackgroundBorderless"-->
-            <!--android:scaleType="center"-->
-            <!--app:srcCompat="@drawable/ic_icon"/>-->
+        <!--android:id="@+id/imageview_icon"-->
+        <!--android:layout_width="@dimen/width_icon_fragment_chat"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:foreground="?selectableItemBackgroundBorderless"-->
+        <!--android:scaleType="center"-->
+        <!--app:srcCompat="@drawable/ic_icon"/>-->
 
         <EditText
             android:id="@+id/edittext_message"
@@ -109,6 +112,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/commonError"
+        android:text="@string/error_common"
         android:visibility="gone"/>
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.chat.helper;
 
 import android.content.Context;
 
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.model.Message;
@@ -41,14 +42,31 @@ public class DetailChatHelper {
         long timeFirstMessage;
         if (listMessage.isEmpty()) {
             timeFirstMessage = System.currentTimeMillis();
-        } else {
+        } else if (listMessage.get(0) instanceof Message) {
             timeFirstMessage = ((Message) listMessage.get(0)).getCreatedAt();
+        } else if (listMessage.get(1) instanceof Message){
+            timeFirstMessage = ((Message) listMessage.get(1)).getCreatedAt();
+        }  else {
+            timeFirstMessage = ((Message) listMessage.get(2)).getCreatedAt();
         }
 
         Disposable disposable = Observable.concat(getMessageDB(conversationID, timeFirstMessage),
                 getMessageApi(mContext, token, conversationID, timeFirstMessage))
                 .filter(arrayList -> arrayList.size() > 0)
                 .first(new ArrayList<>())
+                .map(messages -> {
+                    ArrayList<Object> arrayList = new ArrayList<>();
+                    for (int i = 0, size = messages.size(); i < size; i++) {
+                        if (i == 0) {
+                            arrayList.add(messages.get(0).getCreatedAt());
+                        }
+                        arrayList.add(messages.get(i));
+                        if (i + 1 <= size - 1 && messages.get(i + 1).getCreatedAt() - messages.get(i).getCreatedAt() > AppConstant.TIME_BETWEEN_2_MESSAGE) {
+                            arrayList.add(messages.get(i + 1).getCreatedAt());
+                        }
+                    }
+                    return arrayList;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(messageArrayList -> {
                     if (listener != null) {
@@ -90,13 +108,12 @@ public class DetailChatHelper {
     }
 
     private void saveMessage(ArrayList<Message> messages) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> realm1.copyToRealm(messages));
-        realm.close();
+//        Realm realm = Realm.getDefaultInstance();
+//        realm.executeTransaction(realm1 -> realm1.copyToRealm(messages));
+//        realm.close();
     }
 
     private Observable<ArrayList<Message>> getMessageDB(String conversationID, long timeFirstMessage) {
-
         return Observable.just(Realm.getDefaultInstance().where(Message.class)
                 .equalTo("conversationId", conversationID)
                 .lessThan("createdAt", timeFirstMessage)
@@ -112,7 +129,7 @@ public class DetailChatHelper {
     }
 
     public interface DetailChatHelperListener {
-        void onLoadMessageSuccessfully(ArrayList<Message> arrayList);
+        void onLoadMessageSuccessfully(ArrayList<Object> arrayList);
 
         void onLoadMessageFail(Throwable throwable);
     }

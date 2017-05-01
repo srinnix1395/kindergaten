@@ -12,9 +12,28 @@ public class LikeModel {
     @Expose
     private String idUser;
 
-    @SerializedName("name")
+    @SerializedName("name_user")
     @Expose
     private String name;
+
+    @SerializedName("image_user")
+    @Expose
+    private String image;
+
+    @SerializedName("account_type")
+    @Expose
+    private int accountType;
+
+    @SerializedName("created_at")
+    @Expose
+    private long createdAt;
+
+    public LikeModel(String name, String image, int accountType, long createdAt) {
+        this.name = name;
+        this.image = image;
+        this.accountType = accountType;
+        this.createdAt = createdAt;
+    }
 
     public String getIdUser() {
         return idUser;
@@ -22,5 +41,17 @@ public class LikeModel {
 
     public String getName() {
         return name;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public int getAccountType() {
+        return accountType;
     }
 }

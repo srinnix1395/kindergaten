@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,10 +7,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.clazz.activity.ClassActivity;
 import com.srinnix.kindergarten.clazz.delegate.ClassListDelegate;
+import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassListHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Class;
@@ -20,6 +20,7 @@ import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.UiUtils;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,7 @@ public class ClassListPresenter extends BasePresenter {
 
     @Override
     public void onStart() {
+        super.onStart();
         getListClass();
     }
 
@@ -53,11 +55,11 @@ public class ClassListPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getListClass(new ClassListHelper.ClassResponseListener() {
+        mHelper.getListClass(new ResponseListener<ArrayList<Class>>() {
             @Override
-            public void onLoadSuccess(ApiResponse<ArrayList<Class>> response) {
+            public void onSuccess(ApiResponse<ArrayList<Class>> response) {
                 if (response == null) {
-                    onLoadError(new NullPointerException());
+                    onFail(new NullPointerException());
                     return;
                 }
 
@@ -72,24 +74,26 @@ public class ClassListPresenter extends BasePresenter {
             }
 
             @Override
-            public void onLoadError(Throwable throwable) {
+            public void onFail(Throwable throwable) {
                 DebugLog.e(throwable.getMessage());
                 if (mClassListDelegate != null) {
-                    mClassListDelegate.onLoadError(R.string.commonError);
+                    mClassListDelegate.onLoadError(R.string.error_common);
                 }
+            }
+
+            @Override
+            public void onFinally() {
+
             }
         });
     }
 
     public void onClickClass(Class aClass) {
-        Intent intent = new Intent(mContext, ClassActivity.class);
-        intent.putExtra(AppConstant.SCREEN_ID, AppConstant.FRAGMENT_DETAIL_CLASS);
-
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_CLASS, aClass.getId());
-        intent.putExtras(bundle);
 
-        mContext.startActivity(intent);
+        ViewManager.getInstance().addFragment(new DetailClassFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void onClickRetry(ImageView imvRetry, TextView tvRetry, ProgressBar pbLoading) {

@@ -1,18 +1,27 @@
 package com.srinnix.kindergarten.util;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.srinnix.kindergarten.R;
+
+import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -24,7 +33,7 @@ public class UiUtils {
         DisplayMetrics metrics = resources.getDisplayMetrics();
 //        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         metrics = context.getResources().getDisplayMetrics();
-        return (int)((dp * metrics.density) + 0.5);
+        return (int) ((dp * metrics.density) + 0.5);
     }
 
     public static int pixelsToDp(Context context, float px) {
@@ -32,7 +41,7 @@ public class UiUtils {
         DisplayMetrics metrics = resources.getDisplayMetrics();
 //        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         metrics = context.getResources().getDisplayMetrics();
-        return (int) ((px/metrics.density)+0.5);
+        return (int) ((px / metrics.density) + 0.5);
     }
 
     // Prevent dialog dismiss when orientation changes
@@ -90,13 +99,163 @@ public class UiUtils {
             return;
         }
 
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         progressBar.setEnabled(false);
     }
 
-    public static String convertDateTime(long dateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh:mm", Locale.getDefault());
+    public static Bitmap retrieveVideoFrameFromVideo(String videoPath) throws Throwable {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever mediaMetadataRetriever = null;
+        try {
+            mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<>());
 
-        return dateFormat.format(new Date(dateTime));
+            bitmap = mediaMetadataRetriever.getFrameAtTime();
+        } catch (Exception e) {
+            ErrorUtil.handleException(e);
+        } finally {
+            if (mediaMetadataRetriever != null) {
+                mediaMetadataRetriever.release();
+            }
+        }
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
+        }
+        return bitmap;
     }
+
+    public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        Health.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+        v.startAnimation(a);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        Health.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+
+        v.startAnimation(a);
+    }
+
+    public static void expand(View v, View viewTimeline) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+        final int heightViewTimeLine = viewTimeline.getHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+
+                viewTimeline.getLayoutParams().height = heightViewTimeLine + (int) (targetHeight * interpolatedTime);
+                viewTimeline.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        Health.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+        v.startAnimation(a);
+    }
+
+    public static void collapse(View v, View viewTimeline) {
+        final int initialHeight = v.getMeasuredHeight();
+        final int initialHeightViewTimeLine = viewTimeline.getHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                int heightAnimated = (int) (initialHeight * interpolatedTime);
+
+                viewTimeline.getLayoutParams().height = initialHeightViewTimeLine - heightAnimated;
+                viewTimeline.requestLayout();
+
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                    return;
+                }
+
+                v.getLayoutParams().height = initialHeight - heightAnimated;
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+//        Health.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(250);
+
+        v.startAnimation(a);
+    }
+
+    public static void showDatePickerDialog(Context mContext, DatePickerDialog.OnDateSetListener listener) {
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(mContext, listener,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
+    }
+
+    public static void showTimePickerDialog(Context mContext, TimePickerDialog.OnTimeSetListener listener) {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog dialog = new TimePickerDialog(mContext, listener,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                true);
+        dialog.show();
+    }
+
+
 }

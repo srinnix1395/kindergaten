@@ -1,7 +1,5 @@
 package com.srinnix.kindergarten.chat.fragment;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -18,7 +16,6 @@ import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Contact;
-import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,7 +34,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     @BindView(R.id.recyclerview_chat_list)
     RecyclerView recyclerView;
 
-    private ArrayList<Contact> listContact;
+    private ArrayList<Object> listContact;
     private ChatListAdapter mAdapter;
     private ChatListPresenter mPresenter;
 
@@ -47,26 +44,25 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     }
 
     @Override
-    protected void initChildView() {
+    protected void initData() {
+        super.initData();
         listContact = new ArrayList<>();
         mAdapter = new ChatListAdapter(listContact, new ChatListAdapter.OnClickItemChatListener() {
             @Override
             public void onClick(int position, String name, String urlImage) {
-                mPresenter.onClickItemChat(listContact.get(position), name, urlImage);
+                mPresenter.onClickItemChat(ChatListFragment.this, ((Contact) listContact.get(position)), name, urlImage);
             }
         });
+    }
 
-        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator(){
-            @Override
-            public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-                return true;
-            }
-        };
-        recyclerView.setItemAnimator(defaultItemAnimator);
+    @Override
+    protected void initChildView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(mAdapter);
 
-        mPresenter.getContactFromDatabase();
+        if (isFirst) {
+            mPresenter.getContactFromDatabase();
+        }
     }
 
     @Override
@@ -105,7 +101,6 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onEventSetupContactStatus(MessageContactStatus message) {
         if (listContact.size() > 0) {
-//            EventBus.getDefault().removeStickyEvent(MessageContactStatus.class);
             mPresenter.onSetupContactStatus(message, listContact);
             mAdapter.notifyItemRangeChanged(0, listContact.size(), AppConstant.UPDATE_ALL_VIEW_HOLDER);
         }
@@ -121,17 +116,16 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
     }
 
     @Override
-    public void addContactParent(ArrayList<ContactParent> contactParents) {
-        if (listContact.size() > 0) {
+    public void addContactParent(ArrayList<Object> contactsParents) {
+        if (!listContact.isEmpty()) {
             listContact.clear();
         }
-        listContact.addAll(contactParents);
-        mAdapter.notifyItemRangeInserted(0, contactParents.size());
+        listContact.addAll(contactsParents);
+        mAdapter.notifyItemRangeInserted(0, contactsParents.size());
     }
 
     @Override
     public void updateStatus(int position, int status) {
         mAdapter.notifyItemChanged(position, new StatusPayload(status));
     }
-
 }

@@ -1,14 +1,15 @@
 package com.srinnix.kindergarten.login.helper;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
@@ -31,34 +32,30 @@ public class LoginHelper {
         mApi = RetrofitClient.getApiService();
     }
 
-    public void login(String email, String password, LoginListener mListener) {
+    public void login(String email, String password, ResponseListener<LoginResponse> mListener) {
+        if (mListener == null) {
+            return;
+        }
         mApi.login(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(() -> {
-                    if (mListener != null) {
-                        mListener.onFinally();
-                    }
-                })
-                .subscribe(response -> {
-                            if (mListener != null) {
-                                mListener.onResponseSuccess(response);
-                            }
-                        },
-                        throwable -> {
-                            if (mListener != null) {
-                                mListener.onResponseFail(throwable);
-                            }
-                        });
+                .doFinally(mListener::onFinally)
+                .subscribe(mListener::onSuccess, mListener::onFail);
     }
 
-    public void insertContact(Realm realm, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
+    public void insertData(Realm realm, ArrayList<Child> children, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
         realm.executeTransactionAsync(realm12 -> {
             if (arrayList == null || arrayList.size() == 0) {
                 if (loginDelegate != null) {
                     loginDelegate.loginSuccessfully();
                 }
                 return;
+            }
+
+            if (children != null) {
+                for (Child child : children) {
+                    realm12.copyToRealm(child);
+                }
             }
 
             if (arrayList.get(0) instanceof ContactTeacher) {
@@ -76,7 +73,7 @@ public class LoginHelper {
             if (loginDelegate != null) {
                 loginDelegate.loginSuccessfully();
             }
-            EventBus.getDefault().postSticky(new MessageLoginSuccessfully());
+            EventBus.getDefault().post(new MessageLoginSuccessfully());
             if (!realm.isClosed()) {
                 realm.close();
             }
@@ -84,10 +81,6 @@ public class LoginHelper {
     }
 
     public interface LoginListener {
-
-        void onResponseSuccess(ApiResponse<LoginResponse> dataLogin);
-
-        void onResponseFail(Throwable throwable);
 
         void onFinally();
     }
