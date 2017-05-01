@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorPrimary"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/margin_horizontal_low"
+        android:text="@string/post_time"
+        android:textAllCaps="true"
+        android:textColor="#b3ffffff"
+        android:textSize="16sp"/>
+
+    <RadioGroup
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/radio_now"
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginStart="@dimen/margin_horizontal_low"
+            android:checked="true"
+            android:layoutDirection="rtl"
+            android:paddingEnd="@dimen/margin_horizontal_low"
+            android:text="@string/now"
+            android:textColor="#ffffff"
+            app:buttonTint="#ffffff"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#99ffffff"/>
+
+        <android.support.v7.widget.AppCompatRadioButton
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginStart="@dimen/margin_horizontal_low"
+            android:layoutDirection="rtl"
+            android:paddingEnd="@dimen/margin_horizontal_low"
+            android:text="@string/schedule"
+            android:textColor="#ffffff"
+            app:buttonTint="#ffffff"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#99ffffff"/>
+
+        <LinearLayout
+            android:id="@+id/layout_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_size"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textview_schedule_day"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                tools:text="May 1,2017"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="#99ffffff"/>
+
+            <TextView
+                android:id="@+id/textview_schedule_hour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                tools:text="12:07"/>
+
+        </LinearLayout>
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_marginTop="@dimen/margin_horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/margin_horizontal_low"
+        android:text="@string/notification"
+        android:textAllCaps="true"
+        android:textColor="#b3ffffff"
+        android:textSize="16sp"/>
+
+    <RadioGroup
+        android:id="@+id/radiogroup_notification_range"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/radio_all"
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginStart="@dimen/margin_horizontal_low"
+            android:checked="true"
+            android:layoutDirection="rtl"
+            android:paddingEnd="@dimen/margin_horizontal_low"
+            android:text="@string/all"
+            android:textColor="#ffffff"
+            app:buttonTint="#ffffff"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#99ffffff"/>
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/radio_parent"
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginStart="@dimen/margin_horizontal_low"
+            android:layoutDirection="rtl"
+            android:paddingEnd="@dimen/margin_horizontal_low"
+            android:text="@string/parents"
+            android:textColor="#ffffff"
+            app:buttonTint="#ffffff"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#99ffffff"/>
+
+        <android.support.v7.widget.AppCompatRadioButton
+            style="@style/RadioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_size"
+            android:layout_marginStart="@dimen/margin_horizontal_low"
+            android:layoutDirection="rtl"
+            android:paddingEnd="@dimen/margin_horizontal_low"
+            android:text="@string/teacher"
+            android:textAlignment="textStart"
+            android:textColor="#ffffff"
+            app:buttonTint="#ffffff"/>
+
+    </RadioGroup>
+
+</LinearLayout>

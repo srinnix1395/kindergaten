@@ -78,6 +78,11 @@ public class LikePresenter extends BasePresenter {
                 ErrorUtil.handleException(throwable);
                 mLikeDelegate.onLoadFail(R.string.error_common, isLoadFirst);
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 

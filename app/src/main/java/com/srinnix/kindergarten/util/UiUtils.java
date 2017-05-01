@@ -1,7 +1,9 @@
 package com.srinnix.kindergarten.util;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -18,6 +20,7 @@ import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -235,4 +238,24 @@ public class UiUtils {
 
         v.startAnimation(a);
     }
+
+    public static void showDatePickerDialog(Context mContext, DatePickerDialog.OnDateSetListener listener) {
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(mContext, listener,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH));
+        dialog.show();
+    }
+
+    public static void showTimePickerDialog(Context mContext, TimePickerDialog.OnTimeSetListener listener) {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog dialog = new TimePickerDialog(mContext, listener,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                true);
+        dialog.show();
+    }
+
+
 }

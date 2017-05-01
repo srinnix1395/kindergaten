@@ -195,11 +195,6 @@ public class MainPresenter extends BasePresenter {
         }
     }
 
-    public void signOut() {
-        SharedPreUtils.getInstance(mContext).clearUserData();
-        // TODO: 3/20/2017 sign out
-    }
-
     public void loginSuccessfully(Toolbar mToolbar) {
         mToolbar.getMenu().clear();
         mToolbar.inflateMenu(R.menu.main_menu_signed_in);
@@ -209,7 +204,7 @@ public class MainPresenter extends BasePresenter {
 
     public void removeUnUsedFragment(FragmentManager manager) {
         Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
-        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS) {
+        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS ) {
             manager.beginTransaction().remove(fragment).commit();
         }
     }

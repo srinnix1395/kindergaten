@@ -30,7 +30,7 @@ public class PostHelper {
         this.mDisposable = mDisposable;
     }
 
-    public void post(String token, String content, ArrayList<ImageLocal> listImage, int notiType, ResponseListener<Post> listener) {
+    public void post(String token, String content, ArrayList<ImageLocal> listImage, int notiType, int notificationRange, ResponseListener<Post> listener) {
         if (listener == null) {
             return;
         }
@@ -46,12 +46,14 @@ public class PostHelper {
             }
         }
 
-        RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), content);
+        RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), content.trim());
         RequestBody notiTypeBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(notiType));
+        RequestBody notiRangeBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(notificationRange));
 
-        mDisposable.add(mApi.insertPost(token, contentBody, listFile, notiTypeBody)
+        mDisposable.add(mApi.insertPost(token, contentBody, listFile, notiTypeBody, notiRangeBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 

@@ -85,6 +85,11 @@ public class InfoChildrenPresenter extends BasePresenter {
                 ErrorUtil.handleException(mContext, throwable);
                 mChildrenDelegate.onLoadFail(R.string.error_common);
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 
@@ -117,6 +122,11 @@ public class InfoChildrenPresenter extends BasePresenter {
             @Override
             public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, throwable);
+            }
+
+            @Override
+            public void onFinally() {
+
             }
         });
     }

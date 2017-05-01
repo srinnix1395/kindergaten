@@ -175,6 +175,11 @@ public class BulletinBoardPresenter extends BasePresenter {
             public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, new NullPointerException());
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 
@@ -188,6 +193,11 @@ public class BulletinBoardPresenter extends BasePresenter {
             @Override
             public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, new NullPointerException());
+            }
+
+            @Override
+            public void onFinally() {
+
             }
         });
     }
@@ -283,10 +293,15 @@ public class BulletinBoardPresenter extends BasePresenter {
                 ErrorUtil.handleException(mContext, throwable);
                 mBoardDelegate.onRefreshResult(false, null);
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 
-    public void getPostAfterLogin(SwipeRefreshLayout refreshLayout) {
+    public void getPostAfterLogin(SwipeRefreshLayout refreshLayout, ArrayList<Object> mListPost) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -299,7 +314,12 @@ public class BulletinBoardPresenter extends BasePresenter {
         String token = SharedPreUtils.getInstance(mContext).getToken();
         String userId = SharedPreUtils.getInstance(mContext).getUserID();
 
-        mHelper.getImportantPost(token, userId, new ResponseListener<PostResponse>() {
+        int size = mListPost.size();
+        long minTime = mListPost.get(size - 1) instanceof LoadingItem ?
+                ((Post) mListPost.get(size - 2)).getCreatedAt() :
+                ((Post) mListPost.get(size - 1)).getCreatedAt();
+
+        mHelper.getImportantPost(token, userId, minTime, new ResponseListener<PostResponse>() {
             @Override
             public void onSuccess(ApiResponse<PostResponse> response) {
                 if (response == null) {
@@ -321,6 +341,11 @@ public class BulletinBoardPresenter extends BasePresenter {
             public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, throwable);
                 mBoardDelegate.onRefreshResult(false, null);
+            }
+
+            @Override
+            public void onFinally() {
+
             }
         });
     }
@@ -365,6 +390,13 @@ public class BulletinBoardPresenter extends BasePresenter {
         if (arrPost.size() == 1) {
             return;
         }
+        for (int i = arrPost.size() - 1; i >= 0; i--) {
+            if (arrPost.get(i) instanceof Post && ((Post) arrPost.get(i)).getType() == AppConstant.POST_IMPORTANT) {
+                arrPost.remove(i);
+                mBoardDelegate.deletePost(i);
+            }
+        }
+
         for (Object o : arrPost) {
             if (o instanceof Post && ((Post) o).isUserLike()) {
                 ((Post) o).setUserLike(false);

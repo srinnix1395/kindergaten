@@ -10,4 +10,6 @@ public interface ResponseListener<T> {
     void onSuccess(ApiResponse<T> response);
 
     void onFail(Throwable throwable);
+
+    void onFinally();
 }

@@ -87,6 +87,11 @@ public class DetailClassPresenter extends BasePresenter {
                 ErrorUtil.handleException(throwable);
                 mClassDelegate.onLoadError(R.string.error_common);
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 
@@ -188,6 +193,11 @@ public class DetailClassPresenter extends BasePresenter {
             @Override
             public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, throwable);
+            }
+
+            @Override
+            public void onFinally() {
+
             }
         });
     }

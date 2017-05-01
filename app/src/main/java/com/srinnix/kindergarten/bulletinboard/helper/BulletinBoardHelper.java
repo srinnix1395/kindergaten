@@ -42,7 +42,9 @@ public class BulletinBoardHelper {
                 mApiService.likePost(token, idUser, name, image, accountType, idPost)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doFinally(listener::onFinally)
                         .subscribe(listener::onSuccess, listener::onFail));
+
     }
 
     public void unlikePost(String token, String idUser, String idPost, ResponseListener<LikeResponse> listener) {
@@ -53,6 +55,7 @@ public class BulletinBoardHelper {
         mDisposable.add(mApiService.unlikePost(token, idUser, idPost)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
@@ -131,6 +134,7 @@ public class BulletinBoardHelper {
         mDisposable.add(mApiService.getListNumberLike(idPost, timePrevLike)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
@@ -142,17 +146,19 @@ public class BulletinBoardHelper {
         mDisposable.add(mApiService.getNewPost(token, userSignedIn, userId, timePrev)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
-    public void getImportantPost(String token, String userId, ResponseListener<PostResponse> listener) {
+    public void getImportantPost(String token, String userId, long minTime, ResponseListener<PostResponse> listener) {
         if (listener == null) {
             return;
         }
 
-        mDisposable.add(mApiService.getImportantPost(token, userId)
+        mDisposable.add(mApiService.getImportantPost(token, userId, minTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 

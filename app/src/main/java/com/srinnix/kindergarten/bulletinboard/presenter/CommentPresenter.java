@@ -82,6 +82,11 @@ public class CommentPresenter extends BasePresenter {
                 ErrorUtil.handleException(throwable);
                 mCommentDelegate.onLoadCommentFail(R.string.error_common, isLoadFirst);
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 
@@ -138,6 +143,11 @@ public class CommentPresenter extends BasePresenter {
             public void onFail(Throwable throwable) {
                 mCommentDelegate.updateStateComment(time);
                 ErrorUtil.handleException(throwable);
+            }
+
+            @Override
+            public void onFinally() {
+
             }
         });
     }

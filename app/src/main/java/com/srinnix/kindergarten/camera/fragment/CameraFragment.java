@@ -17,7 +17,6 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.camera.presenter.CameraPresenter;
-import com.srinnix.kindergarten.main.fragment.MainFragment;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -103,7 +102,7 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden && SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
-            ((MainFragment) (getParentFragment())).removeFragment();
+            getParentFragment().getChildFragmentManager().beginTransaction().remove(this).commit();
             onDestroy();
         }
     }
@@ -176,6 +175,8 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mPlayer.release();
+        if (mPlayer != null) {
+            mPlayer.release();
+        }
     }
 }

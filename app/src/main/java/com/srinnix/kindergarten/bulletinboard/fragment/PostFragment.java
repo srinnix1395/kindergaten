@@ -1,35 +1,26 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
+import com.srinnix.kindergarten.bulletinboard.adapter.PostFragmentAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.PostPresenter;
-import com.srinnix.kindergarten.custom.SpacesItemDecoration;
-import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
-import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -37,24 +28,18 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * Created by anhtu on 4/24/2017.
+ * Created by anhtu on 5/1/2017.
  */
 
 public class PostFragment extends BaseFragment implements PostDelegate {
+    @BindView(R.id.viewpager_post)
+    ViewPager viewPager;
+
     @BindView(R.id.toolbar_post)
     Toolbar toolbar;
 
     @BindView(R.id.textview_post)
     TextView tvPost;
-
-    @BindView(R.id.edittext_content)
-    EditText etContent;
-
-    @BindView(R.id.recycler_view_image)
-    RecyclerView rvImages;
-
-    @BindView(R.id.radio_normal)
-    RadioButton radioNormal;
 
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
@@ -62,33 +47,14 @@ public class PostFragment extends BaseFragment implements PostDelegate {
     @BindView(R.id.imageview_success)
     ImageView imvSuccess;
 
-    private ArrayList<ImageLocal> mListImage;
-    private ImagePostAdapter mAdapter;
     private PostPresenter mPresenter;
+
+    private ContentPostFragment contentPostFragment;
+    private SettingPostFragment settingPostFragment;
 
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_post;
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-        mListImage = new ArrayList<>();
-        mAdapter = new ImagePostAdapter(mListImage, position -> {
-            mListImage.remove(position);
-            mAdapter.notifyItemRemoved(position);
-
-            if (!mListImage.isEmpty()) {
-                tvPost.setEnabled(true);
-                tvPost.setTextColor(Color.parseColor("#ffffff"));
-            } else {
-                rvImages.setVisibility(View.GONE);
-
-                tvPost.setEnabled(false);
-                tvPost.setTextColor(Color.parseColor("#80ffffff"));
-            }
-        });
     }
 
     @Override
@@ -97,68 +63,17 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         toolbar.setTitle("Đăng vào bảng tin");
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
-
         tvPost.setEnabled(false);
-        tvPost.setTextColor(Color.parseColor("#80ffffff"));
+        tvPost.setTextColor(Color.parseColor("#99ffffff"));
 
-        etContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        ArrayList<Fragment> arrayList = new ArrayList<>();
+        contentPostFragment = new ContentPostFragment();
+        arrayList.add(contentPostFragment);
+        settingPostFragment = new SettingPostFragment();
+        arrayList.add(settingPostFragment);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0 || !mListImage.isEmpty()) {
-                    tvPost.setEnabled(true);
-                    tvPost.setTextColor(Color.parseColor("#ffffff"));
-                } else {
-                    tvPost.setEnabled(false);
-                    tvPost.setTextColor(Color.parseColor("#80ffffff"));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        rvImages.setVisibility(View.GONE);
-        rvImages.setAdapter(mAdapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1, LinearLayoutManager.HORIZONTAL, false);
-        rvImages.setLayoutManager(gridLayoutManager);
-
-        rvImages.addItemDecoration(new SpacesItemDecoration(mContext, mAdapter, 2, 1, true));
-    }
-
-    @OnClick({R.id.textview_post, R.id.imageview_image})
-    void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.textview_post: {
-                tvPost.setVisibility(View.GONE);
-                UiUtils.showProgressBar(pbLoading);
-                mPresenter.onClickPost(etContent.getText().toString(), mListImage, radioNormal.isChecked());
-                break;
-            }
-            case R.id.imageview_image: {
-                mPresenter.onClickImage(mListImage);
-                break;
-            }
-            case R.id.imageview_video: {
-                mPresenter.onClickVideo();
-                break;
-            }
-            case R.id.imageview_facebook: {
-                mPresenter.onClickFacebook();
-                break;
-            }
-            case R.id.imageview_schedule: {
-                mPresenter.onClickSchedule();
-                break;
-            }
-        }
+        PostFragmentAdapter adapter = new PostFragmentAdapter(getChildFragmentManager(), arrayList);
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -167,49 +82,59 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         return mPresenter;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+    @OnClick(R.id.textview_post)
+    public void onClickPost() {
+        UiUtils.hideKeyboard(getActivity());
+        tvPost.setVisibility(View.GONE);
+        UiUtils.showProgressBar(pbLoading);
+        mPresenter.onClickPost(contentPostFragment.getContentPost(),
+                contentPostFragment.getListImage(),
+                contentPostFragment.getNotificationType(),
+                settingPostFragment.getNotificationRange());
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-    }
+    public void setEnabledTvPost(boolean enabled) {
+        tvPost.setEnabled(enabled);
 
-    @Subscribe
-    public void onEventPickImageLocal(MessageImageLocal message) {
-        if (rvImages.getVisibility() != View.VISIBLE) {
-            rvImages.setVisibility(View.VISIBLE);
-        }
-
-        int sizeTotal = mListImage.size();
-        if (sizeTotal > 0) {
-            mListImage.clear();
-            mAdapter.notifyItemRangeRemoved(0, sizeTotal);
-        }
-        mListImage.addAll(message.mListImage);
-        mAdapter.notifyItemRangeInserted(0, message.mListImage.size());
-
-        if (!mListImage.isEmpty()) {
-            tvPost.setEnabled(true);
+        if (enabled) {
             tvPost.setTextColor(Color.parseColor("#ffffff"));
         } else {
-            tvPost.setEnabled(false);
-            tvPost.setTextColor(Color.parseColor("#80ffffff"));
+            tvPost.setTextColor(Color.parseColor("#99ffffff"));
         }
+    }
+
+    public void setVisibility(int resId, int visibility) {
+        switch (resId) {
+            case R.id.textview_post: {
+                tvPost.setVisibility(visibility);
+                break;
+            }
+            case R.id.progressbar_loading: {
+                if (visibility == View.VISIBLE) {
+                    UiUtils.showProgressBar(pbLoading);
+                } else {
+                    UiUtils.hideProgressBar(pbLoading);
+                }
+                break;
+            }
+            case R.id.imageview_success: {
+                imvSuccess.setVisibility(visibility);
+                break;
+            }
+        }
+    }
+
+    public void gotoSettingFragment() {
+        viewPager.setCurrentItem(1, true);
     }
 
     @Override
     public void onBackPressed() {
-        if (etContent.getText().length() > 0 || !mListImage.isEmpty()) {
-            AlertUtils.showDialogCancelPost(mContext, super::onBackPressed);
+        if (contentPostFragment.getContentPost().length() > 0 ||
+                !contentPostFragment.getListImage().isEmpty()) {
+            AlertUtils.showDialogCancelPost(mContext, (dialog, which) -> {
+                PostFragment.super.onBackPressed();
+            });
             return;
         }
 

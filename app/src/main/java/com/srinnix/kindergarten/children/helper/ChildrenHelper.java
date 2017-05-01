@@ -33,6 +33,7 @@ public class ChildrenHelper {
         mDisposable.add(mApi.getInfoChildren(token, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
@@ -45,6 +46,7 @@ public class ChildrenHelper {
                 mApi.getListChildren(token, idClass)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doFinally(listener::onFinally)
                         .subscribe(listener::onSuccess, listener::onFail));
 
     }
@@ -57,6 +59,7 @@ public class ChildrenHelper {
         mDisposable.add(mApi.getTimelineChildren(token, idChildren, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 }

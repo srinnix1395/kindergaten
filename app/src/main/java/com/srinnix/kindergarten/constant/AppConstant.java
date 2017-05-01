@@ -113,4 +113,8 @@ public class AppConstant {
 
     public static final int TYPE_WEIGHT = 1;
     public static final int TYPE_HEIGHT = 2;
+
+    public static final int NOTIFICATION_ALL = 1;
+    public static final int NOTIFICATION_PARENT = 2;
+    public static final int NOTIFICATION_TEACHER = 3;
 }

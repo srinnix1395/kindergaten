@@ -31,6 +31,7 @@ public class ForgotPasswordHelper {
         mDisposable.add(mApiService.resetPassword(token, idUser, email, newPassword, newPasswordEncrypted)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 }

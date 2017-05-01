@@ -80,6 +80,11 @@ public class ClassListPresenter extends BasePresenter {
                     mClassListDelegate.onLoadError(R.string.error_common);
                 }
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 

@@ -16,7 +16,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by anhtu on 4/18/2017.
  */
 
-public class ForgotPasswordPresenter extends BasePresenter{
+public class ForgotPasswordPresenter extends BasePresenter {
 
     private ForgotPasswordHelper mHelper;
     private CompositeDisposable mDisposable;
@@ -36,28 +36,33 @@ public class ForgotPasswordPresenter extends BasePresenter{
         String email = preUtils.getEmail();
         String newPassword = StringUtil.randomNewPassword(10);
 
-        mHelper.resetPassword(token, idUser, email, newPassword,StringUtil.md5(newPassword),
+        mHelper.resetPassword(token, idUser, email, newPassword, StringUtil.md5(newPassword),
                 new ResponseListener<Boolean>() {
-            @Override
-            public void onSuccess(ApiResponse<Boolean> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+                    @Override
+                    public void onSuccess(ApiResponse<Boolean> response) {
+                        if (response == null) {
+                            onFail(new NullPointerException());
+                            return;
+                        }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+                        if (response.result == ApiResponse.RESULT_NG) {
+                            ErrorUtil.handleErrorApi(mContext, response.error);
+                            return;
+                        }
 
-                mForgotpasswordDelegate.onResetSuccess();
-            }
+                        mForgotpasswordDelegate.onResetSuccess();
+                    }
 
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-            }
-        });
+                    @Override
+                    public void onFail(Throwable throwable) {
+                        ErrorUtil.handleException(mContext, throwable);
+                    }
+
+                    @Override
+                    public void onFinally() {
+
+                    }
+                });
     }
 
     @Override

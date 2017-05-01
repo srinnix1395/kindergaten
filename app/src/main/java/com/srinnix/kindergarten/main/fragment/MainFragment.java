@@ -13,9 +13,11 @@ import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.login.helper.LogoutHelper;
 import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,7 +79,7 @@ public class MainFragment extends BaseFragment implements MainDelegate {
                 break;
             }
             case R.id.menu_item_sign_out: {
-                mPresenter.signOut();
+                LogoutHelper.signOut(mContext);
                 break;
             }
             case R.id.menu_item_account:{
@@ -139,10 +141,15 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         mPresenter.removeUnUsedFragment(getChildFragmentManager());
     }
 
-
     @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
         mPresenter.loginSuccessfully(mToolbar);
+    }
+
+    @Subscribe
+    public void onEventLogout(MessageLogout message) {
+        mToolbar.getMenu().clear();
+        mToolbar.inflateMenu(R.menu.main_menu_unsigned_in);
     }
 
     public void closeDrawer() {

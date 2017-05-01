@@ -117,6 +117,11 @@ public class ChildrenListPresenter extends BasePresenter {
                 ErrorUtil.handleException(mContext, throwable);
                 mChildrenDelegate.onLoadFail(R.string.error_common);
             }
+
+            @Override
+            public void onFinally() {
+
+            }
         });
     }
 

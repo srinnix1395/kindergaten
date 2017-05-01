@@ -24,8 +24,8 @@ public class CommentHelper {
         this.mDisposable = mDisposable;
     }
 
-    public void getComment(String idPost, long timeLastComment, ResponseListener<ArrayList<Comment>> commentListener) {
-        if (commentListener == null) {
+    public void getComment(String idPost, long timeLastComment, ResponseListener<ArrayList<Comment>> listener) {
+        if (listener == null) {
             return;
         }
 
@@ -33,7 +33,8 @@ public class CommentHelper {
                 mApi.getComment(idPost, timeLastComment)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(commentListener::onSuccess, commentListener::onFail)
+                        .doFinally(listener::onFinally)
+                        .subscribe(listener::onSuccess, listener::onFail)
         );
     }
 
@@ -46,6 +47,7 @@ public class CommentHelper {
         mDisposable.add(mApi.insertComment(token, idPost, idUser, name, image, accountType, comment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 }

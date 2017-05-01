@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.ErrorConstant;
+import com.srinnix.kindergarten.login.fragment.LoginFragment;
 import com.srinnix.kindergarten.login.helper.LogoutHelper;
 import com.srinnix.kindergarten.request.model.Error;
 
@@ -25,12 +26,15 @@ public class ErrorUtil {
             }
             case ErrorConstant.ERROR_CODE_102: {
                 AlertUtils.showAlertDialog(context, R.string.session_expired,
-                        R.string.please_re_login, R.string.OK, () -> {
+                        R.string.please_re_login, R.string.OK, (dialog, which) -> {
+                            dialog.dismiss();
                             LogoutHelper.signOut(context);
+                            ViewManager.getInstance().addFragment(new LoginFragment(), null,
+                                    R.anim.translate_right_to_left, R.anim.translate_left_to_right);
                         });
                 break;
             }
-            case ErrorConstant.ERROR_CODE_500:{
+            case ErrorConstant.ERROR_CODE_500: {
                 DebugLog.e(error.message);
                 AlertUtils.showToast(context, R.string.error_common);
                 break;

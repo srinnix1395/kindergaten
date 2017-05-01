@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.login.helper;
 
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.Child;
@@ -9,7 +10,6 @@ import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
 import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
@@ -32,7 +32,7 @@ public class LoginHelper {
         mApi = RetrofitClient.getApiService();
     }
 
-    public void login(String email, String password, LoginListener mListener) {
+    public void login(String email, String password, ResponseListener<LoginResponse> mListener) {
         if (mListener == null) {
             return;
         }
@@ -40,7 +40,7 @@ public class LoginHelper {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(mListener::onFinally)
-                .subscribe(mListener::onResponseSuccess, mListener::onResponseFail);
+                .subscribe(mListener::onSuccess, mListener::onFail);
     }
 
     public void insertData(Realm realm, ArrayList<Child> children, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
@@ -81,10 +81,6 @@ public class LoginHelper {
     }
 
     public interface LoginListener {
-
-        void onResponseSuccess(ApiResponse<LoginResponse> dataLogin);
-
-        void onResponseFail(Throwable throwable);
 
         void onFinally();
     }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#fafafa"
@@ -50,94 +49,8 @@
             app:srcCompat="@drawable/ic_mark"/>
     </android.support.v7.widget.Toolbar>
 
-    <RadioGroup
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_post"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_size"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/radio_normal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:text="@string/normal_notification"/>
-
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/important_notification"/>
-    </RadioGroup>
-
-    <EditText
-        android:id="@+id/edittext_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.5"
-        android:background="@null"
-        android:clickable="true"
-        android:gravity="top"
-        android:hint="@string/post_content"
-        android:padding="@dimen/margin_horizontal_low"
-        android:textSize="20sp"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_image"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_image_class"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/colorDividerColor"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_size">
-
-        <ImageView
-            android:id="@+id/imageview_image"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_images_post"/>
-
-        <ImageView
-            android:id="@+id/imageview_video"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_toEndOf="@+id/imageview_image"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_video_post"/>
-
-        <ImageView
-            android:id="@+id/imageview_schedule"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_alignParentEnd="true"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_setting"/>
-
-        <ImageView
-            android:id="@+id/imageview_facebook"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="@dimen/item_size"
-            android:layout_toStartOf="@+id/imageview_schedule"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_facebook"/>
-
-
-    </RelativeLayout>
+        android:layout_height="match_parent"/>
 </LinearLayout>

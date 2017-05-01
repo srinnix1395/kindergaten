@@ -31,6 +31,7 @@ public class ClassHelper {
                 mApi.getClassInfo(classId, isTeacher)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doFinally(listener::onFinally)
                         .subscribe(listener::onSuccess, listener::onFail)
         );
     }
@@ -42,6 +43,7 @@ public class ClassHelper {
         mDisposable.add(mApi.getImageClass(classId, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 }

@@ -31,6 +31,7 @@ public class ClassListHelper {
         mDisposable.add(mApi.getListClass()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 }

@@ -185,7 +185,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                 && fabPost.getVisibility() != View.VISIBLE) {
             fabPost.setVisibility(View.VISIBLE);
         }
-        mPresenter.getPostAfterLogin(refreshLayout);
+        mPresenter.getPostAfterLogin(refreshLayout, mListPost);
     }
 
     @Subscribe
@@ -203,6 +203,9 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Subscribe
     public void onEventLogout(MessageLogout message) {
+        if (fabPost.getVisibility() == View.VISIBLE) {
+            fabPost.setVisibility(View.GONE);
+        }
         mPresenter.logout(mListPost);
     }
 
@@ -300,6 +303,11 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
+    public void deletePost(int i) {
+        mPostAdapter.notifyItemRemoved(i);
+    }
+
+    @Override
     public void onGetImportantPost(boolean result, PostResponse data) {
         if (!result) {
             if (refreshLayout.isRefreshing()) {
@@ -335,6 +343,8 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
                     listPost.remove(0);
                 }
             }
+
+            rvListPost.scrollToPosition(0);
         }
 
         if (refreshLayout.isRefreshing()) {

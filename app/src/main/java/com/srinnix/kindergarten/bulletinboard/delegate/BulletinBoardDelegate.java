@@ -24,4 +24,6 @@ public interface BulletinBoardDelegate extends BaseDelegate {
     void updateLogout();
 
     void onGetImportantPost(boolean result, PostResponse data);
+
+    void deletePost(int i);
 }

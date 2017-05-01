@@ -29,6 +29,7 @@ public class LogoutHelper {
 
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+            AlertUtils.showToastSuccess(context, R.drawable.ic_account_check, R.string.signed_out);
         }
     }
 }

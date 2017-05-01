@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 
 /**
- * Created by philipp on 02/06/16.
+ * Created by anhtu on 4/17/2017.
  */
 public class DayAxisValueFormatter implements IAxisValueFormatter {
 

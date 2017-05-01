@@ -142,7 +142,7 @@ public class ChartFragment extends BaseFragment {
         xAxis.setDrawGridLines(false);
         xAxis.setAxisLineWidth(1.5f);
         xAxis.setAxisLineColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
-        xAxis.setTextSize(9);
+        xAxis.setTextSize(10);
         xAxis.setValueFormatter(new DayAxisValueFormatter(times));
         xAxis.setGranularity(1f);
 
@@ -150,7 +150,7 @@ public class ChartFragment extends BaseFragment {
         axisLeft.setDrawAxisLine(false);
         axisLeft.setGridColor(ContextCompat.getColor(mContext, R.color.colorGridChart));
         axisLeft.setGridLineWidth(1.5f);
-        axisLeft.setTextSize(9);
+        axisLeft.setTextSize(10);
 
         YAxis axisRight = chart.getAxisRight();
         axisRight.setDrawAxisLine(false);

@@ -108,14 +108,16 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_IMPORTANT_POST)
     Observable<ApiResponse<PostResponse>> getImportantPost(@Header("x-access-token") String token,
-                                                           @Query("_id_user") String userId);
+                                                           @Query("_id_user") String userId,
+                                                           @Query("min_time") long minTime);
 
     @Multipart
     @POST(AppConstant.API_INSERT_POST)
     Observable<ApiResponse<Post>> insertPost(@Header("x-access-token") String token,
                                              @Part("content") RequestBody content,
                                              @Part List<MultipartBody.Part> listImage,
-                                             @Part("noti_type") RequestBody notiType);
+                                             @Part("noti_type") RequestBody notiType,
+                                             @Part("noti_range") RequestBody notiRangeBody);
 
     //POST END
 

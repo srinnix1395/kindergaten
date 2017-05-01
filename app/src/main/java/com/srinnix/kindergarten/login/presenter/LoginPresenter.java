@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.ErrorConstant;
@@ -45,6 +46,11 @@ public class LoginPresenter extends BasePresenter {
 
     public void login(FragmentActivity activity, String email, String password, ProgressBar pbLoading,
                       Button btnLogin) {
+
+        UiUtils.hideKeyboard(activity);
+        UiUtils.showProgressBar(pbLoading);
+        btnLogin.setEnabled(false);
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -55,13 +61,9 @@ public class LoginPresenter extends BasePresenter {
             return;
         }
 
-        UiUtils.hideKeyboard(activity);
-        UiUtils.showProgressBar(pbLoading);
-        btnLogin.setEnabled(false);
-
-        mLoginHelper.login(email, StringUtil.md5(password), new LoginHelper.LoginListener() {
+        mLoginHelper.login(email, StringUtil.md5(password), new ResponseListener<LoginResponse>() {
             @Override
-            public void onResponseSuccess(ApiResponse<LoginResponse> response) {
+            public void onSuccess(ApiResponse<LoginResponse> response) {
                 if (response == null) {
                     DebugLog.e(ErrorConstant.RESPONSE_NULL);
                     return;
@@ -77,7 +79,7 @@ public class LoginPresenter extends BasePresenter {
             }
 
             @Override
-            public void onResponseFail(Throwable throwable) {
+            public void onFail(Throwable throwable) {
                 ErrorUtil.handleException(mContext, throwable);
             }
 

@@ -45,16 +45,11 @@ public class AlertUtils {
         toast.show();
     }
 
-    public static void showAlertDialog(Context context, int resTitle, int resMessage, int resNegative, OnClickListener listener) {
+    public static void showAlertDialog(Context context, int resTitle, int resMessage, int resNegative, DialogInterface.OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setTitle(resTitle)
                 .setMessage(resMessage)
-                .setNegativeButton(resNegative, (dialog, which) -> {
-                    if (listener != null) {
-                        listener.onClick();
-                    }
-                    dialog.dismiss();
-                })
+                .setNegativeButton(resNegative, listener)
                 .create()
                 .show();
     }
@@ -67,16 +62,12 @@ public class AlertUtils {
         return dialog;
     }
 
-    public static void showDialogCancelPost(Context mContext, OnClickListener listener) {
+    public static void showDialogCancelPost(Context mContext, DialogInterface.OnClickListener listener) {
         AlertDialog dialog1 = new AlertDialog.Builder(mContext, R.style.CancelPostDialogStyle)
                 .setTitle(R.string.confirm)
                 .setMessage(R.string.message_cancel_post)
                 .setCancelable(false)
-                .setPositiveButton(R.string.next, (dialog, which) -> {
-                    if (listener != null) {
-                        listener.onClick();
-                    }
-                })
+                .setPositiveButton(R.string.next, listener)
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .create();
 
@@ -89,7 +80,4 @@ public class AlertUtils {
         dialog1.show();
     }
 
-    public interface OnClickListener {
-        void onClick();
-    }
 }
