@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageview_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_margin="@dimen/margin_horizontal_low"
+        android:src="@drawable/image_children_circle"/>
+
+    <TextView
+        android:id="@+id/textview_header"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@+id/imageview_icon"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/important_post"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textview_content"
+        style="?android:attr/textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_header"
+        android:layout_margin="@dimen/margin_horizontal_low"
+        android:ellipsize="end"
+        android:maxLines="3"/>
+
+    <ImageView
+        android:id="@+id/imageview_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_content"
+        android:maxHeight="200dp"
+        android:scaleType="centerCrop"/>
+</RelativeLayout>

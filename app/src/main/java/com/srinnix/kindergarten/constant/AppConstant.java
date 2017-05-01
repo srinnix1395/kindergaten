@@ -117,4 +117,5 @@ public class AppConstant {
     public static final int NOTIFICATION_ALL = 1;
     public static final int NOTIFICATION_PARENT = 2;
     public static final int NOTIFICATION_TEACHER = 3;
+    public static final int ID_FOREGROUND = 1488935410;
 }
