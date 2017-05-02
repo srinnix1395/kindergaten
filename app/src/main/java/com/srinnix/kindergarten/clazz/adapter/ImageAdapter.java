@@ -57,7 +57,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
         } else {
-            ((ImageClassViewHolder) holder).bindData(((Image) arrayList.get(position)), position);
+            ((ImageClassViewHolder) holder).bindData(((Image) arrayList.get(position)));
         }
     }
 

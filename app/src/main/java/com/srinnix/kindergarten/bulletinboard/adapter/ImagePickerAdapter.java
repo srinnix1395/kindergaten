@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.ImageLocalViewHolder;
 import com.srinnix.kindergarten.model.ImageLocal;
 
@@ -18,9 +19,9 @@ import java.util.List;
 
 public class ImagePickerAdapter extends RecyclerView.Adapter<ImageLocalViewHolder> {
     private ArrayList<ImageLocal> arrayList;
-    private ImageLocalViewHolder.OnClickViewHolderListener listener;
+    private OnClickViewHolderListener listener;
 
-    public ImagePickerAdapter(ArrayList<ImageLocal> arrayList, ImageLocalViewHolder.OnClickViewHolderListener listener) {
+    public ImagePickerAdapter(ArrayList<ImageLocal> arrayList, OnClickViewHolderListener listener) {
         this.arrayList = arrayList;
         this.listener = listener;
     }

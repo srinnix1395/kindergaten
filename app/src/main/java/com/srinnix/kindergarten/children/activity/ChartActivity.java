@@ -1,6 +1,7 @@
-package com.srinnix.kindergarten.base.activity;
+package com.srinnix.kindergarten.children.activity;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.BaseActivity;
 import com.srinnix.kindergarten.children.fragment.ChartFragment;
 import com.srinnix.kindergarten.util.ViewManager;
 
@@ -16,6 +17,4 @@ public class ChartActivity extends BaseActivity {
         overridePendingTransition(R.anim.translate_right_to_left, R.anim.translate_left_to_right);
         ViewManager.getInstance().addFragment(new ChartFragment(), getIntent().getExtras());
     }
-
-
 }

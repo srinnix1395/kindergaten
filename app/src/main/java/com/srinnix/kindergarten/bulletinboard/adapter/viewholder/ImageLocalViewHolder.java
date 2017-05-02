@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.model.ImageLocal;
 
 import butterknife.BindView;
@@ -47,9 +48,5 @@ public class ImageLocalViewHolder extends RecyclerView.ViewHolder {
         } else {
             imvAlpha.setImageDrawable(null);
         }
-    }
-
-    public interface OnClickViewHolderListener {
-        void onClick(int position);
     }
 }

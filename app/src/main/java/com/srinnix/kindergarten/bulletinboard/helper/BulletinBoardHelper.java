@@ -2,7 +2,7 @@ package com.srinnix.kindergarten.bulletinboard.helper;
 
 import android.content.Context;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;

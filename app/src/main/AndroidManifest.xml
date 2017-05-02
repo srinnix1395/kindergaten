@@ -33,9 +33,16 @@
         <activity android:name=".main.activity.SplashActivity"/>
 
         <activity
-            android:name=".base.activity.ChartActivity"
+            android:name=".children.activity.ChartActivity"
             android:screenOrientation="landscape"/>
+        <activity
+            android:name=".bulletinboard.activity.DetailPostActivity"
+            android:parentActivityName=".main.activity.MainActivity">
 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.activity.MainActivity"/>
+        </activity>
 
         <service
             android:name=".service.KindergartenMessagingService">

@@ -116,4 +116,6 @@
     <string name="parents">Phụ huynh</string>
     <string name="important_post">Thông báo quan trọng</string>
     <string name="name">Mầm non Kid\'s home</string>
+    <string name="height_growth">Biểu đồ tăng trưởng chiều cao</string>
+    <string name="weight_growth">Biểu đồ tăng trưởng cân nặng</string>
 </resources>

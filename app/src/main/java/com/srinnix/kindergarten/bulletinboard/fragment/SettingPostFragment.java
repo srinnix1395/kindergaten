@@ -49,6 +49,8 @@ public class SettingPostFragment extends BaseFragment {
     @BindView(R.id.radiogroup_notification_range)
     RadioGroup radioGroupRange;
 
+    private boolean isFirst = true;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_setting_post;
@@ -56,7 +58,9 @@ public class SettingPostFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
-        radioGroupRange.setAlpha(0.7f);
+        for (int i = 0; i < radioGroupRange.getChildCount(); i++) {
+            radioGroupRange.getChildAt(i).setEnabled(false);
+        }
 
         rbNow.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -113,6 +117,18 @@ public class SettingPostFragment extends BaseFragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isFirst) {
+            isFirst = false;
+            return;
+        }
+        if (isVisibleToUser) {
+            UiUtils.hideKeyboard(getActivity());
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -130,12 +146,6 @@ public class SettingPostFragment extends BaseFragment {
 
     @Subscribe
     public void onEventEnabledNotificationRange(MessageEnabledNotificationRange message) {
-        if (message.enabled) {
-            radioGroupRange.setAlpha(1f);
-        } else {
-            radioGroupRange.setAlpha(0.7f);
-        }
-
         for (int i = 0; i < radioGroupRange.getChildCount(); i++) {
             radioGroupRange.getChildAt(i).setEnabled(message.enabled);
         }

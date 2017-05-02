@@ -82,7 +82,9 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     protected void initData() {
         super.initData();
         mListImage = new ArrayList<>();
-        mImageAdapter = new ImagePickerAdapter(mListImage, position -> mPresenter.onClickImage(mListImage, position));
+        mImageAdapter = new ImagePickerAdapter(mListImage, position -> {
+            mPresenter.onClickImage(mListImage, position);
+        });
         mPresenter.checkPermissionStorage(getActivity(), mListImageSelected);
     }
 

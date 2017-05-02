@@ -1,68 +1,84 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
+import android.os.Bundle;
+
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
-import com.srinnix.kindergarten.bulletinboard.helper.PostHelper;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.bulletinboard.delegate.DetailPostDelegate;
+import com.srinnix.kindergarten.bulletinboard.helper.DetailPostHelper;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
-import java.util.ArrayList;
-
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
- * Created by anhtu on 5/1/2017.
+ * Created by anhtu on 5/2/2017.
  */
 
-public class PostPresenter extends BasePresenter {
-    private CompositeDisposable mDisposable;
-    private PostHelper mHelper;
-    private PostDelegate mPostDelegate;
+public class DetailPostPresenter extends BasePresenter {
 
-    public PostPresenter(BaseDelegate mDelegate) {
+    private String idPost;
+    private DetailPostHelper mHelper;
+    private DetailPostDelegate mDetailPostDelegate;
+    private CompositeDisposable mDisposable;
+
+    public DetailPostPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-        mPostDelegate = (PostDelegate) mDelegate;
+        mDetailPostDelegate = (DetailPostDelegate) mDelegate;
+
         mDisposable = new CompositeDisposable();
-        mHelper = new PostHelper(mDisposable);
+        mHelper = new DetailPostHelper(mDisposable);
     }
 
-    public void onClickPost(String content, ArrayList<ImageLocal> mListImage, int notificationType, int notificationRange) {
+    @Override
+    public void getData(Bundle bundle) {
+        super.getData(bundle);
+        idPost = bundle.getString(AppConstant.KEY_ID);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDetailPost();
+    }
+
+    public void getDetailPost() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            AlertUtils.showToast(mContext, R.string.noInternetConnection);
-            mPostDelegate.onFail();
+            mDetailPostDelegate.onFail(R.string.noInternetConnection);
             return;
         }
 
-        String token = SharedPreUtils.getInstance(mContext).getToken();
+        SharedPreUtils preUtils = SharedPreUtils.getInstance(mContext);
 
-        mHelper.post(token, content, mListImage, notificationType, notificationRange, new ResponseListener<Post>() {
+        String token = preUtils.getToken();
+        String idUser = preUtils.getUserID();
+        mHelper.getDetailPost(token, idPost, idUser, new ResponseListener<Post>() {
             @Override
             public void onSuccess(ApiResponse<Post> response) {
                 if (response == null) {
-                    onFail(new NullPointerException());
+                    mDetailPostDelegate.onFail(R.string.error_common);
                     return;
                 }
 
                 if (response.result == ApiResponse.RESULT_NG) {
                     ErrorUtil.handleErrorApi(mContext, response.error);
-                    mPostDelegate.onFail();
+                    return;
                 }
 
-                mPostDelegate.onSuccess(response.getData());
+                mDetailPostDelegate.onSuccess(response.getData());
             }
 
             @Override
             public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mPostDelegate.onFail();
+                ErrorUtil.handleException(throwable);
+
+                mDetailPostDelegate.onFail(R.string.error_common);
             }
 
             @Override

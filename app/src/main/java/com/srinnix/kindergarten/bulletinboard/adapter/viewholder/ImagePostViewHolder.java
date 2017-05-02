@@ -20,9 +20,9 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_image)
     ImageView imvImage;
 
-    private OnClickViewHolderListener listener;
+    private OnClickRemoveListener listener;
 
-    public ImagePostViewHolder(View itemView, OnClickViewHolderListener listener) {
+    public ImagePostViewHolder(View itemView, OnClickRemoveListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.listener = listener;
@@ -44,7 +44,7 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public interface OnClickViewHolderListener {
+    public interface OnClickRemoveListener {
         void onClickRemove(int position);
     }
 }

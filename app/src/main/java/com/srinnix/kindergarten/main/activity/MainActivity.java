@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.srinnix.kindergarten.base.activity.BaseActivity;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
-import com.srinnix.kindergarten.children.fragment.ChildrenListFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.PostFragment;
 import com.srinnix.kindergarten.util.ViewManager;
 
 /**
@@ -16,7 +16,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void initChildView() {
         super.initChildView();
-        ViewManager.getInstance().addFragment(new ChildrenListFragment());
+        ViewManager.getInstance().addFragment(new PostFragment());
     }
 
     @Override

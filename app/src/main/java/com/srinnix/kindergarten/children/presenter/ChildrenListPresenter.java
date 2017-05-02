@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenListDelegate;

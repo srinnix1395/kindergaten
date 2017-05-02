@@ -119,6 +119,11 @@ public interface ApiService {
                                              @Part("noti_type") RequestBody notiType,
                                              @Part("noti_range") RequestBody notiRangeBody);
 
+    @GET(AppConstant.API_GET_DETAIL_POST)
+    Observable<ApiResponse<Post>> getDetailPost(@Header("x-access-token") String token,
+                                                @Query("_id_post") String idPost,
+                                                @Query("_id_user") String idUser);
+
     //POST END
 
 
@@ -159,5 +164,6 @@ public interface ApiService {
     @GET(AppConstant.API_GET_ACCOUNT_INFO)
     Observable<ApiResponse<User>> getAccountInfo(@Header("x-access-token") String token,
                                                  @Query("_id_user") String idUser);
+
 
 }

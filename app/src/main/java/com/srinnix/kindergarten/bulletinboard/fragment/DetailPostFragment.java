@@ -1,45 +1,58 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
-import android.view.MotionEvent;
+import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.adapter.PreviewImageAdapter;
-import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.bulletinboard.adapter.ImageDetailPostAdapter;
+import com.srinnix.kindergarten.bulletinboard.delegate.DetailPostDelegate;
+import com.srinnix.kindergarten.bulletinboard.presenter.DetailPostPresenter;
 import com.srinnix.kindergarten.model.Image;
+import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 /**
- * Created by anhtu on 3/24/2017.
+ * Created by anhtu on 5/2/2017.
  */
 
-public class DetailPostFragment extends BaseFragment {
-    @BindView(R.id.viewpager_image)
-    ViewPager mViewPager;
+public class DetailPostFragment extends BaseFragment implements DetailPostDelegate{
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @BindView(R.id.cardview_left)
-    CardView cardViewLeft;
+    @BindView(R.id.layout_retry)
+    RelativeLayout layoutRetry;
 
-    @BindView(R.id.cardview_right)
-    CardView cardViewRight;
+    @BindView(R.id.textview_retry)
+    TextView tvRetry;
 
+    @BindView(R.id.progress_bar)
+    ProgressBar pbLoading;
+
+    @BindView(R.id.textview_created_at)
+    TextView tvCreatedAt;
+
+    @BindView(R.id.textview_content)
+    TextView tvContent;
+
+    @BindView(R.id.recycler_view_image)
+    RecyclerView rvImage;
+
+    private ImageDetailPostAdapter mAdapter;
     private ArrayList<Image> mListImage;
-    private int currentPosition = 0;
 
-    @Override
-    protected void getData() {
-        super.getData();
-        mListImage = getArguments().getParcelableArrayList(AppConstant.KEY_IMAGE);
-    }
+    private DetailPostPresenter mPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -48,77 +61,46 @@ public class DetailPostFragment extends BaseFragment {
 
     @Override
     protected void initChildView() {
-        if (mListImage.size() == 1) {
-            cardViewLeft.setVisibility(View.GONE);
-            cardViewRight.setVisibility(View.GONE);
-        }
-
-        PreviewImageAdapter mAdapter = new PreviewImageAdapter(getChildFragmentManager(), mListImage);
-        mViewPager.setAdapter(mAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPosition = position;
-                if (position == 0) {
-                    cardViewLeft.setVisibility(View.GONE);
-                    cardViewRight.setVisibility(View.VISIBLE);
-                } else if (position == mListImage.size() - 1) {
-                    cardViewRight.setVisibility(View.GONE);
-                    cardViewLeft.setVisibility(View.VISIBLE);
-                } else {
-                    if (cardViewLeft.getVisibility() != View.VISIBLE) {
-                        cardViewLeft.setVisibility(View.VISIBLE);
-                    }
-                    if (cardViewRight.getVisibility() != View.VISIBLE) {
-                        cardViewRight.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("Thông báo");
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(view -> {
+            onBackPressed();
         });
-    }
 
-    @OnTouch({R.id.cardview_left, R.id.cardview_right})
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                v.setAlpha(0.15f);
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: {
-                v.setAlpha(1f);
-                break;
-            }
-        }
-        return false;
-    }
+//        mAdapter = new RecyclerViewAdapter<>(new ImageDetailPostViewHolder(), mListImage, R.layout.image)
 
-    @OnClick({R.id.cardview_left, R.id.cardview_right})
-    public void onClickArrow(View v) {
-        switch (v.getId()) {
-            case R.id.cardview_left: {
-                mViewPager.setCurrentItem(currentPosition - 1, true);
-                break;
-            }
-            case R.id.cardview_right: {
-                mViewPager.setCurrentItem(currentPosition + 1, true);
-                break;
-            }
-        }
     }
 
     @Override
     protected BasePresenter initPresenter() {
-        return null;
+        mPresenter = new DetailPostPresenter(this);
+        return mPresenter;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().onBackPressed();
+    }
+
+    @OnClick(R.id.layout_retry)
+    public void onClickRetry(){
+        layoutRetry.setVisibility(View.GONE);
+
+        UiUtils.showProgressBar(pbLoading);
+        mPresenter.getDetailPost();
+    }
+
+    @Override
+    public void onSuccess(Post data) {
+
+    }
+
+    @Override
+    public void onFail(int resError) {
+        UiUtils.hideProgressBar(pbLoading);
+        tvRetry.setTextColor(resError);
+
+        layoutRetry.setVisibility(View.VISIBLE);
     }
 }

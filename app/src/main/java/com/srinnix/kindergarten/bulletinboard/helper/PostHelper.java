@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.bulletinboard.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;

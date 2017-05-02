@@ -2,10 +2,12 @@ package com.srinnix.kindergarten.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.util.ArrayMap;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +15,14 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.bulletinboard.activity.DetailPostActivity;
+import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.util.SharedPreUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * Created by anhtu on 3/4/2017.
@@ -23,17 +33,30 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        handleMessage(remoteMessage);
+        if (!SharedPreUtils.getInstance(this).isUserSignedIn()) {
+            return;
+        }
+
+        Map<String, String> data = remoteMessage.getData();
+        try {
+            if (data.containsKey("post")) {
+                handleNotificationPost(data.get("post"));
+            } else if (data.containsKey("message")) {
+                handleMessageChat(data.get("message"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void handleMessage(RemoteMessage remoteMessage) {
-        ArrayMap<String, String> arrayMap = (ArrayMap<String, String>) remoteMessage.getData();
+    private void handleNotificationPost(String data) throws JSONException {
+        JSONObject jsonObject = new JSONObject(data);
 
-        String idPost = arrayMap.get("_id");
-        String content = arrayMap.get("content");
+        String idPost = jsonObject.getString("_id");
+        String content = jsonObject.getString("content");
         String image = null;
-        if (arrayMap.containsKey("image")) {
-            image = arrayMap.get("image");
+        if (jsonObject.has("image")) {
+            image = jsonObject.getString("image");
         }
 
         //small remote view
@@ -52,18 +75,17 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
         builder.setVibrate(new long[]{
                 0, 200, 200, 600, 600
         });
-        builder.mNotification.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+        builder.mNotification.flags = Notification.FLAG_AUTO_CANCEL;
         builder.setContent(smallView);
         builder.setCustomBigContentView(bigView);
 
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.setAction(AppConstant.ACTION_NOTIFICATION);
-//        Bundle bundle = new Bundle();
-//        bundle.putString(ApiConstant._ID_HOUSE, idHouse);
-//        intent.putExtras(bundle);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-//        builder.setContentIntent(pendingIntent);
+        Intent intent = new Intent(this, DetailPostActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_ID, idPost);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        builder.setContentIntent(pendingIntent);
 
         Notification notification = builder.build();
 
@@ -90,6 +112,11 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(time, notification);
+    }
+
+    private void handleMessageChat(String data) throws JSONException {
+        JSONObject jsonObject = new JSONObject(data);
+
 
     }
 }

@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.clazz.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.request.model.ImageResponse;

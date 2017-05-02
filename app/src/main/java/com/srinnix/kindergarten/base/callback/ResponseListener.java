@@ -1,4 +1,4 @@
-package com.srinnix.kindergarten.base;
+package com.srinnix.kindergarten.base.callback;
 
 import com.srinnix.kindergarten.request.model.ApiResponse;
 

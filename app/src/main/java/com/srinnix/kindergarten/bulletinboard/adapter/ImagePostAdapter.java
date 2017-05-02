@@ -17,9 +17,9 @@ import java.util.ArrayList;
 
 public class ImagePostAdapter extends RecyclerView.Adapter<ImagePostViewHolder> {
     private ArrayList<ImageLocal> listImage;
-    private ImagePostViewHolder.OnClickViewHolderListener listener;
+    private ImagePostViewHolder.OnClickRemoveListener listener;
 
-    public ImagePostAdapter(ArrayList<ImageLocal> listImage, ImagePostViewHolder.OnClickViewHolderListener listener) {
+    public ImagePostAdapter(ArrayList<ImageLocal> listImage, ImagePostViewHolder.OnClickRemoveListener listener) {
         this.listImage = listImage;
         this.listener = listener;
     }

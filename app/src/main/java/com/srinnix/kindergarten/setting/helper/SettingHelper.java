@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.setting.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.remote.ApiService;

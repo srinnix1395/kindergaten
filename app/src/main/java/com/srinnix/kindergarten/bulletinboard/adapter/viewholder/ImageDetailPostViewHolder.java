@@ -1,52 +1,51 @@
-package com.srinnix.kindergarten.clazz.adapter.viewholder;
+package com.srinnix.kindergarten.bulletinboard.adapter.viewholder;
 
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.clazz.adapter.ImageAdapter;
+import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by anhtu on 2/20/2017.
+ * Created by anhtu on 5/2/2017.
  */
 
-public class ImageClassViewHolder extends RecyclerView.ViewHolder {
+public class ImageDetailPostViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.imageview_image)
     ImageView imvImage;
 
-    @BindView(R.id.imageview_video)
-    ImageView imvVideo;
+    @BindView(R.id.imageview_play_video)
+    ImageView imvPlay;
 
     private Disposable disposable;
-    private ImageAdapter.OnClickImageListener listener;
 
-    public ImageClassViewHolder(View itemView, ImageAdapter.OnClickImageListener listener) {
+    public ImageDetailPostViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        this.listener = listener;
+        itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(getAdapterPosition());
+            }
+        });
     }
 
     public void bindData(Image image) {
-        ViewCompat.setTransitionName(imvImage, "image_" + getAdapterPosition());
-
         if (image.isVideo()) {
-            imvVideo.setVisibility(View.VISIBLE);
+            imvPlay.setVisibility(View.VISIBLE);
             if (!ServiceUtils.isNetworkAvailable(itemView.getContext())) {
                 imvImage.setImageResource(R.drawable.dummy_image);
                 return;
@@ -68,14 +67,7 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
                     .error(R.drawable.dummy_image)
                     .into(imvImage);
 
-            imvVideo.setVisibility(View.GONE);
-        }
-    }
-
-    @OnClick(R.id.imageview_image)
-    void onClick() {
-        if (listener != null) {
-            listener.onClick(getAdapterPosition(), imvImage);
+            imvPlay.setVisibility(View.GONE);
         }
     }
 

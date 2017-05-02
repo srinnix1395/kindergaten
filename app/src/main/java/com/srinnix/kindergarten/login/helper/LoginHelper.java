@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.login.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.Child;

@@ -1,34 +1,32 @@
-package com.srinnix.kindergarten.clazz.helper;
+package com.srinnix.kindergarten.bulletinboard.helper;
 
 import com.srinnix.kindergarten.base.callback.ResponseListener;
-import com.srinnix.kindergarten.model.Class;
+import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.remote.ApiService;
-
-import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by anhtu on 3/20/2017.
+ * Created by anhtu on 5/2/2017.
  */
 
-public class ClassListHelper {
-    private CompositeDisposable mDisposable;
+public class DetailPostHelper {
     private ApiService mApi;
+    private CompositeDisposable mDisposable;
 
-    public ClassListHelper(CompositeDisposable disposable) {
+    public DetailPostHelper(CompositeDisposable mDisposable) {
+        this.mDisposable = mDisposable;
         mApi = RetrofitClient.getApiService();
-        mDisposable = disposable;
     }
 
-    public void getListClass(ResponseListener<ArrayList<Class>> listener) {
+    public void getDetailPost(String token, String idPost, String idUser, ResponseListener<Post> listener) {
         if (listener == null) {
             return;
         }
-        mDisposable.add(mApi.getListClass()
+        mDisposable.add(mApi.getDetailPost(token, idPost, idUser)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(listener::onFinally)

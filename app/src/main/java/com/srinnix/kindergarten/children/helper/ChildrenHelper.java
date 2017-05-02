@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.children.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.request.RetrofitClient;

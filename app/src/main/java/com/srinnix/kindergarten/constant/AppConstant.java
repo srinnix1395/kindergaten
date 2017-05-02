@@ -33,6 +33,7 @@ public class AppConstant {
     public static final String API_INSERT_COMMENT = "post/insertComment";
     public static final String API_INSERT_POST = "post/insert";
     public static final String API_GET_IMPORTANT_POST = "post/getImportantPost";
+    public static final String API_GET_DETAIL_POST = "post/getDetail";
 
     public static final String API_GET_LIST_CLASS = "class/getList";
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";

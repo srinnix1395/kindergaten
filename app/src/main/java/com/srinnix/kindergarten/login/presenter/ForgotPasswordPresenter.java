@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.login.presenter;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.login.delegate.ForgotPasswordDelegate;

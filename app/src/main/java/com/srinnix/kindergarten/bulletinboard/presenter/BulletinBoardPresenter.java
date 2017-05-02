@@ -7,13 +7,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.fragment.CommentFragment;
-import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.DetailImageFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.LikeDialogFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.PostFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
@@ -354,7 +354,7 @@ public class BulletinBoardPresenter extends BasePresenter {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_IMAGE, post.getListImage());
 
-        ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle,
+        ViewManager.getInstance().addFragment(new DetailImageFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 

@@ -81,9 +81,9 @@ public class ChartFragment extends BaseFragment {
     protected void initChildView() {
         toolbar.setTitleTextColor(Color.WHITE);
         if (type == AppConstant.TYPE_HEIGHT) {
-            toolbar.setTitle("Biểu đồ " + mContext.getString(R.string.height));
+            toolbar.setTitle(mContext.getString(R.string.height_growth));
         } else {
-            toolbar.setTitle("Biểu đồ " + mContext.getString(R.string.weight));
+            toolbar.setTitle(mContext.getString(R.string.weight_growth));
         }
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> {
