@@ -90,8 +90,8 @@
     <string name="play_schedule">•  Lịch vui chơi</string>
     <string name="learn_schedule">•  Lịch học năng khiếu</string>
     <string name="edit">Sửa</string>
-    <string name="weight">Cân nặng</string>
-    <string name="height">Chiều cao</string>
+    <string name="weight">cân nặng của trẻ</string>
+    <string name="height">chiều cao của trẻ</string>
     <string name="normal">Bình thường</string>
     <string name="post">Đăng</string>
     <string name="post_content">Nội dung bản tin</string>

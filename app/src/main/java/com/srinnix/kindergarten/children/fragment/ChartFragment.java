@@ -104,16 +104,22 @@ public class ChartFragment extends BaseFragment {
         if (type == AppConstant.TYPE_HEIGHT) {
             dataSet = new LineDataSet(entries, mContext.getString(R.string.height));
 
-            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_N2_SD_MALE : DbUtils.HEIGHT_N2_SD_FEMALE, startMonth, endMonth), "-1"));
-            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_0_SD_MALE : DbUtils.HEIGHT_0_SD_FEMALE, startMonth, endMonth), "0"));
-            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_P2_SD_MALE : DbUtils.HEIGHT_P2_SD_FEMALE, startMonth, endMonth), "1"));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_N2_SD_MALE : DbUtils.HEIGHT_N2_SD_FEMALE, startMonth, endMonth),
+                    "Ngưỡng thấp còi", R.color.colorAccent, 128));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_0_SD_MALE : DbUtils.HEIGHT_0_SD_FEMALE, startMonth, endMonth),
+                    "Đường chuẩn chiều cao", R.color.colorAccent, 0));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getHeightEntries(isMale ? DbUtils.HEIGHT_P2_SD_MALE : DbUtils.HEIGHT_P2_SD_FEMALE, startMonth, endMonth),
+                    "Ngưỡng trên", R.color.colorAccent, 128));
 
         } else {
             dataSet = new LineDataSet(entries, mContext.getString(R.string.weight));
 
-            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_N2_SD_MALE : DbUtils.WEIGHT_N2_SD_FEMALE, startMonth, endMonth), "-1"));
-            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_0_SD_MALE : DbUtils.WEIGHT_0_SD_FEMALE, startMonth, endMonth), "0"));
-            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_P2_SD_MALE : DbUtils.WEIGHT_P2_SD_FEMALE, startMonth, endMonth), "1"));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_N2_SD_MALE : DbUtils.WEIGHT_N2_SD_FEMALE, startMonth, endMonth),
+                    "Ngưỡng suy dinh dưỡng", R.color.colorAccent, 128));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_0_SD_MALE : DbUtils.WEIGHT_0_SD_FEMALE, startMonth, endMonth),
+                    "Đường chuẩn cân nặng", R.color.colorAccent, 0));
+            lineData.addDataSet(createStandardDataSet(DbUtils.getWeightEntries(isMale ? DbUtils.WEIGHT_P2_SD_MALE : DbUtils.WEIGHT_P2_SD_FEMALE, startMonth, endMonth),
+                    "Ngưỡng thừa cân", R.color.colorAccent, 128));
         }
 
         dataSet.setLineWidth(1.75f);
@@ -172,13 +178,17 @@ public class ChartFragment extends BaseFragment {
         chart.animateX(375, Easing.EasingOption.EaseInBack);
     }
 
-    private LineDataSet createStandardDataSet(ArrayList<Entry> entries, String label) {
+    private LineDataSet createStandardDataSet(ArrayList<Entry> entries, String label, int resColor, int alpha) {
         LineDataSet dataSet = new LineDataSet(entries, label);
         dataSet.setLineWidth(1.75f);
         dataSet.setDrawCircles(false);
         dataSet.setDrawValues(false);
 
-        dataSet.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary), 128);
+        if (alpha == 0) {
+            dataSet.setColor(ContextCompat.getColor(mContext, resColor));
+        } else {
+            dataSet.setColor(ContextCompat.getColor(mContext, resColor), alpha);
+        }
         dataSet.setDrawHighlightIndicators(false);
 
         return dataSet;

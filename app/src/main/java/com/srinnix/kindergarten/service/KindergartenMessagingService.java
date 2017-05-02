@@ -13,7 +13,6 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.constant.AppConstant;
 
 /**
  * Created by anhtu on 3/4/2017.
@@ -53,6 +52,7 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
         builder.setVibrate(new long[]{
                 0, 200, 200, 600, 600
         });
+        builder.mNotification.flags = Notification.FLAG_ONLY_ALERT_ONCE;
         builder.setContent(smallView);
         builder.setCustomBigContentView(bigView);
 
@@ -65,9 +65,9 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
 //        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 //        builder.setContentIntent(pendingIntent);
 
-
         Notification notification = builder.build();
 
+        int time = (int) System.currentTimeMillis();
         if (image != null) {
             Handler mainHandler = new Handler(getMainLooper());
 
@@ -78,7 +78,7 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
                         bigView,
                         R.id.imageview_image,
                         notification,
-                        AppConstant.ID_FOREGROUND);
+                        time);
 
                 Glide.with(this)
                         .load(finalImage)
@@ -89,7 +89,7 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
         }
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(AppConstant.ID_FOREGROUND, notification);
+        notificationManager.notify(time, notification);
 
     }
 }

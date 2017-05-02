@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.custom;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.IMarker;
@@ -11,7 +12,6 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.HealthCompact;
-import com.srinnix.kindergarten.model.HealthTotal;
 
 /**
  * Created by anhtu on 4/22/2017.
@@ -34,11 +34,13 @@ public class MarkerViewChart extends MarkerView implements IMarker{
     public void refreshContent(Entry e, Highlight highlight) {
         if (e.getData() == null) {
             tvState.setBackground(null);
+            tvState.setTextColor(Color.TRANSPARENT);
             return;
         }
 
         if (tvState.getBackground() == null) {
             tvState.setBackgroundResource(R.drawable.background_marker_view);
+            tvState.setTextColor(Color.WHITE);
         }
         int state;
         if (typeData == AppConstant.TYPE_WEIGHT) {
@@ -58,7 +60,7 @@ public class MarkerViewChart extends MarkerView implements IMarker{
                 }
             }
         } else {
-            state = ((HealthTotal) e.getData()).getHeightState();
+            state = ((HealthCompact) e.getData()).getState();
             switch (state) {
                 case AppConstant.STATE_HEIGHT_NORMAL: {
                     tvState.setText(R.string.normal);
