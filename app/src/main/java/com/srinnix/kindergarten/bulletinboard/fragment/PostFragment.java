@@ -130,6 +130,11 @@ public class PostFragment extends BaseFragment implements PostDelegate {
 
     @Override
     public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 1) {
+            viewPager.setCurrentItem(0, true);
+            return;
+        }
+
         if (contentPostFragment.getContentPost().length() > 0 ||
                 !contentPostFragment.getListImage().isEmpty()) {
             AlertUtils.showDialogCancelPost(mContext, (dialog, which) -> {

@@ -8,7 +8,9 @@ import com.srinnix.kindergarten.model.HealthTotal;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.model.StudyTimetable;
 import com.srinnix.kindergarten.model.Teacher;
+import com.srinnix.kindergarten.model.Timetable;
 import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
@@ -56,6 +58,10 @@ public interface ApiService {
                                                    @Field("email") String email,
                                                    @Field("new_password") String newPassword,
                                                    @Field("new_password_encrypted") String newPasswordEncrypted);
+
+    @GET(AppConstant.API_GET_ACCOUNT_INFO)
+    Observable<ApiResponse<User>> getAccountInfo(@Header("x-access-token") String token,
+                                                 @Query("_id_user") String idUser);
     //USER END
 
     //POST START
@@ -126,7 +132,7 @@ public interface ApiService {
 
     //POST END
 
-
+    //CLASS START
     @GET(AppConstant.API_GET_LIST_CLASS)
     Observable<ApiResponse<ArrayList<Class>>> getListClass();
 
@@ -141,11 +147,15 @@ public interface ApiService {
     Observable<ApiResponse<ImageResponse>> getImageClass(@Query("_id_class") String classId,
                                                          @Query("time_prev_image") long timePrevImage);
 
-    @GET(AppConstant.API_GET_MESSAGE)
-    Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
-                                                                  @Query("conversation_id") String conversationID,
-                                                                  @Query("time_first_message") long timeFirstMessage);
+    @GET(AppConstant.API_GET_TIMETABLE)
+    Observable<ApiResponse<Timetable>> getTimeTable(@Query("time") String time);
 
+    @GET(AppConstant.API_GET_STUDY_TIMETABLE)
+    Observable<ApiResponse<StudyTimetable>> getStudyTimeTable(@Query("time") String time,
+                                                              @Query("group") String group);
+    //CLASS END
+
+    //CHILDREN START
     @GET(AppConstant.API_GET_INFO_CHILDREN)
     Observable<ApiResponse<Child>> getInfoChildren(@Header("x-access-token") String header,
                                                    @Query("_id_child") String id);
@@ -159,11 +169,12 @@ public interface ApiService {
     @GET(AppConstant.API_GET_LIST_CHILDREN)
     Observable<ApiResponse<ArrayList<Child>>> getListChildren(@Header("x-access-token") String token,
                                                               @Query("_id_class") String classId);
+    //CHILDREN END
 
 
-    @GET(AppConstant.API_GET_ACCOUNT_INFO)
-    Observable<ApiResponse<User>> getAccountInfo(@Header("x-access-token") String token,
-                                                 @Query("_id_user") String idUser);
-
+    @GET(AppConstant.API_GET_MESSAGE)
+    Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
+                                                                  @Query("conversation_id") String conversationID,
+                                                                  @Query("time_first_message") long timeFirstMessage);
 
 }

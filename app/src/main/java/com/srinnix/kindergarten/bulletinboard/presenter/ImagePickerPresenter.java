@@ -23,7 +23,6 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.util.AlertUtils;
-import com.srinnix.kindergarten.util.DebugLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -143,23 +142,11 @@ public class ImagePickerPresenter extends BasePresenter {
     public void displayImage(ArrayList<ImageLocal> mListImage) {
         Uri imageUri = Uri.fromFile(fileCapture);
         if (imageUri != null) {
-            MediaScannerConnection.scanFile(mContext, new String[]{imageUri.getPath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                @Override
-                public void onScanCompleted(String path, Uri uri) {
-                    mHelper.getImageCapture(mContext, fileCapture.getPath(), new ImagePickerHelper.OnGetImageCaptureListener() {
-                        @Override
-                        public void onLoadSuccess(ImageLocal imageLocal) {
-                            mListImage.add(0, imageLocal);
-                            mImagePickerDelegate.insertImageLocal(0);
-                        }
-
-                        @Override
-                        public void onLoadFail() {
-                            DebugLog.e("Loi get anh");
-                            AlertUtils.showToast(mContext, R.string.error_common);
-                        }
-                    });
-                }
+            MediaScannerConnection.scanFile(mContext, new String[]{imageUri.getPath()}, null, (path, uri) -> {
+                mHelper.getImageCapture(mContext, fileCapture.getPath(), imageLocal -> {
+                    mListImage.add(0, imageLocal);
+                    mImagePickerDelegate.insertImageLocal(0);
+                });
             });
         }
     }

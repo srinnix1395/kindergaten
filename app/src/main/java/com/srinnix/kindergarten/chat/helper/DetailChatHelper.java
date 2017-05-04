@@ -2,13 +2,12 @@ package com.srinnix.kindergarten.chat.helper;
 
 import android.content.Context;
 
+import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.constant.ErrorConstant;
 import com.srinnix.kindergarten.model.Message;
-import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.request.remote.ApiService;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ServiceUtils;
 
@@ -26,14 +25,10 @@ import io.realm.Sort;
  * Created by Administrator on 3/3/2017.
  */
 
-public class DetailChatHelper {
-
-    private ApiService mApi;
-    private CompositeDisposable mDisposable;
+public class DetailChatHelper extends BaseHelper{
 
     public DetailChatHelper(CompositeDisposable mDisposable) {
-        this.mDisposable = mDisposable;
-        mApi = RetrofitClient.getApiService();
+        super(mDisposable);
     }
 
     public void getPreviousMessage(Context mContext, String conversationID, ArrayList<Object> listMessage,
@@ -85,7 +80,7 @@ public class DetailChatHelper {
             return Observable.just(new ArrayList<>());
         }
 
-        return mApi.getHistoryMessage(token, conversationID, timeFirstMessage)
+        return mApiService.getHistoryMessage(token, conversationID, timeFirstMessage)
                 .map(response -> {
                     if (response == null) {
                         DebugLog.e(ErrorConstant.RESPONSE_NULL);

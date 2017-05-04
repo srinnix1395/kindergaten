@@ -7,7 +7,7 @@ import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.DetailPostDelegate;
-import com.srinnix.kindergarten.bulletinboard.helper.DetailPostHelper;
+import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -24,7 +24,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class DetailPostPresenter extends BasePresenter {
 
     private String idPost;
-    private DetailPostHelper mHelper;
+    private BulletinBoardHelper mHelper;
     private DetailPostDelegate mDetailPostDelegate;
     private CompositeDisposable mDisposable;
 
@@ -33,7 +33,7 @@ public class DetailPostPresenter extends BasePresenter {
         mDetailPostDelegate = (DetailPostDelegate) mDelegate;
 
         mDisposable = new CompositeDisposable();
-        mHelper = new DetailPostHelper(mDisposable);
+        mHelper = new BulletinBoardHelper(mDisposable);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.main.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +18,6 @@ import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.messageeventbus.MessageLogout;
-import com.srinnix.kindergarten.service.MessagingService;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,9 +48,6 @@ public class MainFragment extends BaseFragment implements MainDelegate {
 
     @Override
     protected void initChildView() {
-        Intent intent = new Intent(mContext, MessagingService.class);
-        mContext.startService(intent);
-
         mPresenter.updateRegId();
 
         mToolbar.setTitleTextColor(Color.WHITE);

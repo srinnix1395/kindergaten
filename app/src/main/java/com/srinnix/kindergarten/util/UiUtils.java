@@ -5,9 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -18,8 +16,6 @@ import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
-import com.srinnix.kindergarten.R;
-
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -29,18 +25,12 @@ import java.util.HashMap;
 
 public class UiUtils {
     public static int dpToPixel(Context context, float dp) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-//        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        metrics = context.getResources().getDisplayMetrics();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) ((dp * metrics.density) + 0.5);
     }
 
     public static int pixelsToDp(Context context, float px) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-//        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        metrics = context.getResources().getDisplayMetrics();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) ((px / metrics.density) + 0.5);
     }
 
@@ -90,12 +80,20 @@ public class UiUtils {
             return;
         }
 
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
         progressBar.setEnabled(true);
         progressBar.setVisibility(View.VISIBLE);
     }
 
     public static void hideProgressBar(ProgressBar progressBar) {
         if (progressBar == null) {
+            return;
+        }
+
+        if (progressBar.getVisibility() != View.VISIBLE) {
             return;
         }
 
@@ -119,7 +117,7 @@ public class UiUtils {
             }
         }
         if (bitmap == null) {
-            bitmap = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_4444);
         }
         return bitmap;
     }
@@ -145,7 +143,6 @@ public class UiUtils {
             }
         };
 
-//        Health.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
         v.startAnimation(a);
     }
@@ -170,7 +167,6 @@ public class UiUtils {
             }
         };
 
-//        Health.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
 
         v.startAnimation(a);

@@ -12,7 +12,7 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.clazz.delegate.ClassListDelegate;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
-import com.srinnix.kindergarten.clazz.helper.ClassListHelper;
+import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -32,7 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class ClassListPresenter extends BasePresenter {
     private ClassListDelegate mClassListDelegate;
-    private ClassListHelper mHelper;
+    private ClassHelper mHelper;
     private CompositeDisposable mDisposable;
 
     public ClassListPresenter(BaseDelegate mDelegate) {
@@ -40,7 +40,7 @@ public class ClassListPresenter extends BasePresenter {
         mClassListDelegate = (ClassListDelegate) mDelegate;
 
         mDisposable = new CompositeDisposable();
-        mHelper = new ClassListHelper(mDisposable);
+        mHelper = new ClassHelper(mDisposable);
     }
 
     @Override

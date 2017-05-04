@@ -22,4 +22,17 @@
         android:paddingBottom="22dp"
         android:paddingStart="22dp"
         app:srcCompat="@drawable/image_close"/>
+
+    <TextView
+        android:id="@+id/textview_gif"
+        android:layout_width="@dimen/item_size"
+        android:layout_height="@dimen/item_size"
+        android:layout_gravity="center"
+        android:background="@drawable/ic_gif_2"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:text="GIF"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"/>
+
 </com.srinnix.kindergarten.custom.SquareItemLayout>

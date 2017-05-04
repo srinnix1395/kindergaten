@@ -8,7 +8,7 @@ import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.CommentDelegate;
-import com.srinnix.kindergarten.bulletinboard.helper.CommentHelper;
+import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -27,7 +27,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class CommentPresenter extends BasePresenter {
     private CommentDelegate mCommentDelegate;
-    private CommentHelper mHelper;
+    private BulletinBoardHelper mHelper;
     private CompositeDisposable mDisposable;
     private String idPost;
     private boolean isLoadFirst = true;
@@ -37,7 +37,7 @@ public class CommentPresenter extends BasePresenter {
         mCommentDelegate = (CommentDelegate) mDelegate;
 
         mDisposable = new CompositeDisposable();
-        mHelper = new CommentHelper(mDisposable);
+        mHelper = new BulletinBoardHelper(mDisposable);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class CommentPresenter extends BasePresenter {
         mCommentDelegate.insertComment(new Comment(String.valueOf(now),
                 name, image, comment, now, accountType));
 
-        sendComment(token,idUser,name,image,accountType,comment,now);
+        sendComment(token, idUser, name, image, accountType, comment, now);
     }
 
     private void sendComment(String token, String idUser, String name, String image,

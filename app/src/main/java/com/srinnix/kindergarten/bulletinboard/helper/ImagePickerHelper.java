@@ -26,16 +26,15 @@ public class ImagePickerHelper {
         this.mDisposable = mDisposable;
     }
 
-    public static final String[] projection = new String[]{
+    private static final String[] projection = new String[]{
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATA
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.MIME_TYPE
     };
-
 
     public void getLocalImage(Context mContext, OnLoadImageLocalListener listener) {
         mDisposable.add(Single.fromCallable(() -> {
-
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
                     null, null, MediaStore.Images.Media.DATE_ADDED);
 
@@ -51,10 +50,11 @@ public class ImagePickerHelper {
                     long id = cursor.getLong(0);
                     String name = cursor.getString(1);
                     String path = cursor.getString(2);
+                    boolean isGIF = cursor.getString(3).equalsIgnoreCase("image/gif");
 
                     file = new File(path);
                     if (file.exists()) {
-                        ImageLocal image = new ImageLocal(id, name, path, false);
+                        ImageLocal image = new ImageLocal(id, name, path, isGIF, false);
                         temp.add(image);
                     }
 
@@ -81,7 +81,8 @@ public class ImagePickerHelper {
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Images.Media._ID,
-                            MediaStore.Images.Media.DISPLAY_NAME
+                            MediaStore.Images.Media.DISPLAY_NAME,
+                            MediaStore.Images.Media.MIME_TYPE
                     },
                     "_data = '" + path + "'", null, MediaStore.Images.Media.DATE_ADDED);
 
@@ -94,10 +95,11 @@ public class ImagePickerHelper {
             if (cursor.moveToNext()) {
                 long id = cursor.getLong(0);
                 String name = cursor.getString(1);
+                boolean isGIF = cursor.getString(2).equalsIgnoreCase("image/gif");
 
                 file = new File(path);
                 if (file.exists()) {
-                    image = new ImageLocal(id, name, path, false);
+                    image = new ImageLocal(id, name, path, isGIF, false);
                 }
             }
             cursor.close();
@@ -105,13 +107,7 @@ public class ImagePickerHelper {
             return image;
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(imageLocal -> {
-                    if (imageLocal == null) {
-                        listener.onLoadFail();
-                    } else {
-                        listener.onLoadSuccess(imageLocal);
-                    }
-                }, ErrorUtil::handleException));
+                .subscribe(listener::onLoadSuccess, ErrorUtil::handleException));
     }
 
     public interface OnLoadImageLocalListener {
@@ -122,7 +118,5 @@ public class ImagePickerHelper {
 
     public interface OnGetImageCaptureListener {
         void onLoadSuccess(ImageLocal imageLocal);
-
-        void onLoadFail();
     }
 }

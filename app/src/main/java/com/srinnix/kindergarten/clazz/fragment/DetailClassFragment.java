@@ -2,11 +2,14 @@ package com.srinnix.kindergarten.clazz.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -84,6 +87,12 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.textview_learn_schedule)
     TextView tvLearnSchedule;
 
+    @BindView(R.id.floatbutton_post)
+    FloatingActionButton fabPost;
+
+    @BindView(R.id.appbar_layout)
+    AppBarLayout appBarLayout;
+
     ImageView imvIcon1;
     TextView tvName1;
     ImageView imvChat1;
@@ -103,7 +112,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     private ArrayList<Child> childArrayList;
     private ChildrenAdapter childrenAdapter;
-
 
     public static DetailClassFragment newInstance(Bundle args) {
         DetailClassFragment fragment = new DetailClassFragment();
@@ -131,6 +139,18 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @Override
     protected void initChildView() {
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                Log.d("abc", "onOffsetChanged: " + verticalOffset);
+                if (verticalOffset == 0) {
+
+                } else {
+
+                }
+            }
+        });
+
         RelativeLayout relTeacher1 = (RelativeLayout) mView.findViewById(R.id.rel_teacher_1);
         imvIcon1 = (ImageView) relTeacher1.findViewById(R.id.imageview_icon);
         tvName1 = (TextView) relTeacher1.findViewById(R.id.textview_teacher_name);
@@ -224,17 +244,18 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     }
 
     @Subscribe
-    public void onEventLoginSuccesfully(MessageLoginSuccessfully message){
+    public void onEventLoginSuccesfully(MessageLoginSuccessfully message) {
         tvLearnSchedule.setVisibility(View.VISIBLE);
 
         // TODO: 4/20/2017 get list children
     }
 
     @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,
-            R.id.textview_timetable1, R.id.textview_play_schedule, R.id.layout_retry})
+            R.id.textview_timetable1, R.id.textview_study_timetable,
+            R.id.layout_retry, R.id.floatbutton_post, R.id.textview_learn_schedule})
     void onClickTeachers(View view) {
         switch (view.getId()) {
-            case R.id.layout_retry:{
+            case R.id.layout_retry: {
                 relRetry.setVisibility(View.GONE);
                 UiUtils.showProgressBar(pbClass);
                 mPresenter.onClickRetry();
@@ -256,8 +277,16 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
                 mPresenter.onClickTimeTable();
                 break;
             }
-            case R.id.textview_play_schedule: {
-                mPresenter.onClickPlaySchedule();
+            case R.id.textview_study_timetable: {
+                mPresenter.onClickStudyTimeTable();
+                break;
+            }
+            case R.id.textview_learn_schedule: {
+                mPresenter.onClickLearnSchedule();
+                break;
+            }
+            case R.id.floatbutton_post: {
+                mPresenter.onClickPost();
                 break;
             }
         }

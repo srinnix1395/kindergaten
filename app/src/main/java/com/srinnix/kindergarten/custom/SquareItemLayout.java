@@ -13,7 +13,6 @@ import com.srinnix.kindergarten.R;
 
 public class SquareItemLayout extends FrameLayout {
     private static final int TYPE_WIDTH = 1;
-    private static final int TYPE_HEIGHT = 2;
 
     private int measureType;
 

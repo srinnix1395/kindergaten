@@ -166,7 +166,7 @@
                         android:layout_marginStart="8dp"
                         android:fontFamily="sans-serif-light"
                         android:gravity="center_vertical"
-                        android:text="@string/learch_and_play_time"
+                        android:text="@string/learn_and_play_time"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@+id/image_timetable"
@@ -185,14 +185,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/image_timetable"/>
 
                     <TextView
-                        android:id="@+id/textview_play_schedule"
+                        android:id="@+id/textview_study_timetable"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/item_size"
                         android:background="?selectableItemBackground"
                         android:clickable="true"
                         android:gravity="center_vertical"
                         android:paddingStart="24dp"
-                        android:text="@string/play_schedule"
+                        android:text="@string/study_time_table"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textview_timetable1"/>
 
@@ -206,7 +206,7 @@
                         android:paddingStart="24dp"
                         android:text="@string/learn_schedule"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textview_play_schedule"/>
+                        app:layout_constraintTop_toBottomOf="@+id/textview_study_timetable"/>
 
                     <View
                         android:id="@+id/view_line_timetable"
@@ -301,6 +301,16 @@
             android:layout_below="@+id/textview_title3"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatbutton_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_edit"/>
     </android.support.design.widget.CoordinatorLayout>
 
     <include

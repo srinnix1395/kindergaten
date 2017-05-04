@@ -17,7 +17,6 @@
     <color name="colorPrimaryText">#313f4f</color>
     <color name="colorSecondaryText">#708499</color>
     <color name="colorThirdText">#d2d6df</color>
-    <color name="colorBackgroundWhite">#fefefe</color>
 
     <!--chat START-->
     <color name="colorBackgroundItemChatLeft">#E2E2E2</color>

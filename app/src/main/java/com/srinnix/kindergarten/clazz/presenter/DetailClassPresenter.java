@@ -14,6 +14,7 @@ import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
+import com.srinnix.kindergarten.clazz.fragment.TimeTableFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
@@ -41,12 +42,15 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class DetailClassPresenter extends BasePresenter {
+
     private ClassDelegate mClassDelegate;
     private CompositeDisposable mDisposable;
-    private boolean isTeacher;
-    private ClassResponse classResponse;
     private ClassHelper mHelper;
+
+    private ClassResponse classResponse;
     private String classId;
+    private String group;
+    private boolean isTeacher;
     private boolean isLoadImageFirst = true;
 
     public DetailClassPresenter(BaseDelegate mClassDelegate) {
@@ -62,6 +66,7 @@ public class DetailClassPresenter extends BasePresenter {
     public void getData(Bundle bundle) {
         super.getData(bundle);
         classId = bundle.getString(AppConstant.KEY_CLASS);
+        group = bundle.getString(AppConstant.KEY_GROUP);
     }
 
     @Override
@@ -218,11 +223,11 @@ public class DetailClassPresenter extends BasePresenter {
 //                    .commit();
 //
 //        } else {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(AppConstant.KEY_IMAGE, image);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstant.KEY_IMAGE, image);
 
-            ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle,
-                    R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
 //        }
     }
 
@@ -230,19 +235,37 @@ public class DetailClassPresenter extends BasePresenter {
         getClassInfo();
     }
 
+    public void onClickTimeTable() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(AppConstant.KEY_TIMETABLE, AppConstant.TIME_TABLE);
+
+        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
+    }
+
+    public void onClickStudyTimeTable() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(AppConstant.KEY_TIMETABLE, AppConstant.STUDY_TIME_TABLE);
+        bundle.putString(AppConstant.KEY_GROUP, "group");
+
+        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
+    }
+
+    public void onClickLearnSchedule() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(AppConstant.KEY_TIMETABLE, AppConstant.STUDY_SCHEDULE);
+
+        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
+    }
+
+    public void onClickPost() {
+
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.clear();
         }
-    }
-
-    public void onClickTimeTable() {
-
-    }
-
-    public void onClickPlaySchedule() {
-
     }
 
 

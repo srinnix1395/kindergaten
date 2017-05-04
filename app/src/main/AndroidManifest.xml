@@ -53,8 +53,6 @@
 
         <service android:name=".service.KindergartenFcmInstanceIDService"/>
 
-        <service android:name=".service.MessagingService"/>
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_children_selected"/>

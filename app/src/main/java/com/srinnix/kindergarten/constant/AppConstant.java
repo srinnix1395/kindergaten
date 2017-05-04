@@ -39,6 +39,8 @@ public class AppConstant {
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
     public static final String API_GET_IMAGE_CLASS = "class/getImage";
+    public static final String API_GET_TIMETABLE = "class/getTimetable";
+    public static final String API_GET_STUDY_TIMETABLE = "class/getStudyTimetable";
 
     public static final String API_GET_MESSAGE = "chat/message";
 
@@ -94,6 +96,8 @@ public class AppConstant {
     public static final String KEY_HEALTH_TYPE = "KEY_HEALTH_TYPE";
     public static final String KEY_GENDER = "KEY_GENDER";
     public static final String KEY_DOB = "KEY_DOB";
+    public static final String KEY_GROUP = "KEY_GROUP";
+    public static final String KEY_TIMETABLE = "KEY_TIMETABLE";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -118,5 +122,8 @@ public class AppConstant {
     public static final int NOTIFICATION_ALL = 1;
     public static final int NOTIFICATION_PARENT = 2;
     public static final int NOTIFICATION_TEACHER = 3;
-    public static final int ID_FOREGROUND = 1488935410;
+
+    public static final int TIME_TABLE = 1;
+    public static final int STUDY_TIME_TABLE = 2;
+    public static final int STUDY_SCHEDULE = 3;
 }

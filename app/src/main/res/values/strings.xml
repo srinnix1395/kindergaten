@@ -9,7 +9,6 @@
     <string name="sign_out">Thoát</string>
     <string name="writeMessage">Viết tin nhắn…</string>
     <string name="info">Thông tin</string>
-    <string name="className">Tên lớp…</string>
     <string name="close">Đóng</string>
     <string name="noInternetConnection">Không có kết nối internet</string>
     <string name="password">Mật khẩu</string>
@@ -33,14 +32,12 @@
     <string name="login_to_like">Hãy đăng nhập để like!</string>
     <string name="reset_password">Gửi email đặt lại mật khẩu</string>
     <string name="back">Quay lại</string>
-    <string name="edu_plan">Kế hoạch giáo dục</string>
     <string name="Ms">Chị</string>
     <string name="Mr">Anh</string>
     <string name="MrTeacher">Thầy</string>
     <string name="MsTeacher">Cô</string>
     <string name="baby">Bé</string>
     <string name="error_msg_101">Email hoặc mật khẩu không chính xác</string>
-    <string name="login_to_see">Hãy đăng nhập để xem đầy đủ</string>
     <string name="login_to_chat">Hãy đăng nhập để trò chuyện!</string>
     <string name="login_successfully">Đăng nhập thành công</string>
     <string name="cant_connect">Không thể kết nối, chạm để thử lại</string>
@@ -85,9 +82,9 @@
     <string name="type_result">sức khỏe loại %d</string>
     <string name="password_reset">Hãy kiểm tra email và\\nđăng nhập lại</string>
     <string name="account">Tài khoản</string>
-    <string name="learch_and_play_time">Lịch sinh hoạt</string>
-    <string name="timetable">•  Thời khóa biểu</string>
-    <string name="play_schedule">•  Lịch vui chơi</string>
+    <string name="learn_and_play_time">Lịch sinh hoạt</string>
+    <string name="timetable">•  Thời gian biểu</string>
+    <string name="study_time_table">•  Thời khóa biểu</string>
     <string name="learn_schedule">•  Lịch học năng khiếu</string>
     <string name="edit">Sửa</string>
     <string name="weight">cân nặng của trẻ</string>
@@ -103,10 +100,8 @@
     <string name="photo_camera">Máy ảnh</string>
     <string name="add">Thêm</string>
     <string name="error_no_camera">Không có camera</string>
-    <string name="error_create_image_file">Đã có lỗi khi tạo file</string>
     <string name="normal_notification">Thông báo thường</string>
     <string name="important_notification">Thông báo quan trọng</string>
-    <string name="post_success">Đăng thành công</string>
     <string name="signed_out">Đã đăng xuất</string>
     <string name="post_time">Thời gian post</string>
     <string name="now">Ngay bây giờ</string>

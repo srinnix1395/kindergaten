@@ -1,7 +1,6 @@
 package com.srinnix.kindergarten.clazz.adapter.viewholder;
 
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -57,10 +56,14 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
-                return BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
+                return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_4444);
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(bitmap -> imvImage.setImageBitmap(bitmap));
+                    .subscribe(bitmap -> {
+                        if (bitmap.getWidth() == 1) {
+                            imvImage.setImageResource(R.drawable.dummy_image);
+                        }
+                    });
         } else {
             Glide.with(itemView.getContext())
                     .load(image.getUrl())

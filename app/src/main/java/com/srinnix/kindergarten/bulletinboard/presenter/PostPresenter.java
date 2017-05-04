@@ -5,7 +5,7 @@ import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
-import com.srinnix.kindergarten.bulletinboard.helper.PostHelper;
+import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -24,14 +24,14 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class PostPresenter extends BasePresenter {
     private CompositeDisposable mDisposable;
-    private PostHelper mHelper;
+    private BulletinBoardHelper mHelper;
     private PostDelegate mPostDelegate;
 
     public PostPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mPostDelegate = (PostDelegate) mDelegate;
         mDisposable = new CompositeDisposable();
-        mHelper = new PostHelper(mDisposable);
+        mHelper = new BulletinBoardHelper(mDisposable);
     }
 
     public void onClickPost(String content, ArrayList<ImageLocal> mListImage, int notificationType, int notificationRange) {

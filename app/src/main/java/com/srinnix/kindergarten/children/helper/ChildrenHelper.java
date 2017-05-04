@@ -1,10 +1,9 @@
 package com.srinnix.kindergarten.children.helper;
 
 import com.srinnix.kindergarten.base.callback.ResponseListener;
+import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.HealthTotal;
-import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.remote.ApiService;
 
 import java.util.ArrayList;
 
@@ -16,13 +15,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by anhtu on 3/8/2017.
  */
 
-public class ChildrenHelper {
-    private CompositeDisposable mDisposable;
-    private ApiService mApi;
+public class ChildrenHelper extends BaseHelper{
 
-    public ChildrenHelper(CompositeDisposable compositeDisposable) {
-        mApi = RetrofitClient.getApiService();
-        mDisposable = compositeDisposable;
+    public ChildrenHelper(CompositeDisposable mDisposable) {
+        super(mDisposable);
     }
 
     public void getInfoChildren(String token, String id, ResponseListener<Child> listener) {
@@ -30,7 +26,7 @@ public class ChildrenHelper {
             return;
         }
 
-        mDisposable.add(mApi.getInfoChildren(token, id)
+        mDisposable.add(mApiService.getInfoChildren(token, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(listener::onFinally)
@@ -43,7 +39,7 @@ public class ChildrenHelper {
         }
 
         mDisposable.add(
-                mApi.getListChildren(token, idClass)
+                mApiService.getListChildren(token, idClass)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doFinally(listener::onFinally)
@@ -56,7 +52,7 @@ public class ChildrenHelper {
             return;
         }
 
-        mDisposable.add(mApi.getTimelineChildren(token, idChildren, time)
+        mDisposable.add(mApiService.getTimelineChildren(token, idChildren, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(listener::onFinally)

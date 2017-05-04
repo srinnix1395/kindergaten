@@ -4,7 +4,7 @@ import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.login.delegate.ForgotPasswordDelegate;
-import com.srinnix.kindergarten.login.helper.ForgotPasswordHelper;
+import com.srinnix.kindergarten.login.helper.LoginHelper;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -18,7 +18,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class ForgotPasswordPresenter extends BasePresenter {
 
-    private ForgotPasswordHelper mHelper;
+    private LoginHelper mHelper;
     private CompositeDisposable mDisposable;
     private ForgotPasswordDelegate mForgotpasswordDelegate;
 
@@ -26,7 +26,7 @@ public class ForgotPasswordPresenter extends BasePresenter {
         super(mDelegate);
         mForgotpasswordDelegate = (ForgotPasswordDelegate) mDelegate;
         mDisposable = new CompositeDisposable();
-        mHelper = new ForgotPasswordHelper(mDisposable);
+        mHelper = new LoginHelper(mDisposable);
     }
 
     public void onClickResetPassword() {

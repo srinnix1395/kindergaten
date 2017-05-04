@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.login.helper;
 
 import com.srinnix.kindergarten.base.callback.ResponseListener;
+import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.model.Child;
@@ -9,15 +10,14 @@ import com.srinnix.kindergarten.model.ContactParent;
 import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
-import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.LoginResponse;
-import com.srinnix.kindergarten.request.remote.ApiService;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
@@ -25,22 +25,21 @@ import io.realm.Realm;
  * Created by Administrator on 3/3/2017.
  */
 
-public class LoginHelper {
-    private ApiService mApi;
+public class LoginHelper extends BaseHelper{
 
-    public LoginHelper() {
-        mApi = RetrofitClient.getApiService();
+    public LoginHelper(CompositeDisposable mDisposable) {
+        super(mDisposable);
     }
 
     public void login(String email, String password, ResponseListener<LoginResponse> mListener) {
         if (mListener == null) {
             return;
         }
-        mApi.login(email, password)
+        mDisposable.add(mApiService.login(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(mListener::onFinally)
-                .subscribe(mListener::onSuccess, mListener::onFail);
+                .subscribe(mListener::onSuccess, mListener::onFail));
     }
 
     public void insertData(Realm realm, ArrayList<Child> children, ArrayList<Contact> arrayList, LoginDelegate loginDelegate) {
@@ -78,6 +77,20 @@ public class LoginHelper {
                 realm.close();
             }
         });
+    }
+
+    public void resetPassword(String token, String idUser, String email, String newPassword,
+                              String newPasswordEncrypted, ResponseListener<Boolean> listener) {
+
+        if (listener == null) {
+            return;
+        }
+
+        mDisposable.add(mApiService.resetPassword(token, idUser, email, newPassword, newPasswordEncrypted)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(listener::onFinally)
+                .subscribe(listener::onSuccess, listener::onFail));
     }
 
     public interface LoginListener {

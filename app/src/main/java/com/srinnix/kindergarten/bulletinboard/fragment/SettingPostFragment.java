@@ -85,14 +85,13 @@ public class SettingPostFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.textview_schedule_day: {
                 UiUtils.showDatePickerDialog(mContext, (view1, year, month, dayOfMonth) -> {
-
+                    tvScheduleDay.setText(String.format(Locale.getDefault(), "%2d/%2d/%4d", dayOfMonth, month, year));
                 });
                 break;
             }
             case R.id.textview_schedule_hour: {
                 UiUtils.showTimePickerDialog(mContext, (view12, hourOfDay, minute) -> {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
-                    tvScheduleHour.setText(dateFormat.format(new Date()));
+                    tvScheduleHour.setText(String.format(Locale.getDefault(), "%d:%d", hourOfDay, minute));
                 });
                 break;
             }
