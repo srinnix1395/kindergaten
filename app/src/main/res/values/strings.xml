@@ -84,6 +84,9 @@
     <string name="account">Tài khoản</string>
     <string name="learn_and_play_time">Lịch sinh hoạt</string>
     <string name="timetable">•  Thời gian biểu</string>
+    <string name="timetable1">Thời gian biểu %s</string>
+    <string name="timetable2">Thời khóa biểu %s - </string>
+    <string name="group">Khối %s</string>
     <string name="study_time_table">•  Thời khóa biểu</string>
     <string name="learn_schedule">•  Lịch học năng khiếu</string>
     <string name="edit">Sửa</string>
@@ -113,4 +116,7 @@
     <string name="name">Mầm non Kid\'s home</string>
     <string name="height_growth">Biểu đồ tăng trưởng chiều cao</string>
     <string name="weight_growth">Biểu đồ tăng trưởng cân nặng</string>
+    <string name="event">Sự kiện:</string>
+    <string name="subject">Chủ đề:</string>
+    <string name="subject_event">Chủ đề/\nsự kiện</string>
 </resources>

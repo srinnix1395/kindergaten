@@ -7,17 +7,21 @@ import com.google.gson.annotations.SerializedName;
  * Created by anhtu on 5/4/2017.
  */
 
-public class Schedule {
+public class StudySchedule {
 
     @SerializedName("time")
     @Expose
     private String time;
+
     @SerializedName("subject")
     @Expose
     private String subject;
+
     @SerializedName("content")
     @Expose
     private String content;
+
+    private boolean isColor;
 
     public String getTime() {
         return time;
@@ -29,5 +33,13 @@ public class Schedule {
 
     public String getContent() {
         return content;
+    }
+
+    public boolean isColor() {
+        return isColor;
+    }
+
+    public void setColor(boolean color) {
+        isColor = color;
     }
 }

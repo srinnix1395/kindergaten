@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.HorizontalActivity;
 import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.children.activity.ChartActivity;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
@@ -160,7 +160,8 @@ public class InfoChildrenPresenter extends BasePresenter {
             }
         }
 
-        Intent myIntent = new Intent(mContext, ChartActivity.class);
+        Intent intent = new Intent(mContext, HorizontalActivity.class);
+        intent.putExtra(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_HEALTH_INDEX);
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(AppConstant.KEY_GENDER, infoChild.getGender().equalsIgnoreCase("Nam"));
@@ -168,8 +169,8 @@ public class InfoChildrenPresenter extends BasePresenter {
         bundle.putParcelableArrayList(AppConstant.KEY_HEALTH, listHealth);
         bundle.putInt(AppConstant.KEY_HEALTH_TYPE, type);
 
-        myIntent.putExtras(bundle);
-        mContext.startActivity(myIntent);
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
     }
 
     @Override

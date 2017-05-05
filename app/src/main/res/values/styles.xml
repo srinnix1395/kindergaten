@@ -60,6 +60,11 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="TimeTableStyle" parent="AppTheme">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <!--chat-->
 
 

@@ -71,7 +71,7 @@ public class ClassHelper extends BaseHelper{
                 .subscribe(listener::onSuccess, listener::onFail));
     }
 
-    public void getStudyTimeTable(String time, String group, ResponseListener<StudyTimetable> listener) {
+    public void getStudyTimeTable(String time, String group, ResponseListener<ArrayList<StudyTimetable>> listener) {
         if (listener == null) {
             return;
         }

@@ -1,10 +1,12 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.activity.HorizontalActivity;
 import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -34,6 +36,7 @@ import com.srinnix.kindergarten.util.ViewManager;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -42,7 +45,6 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class DetailClassPresenter extends BasePresenter {
-
     private ClassDelegate mClassDelegate;
     private CompositeDisposable mDisposable;
     private ClassHelper mHelper;
@@ -236,23 +238,43 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
     public void onClickTimeTable() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(AppConstant.KEY_TIMETABLE, AppConstant.TIME_TABLE);
+        Calendar calendar = Calendar.getInstance();
 
-        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        String time = month + "/" + calendar.get(Calendar.YEAR);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_TIME, time);
+
+        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void onClickStudyTimeTable() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(AppConstant.KEY_TIMETABLE, AppConstant.STUDY_TIME_TABLE);
-        bundle.putString(AppConstant.KEY_GROUP, "group");
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
 
-        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
+        String time = month + "/" + calendar.get(Calendar.YEAR);
+
+        Intent intent = new Intent(mContext, HorizontalActivity.class);
+        intent.putExtra(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_STUDY_TIMETABLE);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_GROUP, group);
+        bundle.putString(AppConstant.KEY_TIME, time);
+
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
     }
 
     public void onClickLearnSchedule() {
+        Calendar calendar = Calendar.getInstance();
+
+        int month = calendar.get(Calendar.MONTH) + 1;
+        String time = month + "/" + calendar.get(Calendar.YEAR);
+
         Bundle bundle = new Bundle();
-        bundle.putInt(AppConstant.KEY_TIMETABLE, AppConstant.STUDY_SCHEDULE);
+        bundle.putString(AppConstant.KEY_TIME, time);
 
         ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
     }
@@ -267,6 +289,4 @@ public class DetailClassPresenter extends BasePresenter {
             mDisposable.clear();
         }
     }
-
-
 }

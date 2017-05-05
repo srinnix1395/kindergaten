@@ -6,31 +6,31 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 /**
- * Created by anhtu on 5/4/2017.
+ * Created by anhtu on 5/5/2017.
  */
-
 public class StudyTimetable {
 
-    @SerializedName("group")
-    @Expose
-    private String group;
     @SerializedName("time")
     @Expose
     private String time;
-    @SerializedName("time_table")
-    @Expose
-    private ArrayList<StudyTimetable> timeTable = null;
 
-    public String getGroup() {
-        return group;
-    }
+    @SerializedName("subject")
+    @Expose
+    private String subject;
+
+    @SerializedName("schedule")
+    @Expose
+    private ArrayList<StudySchedule> schedule = null;
 
     public String getTime() {
         return time;
     }
 
-    public ArrayList<StudyTimetable> getStudyTimetable() {
-        return timeTable;
+    public String getSubject() {
+        return subject;
     }
 
+    public ArrayList<StudySchedule> getSchedule() {
+        return schedule;
+    }
 }

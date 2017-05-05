@@ -151,8 +151,8 @@ public interface ApiService {
     Observable<ApiResponse<Timetable>> getTimeTable(@Query("time") String time);
 
     @GET(AppConstant.API_GET_STUDY_TIMETABLE)
-    Observable<ApiResponse<StudyTimetable>> getStudyTimeTable(@Query("time") String time,
-                                                              @Query("group") String group);
+    Observable<ApiResponse<ArrayList<StudyTimetable>>> getStudyTimeTable(@Query("time") String time,
+                                                                         @Query("group") String group);
     //CLASS END
 
     //CHILDREN START

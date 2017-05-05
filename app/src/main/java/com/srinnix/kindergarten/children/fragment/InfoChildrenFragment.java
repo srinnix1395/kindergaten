@@ -1,7 +1,6 @@
 package com.srinnix.kindergarten.children.fragment;
 
 import android.graphics.PorterDuff;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -66,9 +65,6 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
 
     @BindView(R.id.layout_profile)
     CoordinatorLayout layoutProfile;
-
-    @BindView(R.id.appbar_layout)
-    AppBarLayout appBarLayout;
 
     private InfoChildrenPresenter mPresenter;
 

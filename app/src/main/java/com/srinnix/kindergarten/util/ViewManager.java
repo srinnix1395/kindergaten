@@ -36,6 +36,10 @@ public class ViewManager {
         setFragmentManager(mActivity.getSupportFragmentManager());
     }
 
+    public AppCompatActivity getActivity(){
+        return mActivity;
+    }
+
     private void setFragmentManager(FragmentManager mFragmentManager) {
         this.mFragmentManager = mFragmentManager;
     }
@@ -80,4 +84,7 @@ public class ViewManager {
         }
         return null;
     }
+
+
+
 }

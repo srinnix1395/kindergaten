@@ -87,17 +87,15 @@ public class AppConstant {
     public static final String KEY_IMAGE = "KEY_IMAGE";
     public static final String KEY_ACCOUNT_TYPE = "KEY_ACCOUNT_TYPE";
     public static final String KEY_CLASS = "KEY_CLASS";
-    public static final String KEY_MEMBER = "KEY_MEMBER";
     public static final String KEY_COMMENT = "KEY_COMMENT";
     public static final String KEY_LIKE = "KEY_LIKE";
-    public static final String KEY_TRANSITION = "KEY_TRANSITION";
     public static final String KEY_HEALTH = "KEY_HEALTH";
-    public static final String KEY_POSITION = "KEY_POSITION";
     public static final String KEY_HEALTH_TYPE = "KEY_HEALTH_TYPE";
     public static final String KEY_GENDER = "KEY_GENDER";
     public static final String KEY_DOB = "KEY_DOB";
     public static final String KEY_GROUP = "KEY_GROUP";
-    public static final String KEY_TIMETABLE = "KEY_TIMETABLE";
+    public static final String KEY_TIME = "KEY_TIME";
+    public static final String KEY_FRAGMENT = "KEY_FRAGMENT";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -106,6 +104,8 @@ public class AppConstant {
     public static final int FRAGMENT_CAMERA = 7;
     public static final int FRAGMENT_CHILDREN = 8;
     public static final int FRAGMENT_INFO_CHILDREN = 9;
+    public static final int FRAGMENT_HEALTH_INDEX = 10;
+    public static final int FRAGMENT_STUDY_TIMETABLE = 11;
 
     public static final int STATE_WEIGHT_NORMAL = 1;
     public static final int STATE_WEIGHT_OBESE = 2;
@@ -122,8 +122,4 @@ public class AppConstant {
     public static final int NOTIFICATION_ALL = 1;
     public static final int NOTIFICATION_PARENT = 2;
     public static final int NOTIFICATION_TEACHER = 3;
-
-    public static final int TIME_TABLE = 1;
-    public static final int STUDY_TIME_TABLE = 2;
-    public static final int STUDY_SCHEDULE = 3;
 }

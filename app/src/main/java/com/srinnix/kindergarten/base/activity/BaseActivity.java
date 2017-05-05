@@ -27,11 +27,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onBackPressed() {
         BaseFragment fragment = ViewManager.getInstance().getCurrentFragment(this);
         if (fragment != null) {

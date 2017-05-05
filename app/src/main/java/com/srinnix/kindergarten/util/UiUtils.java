@@ -16,8 +16,11 @@ import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
+import com.srinnix.kindergarten.R;
+
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -254,4 +257,21 @@ public class UiUtils {
     }
 
 
+    public static int randomBackgroundActionTimeTable() {
+        Random random = new Random();
+
+        switch (random.nextInt(8)) {
+            case 2:
+            case 6: {
+                return R.drawable.background_state_weight;
+            }
+            case 3:
+            case 7: {
+                return R.drawable.background_action_green;
+            }
+            default: {
+                return R.drawable.background_state_height;
+            }
+        }
+    }
 }

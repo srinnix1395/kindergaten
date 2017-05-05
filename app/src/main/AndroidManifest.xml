@@ -33,7 +33,7 @@
         <activity android:name=".main.activity.SplashActivity"/>
 
         <activity
-            android:name=".children.activity.ChartActivity"
+            android:name=".base.activity.HorizontalActivity"
             android:screenOrientation="landscape"/>
         <activity
             android:name=".bulletinboard.activity.DetailPostActivity"

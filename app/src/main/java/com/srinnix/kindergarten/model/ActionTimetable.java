@@ -9,19 +9,21 @@ import com.google.gson.annotations.SerializedName;
 
 public class ActionTimetable {
 
-    @SerializedName("time")
+    @SerializedName("action")
     @Expose
-    private String time;
+    private String action;
+
     @SerializedName("content")
     @Expose
     private String content;
 
-    public String getTime() {
-        return time;
+    public String getAction() {
+        return action;
     }
 
     public String getContent() {
         return content;
     }
+
 
 }

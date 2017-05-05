@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="6dp"
+              android:orientation="vertical"
+              android:paddingEnd="@dimen/margin_horizontal"
+              android:paddingStart="@dimen/margin_horizontal">
+
+    <TextView
+        android:id="@+id/textview_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:paddingBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Hoạt động góc"/>
+
+    <TextView
+        android:id="@+id/textview_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        tools:text="Bài hát"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/colorDividerColor"/>
+</LinearLayout>

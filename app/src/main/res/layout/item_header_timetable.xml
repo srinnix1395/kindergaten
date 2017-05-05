@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:padding="4dp">
+
+    <TextView
+        android:id="@+id/textview_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:textStyle="bold"
+        tools:text="Tuần 1"/>
+
+    <TextView
+        android:id="@+id/textview_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="(Từ 6/3 - 10/3)"/>
+</LinearLayout>

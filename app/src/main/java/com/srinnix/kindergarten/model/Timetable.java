@@ -13,12 +13,11 @@ public class Timetable {
     @SerializedName("event")
     @Expose
     private String event;
+
     @SerializedName("subject")
     @Expose
     private String subject;
-    @SerializedName("time")
-    @Expose
-    private String time;
+
     @SerializedName("time_table")
     @Expose
     private ArrayList<ActionTimetable> timeTable = null;
@@ -31,11 +30,7 @@ public class Timetable {
         return subject;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public ArrayList<ActionTimetable> getTimeTable() {
+    public ArrayList<ActionTimetable> getActionTimeTable() {
         return timeTable;
     }
 
