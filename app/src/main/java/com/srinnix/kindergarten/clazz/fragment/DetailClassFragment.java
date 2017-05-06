@@ -2,14 +2,12 @@ package com.srinnix.kindergarten.clazz.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,6 +26,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LoadingItem;
@@ -90,9 +89,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @BindView(R.id.floatbutton_post)
     FloatingActionButton fabPost;
 
-    @BindView(R.id.appbar_layout)
-    AppBarLayout appBarLayout;
-
     ImageView imvIcon1;
     TextView tvName1;
     ImageView imvChat1;
@@ -139,18 +135,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @Override
     protected void initChildView() {
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d("abc", "onOffsetChanged: " + verticalOffset);
-                if (verticalOffset == 0) {
-
-                } else {
-
-                }
-            }
-        });
-
         RelativeLayout relTeacher1 = (RelativeLayout) mView.findViewById(R.id.rel_teacher_1);
         imvIcon1 = (ImageView) relTeacher1.findViewById(R.id.imageview_icon);
         tvName1 = (TextView) relTeacher1.findViewById(R.id.textview_teacher_name);
@@ -245,9 +229,36 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @Subscribe
     public void onEventLoginSuccesfully(MessageLoginSuccessfully message) {
+        if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_PARENTS) {
+            imvChat1.setVisibility(View.VISIBLE);
+            imvChat2.setVisibility(View.VISIBLE);
+            imvChat3.setVisibility(View.VISIBLE);
+        }
+
         tvLearnSchedule.setVisibility(View.VISIBLE);
 
         // TODO: 4/20/2017 get list children
+    }
+
+    @Subscribe
+    public void onEventLogOut(MessageLogout message){
+        tvLearnSchedule.setVisibility(View.GONE);
+
+        if (imvChat1.getVisibility() == View.VISIBLE) {
+            imvChat1.setVisibility(View.GONE);
+            imvChat2.setVisibility(View.GONE);
+            imvChat3.setVisibility(View.GONE);
+        }
+
+        if (rvMember.getVisibility() == View.VISIBLE) {
+            imvMember.setVisibility(View.GONE);
+            tvMember.setVisibility(View.GONE);
+            rvMember.setVisibility(View.GONE);
+            viewLineMember.setVisibility(View.GONE);
+
+            childArrayList.clear();
+            childrenAdapter.notifyDataSetChanged();
+        }
     }
 
     @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,
@@ -323,37 +334,42 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         tvClassName.setText(classInfo.getaClass().getName());
 
         ArrayList<Teacher> teacherArrayList = classInfo.getTeacherArrayList();
-        tvName1.setText(teacherArrayList.get(0).getName());
-        Glide.with(mContext)
-                .load(teacherArrayList.get(0).getImage())
-                .thumbnail(0.1f)
-                .placeholder(R.drawable.dummy_image)
-                .error(R.drawable.image_teacher)
-                .into(imvIcon1);
+        if (teacherArrayList != null && !teacherArrayList.isEmpty()) {
+            tvName1.setText(teacherArrayList.get(0).getName());
+            Glide.with(mContext)
+                    .load(teacherArrayList.get(0).getImage())
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_teacher)
+                    .into(imvIcon1);
 
-        tvName2.setText(teacherArrayList.get(1).getName());
-        Glide.with(mContext)
-                .load(teacherArrayList.get(1).getImage())
-                .thumbnail(0.1f)
-                .placeholder(R.drawable.dummy_image)
-                .error(R.drawable.image_teacher)
-                .into(imvIcon2);
+            tvName2.setText(teacherArrayList.get(1).getName());
+            Glide.with(mContext)
+                    .load(teacherArrayList.get(1).getImage())
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_teacher)
+                    .into(imvIcon2);
 
-        tvName3.setText(teacherArrayList.get(2).getName());
-        Glide.with(mContext)
-                .load(teacherArrayList.get(2).getImage())
-                .thumbnail(0.1f)
-                .placeholder(R.drawable.dummy_image)
-                .error(R.drawable.image_teacher)
-                .into(imvIcon3);
+            tvName3.setText(teacherArrayList.get(2).getName());
+            Glide.with(mContext)
+                    .load(teacherArrayList.get(2).getImage())
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_teacher)
+                    .into(imvIcon3);
+        }
 
         if (mPresenter.isTeacher()) {
             if (!childArrayList.isEmpty()) {
                 childArrayList.clear();
             }
-            childArrayList.addAll(classInfo.getChildren());
-            childrenAdapter.notifyItemRangeInserted(0, classInfo.getChildren().size());
 
+            if (!classInfo.getChildren().isEmpty()) {
+                childArrayList.addAll(classInfo.getChildren());
+                childrenAdapter.notifyItemRangeInserted(0, classInfo.getChildren().size());
+            }
+            
             tvMember.setText(String.format(Locale.getDefault(),
                     getString(R.string.list_member), classInfo.getaClass().getNumberMember()));
             imvMember.setVisibility(View.VISIBLE);

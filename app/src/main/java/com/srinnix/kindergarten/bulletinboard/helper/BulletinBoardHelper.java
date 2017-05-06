@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -70,7 +70,7 @@ public class BulletinBoardHelper extends BaseHelper{
         mDisposable.add(mApiService.getListPostMember(token, idUser, timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
-                        return Observable.error(new NullPointerException());
+                        return Single.error(new NullPointerException());
                     }
 
                     if (response.result == ApiResponse.RESULT_OK) {
@@ -86,10 +86,10 @@ public class BulletinBoardHelper extends BaseHelper{
                                 i++;
                             }
                         }
-                        return Observable.just(listPost);
+                        return Single.just(listPost);
                     }
 
-                    return Observable.just(response.error);
+                    return Single.just(response.error);
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -110,14 +110,14 @@ public class BulletinBoardHelper extends BaseHelper{
         mDisposable.add(mApiService.getListPostGuest(timePrevPost)
                 .flatMap(response -> {
                     if (response == null) {
-                        return Observable.error(new NullPointerException());
+                        return Single.error(new NullPointerException());
                     }
 
                     if (response.result == ApiResponse.RESULT_OK) {
-                        return Observable.just(response.getData());
+                        return Single.just(response.getData());
                     }
 
-                    return Observable.just(response.error);
+                    return Single.just(response.error);
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

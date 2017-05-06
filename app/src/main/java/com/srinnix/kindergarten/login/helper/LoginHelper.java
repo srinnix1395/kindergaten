@@ -92,9 +92,4 @@ public class LoginHelper extends BaseHelper{
                 .doFinally(listener::onFinally)
                 .subscribe(listener::onSuccess, listener::onFail));
     }
-
-    public interface LoginListener {
-
-        void onFinally();
-    }
 }
