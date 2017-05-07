@@ -5,6 +5,7 @@ import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.HealthTotal;
+import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.model.Post;
@@ -14,7 +15,6 @@ import com.srinnix.kindergarten.model.Timetable;
 import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.ImageResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
@@ -145,8 +145,8 @@ public interface ApiService {
     Single<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
 
     @GET(AppConstant.API_GET_IMAGE_CLASS)
-    Single<ApiResponse<ImageResponse>> getImageClass(@Query("_id_class") String classId,
-                                                         @Query("time_prev_image") long timePrevImage);
+    Single<ApiResponse<ArrayList<Image>>> getImageClass(@Query("_id_class") String classId,
+                                                        @Query("time_prev_image") long timePrevImage);
 
     @GET(AppConstant.API_GET_TIMETABLE)
     Single<ApiResponse<Timetable>> getTimeTable(@Query("time") String time);

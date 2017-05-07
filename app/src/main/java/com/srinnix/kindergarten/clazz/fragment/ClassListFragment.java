@@ -63,7 +63,7 @@ public class ClassListFragment extends BaseFragment implements ClassListDelegate
                 PorterDuff.Mode.SRC_ATOP);
 
         if (!isFirst) {
-            mRvListClass.setVisibility(View.VISIBLE);
+            UiUtils.showView(mRvListClass);
             UiUtils.hideProgressBar(pbLoading);
         }
     }

@@ -20,9 +20,9 @@ public interface DetailChatDelegate extends BaseDelegate{
 
     void removeMessage(int position);
 
-    void changeDataMessage(int position, boolean isDisplayIconPayload);
-
     void changeDataMessage(int position, int statusMessagePayload);
 
     void setStatus(String status, int ic_state_online);
+
+    void addMessageWhileFriendTyping(Message chatItem);
 }

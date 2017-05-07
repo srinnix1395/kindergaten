@@ -39,6 +39,9 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         int position = parent.getChildAdapterPosition(view);
+        if (position < 0) {
+            return;
+        }
         if (adapter.getItemViewType(position) == ImageAdapter.VIEW_TYPE_LOADING) {
             return;
         }

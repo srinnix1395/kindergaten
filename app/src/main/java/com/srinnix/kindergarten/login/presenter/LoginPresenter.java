@@ -79,7 +79,9 @@ public class LoginPresenter extends BasePresenter {
                 }
 
                 SharedPreUtils.getInstance(mContext).saveUserData(response.getData().getUser(), response.getData().getChildren());
-                mLoginHelper.insertData(mRealm, response.getData().getChildren(), response.getData().getContacts(), mLoginDelegate);
+                mLoginHelper.insertData(mRealm, response.getData().getChildren(), response.getData().getContacts());
+                mLoginHelper.updateRegId(mContext, response.getData().getUser(), mLoginDelegate);
+
             }
 
             @Override

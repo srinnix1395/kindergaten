@@ -117,14 +117,14 @@ public class SharedPreUtils {
         return sharedPreferences.getString(AppConstant.TOKEN, "");
     }
 
-    public void setHasDeviceToken(boolean b) {
+    public void setServerHasDeviceToken(boolean b) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(AppConstant.HAS_DEVICE_TOKEN, b);
+        editor.putBoolean(AppConstant.SERVER_HAS_DEVICE_TOKEN, b);
         editor.apply();
     }
 
-    public boolean getHasDeviceToken() {
-        return sharedPreferences.getBoolean(AppConstant.HAS_DEVICE_TOKEN, false);
+    public boolean getServerHasDeviceToken() {
+        return sharedPreferences.getBoolean(AppConstant.SERVER_HAS_DEVICE_TOKEN, false);
     }
 
     public String getImage() {
@@ -143,6 +143,7 @@ public class SharedPreUtils {
             editor.remove(AppConstant._ID_CLASS);
         }
         editor.remove(AppConstant.IMAGE);
+        editor.remove(AppConstant.SERVER_HAS_DEVICE_TOKEN);
         editor.apply();
     }
 

@@ -119,4 +119,5 @@
     <string name="event">Sự kiện:</string>
     <string name="subject">Chủ đề:</string>
     <string name="subject_event">Chủ đề/\nsự kiện</string>
+    <string name="please_check_connection">Hãy kiểm tra lại kết nối!</string>
 </resources>

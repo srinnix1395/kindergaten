@@ -184,14 +184,14 @@ public class MainPresenter extends BasePresenter {
 
     public void updateRegId() {
         boolean isUserLoggedIn = SharedPreUtils.getInstance(mContext).isUserSignedIn();
-        boolean hasDeviceToken = SharedPreUtils.getInstance(mContext).getHasDeviceToken();
+        boolean hasDeviceToken = SharedPreUtils.getInstance(mContext).getServerHasDeviceToken();
 
         if (!hasDeviceToken && isUserLoggedIn && ServiceUtils.isNetworkAvailable(mContext)) {
             String token = SharedPreUtils.getInstance(mContext).getToken();
             String id = SharedPreUtils.getInstance(mContext).getUserID();
             String regID = FirebaseInstanceId.getInstance().getToken();
 
-            UpdateFirebaseRegId.updateRegId(mContext, mDisposable, token, id, regID);
+            UpdateFirebaseRegId.updateRegId(mContext, mDisposable, token, id, regID, null);
         }
     }
 
@@ -204,7 +204,7 @@ public class MainPresenter extends BasePresenter {
 
     public void removeUnUsedFragment(FragmentManager manager) {
         Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
-        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS ) {
+        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS) {
             manager.beginTransaction().remove(fragment).commit();
         }
     }

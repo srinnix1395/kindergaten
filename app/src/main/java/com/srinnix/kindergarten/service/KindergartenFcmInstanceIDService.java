@@ -21,12 +21,12 @@ public class KindergartenFcmInstanceIDService extends FirebaseInstanceIdService 
         String token = FirebaseInstanceId.getInstance().getToken();
         DebugLog.i("onTokenRefresh: " + token);
 
-        SharedPreUtils.getInstance(this).setHasDeviceToken(false);
+        SharedPreUtils.getInstance(this).setServerHasDeviceToken(false);
 
         boolean isUserLoggedIn = SharedPreUtils.getInstance(this).isUserSignedIn();
         if (isUserLoggedIn && ServiceUtils.isNetworkAvailable(this)) {
             String id = SharedPreUtils.getInstance(this).getUserID();
-            UpdateFirebaseRegId.updateRegId(this, mDisposable, token, id, token);
+            UpdateFirebaseRegId.updateRegId(this, mDisposable, token, id, token, null);
         }
     }
 

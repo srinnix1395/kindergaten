@@ -26,7 +26,6 @@ import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.ImageResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -176,9 +175,10 @@ public class DetailClassPresenter extends BasePresenter {
         } else {
             time = ((Image) arrayList.get(arrayList.size() - 2)).getCreatedAt();
         }
-        mHelper.getClassImage(classId, time, new ResponseListener<ImageResponse>() {
+
+        mHelper.getClassImage(classId, time, new ResponseListener<ArrayList<Image>>() {
             @Override
-            public void onSuccess(ApiResponse<ImageResponse> response) {
+            public void onSuccess(ApiResponse<ArrayList<Image>> response) {
                 if (response == null) {
                     onFail(new NullPointerException());
                     return;
@@ -190,7 +190,7 @@ public class DetailClassPresenter extends BasePresenter {
                 }
 
                 if (response.getData() != null) {
-                    mClassDelegate.onLoadImage(response.getData().getArrayList(), isLoadImageFirst);
+                    mClassDelegate.onLoadImage(response.getData(), isLoadImageFirst);
                     if (isLoadImageFirst) {
                         isLoadImageFirst = false;
                     }

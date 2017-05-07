@@ -54,7 +54,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof LoadingViewHolder) {
+        if (getItemViewType(position) == VIEW_TYPE_LOADING) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));
         } else {
             ((ImageClassViewHolder) holder).bindData(((Image) arrayList.get(position)));
@@ -68,7 +68,7 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        if (position == arrayList.size() - 1) {
+        if (arrayList.get(position) instanceof LoadingItem) {
             return VIEW_TYPE_LOADING;
         }
 

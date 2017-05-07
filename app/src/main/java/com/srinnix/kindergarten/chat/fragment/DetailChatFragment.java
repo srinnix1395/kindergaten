@@ -20,7 +20,6 @@ import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.adapter.ChatAdapter;
-import com.srinnix.kindergarten.chat.adapter.payload.ImagePayload;
 import com.srinnix.kindergarten.chat.adapter.payload.StatusMessagePayload;
 import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.presenter.DetailChatPresenter;
@@ -35,6 +34,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageTyping;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -106,14 +106,14 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         listMessage = new ArrayList<>();
 
-        rvChat.setVisibility(View.INVISIBLE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         rvChat.addOnScrollListener(new EndlessScrollUpListener(layoutManager) {
             @Override
             public void onLoadMore() {
-                if (isRecyclerScrollable(rvChat)) {
-                    mPresenter.onLoadMore(listMessage);
-                }
+                DebugLog.e("on load more");
+//                if (isRecyclerScrollable(rvChat)) {
+                mPresenter.onLoadMore(listMessage);
+//                }
             }
         });
         rvChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -148,7 +148,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         tvName.setText(name);
         tvStatus.setText(StringUtil.getStatus(mContext, status));
-        tvStatus.setCompoundDrawablesWithIntrinsicBounds(StringUtil.getDrawableState(status), 0, 0, 0);
     }
 
     @Override
@@ -233,11 +232,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     @Override
-    public void changeDataMessage(int position, boolean isDisplayIcon) {
-        adapter.notifyItemChanged(position, new ImagePayload(isDisplayIcon));
-    }
-
-    @Override
     public void changeDataMessage(int position, int statusMessagePayload) {
         adapter.notifyItemChanged(position, new StatusMessagePayload(statusMessagePayload));
     }
@@ -290,7 +284,6 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
     @Override
     public void addMessage(Message message, int position) {
-
         int size = listMessage.size();
 
         if (position == 0) {
@@ -307,6 +300,29 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         }
         listMessage.add(message);
         adapter.notifyItemInserted(size + 1);
+
+        rvChat.smoothScrollToPosition(listMessage.size() - 1);
+    }
+
+    @Override
+    public void addMessageWhileFriendTyping(Message chatItem) {
+        int size = listMessage.size();
+
+        if (size == 0) {
+            listMessage.add(chatItem.getCreatedAt());
+            listMessage.add(chatItem);
+            adapter.notifyItemRangeInserted(0, 2);
+            return;
+        }
+
+        if (listMessage.get(size - 1) instanceof Message &&
+                ((Message) listMessage.get(size - 1)).isTypingMessage()) {
+            listMessage.add(size - 1, chatItem);
+            adapter.notifyItemInserted(size - 1);
+        } else {
+            listMessage.add(chatItem);
+            adapter.notifyItemInserted(size);
+        }
 
         rvChat.smoothScrollToPosition(listMessage.size() - 1);
     }

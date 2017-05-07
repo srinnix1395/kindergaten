@@ -274,4 +274,24 @@ public class UiUtils {
             }
         }
     }
+
+    public static void hideView(View view) {
+        if (view == null) {
+            return;
+        }
+
+        if (view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    public static void showView(View view) {
+        if (view == null) {
+            return;
+        }
+
+        if (view.getVisibility() != View.VISIBLE) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
 }

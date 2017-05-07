@@ -3,10 +3,10 @@ package com.srinnix.kindergarten.clazz.helper;
 import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.model.Class;
+import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.StudyTimetable;
 import com.srinnix.kindergarten.model.Timetable;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.ImageResponse;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class ClassHelper extends BaseHelper{
         );
     }
 
-    public void getClassImage(String classId, long time, ResponseListener<ImageResponse> listener) {
+    public void getClassImage(String classId, long time, ResponseListener<ArrayList<Image>> listener) {
         if (listener == null) {
             return;
         }

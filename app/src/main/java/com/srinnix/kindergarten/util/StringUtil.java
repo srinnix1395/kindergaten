@@ -211,20 +211,6 @@ public class StringUtil {
         return sb.toString();
     }
 
-    public static int getDrawableState(int status) {
-        switch (status) {
-            case ChatConstant.STATUS_ONLINE: {
-                return R.drawable.ic_state_online;
-            }
-            case ChatConstant.STATUS_OFFLINE: {
-                return R.drawable.ic_state_offline;
-            }
-            default: {
-                return 0;
-            }
-        }
-    }
-
     public static String getTimeHealthIndex(String measureTime) {
         return measureTime.substring(measureTime.indexOf("/") + 1);
     }

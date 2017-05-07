@@ -122,7 +122,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
     @Override
     protected void initData() {
-        super.initData();
         childArrayList = new ArrayList<>();
         childrenAdapter = new ChildrenAdapter(childArrayList, ChildrenAdapter.TYPE_GRID
                 , position -> mPresenter.onClickChildViewHolder(childArrayList.get(position).getId()));
@@ -230,35 +229,35 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     @Subscribe
     public void onEventLoginSuccesfully(MessageLoginSuccessfully message) {
         if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_PARENTS) {
-            imvChat1.setVisibility(View.VISIBLE);
-            imvChat2.setVisibility(View.VISIBLE);
-            imvChat3.setVisibility(View.VISIBLE);
+            UiUtils.showView(imvChat1);
+            UiUtils.showView(imvChat2);
+            UiUtils.showView(imvChat3);
         }
 
-        tvLearnSchedule.setVisibility(View.VISIBLE);
+        UiUtils.showView(tvLearnSchedule);
 
         // TODO: 4/20/2017 get list children
     }
 
     @Subscribe
-    public void onEventLogOut(MessageLogout message){
+    public void onEventLogOut(MessageLogout message) {
         tvLearnSchedule.setVisibility(View.GONE);
 
-        if (imvChat1.getVisibility() == View.VISIBLE) {
-            imvChat1.setVisibility(View.GONE);
-            imvChat2.setVisibility(View.GONE);
-            imvChat3.setVisibility(View.GONE);
-        }
+        UiUtils.hideView(imvChat1);
+        UiUtils.hideView(imvChat2);
+        UiUtils.hideView(imvChat3);
 
         if (rvMember.getVisibility() == View.VISIBLE) {
-            imvMember.setVisibility(View.GONE);
-            tvMember.setVisibility(View.GONE);
-            rvMember.setVisibility(View.GONE);
-            viewLineMember.setVisibility(View.GONE);
+            UiUtils.hideView(imvMember);
+            UiUtils.hideView(tvMember);
+            UiUtils.hideView(rvMember);
+            UiUtils.hideView(viewLineMember);
 
             childArrayList.clear();
             childrenAdapter.notifyDataSetChanged();
         }
+
+        UiUtils.hideView(fabPost);
     }
 
     @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,
@@ -267,7 +266,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     void onClickTeachers(View view) {
         switch (view.getId()) {
             case R.id.layout_retry: {
-                relRetry.setVisibility(View.GONE);
+                UiUtils.hideView(relRetry);
                 UiUtils.showProgressBar(pbClass);
                 mPresenter.onClickRetry();
                 break;
@@ -309,21 +308,17 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
     }
 
     @Override
-    public void onLoadSuccess(ClassResponse classInfo) {
+    public void onLoadSuccess(ClassResponse data) {
         UiUtils.hideProgressBar(pbClass);
 
-        if (classInfo == null) {
+        if (data == null) {
             tvRetry.setText(R.string.error_common);
-            if (relRetry.getVisibility() != View.VISIBLE) {
-                relRetry.setVisibility(View.VISIBLE);
-            }
+            UiUtils.showView(relRetry);
             return;
         }
 
-        if (relRetry.getVisibility() == View.VISIBLE) {
-            relRetry.setVisibility(View.GONE);
-        }
-        layoutInfo.setVisibility(View.VISIBLE);
+        UiUtils.hideView(relRetry);
+        UiUtils.showView(layoutInfo);
 
         Glide.with(mContext)
                 .load(R.drawable.logo_school)
@@ -331,9 +326,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
                 .error(R.drawable.dummy_image)
                 .into(imvIconClass);
 
-        tvClassName.setText(classInfo.getaClass().getName());
+        tvClassName.setText(data.getaClass().getName());
 
-        ArrayList<Teacher> teacherArrayList = classInfo.getTeacherArrayList();
+        ArrayList<Teacher> teacherArrayList = data.getTeacherArrayList();
         if (teacherArrayList != null && !teacherArrayList.isEmpty()) {
             tvName1.setText(teacherArrayList.get(0).getName());
             Glide.with(mContext)
@@ -365,24 +360,28 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
                 childArrayList.clear();
             }
 
-            if (!classInfo.getChildren().isEmpty()) {
-                childArrayList.addAll(classInfo.getChildren());
-                childrenAdapter.notifyItemRangeInserted(0, classInfo.getChildren().size());
+            if (!data.getChildren().isEmpty()) {
+                childArrayList.addAll(data.getChildren());
+                childrenAdapter.notifyItemRangeInserted(0, data.getChildren().size());
             }
-            
+
             tvMember.setText(String.format(Locale.getDefault(),
-                    getString(R.string.list_member), classInfo.getaClass().getNumberMember()));
-            imvMember.setVisibility(View.VISIBLE);
-            tvMember.setVisibility(View.VISIBLE);
-            rvMember.setVisibility(View.VISIBLE);
-            viewLineMember.setVisibility(View.VISIBLE);
+                    getString(R.string.list_member), data.getaClass().getNumberMember()));
+            UiUtils.showView(imvMember);
+            UiUtils.showView(tvMember);
+            UiUtils.showView(rvMember);
+            UiUtils.showView(viewLineMember);
         } else {
-            imvMember.setVisibility(View.GONE);
-            tvMember.setVisibility(View.GONE);
-            rvMember.setVisibility(View.GONE);
-            viewLineMember.setVisibility(View.GONE);
+            UiUtils.hideView(imvMember);
+            UiUtils.hideView(tvMember);
+            UiUtils.hideView(rvMember);
+            UiUtils.hideView(viewLineMember);
         }
 
+        if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS &&
+                SharedPreUtils.getInstance(mContext).getClassId().equals(data.getaClass().getId())) {
+            UiUtils.showView(fabPost);
+        }
     }
 
     @Override
@@ -390,7 +389,7 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         UiUtils.hideProgressBar(pbClass);
 
         tvRetry.setText(resError);
-        relRetry.setVisibility(View.VISIBLE);
+        UiUtils.showView(relRetry);
     }
 
     @Override

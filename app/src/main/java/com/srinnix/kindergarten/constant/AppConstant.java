@@ -75,7 +75,7 @@ public class AppConstant {
     public static final int ACCOUNT_TEACHERS = 2;
     public static final int ACCOUNT_MANAGERS = 3;
 
-    public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
+    public static final String SERVER_HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
     public static final String URL_CAMERA = "URL_CAMERA";
 
     public static final String MALE = "Nam";

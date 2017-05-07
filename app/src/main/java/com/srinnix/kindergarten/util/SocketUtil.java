@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.util;
 
 import android.content.Context;
 
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
@@ -61,6 +62,7 @@ public class SocketUtil {
         }
     }
 
+
     private void onEventUserConnect(Object jsonObject, boolean isConnect) {
         if (isConnect) {
             DebugLog.i("User connected");
@@ -102,13 +104,19 @@ public class SocketUtil {
                 .subscribe(messageContactStatus -> EventBus.getDefault().postSticky(messageContactStatus));
     }
 
-    public void sendMessage(Message message) {
+    public void sendMessage(Context mContext, Message message) {
+        if (!mSocket.connected()) {
+            AlertUtils.showToast(mContext, R.string.please_check_connection);
+            return;
+        }
         JSONObject jsonMessage = JsonUtil.getJsonMessage(message);
         mSocket.emit(Socket.EVENT_MESSAGE, jsonMessage
                 , (Ack) args -> onServerReceived(args[0]));
     }
 
     private void onServerReceived(Object arg) {
+        final Message[] message = new Message[1];
+
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             JSONObject data = (JSONObject) arg;
@@ -119,24 +127,26 @@ public class SocketUtil {
                 e.printStackTrace();
             }
 
-            Message message = realm1.where(Message.class)
+            Message message1 = realm1.where(Message.class)
                     .equalTo("id", id)
                     .findFirst();
             try {
-                message.setId(data.getString(ChatConstant._ID));
-                message.setCreatedAt(data.getLong(ChatConstant.CREATED_AT));
-                if (message.getStatus() != ChatConstant.FRIEND_RECEIVED) {
-                    message.setStatus(ChatConstant.SERVER_RECEIVED);
+                message1.setId(data.getString(ChatConstant._ID));
+                message1.setCreatedAt(data.getLong(ChatConstant.CREATED_AT));
+                if (message1.getStatus() != ChatConstant.FRIEND_RECEIVED) {
+                    message1.setStatus(ChatConstant.SERVER_RECEIVED);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            if (EventBus.getDefault().hasSubscriberForEvent(MessageServerReceived.class)) {
-                EventBus.getDefault().post(new MessageServerReceived(message));
-            }
+            message[0] = realm1.copyFromRealm(message1);
         });
         realm.close();
+
+        if (EventBus.getDefault().hasSubscriberForEvent(MessageServerReceived.class)) {
+            EventBus.getDefault().post(new MessageServerReceived(message[0]));
+        }
     }
 
     private void onSendSuccessfully(Object[] args) {
@@ -154,7 +164,7 @@ public class SocketUtil {
                 message.setId(data.getString(ChatConstant._ID));
                 message.setStatus(ChatConstant.FRIEND_RECEIVED);
 
-                messageEdited[0] = new Message(message);
+                messageEdited[0] = realm1.copyFromRealm(message);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -189,7 +199,7 @@ public class SocketUtil {
                 e.printStackTrace();
             }
 
-            messageEdited[0] = new Message(message);
+            messageEdited[0] = realm1.copyFromRealm(message);
         });
         realm.close();
 

@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.chat.presenter;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
@@ -61,7 +62,7 @@ public class ChatListPresenter extends BasePresenter {
         ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
 
-        ((MainFragment) fragment.getParentFragment()).closeDrawer();
+        new Handler().postDelayed(() -> ((MainFragment) fragment.getParentFragment()).closeDrawer(), 300);
     }
 
     public void onDisconnect(ArrayList<Object> arrayList) {
