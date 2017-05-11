@@ -49,27 +49,27 @@ public interface ApiService {
     @POST(AppConstant.API_UPDATE_REG_ID)
     @FormUrlEncoded
     Single<ApiResponse<Boolean>> updateRegId(@Header("x-access-token") String header,
-                                                 @Field("_id") String id,
-                                                 @Field("reg_id") String regId);
+                                             @Field("_id") String id,
+                                             @Field("reg_id") String regId);
 
     @POST(AppConstant.API_RESET_PASSWORD)
     @FormUrlEncoded
     Single<ApiResponse<Boolean>> resetPassword(@Header("x-access-token") String token,
-                                                   @Field("_id_user") String id,
-                                                   @Field("email") String email,
-                                                   @Field("new_password") String newPassword,
-                                                   @Field("new_password_encrypted") String newPasswordEncrypted);
+                                               @Field("_id_user") String id,
+                                               @Field("email") String email,
+                                               @Field("new_password") String newPassword,
+                                               @Field("new_password_encrypted") String newPasswordEncrypted);
 
     @GET(AppConstant.API_GET_ACCOUNT_INFO)
     Single<ApiResponse<User>> getAccountInfo(@Header("x-access-token") String token,
-                                                 @Query("_id_user") String idUser);
+                                             @Query("_id_user") String idUser);
     //USER END
 
     //POST START
     @GET(AppConstant.API_GET_POST_MEMBER)
     Single<ApiResponse<PostResponse>> getListPostMember(@Header("x-access-token") String token,
-                                                            @Query("_id_user") String idUser,
-                                                            @Query("time_prev_post") long time);
+                                                        @Query("_id_user") String idUser,
+                                                        @Query("time_prev_post") long time);
 
     @GET(AppConstant.API_GET_POST_GUEST)
     Single<ApiResponse<ArrayList<Post>>> getListPostGuest(@Query("time_prev_post") long time);
@@ -77,59 +77,59 @@ public interface ApiService {
     @POST(AppConstant.API_LIKE_POST)
     @FormUrlEncoded
     Single<ApiResponse<LikeResponse>> likePost(@Header("x-access-token") String token,
-                                                   @Field("_id_user") String idUser,
-                                                   @Field("name_user") String name,
-                                                   @Field("image_user") String image,
-                                                   @Field("account_type") int accountType,
-                                                   @Field("_id_post") String idPost);
+                                               @Field("_id_user") String idUser,
+                                               @Field("name_user") String name,
+                                               @Field("image_user") String image,
+                                               @Field("account_type") int accountType,
+                                               @Field("_id_post") String idPost);
 
     @POST(AppConstant.API_UNLIKE_POST)
     @FormUrlEncoded
     Single<ApiResponse<LikeResponse>> unlikePost(@Header("x-access-token") String token,
-                                                     @Field("_id_user") String idUser,
-                                                     @Field("_id_post") String idPost);
+                                                 @Field("_id_user") String idUser,
+                                                 @Field("_id_post") String idPost);
 
     @GET(AppConstant.API_GET_LIST_NUMBER_LIKE)
     Single<ApiResponse<ArrayList<LikeModel>>> getListNumberLike(@Query("_id_post") String id,
-                                                                    @Query("time_prev_like") long timePrevLike);
+                                                                @Query("time_prev_like") long timePrevLike);
 
     @GET(AppConstant.API_GET_COMMENT)
     Single<ApiResponse<ArrayList<Comment>>> getComment(@Query("_id_post") String idPost,
-                                                           @Query("time_prev_comment") long timeLastComment);
+                                                       @Query("time_prev_comment") long timeLastComment);
 
     @POST(AppConstant.API_INSERT_COMMENT)
     @FormUrlEncoded
     Single<ApiResponse<Comment>> insertComment(@Header("x-access-token") String token,
-                                                   @Field("_id_post") String idPost,
-                                                   @Field("_id_user") String idUser,
-                                                   @Field("name_user") String name,
-                                                   @Field("image_user") String image,
-                                                   @Field("account_type") int accountType,
-                                                   @Field("comment") String comment);
+                                               @Field("_id_post") String idPost,
+                                               @Field("_id_user") String idUser,
+                                               @Field("name_user") String name,
+                                               @Field("image_user") String image,
+                                               @Field("account_type") int accountType,
+                                               @Field("comment") String comment);
 
     @GET(AppConstant.API_GET_NEW_POST)
     Single<ApiResponse<PostResponse>> getNewPost(@Header("x-access-token") String token,
-                                                     @Query("is_user_signed_in") boolean isUserSignIn,
-                                                     @Query("_id_user") String userId,
-                                                     @Query("time") long listId);
+                                                 @Query("is_user_signed_in") boolean isUserSignIn,
+                                                 @Query("_id_user") String userId,
+                                                 @Query("time") long listId);
 
     @GET(AppConstant.API_GET_IMPORTANT_POST)
     Single<ApiResponse<PostResponse>> getImportantPost(@Header("x-access-token") String token,
-                                                           @Query("_id_user") String userId,
-                                                           @Query("min_time") long minTime);
+                                                       @Query("_id_user") String userId,
+                                                       @Query("min_time") long minTime);
 
     @Multipart
     @POST(AppConstant.API_INSERT_POST)
     Single<ApiResponse<Post>> insertPost(@Header("x-access-token") String token,
-                                             @Part("content") RequestBody content,
-                                             @Part List<MultipartBody.Part> listImage,
-                                             @Part("noti_type") RequestBody notiType,
-                                             @Part("noti_range") RequestBody notiRangeBody);
+                                         @Part("content") RequestBody content,
+                                         @Part List<MultipartBody.Part> listImage,
+                                         @Part("noti_type") RequestBody notiType,
+                                         @Part("noti_range") RequestBody notiRangeBody);
 
     @GET(AppConstant.API_GET_DETAIL_POST)
     Single<ApiResponse<Post>> getDetailPost(@Header("x-access-token") String token,
-                                                @Query("_id_post") String idPost,
-                                                @Query("_id_user") String idUser);
+                                            @Query("_id_post") String idPost,
+                                            @Query("_id_user") String idUser);
 
     //POST END
 
@@ -139,7 +139,7 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_DETAIL_CLASS)
     Single<ApiResponse<ClassResponse>> getClassInfo(@Query("_id_class") String classId,
-                                                        @Query("is_teacher") boolean isTeacher);
+                                                    @Query("is_teacher") boolean isTeacher);
 
     @GET(AppConstant.API_GET_INFO_TEACHER)
     Single<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
@@ -153,23 +153,29 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_STUDY_TIMETABLE)
     Single<ApiResponse<ArrayList<StudyTimetable>>> getStudyTimeTable(@Query("time") String time,
-                                                                         @Query("group") String group);
+                                                                     @Query("group") String group);
+
+    @Multipart
+    @POST(AppConstant.API_INSERT_IMAGE)
+    Single<ApiResponse<ArrayList<Image>>> insertImages(@Header("x-access-token") String token,
+                                                       @Part("_id_class") RequestBody classID,
+                                                       @Part List<MultipartBody.Part> listImage);
     //CLASS END
 
     //CHILDREN START
     @GET(AppConstant.API_GET_INFO_CHILDREN)
     Single<ApiResponse<Child>> getInfoChildren(@Header("x-access-token") String header,
-                                                   @Query("_id_child") String id);
+                                               @Query("_id_child") String id);
 
     @GET(AppConstant.API_GET_HEALTH_INDEX_CHILDREN)
     Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(@Header("x-access-token") String token,
-                                                                        @Query("_id_child") String childId,
-                                                                        @Query("time_prev") long time);
+                                                                    @Query("_id_child") String childId,
+                                                                    @Query("time_prev") long time);
 
 
     @GET(AppConstant.API_GET_LIST_CHILDREN)
     Single<ApiResponse<ArrayList<Child>>> getListChildren(@Header("x-access-token") String token,
-                                                              @Query("_id_class") String classId);
+                                                          @Query("_id_class") String classId);
     //CHILDREN END
 
 

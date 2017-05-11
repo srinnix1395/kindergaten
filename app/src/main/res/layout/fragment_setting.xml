@@ -3,6 +3,21 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#fafafa"
+              android:clickable="true"
               android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_noti"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_item_high"
+        android:paddingEnd="@dimen/margin_horizontal"
+        android:paddingStart="@dimen/margin_horizontal"
+        android:text="@string/receive_important_notification"/>
 
 </LinearLayout>

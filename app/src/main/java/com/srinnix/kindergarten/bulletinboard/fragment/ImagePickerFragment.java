@@ -41,7 +41,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     @BindView(R.id.toolbar_image_picker)
     Toolbar toolbar;
 
-    @BindView(R.id.recycler_view_image)
+    @BindView(R.id.recyclerview_image)
     RecyclerView rvListImage;
 
     @BindView(R.id.progressbar_loading)
@@ -75,7 +75,6 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
                 mListImageSelected.add(imageLocal.getId());
             }
         }
-
     }
 
     @Override
@@ -96,7 +95,11 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
         toolbar.inflateMenu(R.menu.menu_image_picker_fragment);
         menuItemAdd = toolbar.getMenu().findItem(R.id.menu_item_add);
-        menuItemAdd.setVisible(false);
+        if (mListImageSelected.isEmpty()) {
+            menuItemAdd.setVisible(false);
+        } else {
+            menuItemAdd.setVisible(true);
+        }
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_camera: {

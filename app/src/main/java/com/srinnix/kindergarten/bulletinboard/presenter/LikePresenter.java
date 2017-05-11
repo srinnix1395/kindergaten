@@ -16,24 +16,21 @@ import com.srinnix.kindergarten.util.ServiceUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 4/4/2017.
  */
 
 public class LikePresenter extends BasePresenter {
     private BulletinBoardHelper mHelper;
-    private CompositeDisposable mDisposable;
     private LikeDelegate mLikeDelegate;
     private String idPost;
     private boolean isLoadFirst = true;
 
     public LikePresenter(BaseDelegate mDelegate) {
         super(mDelegate);
-        mDisposable = new CompositeDisposable();
-        mHelper = new BulletinBoardHelper(mDisposable);
         mLikeDelegate = (LikeDelegate) mDelegate;
+
+        mHelper = new BulletinBoardHelper(mDisposable);
     }
 
     @Override
@@ -50,7 +47,7 @@ public class LikePresenter extends BasePresenter {
 
     public void getListLike(long timePrevLike) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mLikeDelegate.onLoadFail(R.string.noInternetConnection, isLoadFirst);
+            mLikeDelegate.onLoadFail(R.string.cant_connect, isLoadFirst);
             return;
         }
 
@@ -84,13 +81,5 @@ public class LikePresenter extends BasePresenter {
 
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
     }
 }

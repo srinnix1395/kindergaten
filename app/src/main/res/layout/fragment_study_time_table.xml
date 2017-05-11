@@ -26,4 +26,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
+
+
+    <TextView
+        android:id="@+id/textview_no_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="10dp"
+        android:drawableTop="@drawable/ic_close_outline"
+        android:text="Chưa có thời khóa biểu"
+        android:visibility="gone"/>
 </RelativeLayout>

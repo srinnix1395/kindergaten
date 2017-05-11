@@ -2,9 +2,11 @@ package com.srinnix.kindergarten.clazz.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LoadingItem;
+import com.srinnix.kindergarten.model.MessageImagePostSuccessfully;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.util.DebugLog;
@@ -186,6 +189,38 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         });
         rvListImage.setLayoutManager(layoutManager);
         rvListImage.addOnScrollListener(new EndlessScrollDownListener(layoutManager) {
+            Handler handlerFab = new Handler();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    fabPost.animate()
+                            .alpha(1f)
+                            .translationY(0)
+                            .setInterpolator(new FastOutSlowInInterpolator())
+                            .setDuration(200)
+                            .start();
+                }
+            };
+
+            @Override
+            public void onStateChanged(int newState) {
+                super.onStateChanged(newState);
+                if (fabPost.getVisibility() != View.VISIBLE) {
+                    return;
+                }
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    handlerFab.removeCallbacks(runnable);
+                    fabPost.animate()
+                            .translationY(fabPost.getHeight() / 2)
+                            .alpha(0f)
+                            .setInterpolator(new FastOutSlowInInterpolator())
+                            .setDuration(200)
+                            .start();
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    handlerFab.postDelayed(runnable, 1000);
+                }
+            }
+
             @Override
             public void onLoadMore() {
                 DebugLog.i("onLoadMore() called");
@@ -258,6 +293,14 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         }
 
         UiUtils.hideView(fabPost);
+    }
+
+    @Subscribe
+    public void onEventPostSuccessfully(MessageImagePostSuccessfully message) {
+        mListImage.addAll(0, message.data);
+        mImageAdapter.notifyItemRangeInserted(0, message.data.size());
+
+        rvListImage.scrollToPosition(0);
     }
 
     @OnClick({R.id.rel_teacher_1, R.id.rel_teacher_2, R.id.rel_teacher_3,

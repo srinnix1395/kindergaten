@@ -25,7 +25,6 @@ import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
-import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 
 /**
@@ -36,7 +35,6 @@ public class LoginPresenter extends BasePresenter {
 
     private LoginDelegate mLoginDelegate;
     private LoginHelper mLoginHelper;
-    private CompositeDisposable mDisposable;
     private Realm mRealm;
 
     public LoginPresenter(BaseDelegate mDelegate) {
@@ -44,7 +42,6 @@ public class LoginPresenter extends BasePresenter {
         mLoginDelegate = (LoginDelegate) mDelegate;
         mRealm = Realm.getDefaultInstance();
 
-        mDisposable = new CompositeDisposable();
         mLoginHelper = new LoginHelper(mDisposable);
     }
 
@@ -112,9 +109,6 @@ public class LoginPresenter extends BasePresenter {
         super.onDestroy();
         if (!mRealm.isClosed()) {
             mRealm.close();
-        }
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
         }
     }
 }

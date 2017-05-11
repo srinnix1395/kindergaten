@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                android:clickable="true"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/textview_post"
+            style="?android:textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/post"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <ProgressBar
+            android:id="@+id/progressbar_loading"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:padding="4.5dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imageview_success"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal"
+            android:padding="4.5dp"
+            android:scaleType="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_mark"/>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_line"
+        android:layout_below="@+id/toolbar"
+        android:paddingBottom="2dp"/>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/layout_setting"
+        android:background="@color/colorDividerColor"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_setting"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_size"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/imageview_image"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_images_post"/>
+
+        <ImageView
+            android:id="@+id/imageview_video"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_toEndOf="@+id/imageview_image"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_video_post"/>
+
+        <ImageView
+            android:id="@+id/imageview_facebook"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="@dimen/item_size"
+            android:layout_alignParentEnd="true"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_facebook"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

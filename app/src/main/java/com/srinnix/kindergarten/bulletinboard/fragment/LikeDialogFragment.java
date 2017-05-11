@@ -164,7 +164,7 @@ public class LikeDialogFragment extends BottomSheetDialogFragment implements Lik
             UiUtils.hideProgressBar(mPbLoading);
 
             mTvRetry.setText(resError);
-            mRelRetry.setVisibility(View.VISIBLE);
+            UiUtils.showView(mRelRetry);
         } else if (!mListLike.isEmpty() && (mListLike.get(0) instanceof LoadingItem3State)) {
             ((LoadingItem3State) mListLike.get(0)).setLoadingState(LoadingItem3State.STATE_IDLE);
             mAdapter.notifyItemChanged(0);

@@ -19,8 +19,6 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 3/28/2017.
  */
@@ -28,7 +26,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class CommentPresenter extends BasePresenter {
     private CommentDelegate mCommentDelegate;
     private BulletinBoardHelper mHelper;
-    private CompositeDisposable mDisposable;
     private String idPost;
     private boolean isLoadFirst = true;
 
@@ -36,7 +33,6 @@ public class CommentPresenter extends BasePresenter {
         super(mDelegate);
         mCommentDelegate = (CommentDelegate) mDelegate;
 
-        mDisposable = new CompositeDisposable();
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
@@ -54,7 +50,7 @@ public class CommentPresenter extends BasePresenter {
 
     public void getComment(long time) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mCommentDelegate.onLoadCommentFail(R.string.noInternetConnection, isLoadFirst);
+            mCommentDelegate.onLoadCommentFail(R.string.cant_connect, isLoadFirst);
             return;
         }
 
@@ -163,14 +159,6 @@ public class CommentPresenter extends BasePresenter {
 
     public void onLongClickComment(Comment comment) {
         // TODO: 4/2/2017 long click
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
     }
 
     public String getIdPost() {

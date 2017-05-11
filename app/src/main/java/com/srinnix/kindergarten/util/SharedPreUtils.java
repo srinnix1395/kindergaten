@@ -109,6 +109,7 @@ public class SharedPreUtils {
         } else {
             editor.putString(AppConstant.IMAGE, !children.isEmpty() ? children.get(0).getImage() : "");
         }
+        editor.putBoolean(AppConstant.KEY_RECEIVE_NOTIFICATION, true);
         editor.putString(AppConstant.TOKEN, user.getToken());
         editor.apply();
     }
@@ -133,21 +134,21 @@ public class SharedPreUtils {
 
     public void clearUserData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(AppConstant.IS_USER_SIGNED_IN);
-        editor.remove(AppConstant.USER_ID);
-        editor.remove(AppConstant.EMAIL);
-        editor.remove(AppConstant.NAME);
-        editor.remove(AppConstant.USER_TYPE);
-        editor.remove(AppConstant.TOKEN);
-        if (sharedPreferences.contains(AppConstant._ID_CLASS)) {
-            editor.remove(AppConstant._ID_CLASS);
-        }
-        editor.remove(AppConstant.IMAGE);
-        editor.remove(AppConstant.SERVER_HAS_DEVICE_TOKEN);
+        editor.clear();
         editor.apply();
     }
 
     public String getEmail() {
         return sharedPreferences.getString(AppConstant.EMAIL, "");
+    }
+
+    public boolean getFlagReceiveNotification() {
+        return sharedPreferences.getBoolean(AppConstant.KEY_RECEIVE_NOTIFICATION, false);
+    }
+
+    public void setFlagReceiveNotification(boolean flag) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(AppConstant.KEY_RECEIVE_NOTIFICATION, flag);
+        editor.apply();
     }
 }

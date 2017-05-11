@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -42,12 +41,10 @@ import io.realm.RealmResults;
 public class ChatListPresenter extends BasePresenter {
 
     private ChatListDelegate mChatListDelegate;
-    private CompositeDisposable mDisposable;
 
     public ChatListPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mChatListDelegate = (ChatListDelegate) mDelegate;
-        mDisposable = new CompositeDisposable();
     }
 
     public void onClickItemChat(ChatListFragment fragment, Contact contact, String name, String urlImage) {

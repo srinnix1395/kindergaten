@@ -50,6 +50,10 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
     }
 
     private void handleNotificationPost(String data) throws JSONException {
+        if (!SharedPreUtils.getInstance(this).getFlagReceiveNotification()) {
+            return;
+        }
+
         JSONObject jsonObject = new JSONObject(data);
 
         String idPost = jsonObject.getString("_id");

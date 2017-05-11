@@ -48,6 +48,9 @@ public class StudyTimetableFragment extends BaseFragment implements StudyTimetab
     @BindView(R.id.textview_retry)
     TextView tvRetry;
 
+    @BindView(R.id.textview_no_content)
+    TextView tvNoContent;
+
     private ArrayList<Object> mListTimeTable;
     private StudyTimetableAdapter mAdapter;
     private StudyTimetablePresenter mPresenter;
@@ -74,9 +77,22 @@ public class StudyTimetableFragment extends BaseFragment implements StudyTimetab
             onBackPressed();
         });
 
-        pbLoading.getIndeterminateDrawable().setColorFilter(
-                ContextCompat.getColor(mContext, R.color.colorPrimary),
-                PorterDuff.Mode.SRC_ATOP);
+        if (isFirst) {
+            pbLoading.getIndeterminateDrawable().setColorFilter(
+                    ContextCompat.getColor(mContext, R.color.colorPrimary),
+                    PorterDuff.Mode.SRC_ATOP);
+        } else {
+            UiUtils.hideProgressBar(pbLoading);
+            if (mPresenter.isHasError()) {
+                UiUtils.showView(layoutRetry);
+            } else {
+                if (mListTimeTable.isEmpty()) {
+                    UiUtils.showView(tvNoContent);
+                } else {
+                    UiUtils.showView(rvTimetable);
+                }
+            }
+        }
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 9, GridLayoutManager.VERTICAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -110,6 +126,14 @@ public class StudyTimetableFragment extends BaseFragment implements StudyTimetab
 
     @Override
     public void onSuccessStudyTimetable(ArrayList<StudyTimetable> data) {
+        UiUtils.hideProgressBar(pbLoading);
+
+        if (data.isEmpty()) {
+            UiUtils.showView(tvNoContent);
+            UiUtils.hideView(rvTimetable);
+            return;
+        }
+
         mListTimeTable.add(null);
 
         for (int i = 0, size = data.size(); i < size; i++) {
@@ -139,7 +163,6 @@ public class StudyTimetableFragment extends BaseFragment implements StudyTimetab
 
         rvTimetable.scrollToPosition(0);
 
-        UiUtils.hideProgressBar(pbLoading);
         rvTimetable.setVisibility(View.VISIBLE);
     }
 

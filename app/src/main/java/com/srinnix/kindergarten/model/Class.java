@@ -24,6 +24,10 @@ public class Class implements Parcelable {
     @Expose
     private int numberMember;
 
+    @SerializedName("group")
+    @Expose
+    private String group;
+
     @SerializedName("_id_school")
     @Expose
     private String idSchool;
@@ -32,6 +36,7 @@ public class Class implements Parcelable {
         id = in.readString();
         name = in.readString();
         numberMember = in.readInt();
+        group = in.readString();
         idSchool = in.readString();
     }
 
@@ -59,8 +64,8 @@ public class Class implements Parcelable {
         return numberMember;
     }
 
-    public String getIdSchool() {
-        return idSchool;
+    public String getGroup() {
+        return group;
     }
 
     @Override
@@ -73,6 +78,7 @@ public class Class implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeInt(numberMember);
+        dest.writeString(group);
         dest.writeString(idSchool);
     }
 }

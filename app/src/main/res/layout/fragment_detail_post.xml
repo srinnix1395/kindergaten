@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -133,12 +133,12 @@
                 android:id="@+id/view_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_below="@+id/recycler_view_image"
+                android:layout_below="@+id/recyclerview_image"
                 android:layout_marginTop="@dimen/margin_vertical_post"
                 android:background="@color/colorDividerColor"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_image"
+                android:id="@+id/recyclerview_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/textview_content"/>

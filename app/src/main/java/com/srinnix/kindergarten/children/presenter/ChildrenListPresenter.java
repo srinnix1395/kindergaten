@@ -23,7 +23,6 @@ import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 
 /**
@@ -33,13 +32,12 @@ import io.realm.Realm;
 public class ChildrenListPresenter extends BasePresenter {
 
     private ChildrenHelper mHelper;
-    private CompositeDisposable mDisposable;
     private ChildrenListDelegate mChildrenDelegate;
 
     public ChildrenListPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mChildrenDelegate = (ChildrenListDelegate) mDelegate;
-        mDisposable = new CompositeDisposable();
+
         mHelper = new ChildrenHelper(mDisposable);
     }
 
@@ -84,7 +82,7 @@ public class ChildrenListPresenter extends BasePresenter {
 
     private void getListChildrenTeacher() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mChildrenDelegate.onLoadFail(R.string.noInternetConnection);
+            mChildrenDelegate.onLoadFail(R.string.cant_connect);
             return;
         }
 
@@ -124,14 +122,4 @@ public class ChildrenListPresenter extends BasePresenter {
             }
         });
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-        }
-    }
-
-
 }

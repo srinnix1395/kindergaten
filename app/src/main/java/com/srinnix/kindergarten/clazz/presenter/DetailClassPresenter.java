@@ -15,6 +15,7 @@ import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
+import com.srinnix.kindergarten.clazz.fragment.PostImageFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
 import com.srinnix.kindergarten.clazz.fragment.TimeTableFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
@@ -37,20 +38,16 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 2/16/2017.
  */
 
 public class DetailClassPresenter extends BasePresenter {
     private ClassDelegate mClassDelegate;
-    private CompositeDisposable mDisposable;
     private ClassHelper mHelper;
 
     private ClassResponse classResponse;
     private String classId;
-    private String group;
     private boolean isTeacher;
     private boolean isLoadImageFirst = true;
 
@@ -58,7 +55,6 @@ public class DetailClassPresenter extends BasePresenter {
         super(mClassDelegate);
         this.mClassDelegate = (ClassDelegate) mClassDelegate;
 
-        mDisposable = new CompositeDisposable();
         mHelper = new ClassHelper(mDisposable);
         isTeacher = SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS;
     }
@@ -67,7 +63,6 @@ public class DetailClassPresenter extends BasePresenter {
     public void getData(Bundle bundle) {
         super.getData(bundle);
         classId = bundle.getString(AppConstant.KEY_CLASS);
-        group = bundle.getString(AppConstant.KEY_GROUP);
     }
 
     @Override
@@ -78,7 +73,7 @@ public class DetailClassPresenter extends BasePresenter {
 
     private void getClassInfo() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mClassDelegate.onLoadError(R.string.noInternetConnection);
+            mClassDelegate.onLoadError(R.string.cant_connect);
             return;
         }
 
@@ -260,7 +255,7 @@ public class DetailClassPresenter extends BasePresenter {
         intent.putExtra(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_STUDY_TIMETABLE);
 
         Bundle bundle = new Bundle();
-        bundle.putString(AppConstant.KEY_GROUP, group);
+        bundle.putString(AppConstant.KEY_GROUP, classResponse.getaClass().getGroup());
         bundle.putString(AppConstant.KEY_TIME, time);
 
         intent.putExtras(bundle);
@@ -268,25 +263,12 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
     public void onClickLearnSchedule() {
-        Calendar calendar = Calendar.getInstance();
 
-        int month = calendar.get(Calendar.MONTH) + 1;
-        String time = month + "/" + calendar.get(Calendar.YEAR);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(AppConstant.KEY_TIME, time);
-
-        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle);
     }
 
     public void onClickPost() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
+        ViewManager.getInstance().addFragment(new PostImageFragment(), null,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 }

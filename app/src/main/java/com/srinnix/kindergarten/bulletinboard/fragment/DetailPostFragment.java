@@ -1,6 +1,8 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.ImageDetailPostAdapter;
@@ -16,6 +19,7 @@ import com.srinnix.kindergarten.bulletinboard.delegate.DetailPostDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.DetailPostPresenter;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
@@ -27,7 +31,7 @@ import butterknife.OnClick;
  * Created by anhtu on 5/2/2017.
  */
 
-public class DetailPostFragment extends BaseFragment implements DetailPostDelegate{
+public class DetailPostFragment extends BaseFragment implements DetailPostDelegate {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -46,8 +50,11 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     @BindView(R.id.textview_content)
     TextView tvContent;
 
-    @BindView(R.id.recycler_view_image)
+    @BindView(R.id.recyclerview_image)
     RecyclerView rvImage;
+
+    @BindView(R.id.scrollView)
+    NestedScrollView scrollView;
 
     private ImageDetailPostAdapter mAdapter;
     private ArrayList<Image> mListImage;
@@ -60,6 +67,19 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     }
 
     @Override
+    protected void initData() {
+        super.initData();
+
+        mListImage = new ArrayList<>();
+        mAdapter = new ImageDetailPostAdapter(mListImage, new OnClickViewHolderListener() {
+            @Override
+            public void onClick(int position) {
+
+            }
+        });
+    }
+
+    @Override
     protected void initChildView() {
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle("Thông báo");
@@ -68,8 +88,8 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
             onBackPressed();
         });
 
-//        mAdapter = new RecyclerViewAdapter<>(new ImageDetailPostViewHolder(), mListImage, R.layout.image)
-
+        rvImage.setLayoutManager(new LinearLayoutManager(mContext));
+        rvImage.setAdapter(mAdapter);
     }
 
     @Override
@@ -84,7 +104,7 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     }
 
     @OnClick(R.id.layout_retry)
-    public void onClickRetry(){
+    public void onClickRetry() {
         layoutRetry.setVisibility(View.GONE);
 
         UiUtils.showProgressBar(pbLoading);
@@ -93,7 +113,20 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
 
     @Override
     public void onSuccess(Post data) {
+        UiUtils.hideProgressBar(pbLoading);
 
+        UiUtils.showView(scrollView);
+
+        tvContent.setText(data.getContent());
+        tvCreatedAt.setText(StringUtil.getTimeAgo(mContext, data.getCreatedAt()));
+
+        if (data.getListImage().isEmpty()) {
+            UiUtils.hideView(rvImage);
+        } else {
+            UiUtils.showView(rvImage);
+            mListImage.addAll(data.getListImage());
+            mAdapter.notifyItemRangeInserted(0, data.getListImage().size());
+        }
     }
 
     @Override

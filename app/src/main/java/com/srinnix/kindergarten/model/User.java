@@ -63,4 +63,5 @@ public class User {
     public String getImage() {
         return image;
     }
+
 }

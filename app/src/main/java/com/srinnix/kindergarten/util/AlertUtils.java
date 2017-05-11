@@ -62,10 +62,10 @@ public class AlertUtils {
         return dialog;
     }
 
-    public static void showDialogCancelPost(Context mContext, DialogInterface.OnClickListener listener) {
+    public static void showDialogCancelPost(Context mContext, int resMessage, DialogInterface.OnClickListener listener) {
         AlertDialog dialog1 = new AlertDialog.Builder(mContext, R.style.CancelPostDialogStyle)
                 .setTitle(R.string.confirm)
-                .setMessage(R.string.message_cancel_post)
+                .setMessage(resMessage)
                 .setCancelable(false)
                 .setPositiveButton(R.string.next, listener)
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())

@@ -10,8 +10,6 @@ import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.StringUtil;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 4/18/2017.
  */
@@ -19,13 +17,12 @@ import io.reactivex.disposables.CompositeDisposable;
 public class ForgotPasswordPresenter extends BasePresenter {
 
     private LoginHelper mHelper;
-    private CompositeDisposable mDisposable;
     private ForgotPasswordDelegate mForgotpasswordDelegate;
 
     public ForgotPasswordPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mForgotpasswordDelegate = (ForgotPasswordDelegate) mDelegate;
-        mDisposable = new CompositeDisposable();
+
         mHelper = new LoginHelper(mDisposable);
     }
 
@@ -63,13 +60,5 @@ public class ForgotPasswordPresenter extends BasePresenter {
 
                     }
                 });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
     }
 }

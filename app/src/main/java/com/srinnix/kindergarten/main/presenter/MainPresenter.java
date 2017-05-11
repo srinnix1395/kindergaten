@@ -28,8 +28,6 @@ import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
-import io.reactivex.disposables.Disposable;
-
 /**
  * Created by DELL on 2/4/2017.
  */
@@ -37,7 +35,6 @@ import io.reactivex.disposables.Disposable;
 public class MainPresenter extends BasePresenter {
 
     private boolean isFirstOpenMenuChat = true;
-    private Disposable mDisposable;
     private int currentPosition = 5;
     private int accountType;
 
@@ -212,14 +209,6 @@ public class MainPresenter extends BasePresenter {
     public void onClickAccount() {
         ViewManager.getInstance().addFragment(new AccountFragment(), null,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-        }
     }
 
 }

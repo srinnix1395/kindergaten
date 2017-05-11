@@ -14,14 +14,11 @@ import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 5/4/2017.
  */
 
 public class TimeTablePresenter extends BasePresenter {
-    protected CompositeDisposable mDisposable;
     protected ClassHelper mHelper;
     private TimeTableDelegate mTimeTableDelegate;
 
@@ -30,7 +27,7 @@ public class TimeTablePresenter extends BasePresenter {
     public TimeTablePresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         initDelegate();
-        mDisposable = new CompositeDisposable();
+
         mHelper = new ClassHelper(mDisposable);
     }
 
@@ -53,7 +50,7 @@ public class TimeTablePresenter extends BasePresenter {
 
     public void getTimetable() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mTimeTableDelegate.onFail(R.string.noInternetConnection);
+            mTimeTableDelegate.onFail(R.string.cant_connect);
             return;
         }
 
@@ -84,14 +81,6 @@ public class TimeTablePresenter extends BasePresenter {
 
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
     }
 
     public String getTime() {

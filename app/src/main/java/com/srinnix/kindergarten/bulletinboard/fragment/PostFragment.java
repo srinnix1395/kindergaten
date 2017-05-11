@@ -103,27 +103,6 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         }
     }
 
-    public void setVisibility(int resId, int visibility) {
-        switch (resId) {
-            case R.id.textview_post: {
-                tvPost.setVisibility(visibility);
-                break;
-            }
-            case R.id.progressbar_loading: {
-                if (visibility == View.VISIBLE) {
-                    UiUtils.showProgressBar(pbLoading);
-                } else {
-                    UiUtils.hideProgressBar(pbLoading);
-                }
-                break;
-            }
-            case R.id.imageview_success: {
-                imvSuccess.setVisibility(visibility);
-                break;
-            }
-        }
-    }
-
     public void gotoSettingFragment() {
         viewPager.setCurrentItem(1, true);
     }
@@ -137,7 +116,7 @@ public class PostFragment extends BaseFragment implements PostDelegate {
 
         if (contentPostFragment.getContentPost().length() > 0 ||
                 !contentPostFragment.getListImage().isEmpty()) {
-            AlertUtils.showDialogCancelPost(mContext, (dialog, which) -> {
+            AlertUtils.showDialogCancelPost(mContext, R.string.message_cancel_post, (dialog, which) -> {
                 PostFragment.super.onBackPressed();
             });
             return;
@@ -149,13 +128,13 @@ public class PostFragment extends BaseFragment implements PostDelegate {
     @Override
     public void onFail() {
         UiUtils.hideProgressBar(pbLoading);
-        tvPost.setVisibility(View.VISIBLE);
+        UiUtils.showView(tvPost);
     }
 
     @Override
     public void onSuccess(Post data) {
         UiUtils.hideProgressBar(pbLoading);
-        imvSuccess.setVisibility(View.VISIBLE);
+        UiUtils.showView(imvSuccess);
 
         EventBus.getDefault().post(new MessagePostSuccessfully(data));
         super.onBackPressed();

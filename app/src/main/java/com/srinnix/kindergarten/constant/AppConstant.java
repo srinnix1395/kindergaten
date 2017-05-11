@@ -41,6 +41,7 @@ public class AppConstant {
     public static final String API_GET_IMAGE_CLASS = "class/getImage";
     public static final String API_GET_TIMETABLE = "class/getTimetable";
     public static final String API_GET_STUDY_TIMETABLE = "class/getStudyTimetable";
+    public static final String API_INSERT_IMAGE = "class/insertImage";
 
     public static final String API_GET_MESSAGE = "chat/message";
 
@@ -96,6 +97,7 @@ public class AppConstant {
     public static final String KEY_GROUP = "KEY_GROUP";
     public static final String KEY_TIME = "KEY_TIME";
     public static final String KEY_FRAGMENT = "KEY_FRAGMENT";
+    public static final String KEY_RECEIVE_NOTIFICATION = "KEY_RECEIVE_NOTIFICATION";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -122,4 +124,9 @@ public class AppConstant {
     public static final int NOTIFICATION_ALL = 1;
     public static final int NOTIFICATION_PARENT = 2;
     public static final int NOTIFICATION_TEACHER = 3;
+
+    public static final String GROUP_TINY = "Nhà trẻ";
+    public static final String GROUP_SMALL = "Mẫu giáo bé";
+    public static final String GROUP_MEDIUM = "Mẫu giáo nhỡ";
+    public static final String GROUP_BIG = "Mẫu giáo lớn";
 }

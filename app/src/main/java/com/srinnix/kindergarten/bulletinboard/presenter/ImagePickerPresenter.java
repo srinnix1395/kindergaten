@@ -29,8 +29,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 4/25/2017.
  */
@@ -44,14 +42,12 @@ public class ImagePickerPresenter extends BasePresenter {
     private int numberImage = 0;
     private ImagePickerDelegate mImagePickerDelegate;
     private ImagePickerHelper mHelper;
-    private CompositeDisposable mDisposable;
     private File fileCapture;
 
     public ImagePickerPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mImagePickerDelegate = (ImagePickerDelegate) mDelegate;
 
-        mDisposable = new CompositeDisposable();
         mHelper = new ImagePickerHelper(mDisposable);
     }
 
@@ -152,6 +148,11 @@ public class ImagePickerPresenter extends BasePresenter {
     }
 
     public void onClickImage(ArrayList<ImageLocal> mListImage, int position) {
+        if (numberImage == 10) {
+            AlertUtils.showToast(mContext, "Số ảnh tối đa là 10 ảnh");
+            return;
+        }
+
         ImageLocal imageLocal = mListImage.get(position);
 
         if (imageLocal.isSelected()) {
@@ -178,14 +179,4 @@ public class ImagePickerPresenter extends BasePresenter {
             imagePickerFragment.onBackPressed();
         }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
-
-
 }

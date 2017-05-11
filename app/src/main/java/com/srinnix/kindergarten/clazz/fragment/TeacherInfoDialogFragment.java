@@ -55,9 +55,6 @@ public class TeacherInfoDialogFragment extends BottomSheetDialogFragment {
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
 
-    @BindView(R.id.imageview_retry)
-    ImageView imvRetry;
-
     @BindView(R.id.textview_retry)
     TextView tvRetry;
 
@@ -102,7 +99,7 @@ public class TeacherInfoDialogFragment extends BottomSheetDialogFragment {
 
     private void getTeacherInfo(){
         if (!ServiceUtils.isNetworkAvailable(getContext())) {
-            handleException(R.string.noInternetConnection);
+            handleException(R.string.cant_connect);
             return;
         }
 
@@ -132,14 +129,12 @@ public class TeacherInfoDialogFragment extends BottomSheetDialogFragment {
         UiUtils.hideProgressBar(pbLoading);
 
         tvRetry.setText(resError);
-        tvRetry.setVisibility(View.VISIBLE);
-        imvRetry.setVisibility(View.VISIBLE);
+        UiUtils.showView(relRetry);
     }
 
     @OnClick(R.id.layout_retry)
     public void onClickRetry() {
-        tvRetry.setVisibility(View.GONE);
-        imvRetry.setVisibility(View.GONE);
+        UiUtils.hideView(relRetry);
         UiUtils.showProgressBar(pbLoading);
 
         getTeacherInfo();

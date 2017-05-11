@@ -12,7 +12,8 @@ import com.srinnix.kindergarten.R;
  */
 
 public class SquareItemLayout extends FrameLayout {
-    private static final int TYPE_WIDTH = 1;
+    public static final int TYPE_WIDTH = 1;
+    public static final int TYPE_HEIGHT = 2;
 
     private int measureType;
 
@@ -29,6 +30,11 @@ public class SquareItemLayout extends FrameLayout {
 
     public SquareItemLayout(Context context) {
         super(context);
+    }
+
+    public void setMeasureType(int measureType) {
+        this.measureType = measureType;
+        requestLayout();
     }
 
     @Override

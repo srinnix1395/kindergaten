@@ -16,21 +16,18 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 5/1/2017.
  */
 
 public class PostPresenter extends BasePresenter {
-    private CompositeDisposable mDisposable;
     private BulletinBoardHelper mHelper;
     private PostDelegate mPostDelegate;
 
     public PostPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mPostDelegate = (PostDelegate) mDelegate;
-        mDisposable = new CompositeDisposable();
+
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
@@ -70,13 +67,5 @@ public class PostPresenter extends BasePresenter {
 
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
     }
 }

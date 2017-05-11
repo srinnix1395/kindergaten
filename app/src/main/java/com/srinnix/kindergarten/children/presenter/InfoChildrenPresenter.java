@@ -22,15 +22,12 @@ import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 2/21/2017.
  */
 
 public class InfoChildrenPresenter extends BasePresenter {
 
-    private CompositeDisposable mDisposable;
     private ChildrenDelegate mChildrenDelegate;
     private ChildrenHelper mHelper;
     private String idChild;
@@ -40,7 +37,7 @@ public class InfoChildrenPresenter extends BasePresenter {
     public InfoChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
         this.mChildrenDelegate = (ChildrenDelegate) mChildrenDelegate;
-        mDisposable = new CompositeDisposable();
+
         mHelper = new ChildrenHelper(mDisposable);
     }
 
@@ -54,7 +51,7 @@ public class InfoChildrenPresenter extends BasePresenter {
 
     public void getInfoChildren() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mChildrenDelegate.onLoadFail(R.string.noInternetConnection);
+            mChildrenDelegate.onLoadFail(R.string.cant_connect);
             return;
         }
 
@@ -172,14 +169,4 @@ public class InfoChildrenPresenter extends BasePresenter {
         intent.putExtras(bundle);
         mContext.startActivity(intent);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
-
-
 }

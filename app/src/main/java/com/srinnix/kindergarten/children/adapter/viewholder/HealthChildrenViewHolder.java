@@ -185,12 +185,12 @@ public class HealthChildrenViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (healthTotal.getResult() != AppConstant.UNSPECIFIED && healthTotal.getWeight() == AppConstant.UNSPECIFIED) {
-            imvShowMore.setVisibility(View.GONE);
-            layoutHealthContent.setVisibility(View.VISIBLE);
+            UiUtils.hideView(imvShowMore);
+            UiUtils.showView(layoutHealthContent);
             canExpand = false;
         } else {
-            imvShowMore.setVisibility(View.VISIBLE);
-            layoutHealthContent.setVisibility(View.GONE);
+            UiUtils.showView(imvShowMore);
+            UiUtils.hideView(layoutHealthContent);
             canExpand = true;
         }
 

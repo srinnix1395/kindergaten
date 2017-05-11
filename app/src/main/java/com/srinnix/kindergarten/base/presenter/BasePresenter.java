@@ -8,6 +8,8 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.login.fragment.LoginFragment;
 import com.srinnix.kindergarten.util.ViewManager;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 /**
  * Created by DELL on 2/3/2017.
  */
@@ -15,10 +17,12 @@ import com.srinnix.kindergarten.util.ViewManager;
 public class BasePresenter {
 	protected Context mContext;
 	protected BaseDelegate mDelegate;
-	
+	protected CompositeDisposable mDisposable;
+
 	public BasePresenter(BaseDelegate mDelegate) {
-		this.mDelegate = mDelegate;
-	}
+        this.mDelegate = mDelegate;
+        mDisposable = new CompositeDisposable();
+    }
 	
 	public void setContext(Context mContext) {
 		this.mContext = mContext;
@@ -29,7 +33,9 @@ public class BasePresenter {
 	}
 
     public void onDestroy() {
-
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.clear();
+        }
     }
 
     public void onStart() {
@@ -47,6 +53,10 @@ public class BasePresenter {
 
     public void onHiddenChanged(boolean hidden) {
 
+    }
+
+    public CompositeDisposable getDisposable() {
+        return mDisposable;
     }
 
 

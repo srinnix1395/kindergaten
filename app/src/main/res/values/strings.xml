@@ -90,8 +90,8 @@
     <string name="study_time_table">•  Thời khóa biểu</string>
     <string name="learn_schedule">•  Lịch học năng khiếu</string>
     <string name="edit">Sửa</string>
-    <string name="weight">cân nặng của trẻ</string>
-    <string name="height">chiều cao của trẻ</string>
+    <string name="weight">Cân nặng của trẻ</string>
+    <string name="height">Chiều cao của trẻ</string>
     <string name="normal">Bình thường</string>
     <string name="post">Đăng</string>
     <string name="post_content">Nội dung bản tin</string>
@@ -120,4 +120,6 @@
     <string name="subject">Chủ đề:</string>
     <string name="subject_event">Chủ đề/\nsự kiện</string>
     <string name="please_check_connection">Hãy kiểm tra lại kết nối!</string>
+    <string name="receive_important_notification">Nhận thông báo quan trọng</string>
+    <string name="message_cancel_images">Những hình ảnh bạn chọn sẽ không được lưu?</string>
 </resources>

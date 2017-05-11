@@ -36,7 +36,11 @@ public class ViewManager {
         setFragmentManager(mActivity.getSupportFragmentManager());
     }
 
-    public AppCompatActivity getActivity(){
+    public FragmentManager getFragmentManager() {
+        return mFragmentManager;
+    }
+
+    public AppCompatActivity getActivity() {
         return mActivity;
     }
 
@@ -65,7 +69,7 @@ public class ViewManager {
             fragment.setArguments(bundle);
             String nameFragment = fragment.getClass().getName();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.add(R.id.layout_content, fragment);
+            ft.add(R.id.layout_content, fragment, nameFragment);
             ft.addToBackStack(nameFragment);
             ft.commit();
         }
@@ -84,7 +88,6 @@ public class ViewManager {
         }
         return null;
     }
-
 
 
 }

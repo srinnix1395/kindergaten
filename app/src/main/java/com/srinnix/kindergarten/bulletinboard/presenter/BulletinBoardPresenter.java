@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -46,13 +45,11 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     private BulletinBoardDelegate mBoardDelegate;
     private BulletinBoardHelper mHelper;
-    private CompositeDisposable mDisposable;
     private boolean isLoadFirst = true;
 
     public BulletinBoardPresenter(BaseDelegate delegate) {
         super(delegate);
         mBoardDelegate = (BulletinBoardDelegate) delegate;
-        mDisposable = new CompositeDisposable();
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
@@ -409,13 +406,4 @@ public class BulletinBoardPresenter extends BasePresenter {
         ViewManager.getInstance().addFragment(new PostFragment(), null,
                 R.anim.translate_down_to_up, R.anim.translate_up_to_down);
     }
-
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
-
-
 }

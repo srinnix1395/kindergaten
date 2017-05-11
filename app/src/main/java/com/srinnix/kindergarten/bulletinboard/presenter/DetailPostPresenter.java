@@ -15,8 +15,6 @@ import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 /**
  * Created by anhtu on 5/2/2017.
  */
@@ -26,13 +24,11 @@ public class DetailPostPresenter extends BasePresenter {
     private String idPost;
     private BulletinBoardHelper mHelper;
     private DetailPostDelegate mDetailPostDelegate;
-    private CompositeDisposable mDisposable;
 
     public DetailPostPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mDetailPostDelegate = (DetailPostDelegate) mDelegate;
 
-        mDisposable = new CompositeDisposable();
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
@@ -50,7 +46,7 @@ public class DetailPostPresenter extends BasePresenter {
 
     public void getDetailPost() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mDetailPostDelegate.onFail(R.string.noInternetConnection);
+            mDetailPostDelegate.onFail(R.string.cant_connect);
             return;
         }
 
@@ -86,13 +82,5 @@ public class DetailPostPresenter extends BasePresenter {
 
             }
         });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
     }
 }

@@ -82,9 +82,9 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
             mBasePresenter.getData(bundle);
         }
 
-//        if (isFirst) {
-        initData();
-//        }
+        if (isFirst) {
+            initData();
+        }
 
         initChildView();
 

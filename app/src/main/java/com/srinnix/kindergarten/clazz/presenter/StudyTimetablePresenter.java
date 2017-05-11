@@ -22,6 +22,7 @@ public class StudyTimetablePresenter extends TimeTablePresenter {
     private StudyTimetableDelegate mStudyTimetableDelegate;
 
     private String group;
+    private boolean hasError = false;
 
     public StudyTimetablePresenter(BaseDelegate mDelegate) {
         super(mDelegate);
@@ -46,29 +47,33 @@ public class StudyTimetablePresenter extends TimeTablePresenter {
 
     public void getStudyTimetable() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mStudyTimetableDelegate.onFail(R.string.noInternetConnection);
+            hasError = true;
+            mStudyTimetableDelegate.onFail(R.string.cant_connect);
             return;
         }
 
-        group = "Mầm";//todo get mầm
         mHelper.getStudyTimeTable(time, group, new ResponseListener<ArrayList<StudyTimetable>>() {
             @Override
             public void onSuccess(ApiResponse<ArrayList<StudyTimetable>> response) {
                 if (response == null) {
+                    hasError = true;
                     onFail(new NullPointerException());
                     return;
                 }
 
                 if (response.result == ApiResponse.RESULT_NG) {
+                    hasError = true;
                     ErrorUtil.handleErrorApi(mContext, response.error);
                     return;
                 }
 
+                hasError = false;
                 mStudyTimetableDelegate.onSuccessStudyTimetable(response.getData());
             }
 
             @Override
             public void onFail(Throwable throwable) {
+                hasError = true;
                 ErrorUtil.handleException(throwable);
                 mStudyTimetableDelegate.onFail(R.string.error_common);
             }
@@ -82,5 +87,9 @@ public class StudyTimetablePresenter extends TimeTablePresenter {
 
     public String getGroup() {
         return group;
+    }
+
+    public boolean isHasError() {
+        return hasError;
     }
 }

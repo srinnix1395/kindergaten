@@ -44,7 +44,6 @@ public class DetailChatPresenter extends BasePresenter {
 
     private DetailChatHelper mHelper;
     private Realm mRealm;
-    private CompositeDisposable mDisposable;
     private DetailChatDelegate mDetailChatDelegate;
     private boolean isLoadingDataFirst = true;
 
@@ -279,9 +278,7 @@ public class DetailChatPresenter extends BasePresenter {
 
     @Override
     public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
+        super.onDestroy();
 
         if (!mRealm.isClosed()) {
             mRealm.close();
