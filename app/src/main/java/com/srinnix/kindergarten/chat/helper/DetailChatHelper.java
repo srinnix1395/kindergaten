@@ -72,6 +72,7 @@ public class DetailChatHelper extends BaseHelper{
                         listener.onLoadMessageFail(throwable);
                     }
                 });
+
         mDisposable.add(disposable);
     }
 

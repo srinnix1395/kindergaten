@@ -1,13 +1,11 @@
 package com.srinnix.kindergarten.bulletinboard.presenter;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.model.ImageLocal;
-import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -40,32 +38,22 @@ public class PostPresenter extends BasePresenter {
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mHelper.post(token, content, mListImage, notificationType, notificationRange, new ResponseListener<Post>() {
-            @Override
-            public void onSuccess(ApiResponse<Post> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+        mDisposable.add(mHelper.post(token, content, mListImage, notificationType, notificationRange)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        return;
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mPostDelegate.onFail();
+                    }
+
+                    mPostDelegate.onSuccess(response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mPostDelegate.onFail();
-                }
-
-                mPostDelegate.onSuccess(response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mPostDelegate.onFail();
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
 }

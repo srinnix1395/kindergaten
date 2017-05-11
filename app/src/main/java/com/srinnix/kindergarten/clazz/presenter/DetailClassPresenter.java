@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.activity.HorizontalActivity;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
@@ -77,23 +76,11 @@ public class DetailClassPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getClassInfo(classId, isTeacher, new ResponseListener<ClassResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<ClassResponse> response) {
-                handleResponseClassInfo(response);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(throwable);
-                mClassDelegate.onLoadError(R.string.error_common);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+        mDisposable.add(mHelper.getClassInfo(classId, isTeacher)
+                .subscribe(this::handleResponseClassInfo, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mClassDelegate.onLoadError(R.string.error_common);
+                }));
     }
 
     private void handleResponseClassInfo(ApiResponse<ClassResponse> response) {
@@ -171,37 +158,25 @@ public class DetailClassPresenter extends BasePresenter {
             time = ((Image) arrayList.get(arrayList.size() - 2)).getCreatedAt();
         }
 
-        mHelper.getClassImage(classId, time, new ResponseListener<ArrayList<Image>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<Image>> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
-
-                if (response.getData() != null) {
-                    mClassDelegate.onLoadImage(response.getData(), isLoadImageFirst);
-                    if (isLoadImageFirst) {
-                        isLoadImageFirst = false;
+        mDisposable.add(mHelper.getClassImage(classId, time)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        return;
                     }
-                }
-            }
 
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-            }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    if (response.getData() != null) {
+                        mClassDelegate.onLoadImage(response.getData(), isLoadImageFirst);
+                        if (isLoadImageFirst) {
+                            isLoadImageFirst = false;
+                        }
+                    }
+                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
     public boolean isTeacher() {
@@ -269,6 +244,6 @@ public class DetailClassPresenter extends BasePresenter {
 
     public void onClickPost() {
         ViewManager.getInstance().addFragment(new PostImageFragment(), null,
-                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+                R.anim.translate_down_to_up, R.anim.translate_up_to_down);
     }
 }

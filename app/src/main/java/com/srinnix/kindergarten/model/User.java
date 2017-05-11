@@ -20,13 +20,29 @@ public class User {
     @Expose
     private String name;
 
+    @SerializedName("DOB")
+    @Expose
+    private String dob;
+
+    @SerializedName("gender")
+    @Expose
+    private String gender;
+
     @SerializedName("account_type")
     @Expose
     private int accountType;
 
+    @SerializedName("phone_number")
+    @Expose
+    private String phoneNumber;
+
     @SerializedName("_id_class")
     @Expose
     private String idClass;
+
+    @SerializedName("class_name")
+    @Expose
+    private String className;
 
     @SerializedName("image")
     @Expose
@@ -64,4 +80,19 @@ public class User {
         return image;
     }
 
+    public String getDob() {
+        return dob;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getClassName() {
+        return className;
+    }
 }

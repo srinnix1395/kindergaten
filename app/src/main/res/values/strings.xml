@@ -81,7 +81,7 @@
     <string name="tooth">• Răng:</string>
     <string name="type_result">sức khỏe loại %d</string>
     <string name="password_reset">Hãy kiểm tra email và\\nđăng nhập lại</string>
-    <string name="account">Tài khoản</string>
+    <string name="account_type">Tài khoản</string>
     <string name="learn_and_play_time">Lịch sinh hoạt</string>
     <string name="timetable">•  Thời gian biểu</string>
     <string name="timetable1">Thời gian biểu %s</string>
@@ -89,7 +89,7 @@
     <string name="group">Khối %s</string>
     <string name="study_time_table">•  Thời khóa biểu</string>
     <string name="learn_schedule">•  Lịch học năng khiếu</string>
-    <string name="edit">Sửa</string>
+    <string name="edit">Sửa thông tin cá nhân</string>
     <string name="weight">Cân nặng của trẻ</string>
     <string name="height">Chiều cao của trẻ</string>
     <string name="normal">Bình thường</string>
@@ -113,7 +113,7 @@
     <string name="all">Tất cả</string>
     <string name="parents">Phụ huynh</string>
     <string name="important_post">Thông báo quan trọng</string>
-    <string name="name">Mầm non Kid\'s home</string>
+    <string name="school_name">Mầm non Kid\'s home</string>
     <string name="height_growth">Biểu đồ tăng trưởng chiều cao</string>
     <string name="weight_growth">Biểu đồ tăng trưởng cân nặng</string>
     <string name="event">Sự kiện:</string>
@@ -122,4 +122,20 @@
     <string name="please_check_connection">Hãy kiểm tra lại kết nối!</string>
     <string name="receive_important_notification">Nhận thông báo quan trọng</string>
     <string name="message_cancel_images">Những hình ảnh bạn chọn sẽ không được lưu?</string>
+    <string name="information">Thông tin</string>
+    <string name="DOB">Ngày sinh</string>
+    <string name="name">Tên</string>
+    <string name="gender">Giới tính</string>
+    <string name="phone_number">Điện thoại</string>
+    <string name="save">Lưu</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="work">Công việc</string>
+    <string name="bClass">Lớp</string>
+    <string name="current_password">Mật khẩu hiện tại</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="new_password_again">Nhập lại mật khẩu mới</string>
+    <string name="password_at_least_6_chars">Mật khẩu phải dài tối thiểu 6 ký tự</string>
+    <string name="password_not_match">Mật khẩu mới không trùng khớp</string>
+    <string name="change_password_successfully">Đổi mật khẩu thành công</string>
+    <string name="wrong_password">Mật khẩu cũ không chính xác</string>
 </resources>

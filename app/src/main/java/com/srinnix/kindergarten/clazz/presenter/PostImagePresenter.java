@@ -3,14 +3,12 @@ package com.srinnix.kindergarten.clazz.presenter;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.ImagePickerFragment;
 import com.srinnix.kindergarten.clazz.delegate.PostImageDelegate;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
@@ -46,33 +44,24 @@ public class PostImagePresenter extends BasePresenter {
         String token = SharedPreUtils.getInstance(mContext).getToken();
         String classId = SharedPreUtils.getInstance(mContext).getClassId();
 
-        mHelper.postImage(token, classId, mListImage, new ResponseListener<ArrayList<Image>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<Image>> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+        mDisposable.add(mHelper.postImage(token, classId, mListImage)
+                .subscribe(response -> {
+                    if (response == null) {
+                        mPostImageDelegate.onFail();
+                        ErrorUtil.handleException(new NullPointerException());
+                        return;
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mPostImageDelegate.onFail();
+                    }
+
+                    mPostImageDelegate.onSuccess(response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mPostImageDelegate.onFail();
-                }
-
-                mPostImageDelegate.onSuccess(response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mPostImageDelegate.onFail();
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
 
     public void onClickImage(ArrayList<ImageLocal> mListImage) {

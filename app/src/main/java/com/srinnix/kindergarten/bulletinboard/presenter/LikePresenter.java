@@ -3,18 +3,14 @@ package com.srinnix.kindergarten.bulletinboard.presenter;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.LikeDelegate;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
-
-import java.util.ArrayList;
 
 /**
  * Created by anhtu on 4/4/2017.
@@ -51,35 +47,25 @@ public class LikePresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getListNumberLike(idPost, timePrevLike, new ResponseListener<ArrayList<LikeModel>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<LikeModel>> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+        mHelper.getListNumberLike(idPost, timePrevLike)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(new NullPointerException());
+                        return;
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-                mLikeDelegate.onLoadSuccess(response.getData(), isLoadFirst);
-                if (isLoadFirst) {
-                    isLoadFirst = false;
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(throwable);
-                mLikeDelegate.onLoadFail(R.string.error_common, isLoadFirst);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    mLikeDelegate.onLoadSuccess(response.getData(), isLoadFirst);
+                    if (isLoadFirst) {
+                        isLoadFirst = false;
+                    }
+                }, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mLikeDelegate.onLoadFail(R.string.error_common, isLoadFirst);
+                });
     }
 }

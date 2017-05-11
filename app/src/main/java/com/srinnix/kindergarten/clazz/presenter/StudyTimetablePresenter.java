@@ -3,16 +3,12 @@ package com.srinnix.kindergarten.clazz.presenter;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.clazz.delegate.StudyTimetableDelegate;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.StudyTimetable;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
-
-import java.util.ArrayList;
 
 /**
  * Created by anhtu on 5/5/2017.
@@ -52,37 +48,27 @@ public class StudyTimetablePresenter extends TimeTablePresenter {
             return;
         }
 
-        mHelper.getStudyTimeTable(time, group, new ResponseListener<ArrayList<StudyTimetable>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<StudyTimetable>> response) {
-                if (response == null) {
+        mDisposable.add(mHelper.getStudyTimeTable(time, group)
+                .subscribe(response -> {
+                    if (response == null) {
+                        hasError = true;
+                        ErrorUtil.handleException(new NullPointerException());
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        hasError = true;
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
+
+                    hasError = false;
+                    mStudyTimetableDelegate.onSuccessStudyTimetable(response.getData());
+                }, throwable -> {
                     hasError = true;
-                    onFail(new NullPointerException());
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    hasError = true;
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
-
-                hasError = false;
-                mStudyTimetableDelegate.onSuccessStudyTimetable(response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                hasError = true;
-                ErrorUtil.handleException(throwable);
-                mStudyTimetableDelegate.onFail(R.string.error_common);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    ErrorUtil.handleException(throwable);
+                    mStudyTimetableDelegate.onFail(R.string.error_common);
+                }));
     }
 
     public String getGroup() {

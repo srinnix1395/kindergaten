@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
@@ -22,8 +21,8 @@ import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.Error;
 import com.srinnix.kindergarten.request.model.LikeResponse;
-import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -89,41 +88,36 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
     private void getPostSignIn(String token, String idUser, long timePrevPost) {
-        mHelper.getPostSignIn(mContext, token, idUser, timePrevPost, new BulletinBoardHelper.PostListener() {
-            @Override
-            public void onSuccess(ArrayList<Post> arrayList) {
-                if (mBoardDelegate != null) {
-                    mBoardDelegate.updateSchoolBoard(arrayList, isLoadFirst);
-                }
-                if (isLoadFirst) {
-                    isLoadFirst = false;
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                handleExceptionPost(throwable);
-            }
-        });
+        mDisposable.add(mHelper.getPostSignIn(token, idUser, timePrevPost)
+                .subscribe(o -> {
+                            if (o instanceof Error) {
+                                ErrorUtil.handleErrorApi(mContext, (Error) o);
+                            } else {
+                                if (mBoardDelegate != null) {
+                                    mBoardDelegate.updateSchoolBoard((ArrayList<Post>) o, isLoadFirst);
+                                }
+                                if (isLoadFirst) {
+                                    isLoadFirst = false;
+                                }
+                            }
+                        }
+                        , this::handleExceptionPost));
     }
 
     private void getPostUnsignIn(long timePrevPost) {
-        mHelper.getPostUnsignIn(mContext, timePrevPost, new BulletinBoardHelper.PostListener() {
-            @Override
-            public void onSuccess(ArrayList<Post> arrayList) {
-                if (mBoardDelegate != null) {
-                    mBoardDelegate.updateSchoolBoard(arrayList, isLoadFirst);
-                }
-                if (isLoadFirst) {
-                    isLoadFirst = false;
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                handleExceptionPost(throwable);
-            }
-        });
+        mDisposable.add(mHelper.getPostUnsignIn(timePrevPost)
+                .subscribe(o -> {
+                    if (o instanceof Error) {
+                        ErrorUtil.handleErrorApi(mContext, (Error) o);
+                    } else {
+                        if (mBoardDelegate != null) {
+                            mBoardDelegate.updateSchoolBoard((ArrayList<Post>) o, isLoadFirst);
+                        }
+                        if (isLoadFirst) {
+                            isLoadFirst = false;
+                        }
+                    }
+                }, this::handleExceptionPost));
     }
 
     private void handleExceptionPost(Throwable throwable) {
@@ -162,43 +156,14 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost,
                           String name, String image, int accountType) {
-        mHelper.likePost(token, idUser, idPost, name, image, accountType, new ResponseListener<LikeResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<LikeResponse> response) {
-                handleResponseLike(arrPost, response);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, new NullPointerException());
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+        mDisposable.add(mHelper.likePost(token, idUser, idPost, name, image, accountType)
+                .subscribe(likeResponseApiResponse -> handleResponseLike(arrPost, likeResponseApiResponse), throwable -> ErrorUtil.handleException(mContext, new NullPointerException())));
     }
 
     private void unlikePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
-        mHelper.unlikePost(token, idUser, idPost, new ResponseListener<LikeResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<LikeResponse> response) {
-                handleResponseLike(arrPost, response);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, new NullPointerException());
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+        mDisposable.add(mHelper.unlikePost(token, idUser, idPost)
+                .subscribe(likeResponseApiResponse -> handleResponseLike(arrPost, likeResponseApiResponse), throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
-
 
     private void handleResponseLike(ArrayList<Object> arrPost, ApiResponse<LikeResponse> response) {
         if (response == null) {
@@ -267,35 +232,25 @@ public class BulletinBoardPresenter extends BasePresenter {
 
         long timePrev = arrPost.get(0) instanceof LoadingItem ? System.currentTimeMillis() : ((Post) arrPost.get(0)).getCreatedAt();
 
-        mHelper.getNewPost(userSignedIn, token, userId, timePrev, new ResponseListener<PostResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<PostResponse> response) {
-                if (response == null) {
-                    ErrorUtil.handleException(mContext, new NullPointerException());
+        mDisposable.add(mHelper.getNewPost(userSignedIn, token, userId, timePrev)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    mBoardDelegate.onRefreshResult(true, response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                mBoardDelegate.onRefreshResult(true, response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mBoardDelegate.onRefreshResult(false, null);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
 
     public void getPostAfterLogin(SwipeRefreshLayout refreshLayout, ArrayList<Object> mListPost) {
@@ -316,35 +271,25 @@ public class BulletinBoardPresenter extends BasePresenter {
                 ((Post) mListPost.get(size - 2)).getCreatedAt() :
                 ((Post) mListPost.get(size - 1)).getCreatedAt();
 
-        mHelper.getImportantPost(token, userId, minTime, new ResponseListener<PostResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<PostResponse> response) {
-                if (response == null) {
-                    ErrorUtil.handleException(mContext, new NullPointerException());
+        mDisposable.add(mHelper.getImportantPost(token, userId, minTime)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    mBoardDelegate.onGetImportantPost(true, response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                mBoardDelegate.onGetImportantPost(true, response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mBoardDelegate.onRefreshResult(false, null);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
 
     public void onClickImages(Post post) {

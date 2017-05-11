@@ -97,11 +97,6 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Override
     protected void initChildView() {
-        if (SharedPreUtils.getInstance(mContext).isUserSignedIn() &&
-                SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
-            UiUtils.showView(fabPost);
-        }
-
         rvListPost.setAdapter(mPostAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -226,6 +221,11 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         } else {
             mListPost.addAll(sizeTotal - 1, data);
             mPostAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
+        }
+
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn() &&
+                SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
+            UiUtils.showView(fabPost);
         }
 
         if (isLoadFirst && !mListPost.isEmpty()) {

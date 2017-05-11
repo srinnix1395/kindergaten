@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.srinnix.kindergarten.model.ImageLocal;
-import com.srinnix.kindergarten.util.ErrorUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,8 +32,8 @@ public class ImagePickerHelper {
             MediaStore.Images.Media.MIME_TYPE
     };
 
-    public void getLocalImage(Context mContext, OnLoadImageLocalListener listener) {
-        mDisposable.add(Single.fromCallable(() -> {
+    public Single<ArrayList<ImageLocal>> getLocalImage(Context mContext) {
+        return Single.fromCallable(() -> {
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
                     null, null, MediaStore.Images.Media.DATE_ADDED);
 
@@ -63,19 +62,13 @@ public class ImagePickerHelper {
             cursor.close();
 
             return temp;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(imageLocals -> {
-                    if (imageLocals == null) {
-                        listener.onLoadFail();
-                    } else {
-                        listener.onLoadSuccess(imageLocals);
-                    }
-                }, ErrorUtil::handleException));
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getImageCapture(Context mContext, String path, OnGetImageCaptureListener listener) {
-        mDisposable.add(Single.fromCallable(() -> {
+    public Single<ImageLocal> getImageCapture(Context mContext, String path) {
+        return Single.fromCallable(() -> {
             ImageLocal image = null;
 
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -105,18 +98,8 @@ public class ImagePickerHelper {
             cursor.close();
 
             return image;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listener::onLoadSuccess, ErrorUtil::handleException));
-    }
-
-    public interface OnLoadImageLocalListener {
-        void onLoadSuccess(ArrayList<ImageLocal> imageLocals);
-
-        void onLoadFail();
-    }
-
-    public interface OnGetImageCaptureListener {
-        void onLoadSuccess(ImageLocal imageLocal);
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

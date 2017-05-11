@@ -399,10 +399,6 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
         }
 
         if (mPresenter.isTeacher()) {
-            if (!childArrayList.isEmpty()) {
-                childArrayList.clear();
-            }
-
             if (!data.getChildren().isEmpty()) {
                 childArrayList.addAll(data.getChildren());
                 childrenAdapter.notifyItemRangeInserted(0, data.getChildren().size());

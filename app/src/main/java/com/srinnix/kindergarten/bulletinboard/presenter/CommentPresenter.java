@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.CommentDelegate;
@@ -16,8 +15,6 @@ import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
-
-import java.util.ArrayList;
 
 /**
  * Created by anhtu on 3/28/2017.
@@ -54,36 +51,26 @@ public class CommentPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getComment(idPost, time, new ResponseListener<ArrayList<Comment>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<Comment>> response) {
-                if (response == null) {
-                    ErrorUtil.handleException(mContext, new NullPointerException());
-                    return;
-                }
+        mDisposable.add(mHelper.getComment(idPost, time)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        return;
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-                mCommentDelegate.onLoadCommentSuccess(response.getData(), isLoadFirst);
-                if (isLoadFirst) {
-                    isLoadFirst = false;
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(throwable);
-                mCommentDelegate.onLoadCommentFail(R.string.error_common, isLoadFirst);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    mCommentDelegate.onLoadCommentSuccess(response.getData(), isLoadFirst);
+                    if (isLoadFirst) {
+                        isLoadFirst = false;
+                    }
+                }, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mCommentDelegate.onLoadCommentFail(R.string.error_common, isLoadFirst);
+                }));
     }
 
     public void onClickSend(EditText etComment) {
@@ -117,35 +104,25 @@ public class CommentPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.sendComment(token, idPost, idUser, name, image, accountType, comment, new ResponseListener<Comment>() {
-            @Override
-            public void onSuccess(ApiResponse<Comment> response) {
-                if (response == null) {
+        mDisposable.add(mHelper.sendComment(token, idPost, idUser, name, image, accountType, comment)
+                .subscribe(response -> {
+                    if (response == null) {
+                        mCommentDelegate.updateStateComment(time);
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        mCommentDelegate.updateStateComment(time);
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
+
+                    mCommentDelegate.updateIdComment(time, response.getData());
+                }, throwable -> {
                     mCommentDelegate.updateStateComment(time);
-                    ErrorUtil.handleException(mContext, new NullPointerException());
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    mCommentDelegate.updateStateComment(time);
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
-
-                mCommentDelegate.updateIdComment(time, response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                mCommentDelegate.updateStateComment(time);
-                ErrorUtil.handleException(throwable);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    ErrorUtil.handleException(throwable);
+                }));
     }
 
     public void onResendComment(Comment comment, int position) {

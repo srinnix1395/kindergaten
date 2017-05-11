@@ -23,11 +23,15 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.util.AlertUtils;
+import com.srinnix.kindergarten.util.ErrorUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
 
 /**
  * Created by anhtu on 4/25/2017.
@@ -75,27 +79,27 @@ public class ImagePickerPresenter extends BasePresenter {
     }
 
     public void getImage(ArrayList<Long> mListImageSelected) {
-        mHelper.getLocalImage(mContext, new ImagePickerHelper.OnLoadImageLocalListener() {
-            @Override
-            public void onLoadSuccess(ArrayList<ImageLocal> imageLocals) {
-                int i = 0;
-                for (ImageLocal imageLocal : imageLocals) {
-                    if (i == mListImageSelected.size()) {
-                        break;
+        mDisposable.add(mHelper.getLocalImage(mContext)
+                .subscribe(imageLocals -> {
+                    if (imageLocals == null) {
+                        mImagePickerDelegate.onLoadFail(R.string.error_common);
+                    } else {
+                        int i = 0;
+                        for (ImageLocal imageLocal : imageLocals) {
+                            if (i == mListImageSelected.size()) {
+                                break;
+                            }
+                            if (mListImageSelected.contains(imageLocal.getId())) {
+                                i++;
+                                imageLocal.setSelected(true);
+                            }
+                        }
+                        mImagePickerDelegate.onLoadSuccess(imageLocals);
                     }
-                    if (mListImageSelected.contains(imageLocal.getId())) {
-                        i++;
-                        imageLocal.setSelected(true);
-                    }
-                }
-                mImagePickerDelegate.onLoadSuccess(imageLocals);
-            }
-
-            @Override
-            public void onLoadFail() {
-                mImagePickerDelegate.onLoadFail(R.string.error_common);
-            }
-        });
+                }, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mImagePickerDelegate.onLoadFail(R.string.error_common);
+                }));
     }
 
     public void onClickCamera(ImagePickerFragment imagePickerFragment) {
@@ -139,26 +143,27 @@ public class ImagePickerPresenter extends BasePresenter {
         Uri imageUri = Uri.fromFile(fileCapture);
         if (imageUri != null) {
             MediaScannerConnection.scanFile(mContext, new String[]{imageUri.getPath()}, null, (path, uri) -> {
-                mHelper.getImageCapture(mContext, fileCapture.getPath(), imageLocal -> {
-                    mListImage.add(0, imageLocal);
-                    mImagePickerDelegate.insertImageLocal(0);
-                });
+                mHelper.getImageCapture(mContext, fileCapture.getPath())
+                        .subscribe(imageLocal -> {
+                            mListImage.add(0, imageLocal);
+                            mImagePickerDelegate.insertImageLocal(0);
+                        }, ErrorUtil::handleException);
             });
         }
     }
 
     public void onClickImage(ArrayList<ImageLocal> mListImage, int position) {
-        if (numberImage == 10) {
-            AlertUtils.showToast(mContext, "Số ảnh tối đa là 10 ảnh");
-            return;
-        }
-
         ImageLocal imageLocal = mListImage.get(position);
 
         if (imageLocal.isSelected()) {
             numberImage--;
             imageLocal.setSelected(false);
         } else {
+            if (numberImage == 10) {
+                AlertUtils.showToast(mContext, "Số ảnh tối đa là 10 ảnh");
+                return;
+            }
+
             numberImage++;
             imageLocal.setSelected(true);
         }
@@ -168,15 +173,13 @@ public class ImagePickerPresenter extends BasePresenter {
 
     public void onClickAdd(ImagePickerFragment imagePickerFragment, ArrayList<ImageLocal> mListImage) {
         if (!mListImage.isEmpty()) {
-            ArrayList<ImageLocal> arrayList = new ArrayList<>();
-            for (ImageLocal imageLocal : mListImage) {
-                if (imageLocal.isSelected()) {
-                    arrayList.add(imageLocal);
-                }
-            }
-
-            EventBus.getDefault().post(new MessageImageLocal(arrayList));
-            imagePickerFragment.onBackPressed();
+            Observable.fromIterable(mListImage)
+                    .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<ImageLocal>) imageLocal -> imageLocal.isSelected())
+                    .toList()
+                    .subscribe(imageLocals -> {
+                        EventBus.getDefault().post(new MessageImageLocal((ArrayList<ImageLocal>) imageLocals));
+                        imagePickerFragment.onBackPressed();
+                    });
         }
     }
 }

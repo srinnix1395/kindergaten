@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:icon="@drawable/ic_edit"
         android:id="@+id/menu_item_edit"
+        android:icon="@drawable/ic_edit"
         android:title="@string/edit"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_change_password"
+        android:title="@string/change_password"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_item_sign_out"
+        android:title="@string/sign_out"
+        app:showAsAction="never"/>
 </menu>

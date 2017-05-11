@@ -7,6 +7,9 @@ import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.request.converter.ContactDeserializer;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,8 +27,14 @@ public class RetrofitClient {
                     .registerTypeAdapter(Contact.class, new ContactDeserializer())
                     .create();
 
+            final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .readTimeout(2, TimeUnit.MINUTES)
+                    .connectTimeout(2, TimeUnit.MINUTES)
+                    .build();
+
             sRetrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
+                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

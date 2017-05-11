@@ -3,7 +3,6 @@ package com.srinnix.kindergarten.login.helper;
 import android.content.Context;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.login.delegate.LoginDelegate;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
@@ -14,6 +13,7 @@ import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.model.realm.ContactParentRealm;
 import com.srinnix.kindergarten.model.realm.ContactTeacherRealm;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.service.UpdateFirebaseRegId;
 
@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -36,15 +37,10 @@ public class LoginHelper extends BaseHelper {
         super(mDisposable);
     }
 
-    public void login(String email, String password, ResponseListener<LoginResponse> mListener) {
-        if (mListener == null) {
-            return;
-        }
-        mDisposable.add(mApiService.login(email, password)
+    public Single<ApiResponse<LoginResponse>> login(String email, String password) {
+        return mApiService.login(email, password)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(mListener::onFinally)
-                .subscribe(mListener::onSuccess, mListener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public void insertData(Realm realm, ArrayList<Child> children, ArrayList<Contact> arrayList) {
@@ -86,17 +82,11 @@ public class LoginHelper extends BaseHelper {
         });
     }
 
-    public void resetPassword(String token, String idUser, String email, String newPassword,
-                              String newPasswordEncrypted, ResponseListener<Boolean> listener) {
+    public Single<ApiResponse<Boolean>> resetPassword(String token, String idUser, String email, String newPassword,
+                                                      String newPasswordEncrypted) {
 
-        if (listener == null) {
-            return;
-        }
-
-        mDisposable.add(mApiService.resetPassword(token, idUser, email, newPassword, newPasswordEncrypted)
+        return mApiService.resetPassword(token, idUser, email, newPassword, newPasswordEncrypted)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

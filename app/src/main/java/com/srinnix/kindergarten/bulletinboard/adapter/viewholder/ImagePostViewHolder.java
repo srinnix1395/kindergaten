@@ -11,6 +11,7 @@ import com.srinnix.kindergarten.model.ImageLocal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by anhtu on 4/24/2017.
@@ -23,14 +24,12 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textview_gif)
     TextView tvGif;
 
+    private  OnClickRemoveListener listener;
+
     public ImagePostViewHolder(View itemView, OnClickRemoveListener listener) {
         super(itemView);
+        this.listener = listener;
         ButterKnife.bind(this, itemView);
-        itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onClickRemove(getAdapterPosition());
-            }
-        });
     }
 
     public void bindData(ImageLocal image) {
@@ -51,6 +50,13 @@ public class ImagePostViewHolder extends RecyclerView.ViewHolder {
                     .thumbnail(0.5f)
                     .into(imvImage);
             tvGif.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.imageview_remove)
+    public void onClickRemove(){
+        if (listener != null) {
+            listener.onClickRemove(getAdapterPosition());
         }
     }
 

@@ -22,6 +22,7 @@ public class AppConstant {
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
     public static final String API_RESET_PASSWORD = "user/requestResetPassword";
     public static final String API_GET_ACCOUNT_INFO = "user/getInfo";
+    public static final String API_POST_CHANGE_PASSWORD = "user/changePassword";
 
     public static final String API_GET_POST_MEMBER = "post/get/member";
     public static final String API_GET_POST_GUEST = "post/get/guest";

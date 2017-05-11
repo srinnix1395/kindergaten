@@ -34,6 +34,10 @@ public class ErrorUtil {
                         });
                 break;
             }
+            case ErrorConstant.ERROR_CODE_105:{
+                AlertUtils.showToast(context, R.string.wrong_password);
+                break;
+            }
             case ErrorConstant.ERROR_CODE_500: {
                 DebugLog.e(error.message);
                 AlertUtils.showToast(context, R.string.error_common);

@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.login.presenter;
 
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.login.delegate.ForgotPasswordDelegate;
@@ -33,32 +32,19 @@ public class ForgotPasswordPresenter extends BasePresenter {
         String email = preUtils.getEmail();
         String newPassword = StringUtil.randomNewPassword(10);
 
-        mHelper.resetPassword(token, idUser, email, newPassword, StringUtil.md5(newPassword),
-                new ResponseListener<Boolean>() {
-                    @Override
-                    public void onSuccess(ApiResponse<Boolean> response) {
-                        if (response == null) {
-                            onFail(new NullPointerException());
-                            return;
-                        }
-
-                        if (response.result == ApiResponse.RESULT_NG) {
-                            ErrorUtil.handleErrorApi(mContext, response.error);
-                            return;
-                        }
-
-                        mForgotpasswordDelegate.onResetSuccess();
+        mDisposable.add(mHelper.resetPassword(token, idUser, email, newPassword, StringUtil.md5(newPassword))
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(new NullPointerException());
+                        return;
                     }
 
-                    @Override
-                    public void onFail(Throwable throwable) {
-                        ErrorUtil.handleException(mContext, throwable);
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
                     }
 
-                    @Override
-                    public void onFinally() {
-
-                    }
-                });
+                    mForgotpasswordDelegate.onResetSuccess();
+                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 }

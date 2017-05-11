@@ -1,18 +1,19 @@
 package com.srinnix.kindergarten.clazz.helper;
 
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.model.StudyTimetable;
 import com.srinnix.kindergarten.model.Timetable;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -30,70 +31,38 @@ public class ClassHelper extends BaseHelper {
         super(mDisposable);
     }
 
-    public void getListClass(ResponseListener<ArrayList<Class>> listener) {
-        if (listener == null) {
-            return;
-        }
-        mDisposable.add(mApiService.getListClass()
+    public Single<ApiResponse<ArrayList<Class>>> getListClass() {
+        return mApiService.getListClass()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getClassInfo(String classId, boolean isTeacher, ResponseListener<ClassResponse> listener) {
-        if (listener == null) {
-            return;
-        }
-        mDisposable.add(
-                mApiService.getClassInfo(classId, isTeacher)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doFinally(listener::onFinally)
-                        .subscribe(listener::onSuccess, listener::onFail)
-        );
-    }
+    public Single<ApiResponse<ClassResponse>> getClassInfo(String classId, boolean isTeacher) {
 
-    public void getClassImage(String classId, long time, ResponseListener<ArrayList<Image>> listener) {
-        if (listener == null) {
-            return;
-        }
-        mDisposable.add(mApiService.getImageClass(classId, time)
+        return mApiService.getClassInfo(classId, isTeacher)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getTimeTable(String time, ResponseListener<Timetable> listener) {
-        if (listener == null) {
-            return;
-        }
-
-        mDisposable.add(mApiService.getTimeTable(time)
+    public Single<ApiResponse<ArrayList<Image>>> getClassImage(String classId, long time) {
+        return mApiService.getImageClass(classId, time)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getStudyTimeTable(String time, String group, ResponseListener<ArrayList<StudyTimetable>> listener) {
-        if (listener == null) {
-            return;
-        }
-
-        mDisposable.add(mApiService.getStudyTimeTable(time, group)
+    public Single<ApiResponse<Timetable>> getTimeTable(String time) {
+        return mApiService.getTimeTable(time)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void postImage(String token, String classId, ArrayList<ImageLocal> mListImage, ResponseListener<ArrayList<Image>> listener) {
-        if (listener == null) {
-            return;
-        }
+    public Single<ApiResponse<ArrayList<StudyTimetable>>> getStudyTimeTable(String time, String group) {
+        return mApiService.getStudyTimeTable(time, group)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
+    public Single<ApiResponse<ArrayList<Image>>> postImage(String token, String classId, ArrayList<ImageLocal> mListImage) {
         List<MultipartBody.Part> listFile;
         listFile = new ArrayList<>();
         for (ImageLocal imageLocal : mListImage) {
@@ -105,11 +74,10 @@ public class ClassHelper extends BaseHelper {
 
         RequestBody bodyClassId = RequestBody.create(MediaType.parse("text/plain"), classId);
 
-        mDisposable.add(mApiService.insertImages(token, bodyClassId, listFile)
+        return mApiService.insertImages(token, bodyClassId, listFile)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
     private MultipartBody.Part prepareFilePart(ImageLocal imageLocal) {

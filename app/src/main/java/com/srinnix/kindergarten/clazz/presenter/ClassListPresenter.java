@@ -3,7 +3,6 @@ package com.srinnix.kindergarten.clazz.presenter;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.clazz.delegate.ClassListDelegate;
@@ -12,12 +11,9 @@ import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.ViewManager;
-
-import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2/21/2017.
@@ -46,37 +42,28 @@ public class ClassListPresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getListClass(new ResponseListener<ArrayList<Class>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<Class>> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+        mDisposable.add(mHelper.getListClass()
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(new NullPointerException());
+                        mClassListDelegate.onLoadError(R.string.error_common);
+                        return;
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-                if (mClassListDelegate != null) {
-                    mClassListDelegate.onLoadSuccess(response.getData());
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                DebugLog.e(throwable.getMessage());
-                if (mClassListDelegate != null) {
-                    mClassListDelegate.onLoadError(R.string.error_common);
-                }
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    if (mClassListDelegate != null) {
+                        mClassListDelegate.onLoadSuccess(response.getData());
+                    }
+                }, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    if (mClassListDelegate != null) {
+                        mClassListDelegate.onLoadError(R.string.error_common);
+                    }
+                }));
     }
 
     public void onClickClass(Class aClass) {

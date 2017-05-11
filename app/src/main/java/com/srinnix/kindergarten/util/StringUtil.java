@@ -214,4 +214,12 @@ public class StringUtil {
     public static String getTimeHealthIndex(String measureTime) {
         return measureTime.substring(measureTime.indexOf("/") + 1);
     }
+
+    public static int getAccountType(int accountType) {
+        if (accountType == AppConstant.ACCOUNT_PARENTS) {
+            return R.string.parents;
+        } else {
+            return R.string.teacher;
+        }
+    }
 }

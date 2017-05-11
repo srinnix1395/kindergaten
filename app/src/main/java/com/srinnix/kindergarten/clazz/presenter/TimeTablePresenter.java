@@ -3,13 +3,11 @@ package com.srinnix.kindergarten.clazz.presenter;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.callback.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.clazz.delegate.TimeTableDelegate;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.Timetable;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
@@ -54,33 +52,24 @@ public class TimeTablePresenter extends BasePresenter {
             return;
         }
 
-        mHelper.getTimeTable(time, new ResponseListener<Timetable>() {
-            @Override
-            public void onSuccess(ApiResponse<Timetable> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+        mDisposable.add(mHelper.getTimeTable(time)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(new NullPointerException());
+                        return;
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        mTimeTableDelegate.onFail(R.string.error_common);
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-                mTimeTableDelegate.onSuccessTimetable(response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(throwable);
-
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    mTimeTableDelegate.onSuccessTimetable(response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mTimeTableDelegate.onFail(R.string.error_common);
+                }));
     }
 
     public String getTime() {

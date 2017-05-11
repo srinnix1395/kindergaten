@@ -65,6 +65,22 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="TitleStyleFrmAccount" parent="AppTheme">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ContentStyleFrmAccount">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_low</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <!--chat-->
 
 
