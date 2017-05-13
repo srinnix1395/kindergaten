@@ -80,19 +80,36 @@ public class User {
         return image;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getDob() {
         return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getGender() {
         return gender;
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getClassName() {
         return className;
     }
+
 }

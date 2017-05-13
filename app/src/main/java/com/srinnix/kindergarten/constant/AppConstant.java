@@ -22,7 +22,8 @@ public class AppConstant {
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
     public static final String API_RESET_PASSWORD = "user/requestResetPassword";
     public static final String API_GET_ACCOUNT_INFO = "user/getInfo";
-    public static final String API_POST_CHANGE_PASSWORD = "user/changePassword";
+    public static final String API_CHANGE_PASSWORD = "user/changePassword";
+    public static final String API_UPDATE_INFO = "user/updateInfo";
 
     public static final String API_GET_POST_MEMBER = "post/get/member";
     public static final String API_GET_POST_GUEST = "post/get/guest";
@@ -130,4 +131,6 @@ public class AppConstant {
     public static final String GROUP_SMALL = "Mẫu giáo bé";
     public static final String GROUP_MEDIUM = "Mẫu giáo nhỡ";
     public static final String GROUP_BIG = "Mẫu giáo lớn";
+
+    public static final String LANGUAGE = "LANGUAGE";
 }

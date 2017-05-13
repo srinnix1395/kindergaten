@@ -18,6 +18,7 @@ import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.messageeventbus.MessageLogout;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -82,15 +83,11 @@ public class MainFragment extends BaseFragment implements MainDelegate {
                 break;
             }
             case R.id.menu_item_sign_out: {
-                LogoutHelper.signOut(mContext);
+                AlertUtils.showDialogConfirm(mContext, R.string.confirm_log_out, R.string.sign_out, (dialog, which) -> LogoutHelper.signOut(mContext));
                 break;
             }
-            case R.id.menu_item_account:{
+            case R.id.menu_item_account: {
                 mPresenter.onClickAccount();
-                break;
-            }
-            case R.id.menu_item_about: {
-
                 break;
             }
             case R.id.menu_item_chat: {

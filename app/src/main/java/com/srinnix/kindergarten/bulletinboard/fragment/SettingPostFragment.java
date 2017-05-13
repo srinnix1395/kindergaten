@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -85,8 +86,12 @@ public class SettingPostFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.textview_schedule_day: {
                 UiUtils.showDatePickerDialog(mContext, (view1, year, month, dayOfMonth) -> {
-                    tvScheduleDay.setText(String.format(Locale.getDefault(), "%2d/%2d/%4d", dayOfMonth, month, year));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    Calendar c = Calendar.getInstance();
+                    c.set(year, month, dayOfMonth);
+                    tvScheduleDay.setText(simpleDateFormat.format(c.getTime()));
                 });
+
                 break;
             }
             case R.id.textview_schedule_hour: {

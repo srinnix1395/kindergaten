@@ -89,7 +89,7 @@
     <string name="group">Khối %s</string>
     <string name="study_time_table">•  Thời khóa biểu</string>
     <string name="learn_schedule">•  Lịch học năng khiếu</string>
-    <string name="edit">Sửa thông tin cá nhân</string>
+    <string name="edit_info">Sửa thông tin cá nhân</string>
     <string name="weight">Cân nặng của trẻ</string>
     <string name="height">Chiều cao của trẻ</string>
     <string name="normal">Bình thường</string>
@@ -138,4 +138,9 @@
     <string name="password_not_match">Mật khẩu mới không trùng khớp</string>
     <string name="change_password_successfully">Đổi mật khẩu thành công</string>
     <string name="wrong_password">Mật khẩu cũ không chính xác</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="message_cancel_edit_info">Thông tin sẽ không được sửa đổi?</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="confirm_log_out">Bạn có thực sự muốn thoát?</string>
+    <string name="update_successfully">Cập nhật thành công</string>
 </resources>

@@ -44,8 +44,7 @@
                 android:value=".main.activity.MainActivity"/>
         </activity>
 
-        <service
-            android:name=".service.KindergartenMessagingService">
+        <service android:name=".service.KindergartenMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

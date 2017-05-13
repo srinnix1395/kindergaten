@@ -151,4 +151,14 @@ public class SharedPreUtils {
         editor.putBoolean(AppConstant.KEY_RECEIVE_NOTIFICATION, flag);
         editor.apply();
     }
+
+    public String getLanguage() {
+        return sharedPreferences.getString(AppConstant.LANGUAGE, "Tiếng Việt");
+    }
+
+    public void setLanguage(String language) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(AppConstant.LANGUAGE, language);
+        editor.apply();
+    }
 }

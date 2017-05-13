@@ -184,7 +184,7 @@ public class PostImageFragment extends BaseFragment implements PostImageDelegate
     @Override
     public void onBackPressed() {
         if (!mListImage.isEmpty()) {
-            AlertUtils.showDialogCancelPost(mContext, R.string.message_cancel_images, (dialog, which) -> {
+            AlertUtils.showDialogConfirm(mContext, R.string.message_cancel_images, R.string.next, (dialog, which) -> {
                 PostImageFragment.super.onBackPressed();
             });
             return;

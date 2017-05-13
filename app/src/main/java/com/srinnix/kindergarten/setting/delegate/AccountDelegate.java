@@ -11,7 +11,13 @@ import java.util.ArrayList;
  */
 
 public interface AccountDelegate extends BaseDelegate{
-    void onFail(int resError);
+    void onFailGetData(int resError);
 
-    void onSuccess(User response, ArrayList<Child> children);
+    void onSuccessGetData(User response, ArrayList<Child> children);
+
+    void onStartCallAPIUpdateData();
+
+    void onFailUpdateData();
+
+    void onSuccessUpdateData(User data);
 }

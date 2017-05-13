@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,11 @@ import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -238,13 +242,37 @@ public class UiUtils {
         v.startAnimation(a);
     }
 
+    public static void showDatePickerDialog(Context mContext, String source, DatePickerDialog.OnDateSetListener listener) {
+        if (TextUtils.isEmpty(source)) {
+            showDatePickerDialog(mContext, listener);
+            return;
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(simpleDateFormat.parse(source));
+
+            showDatePickerDialog(mContext, calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH), listener);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showDatePickerDialog(Context mContext, int year, int month, int date, DatePickerDialog.OnDateSetListener listener) {
+        DatePickerDialog dialog = new DatePickerDialog(mContext, listener, year, month, date);
+        dialog.show();
+    }
+
     public static void showDatePickerDialog(Context mContext, DatePickerDialog.OnDateSetListener listener) {
         Calendar now = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(mContext, listener,
+        showDatePickerDialog(mContext,
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
+                now.get(Calendar.DAY_OF_MONTH),
+                listener);
     }
 
     public static void showTimePickerDialog(Context mContext, TimePickerDialog.OnTimeSetListener listener) {

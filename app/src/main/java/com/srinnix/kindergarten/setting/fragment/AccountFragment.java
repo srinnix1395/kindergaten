@@ -1,16 +1,22 @@
 package com.srinnix.kindergarten.setting.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,18 +25,26 @@ import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.adapter.ChildrenAdapter;
 import com.srinnix.kindergarten.constant.AppConstant;
+import com.srinnix.kindergarten.login.helper.LogoutHelper;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.setting.delegate.AccountDelegate;
 import com.srinnix.kindergarten.setting.presenter.AccountPresenter;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.srinnix.kindergarten.setting.presenter.AccountPresenter.STATE_EDIT;
+import static com.srinnix.kindergarten.setting.presenter.AccountPresenter.STATE_VIEW;
 
 /**
  * Created by anhtu on 4/20/2017.
@@ -59,7 +73,7 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
     TextView tvDOBtitle;
 
     @BindView(R.id.textview_DOB)
-    TextView tvDOB;
+    TextView tvDob;
 
     @BindView(R.id.textview_gender)
     TextView tvGender;
@@ -94,6 +108,26 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
     @BindView(R.id.cardview_icon)
     CardView cardViewIcon;
 
+    @BindView(R.id.edittext_DOB)
+    EditText etDob;
+
+    @BindView(R.id.spinner_gender)
+    Spinner spinnerGender;
+
+    @BindView(R.id.edittext_phone_number)
+    EditText etPhoneNumber;
+
+    @BindView(R.id.textview_edit_image)
+    TextView tvEditImage;
+
+    @BindView(R.id.progressbar_loading_api)
+    ProgressBar pbLoadingAPI;
+
+    private MenuItem menuSave;
+    private MenuItem menuEdit;
+    private MenuItem menuChangePassword;
+    private MenuItem menuSignOut;
+
     private ArrayList<Child> listChild;
     private ChildrenAdapter childrenAdapter;
 
@@ -122,24 +156,39 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_edit: {
-
+                    mPresenter.onClickEdit(menuSave, menuEdit, menuChangePassword,
+                            menuSignOut, tvEditImage, rvChildren, tvDob, etDob,
+                            tvGender, spinnerGender, tvPhoneNumber, etPhoneNumber);
                     break;
                 }
                 case R.id.menu_item_change_password: {
-                    mPresenter.onClickChangePassword(getChildFragmentManager());
+                    mPresenter.onClickChangePassword();
                     break;
                 }
                 case R.id.menu_item_sign_out: {
-
+                    AlertUtils.showDialogConfirm(mContext, R.string.confirm_log_out, R.string.sign_out, (dialog, which) -> {
+                        LogoutHelper.signOut(mContext);
+                        onBackPressed();
+                    });
                     break;
                 }
                 case R.id.menu_item_save: {
-
+                    UiUtils.hideKeyboard(getActivity());
+                    mPresenter.onClickSave(etDob.getText().toString(),
+                            spinnerGender.getSelectedItem().toString(),
+                            etPhoneNumber.getText().toString().trim());
                     break;
                 }
             }
             return false;
         });
+        menuSave = toolbar.getMenu().findItem(R.id.menu_item_save);
+        menuEdit = toolbar.getMenu().findItem(R.id.menu_item_edit);
+        menuChangePassword = toolbar.getMenu().findItem(R.id.menu_item_change_password);
+        menuSignOut = toolbar.getMenu().findItem(R.id.menu_item_sign_out);
+
+        menuSave.setVisible(false);
+        menuEdit.setVisible(false);
 
         rvChildren.setLayoutManager(new LinearLayoutManager(mContext));
         rvChildren.setAdapter(childrenAdapter);
@@ -148,10 +197,41 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
                 , PorterDuff.Mode.SRC_ATOP);
     }
 
+
     @Override
     protected BasePresenter initPresenter() {
         mPresenter = new AccountPresenter(this);
         return mPresenter;
+    }
+
+    @OnClick(R.id.imageview_icon)
+    public void onClickIcon() {
+        mPresenter.onClickIcon(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AccountPresenter.PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            mPresenter.setUriNewImage(uri);
+            Glide.with(mContext)
+                    .load(uri)
+                    .thumbnail(0.5f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.ic_user_gray)
+                    .into(imvIcon);
+        }
+    }
+
+    @OnClick(R.id.edittext_DOB)
+    public void onClickEdittextDob() {
+        UiUtils.showDatePickerDialog(mContext, tvDob.getText().toString(), (view, year, month, dayOfMonth) -> {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Calendar c = Calendar.getInstance();
+            c.set(year, month, dayOfMonth);
+            etDob.setText(simpleDateFormat.format(c.getTime()));
+        });
     }
 
     @OnClick(R.id.layout_retry)
@@ -163,7 +243,7 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
     }
 
     @Override
-    public void onFail(int resError) {
+    public void onFailGetData(int resError) {
         UiUtils.hideProgressBar(pbLoading);
 
         tvRetry.setText(resError);
@@ -171,7 +251,9 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
     }
 
     @Override
-    public void onSuccess(User user, ArrayList<Child> children) {
+    public void onSuccessGetData(User user, ArrayList<Child> children) {
+        menuEdit.setVisible(true);
+
         UiUtils.hideProgressBar(pbLoading);
         UiUtils.showView(scrollView);
 
@@ -183,39 +265,30 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
         tvPhoneNumber.setText(user.getPhoneNumber() == null ? "Chưa có" : user.getPhoneNumber());
         UiUtils.showView(cardViewIcon);
         tvEmail.setText(SharedPreUtils.getInstance(mContext).getEmail());
+        Glide.with(mContext)
+                .load(user.getImage())
+                .thumbnail(0.5f)
+                .placeholder(R.drawable.dummy_image)
+                .error(R.drawable.ic_user_gray)
+                .into(imvIcon);
 
         if (user.getAccountType() == AppConstant.ACCOUNT_PARENTS) {
-            if (user.getImage() != null) {
-                Glide.with(mContext)
-                        .load(user.getImage())
-                        .thumbnail(0.5f)
-                        .placeholder(R.drawable.dummy_image)
-                        .error(R.drawable.image_parent)
-                        .into(imvIcon);
-            } else {
-                imvIcon.setImageResource(R.drawable.ic_user);
-            }
-
             imvWork.setImageResource(R.drawable.image_children_circle);
             tvWork.setText(R.string.children);
 
+            if (!listChild.isEmpty()) {
+                listChild.clear();
+            }
             listChild.addAll(children);
-            childrenAdapter.notifyItemRangeInserted(0, children.size());
+            childrenAdapter.notifyDataSetChanged();
 
-            UiUtils.hideView(tvDOB);
+            UiUtils.hideView(tvDob);
             UiUtils.hideView(tvDOBtitle);
 
             UiUtils.hideView(tvClass);
             UiUtils.hideView(tvClassTitle);
         } else {
-            Glide.with(mContext)
-                    .load(user.getImage())
-                    .thumbnail(0.5f)
-                    .placeholder(R.drawable.dummy_image)
-                    .error(R.drawable.image_teacher)
-                    .into(imvIcon);
-
-            tvDOB.setText(user.getDob());
+            tvDob.setText(user.getDob());
 
             imvWork.setImageResource(R.drawable.image_class);
             tvWork.setText(R.string.work);
@@ -224,5 +297,109 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
 
             UiUtils.hideView(rvChildren);
         }
+    }
+
+    @Override
+    public void onStartCallAPIUpdateData() {
+        menuSave.setVisible(false);
+        UiUtils.showProgressBar(pbLoadingAPI);
+    }
+
+    @Override
+    public void onSuccessUpdateData(User user) {
+        AlertUtils.showToastSuccess(mContext, R.drawable.ic_account_check, R.string.update_successfully);
+        mPresenter.setState(STATE_VIEW);
+
+        UiUtils.hideProgressBar(pbLoadingAPI);
+        menuSave.setVisible(false);
+        menuEdit.setVisible(true);
+        menuChangePassword.setVisible(true);
+        menuSignOut.setVisible(true);
+
+        UiUtils.hideView(tvEditImage);
+        if (user.getAccountType() == AppConstant.ACCOUNT_PARENTS) {
+            rvChildren.setEnabled(true);
+            rvChildren.setAlpha(1f);
+        } else {
+            UiUtils.hideView(etDob);
+            UiUtils.showView(tvDob);
+        }
+
+        UiUtils.hideView(spinnerGender);
+        UiUtils.showView(tvGender);
+        spinnerGender.setAdapter(null);
+
+        UiUtils.hideView(etPhoneNumber);
+        UiUtils.showView(tvPhoneNumber);
+
+        if (user.getImage() != null) {
+            Glide.with(mContext)
+                    .load(user.getImage())
+                    .thumbnail(0.5f)
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.ic_user_gray)
+                    .into(imvIcon);
+        }
+
+        if (user.getGender() != null) {
+            tvGender.setText(user.getGender());
+        }
+        if (user.getPhoneNumber() != null) {
+            tvPhoneNumber.setText(user.getPhoneNumber());
+        }
+        if (user.getAccountType() == AppConstant.ACCOUNT_TEACHERS && user.getDob() != null) {
+            tvDob.setText(user.getDob());
+        }
+    }
+
+    @Override
+    public void onFailUpdateData() {
+        UiUtils.hideProgressBar(pbLoadingAPI);
+        menuSave.setVisible(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPresenter.getState() == STATE_EDIT) {
+            AlertUtils.showDialogConfirm(mContext, R.string.message_cancel_edit_info, R.string.next, (dialog, which) -> {
+                mPresenter.setState(STATE_VIEW);
+
+                menuEdit.setVisible(true);
+                menuSave.setVisible(false);
+                menuChangePassword.setVisible(true);
+                menuSignOut.setVisible(true);
+
+                UiUtils.hideView(tvEditImage);
+                if (mPresenter.getUser().getAccountType() == AppConstant.ACCOUNT_PARENTS) {
+                    rvChildren.setEnabled(true);
+                    rvChildren.setAlpha(1f);
+                } else {
+                    UiUtils.hideView(etDob);
+                    UiUtils.showView(tvDob);
+
+                    tvDob.setText(mPresenter.getUser().getDob());
+                }
+
+                UiUtils.hideView(spinnerGender);
+                UiUtils.showView(tvGender);
+                spinnerGender.setAdapter(null);
+
+                UiUtils.hideView(etPhoneNumber);
+                UiUtils.showView(tvPhoneNumber);
+
+                Glide.with(mContext)
+                        .load(mPresenter.getUser().getImage())
+                        .thumbnail(0.5f)
+                        .placeholder(R.drawable.dummy_image)
+                        .error(R.drawable.ic_user_gray)
+                        .into(imvIcon);
+                tvGender.setText(mPresenter.getUser().getGender());
+                tvPhoneNumber.setText(mPresenter.getUser().getPhoneNumber() == null ?
+                        "Chưa có" : mPresenter.getUser().getPhoneNumber());
+            });
+            return;
+        }
+
+        super.onBackPressed();
     }
 }

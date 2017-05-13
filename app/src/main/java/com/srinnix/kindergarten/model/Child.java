@@ -64,7 +64,8 @@ public class Child extends RealmObject implements Parcelable {
         this.characteristic = characteristic;
     }
 
-    public Child(String name, String image, String idClass) {
+    public Child(String id, String name, String image, String idClass) {
+        this.id = id;
         this.image = image;
         this.name = name;
         this.idClass = idClass;

@@ -37,7 +37,7 @@ public class ContactParent extends Contact {
             this.children = new ArrayList<>();
         }
         for (Child child : children) {
-            this.children.add(new Child(child.getName(), child.getImage(), child.getIdClass()));
+            this.children.add(new Child(child.getId(), child.getName(), child.getImage(), child.getIdClass()));
         }
     }
 }

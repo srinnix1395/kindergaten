@@ -5,11 +5,11 @@ import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +133,7 @@ public class BulletinBoardHelper extends BaseHelper {
         if (!listImage.isEmpty()) {
             listFile = new ArrayList<>();
             for (ImageLocal imageLocal : listImage) {
-                MultipartBody.Part part = prepareFilePart(imageLocal);
+                MultipartBody.Part part = RetrofitClient.prepareFilePart(imageLocal.getPath());
                 if (part != null) {
                     listFile.add(part);
                 }
@@ -147,16 +147,5 @@ public class BulletinBoardHelper extends BaseHelper {
         return mApiService.insertPost(token, contentBody, listFile, notiTypeBody, notiRangeBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private MultipartBody.Part prepareFilePart(ImageLocal imageLocal) {
-        File file = new File(imageLocal.getPath());
-
-        if (!file.exists()) {
-            return null;
-        }
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-        return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
     }
 }

@@ -65,12 +65,23 @@ public interface ApiService {
                                              @Query("_id_user") String idUser,
                                              @Query("account_type") int accountType);
 
-    @POST(AppConstant.API_POST_CHANGE_PASSWORD)
+    @POST(AppConstant.API_CHANGE_PASSWORD)
     @FormUrlEncoded
     Single<ApiResponse<Boolean>> changePassword(@Header("x-access-token") String token,
                                                 @Field("_id_user") String idUser,
                                                 @Field("old_password") String oldPassword,
                                                 @Field("new_password") String newPassword);
+
+    @Multipart
+    @POST(AppConstant.API_UPDATE_INFO)
+    Single<ApiResponse<User>> updateInfo(@Header("x-access-token") String token,
+                                         @Part("_id_user") RequestBody idUser,
+                                         @Part("account_type") RequestBody accountType,
+                                         @Part("gender") RequestBody gender,
+                                         @Part("DOB") RequestBody dob,
+                                         @Part("phone_number") RequestBody phoneNumber,
+                                         @Part MultipartBody.Part image);
+
     //USER END
 
     //POST START
@@ -191,4 +202,5 @@ public interface ApiService {
     Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
                                                                   @Query("conversation_id") String conversationID,
                                                                   @Query("time_first_message") long timeFirstMessage);
+
 }

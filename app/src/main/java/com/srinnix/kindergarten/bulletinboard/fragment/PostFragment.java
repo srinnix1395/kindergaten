@@ -116,7 +116,7 @@ public class PostFragment extends BaseFragment implements PostDelegate {
 
         if (contentPostFragment.getContentPost().length() > 0 ||
                 !contentPostFragment.getListImage().isEmpty()) {
-            AlertUtils.showDialogCancelPost(mContext, R.string.message_cancel_post, (dialog, which) -> {
+            AlertUtils.showDialogConfirm(mContext, R.string.message_cancel_post, R.string.next, (dialog, which) -> {
                 PostFragment.super.onBackPressed();
             });
             return;

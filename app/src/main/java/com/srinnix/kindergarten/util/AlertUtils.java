@@ -62,12 +62,12 @@ public class AlertUtils {
         return dialog;
     }
 
-    public static void showDialogCancelPost(Context mContext, int resMessage, DialogInterface.OnClickListener listener) {
+    public static void showDialogConfirm(Context mContext, int resMessage, int resButtonPositive, DialogInterface.OnClickListener listener) {
         AlertDialog dialog1 = new AlertDialog.Builder(mContext, R.style.CancelPostDialogStyle)
                 .setTitle(R.string.confirm)
                 .setMessage(resMessage)
                 .setCancelable(false)
-                .setPositiveButton(R.string.next, listener)
+                .setPositiveButton(resButtonPositive, listener)
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                 .create();
 
@@ -79,5 +79,4 @@ public class AlertUtils {
 
         dialog1.show();
     }
-
 }
