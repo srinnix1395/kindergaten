@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.setting.presenter;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.User;
@@ -180,6 +182,7 @@ public class AccountPresenter extends BasePresenter {
 
         if (user.getAccountType() == AppConstant.ACCOUNT_PARENTS) {
             rvChildren.setEnabled(false);
+            rvChildren.setClickable(false);
             rvChildren.setAlpha(0.5f);
         } else {
             UiUtils.hideView(tvDob);
@@ -212,6 +215,16 @@ public class AccountPresenter extends BasePresenter {
         }
     }
 
+    public void onClickChildren(Child child) {
+        InfoChildrenFragment childrenFragment = new InfoChildrenFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_ID, child.getId());
+        bundle.putBoolean(AppConstant.KEY_DISPLAY, true);
+        childrenFragment.setArguments(bundle);
+
+        ViewManager.getInstance().addFragment(childrenFragment, bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+    }
 
     public User getUser() {
         return user;

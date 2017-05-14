@@ -143,4 +143,5 @@
     <string name="edit">Chỉnh sửa</string>
     <string name="confirm_log_out">Bạn có thực sự muốn thoát?</string>
     <string name="update_successfully">Cập nhật thành công</string>
+    <string name="children_info">Thông tin con trẻ</string>
 </resources>

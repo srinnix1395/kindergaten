@@ -33,6 +33,8 @@ public class InfoChildrenPresenter extends BasePresenter {
     private boolean isLoadTimelineFirst = true;
     private Child infoChild;
 
+    private boolean isDisplayToolbar;
+
     public InfoChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
         this.mChildrenDelegate = (ChildrenDelegate) mChildrenDelegate;
@@ -44,6 +46,8 @@ public class InfoChildrenPresenter extends BasePresenter {
     public void getData(Bundle bundle) {
         super.getData(bundle);
         idChild = bundle.getString(AppConstant.KEY_ID);
+        isDisplayToolbar = bundle.getBoolean(AppConstant.KEY_DISPLAY, false);
+
         getInfoChildren();
         getTimelineChildren(System.currentTimeMillis());
     }
@@ -144,5 +148,9 @@ public class InfoChildrenPresenter extends BasePresenter {
 
         intent.putExtras(bundle);
         mContext.startActivity(intent);
+    }
+
+    public boolean isDisplayToolbar() {
+        return isDisplayToolbar;
     }
 }

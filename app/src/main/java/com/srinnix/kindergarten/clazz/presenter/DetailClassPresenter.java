@@ -144,6 +144,7 @@ public class DetailClassPresenter extends BasePresenter {
         InfoChildrenFragment childrenFragment = new InfoChildrenFragment();
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, id);
+        bundle.putBoolean(AppConstant.KEY_DISPLAY, true);
         childrenFragment.setArguments(bundle);
 
         ViewManager.getInstance().addFragment(childrenFragment, bundle,

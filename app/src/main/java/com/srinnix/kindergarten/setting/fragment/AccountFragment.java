@@ -143,7 +143,7 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
         super.initData();
         listChild = new ArrayList<>();
         childrenAdapter = new ChildrenAdapter(listChild, ChildrenAdapter.TYPE_LINEAR, position -> {
-
+            mPresenter.onClickChildren(listChild.get(position));
         });
     }
 
@@ -182,6 +182,7 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
             }
             return false;
         });
+
         menuSave = toolbar.getMenu().findItem(R.id.menu_item_save);
         menuEdit = toolbar.getMenu().findItem(R.id.menu_item_edit);
         menuChangePassword = toolbar.getMenu().findItem(R.id.menu_item_change_password);
@@ -319,6 +320,7 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
         UiUtils.hideView(tvEditImage);
         if (user.getAccountType() == AppConstant.ACCOUNT_PARENTS) {
             rvChildren.setEnabled(true);
+            rvChildren.setClickable(true);
             rvChildren.setAlpha(1f);
         } else {
             UiUtils.hideView(etDob);
@@ -382,6 +384,7 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
         UiUtils.hideView(tvEditImage);
         if (mPresenter.getUser().getAccountType() == AppConstant.ACCOUNT_PARENTS) {
             rvChildren.setEnabled(true);
+            rvChildren.setClickable(true);
             rvChildren.setAlpha(1f);
         } else {
             UiUtils.hideView(etDob);

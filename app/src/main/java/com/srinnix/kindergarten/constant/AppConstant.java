@@ -100,6 +100,7 @@ public class AppConstant {
     public static final String KEY_TIME = "KEY_TIME";
     public static final String KEY_FRAGMENT = "KEY_FRAGMENT";
     public static final String KEY_RECEIVE_NOTIFICATION = "KEY_RECEIVE_NOTIFICATION";
+    public static final String KEY_DISPLAY = "KEY_DISPLAY";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 

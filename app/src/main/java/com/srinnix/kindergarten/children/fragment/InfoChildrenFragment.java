@@ -1,10 +1,12 @@
 package com.srinnix.kindergarten.children.fragment;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -63,8 +65,11 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
 
-    @BindView(R.id.layout_profile)
-    CoordinatorLayout layoutProfile;
+    @BindView(R.id.appbar_layout)
+    AppBarLayout layoutProfile;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private InfoChildrenPresenter mPresenter;
 
@@ -77,15 +82,30 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
     }
 
     @Override
-    protected void initChildView() {
-        pbLoading.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary),
-                PorterDuff.Mode.SRC_ATOP);
-
+    protected void initData() {
+        super.initData();
         mListChildrenHealth = new ArrayList<>();
         mListChildrenHealth.add(new LoadingItem());
         mHealthChildrenAdapter = new HealthChildrenAdapter(mListChildrenHealth, (int type) -> {
             mPresenter.onClickIndex(mListChildrenHealth, type);
         });
+    }
+
+    @Override
+    protected void initChildView() {
+        if (mPresenter.isDisplayToolbar()) {
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setTitle(R.string.children_info);
+            toolbar.setNavigationIcon(R.drawable.ic_back);
+            toolbar.setNavigationOnClickListener(v -> onBackPressed());
+            UiUtils.showView(toolbar);
+        } else {
+            UiUtils.hideView(toolbar);
+        }
+
+        pbLoading.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_ATOP);
+
         rvHealthChildren.setAdapter(mHealthChildrenAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -132,8 +152,9 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
     @Override
     public void onLoadChildren(Child child) {
         UiUtils.hideProgressBar(pbLoading);
-        layoutProfile.setVisibility(View.VISIBLE);
-
+        UiUtils.showView(layoutProfile);
+        UiUtils.showView(rvHealthChildren);
+        
         Glide.with(mContext)
                 .load(child.getImage())
                 .thumbnail(0.5f)
