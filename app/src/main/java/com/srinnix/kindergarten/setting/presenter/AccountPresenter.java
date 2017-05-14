@@ -113,6 +113,15 @@ public class AccountPresenter extends BasePresenter {
     }
 
     public void onClickSave(String dob, String gender, String phoneNumber) {
+        boolean infoHasNotChanged = (phoneNumber.equals(user.getPhoneNumber()) || (phoneNumber.isEmpty() && user.getPhoneNumber() == null)) &&
+                (dob.equals(user.getDob()) || (dob.isEmpty() && user.getDob() == null)) &&
+                user.getGender().equals(gender) && uriNewImage == null;
+
+        if (infoHasNotChanged) {
+            mAccountDelegate.backToStateView();
+            return;
+        }
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -120,7 +129,7 @@ public class AccountPresenter extends BasePresenter {
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mHelper.updateInfo(token, user, dob, gender, phoneNumber, uriNewImage)
+        mHelper.updateInfo(mContext, token, user, dob, gender, phoneNumber, uriNewImage)
                 .doOnSubscribe(disposable -> mAccountDelegate.onStartCallAPIUpdateData())
                 .subscribe(response -> {
                     if (response == null) {

@@ -362,44 +362,49 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
     public void onBackPressed() {
         if (mPresenter.getState() == STATE_EDIT) {
             AlertUtils.showDialogConfirm(mContext, R.string.message_cancel_edit_info, R.string.next, (dialog, which) -> {
-                mPresenter.setState(STATE_VIEW);
-
-                menuEdit.setVisible(true);
-                menuSave.setVisible(false);
-                menuChangePassword.setVisible(true);
-                menuSignOut.setVisible(true);
-
-                UiUtils.hideView(tvEditImage);
-                if (mPresenter.getUser().getAccountType() == AppConstant.ACCOUNT_PARENTS) {
-                    rvChildren.setEnabled(true);
-                    rvChildren.setAlpha(1f);
-                } else {
-                    UiUtils.hideView(etDob);
-                    UiUtils.showView(tvDob);
-
-                    tvDob.setText(mPresenter.getUser().getDob());
-                }
-
-                UiUtils.hideView(spinnerGender);
-                UiUtils.showView(tvGender);
-                spinnerGender.setAdapter(null);
-
-                UiUtils.hideView(etPhoneNumber);
-                UiUtils.showView(tvPhoneNumber);
-
-                Glide.with(mContext)
-                        .load(mPresenter.getUser().getImage())
-                        .thumbnail(0.5f)
-                        .placeholder(R.drawable.dummy_image)
-                        .error(R.drawable.ic_user_gray)
-                        .into(imvIcon);
-                tvGender.setText(mPresenter.getUser().getGender());
-                tvPhoneNumber.setText(mPresenter.getUser().getPhoneNumber() == null ?
-                        "Chưa có" : mPresenter.getUser().getPhoneNumber());
+                backToStateView();
             });
             return;
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    public void backToStateView() {
+        mPresenter.setState(STATE_VIEW);
+
+        menuEdit.setVisible(true);
+        menuSave.setVisible(false);
+        menuChangePassword.setVisible(true);
+        menuSignOut.setVisible(true);
+
+        UiUtils.hideView(tvEditImage);
+        if (mPresenter.getUser().getAccountType() == AppConstant.ACCOUNT_PARENTS) {
+            rvChildren.setEnabled(true);
+            rvChildren.setAlpha(1f);
+        } else {
+            UiUtils.hideView(etDob);
+            UiUtils.showView(tvDob);
+
+            tvDob.setText(mPresenter.getUser().getDob());
+        }
+
+        UiUtils.hideView(spinnerGender);
+        UiUtils.showView(tvGender);
+        spinnerGender.setAdapter(null);
+
+        UiUtils.hideView(etPhoneNumber);
+        UiUtils.showView(tvPhoneNumber);
+
+        Glide.with(mContext)
+                .load(mPresenter.getUser().getImage())
+                .thumbnail(0.5f)
+                .placeholder(R.drawable.dummy_image)
+                .error(R.drawable.ic_user_gray)
+                .into(imvIcon);
+        tvGender.setText(mPresenter.getUser().getGender());
+        tvPhoneNumber.setText(mPresenter.getUser().getPhoneNumber() == null ?
+                "Chưa có" : mPresenter.getUser().getPhoneNumber());
     }
 }

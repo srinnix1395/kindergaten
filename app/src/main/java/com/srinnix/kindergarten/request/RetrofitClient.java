@@ -51,6 +51,9 @@ public class RetrofitClient {
     }
 
     public static MultipartBody.Part prepareFilePart(String path) {
+        if (path == null) {
+            return null;
+        }
         File file = new File(path);
 
         if (!file.exists()) {

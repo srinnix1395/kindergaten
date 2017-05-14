@@ -20,4 +20,6 @@ public interface AccountDelegate extends BaseDelegate{
     void onFailUpdateData();
 
     void onSuccessUpdateData(User data);
+
+    void backToStateView();
 }
