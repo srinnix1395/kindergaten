@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -59,7 +60,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     private ArrayList<ImageLocal> mListImage;
     private ImagePickerPresenter mPresenter;
 
-    private ArrayList<Long> mListImageSelected = new ArrayList<>();
+    private LongSparseArray<ImageLocal> mListImageSelected = new LongSparseArray<>();
 
     @Override
     protected int getLayoutId() {
@@ -72,7 +73,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         ArrayList<ImageLocal> arrayList = getArguments().getParcelableArrayList(AppConstant.KEY_IMAGE);
         if (arrayList != null) {
             for (ImageLocal imageLocal : arrayList) {
-                mListImageSelected.add(imageLocal.getId());
+                mListImageSelected.put(imageLocal.getId(), imageLocal);
             }
         }
     }
@@ -82,7 +83,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         super.initData();
         mListImage = new ArrayList<>();
         mImageAdapter = new ImagePickerAdapter(mListImage, position -> {
-            mPresenter.onClickImage(mListImage, position);
+            mPresenter.onClickImage(mListImage.get(position), position, mListImageSelected);
         });
         mPresenter.checkPermissionStorage(getActivity(), mListImageSelected);
     }
@@ -95,7 +96,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
         toolbar.inflateMenu(R.menu.menu_image_picker_fragment);
         menuItemAdd = toolbar.getMenu().findItem(R.id.menu_item_add);
-        if (mListImageSelected.isEmpty()) {
+        if (mListImageSelected.size() == 0) {
             menuItemAdd.setVisible(false);
         } else {
             menuItemAdd.setVisible(true);
@@ -107,7 +108,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
                     break;
                 }
                 case R.id.menu_item_add: {
-                    mPresenter.onClickAdd(ImagePickerFragment.this, mListImage);
+                    mPresenter.onClickAdd(ImagePickerFragment.this, mListImageSelected);
                     break;
                 }
             }
@@ -195,7 +196,7 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
 
         rvListImage.scrollToPosition(0);
 
-        if (mListImageSelected.isEmpty()) {
+        if (mListImageSelected.size() == 0) {
             toolbar.setTitle(R.string.tap_to_select_image);
         } else {
             toolbar.setTitle(String.format(Locale.getDefault(), "%d %s", mListImageSelected.size(), mContext.getString(R.string.image)));

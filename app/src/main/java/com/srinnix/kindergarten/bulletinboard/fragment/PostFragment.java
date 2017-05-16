@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +17,7 @@ import com.srinnix.kindergarten.bulletinboard.adapter.PostFragmentAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.PostPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
-import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -87,10 +88,14 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         UiUtils.hideKeyboard(getActivity());
         tvPost.setVisibility(View.GONE);
         UiUtils.showProgressBar(pbLoading);
-        mPresenter.onClickPost(contentPostFragment.getContentPost(),
+
+        mPresenter.onClickPost(
+                contentPostFragment.getContentPost(),
                 contentPostFragment.getListImage(),
                 contentPostFragment.getNotificationType(),
-                settingPostFragment.getNotificationRange());
+                settingPostFragment.getNotificationRange(),
+                settingPostFragment.getPostType(),
+                settingPostFragment.getSchedule());
     }
 
     public void setEnabledTvPost(boolean enabled) {
@@ -132,11 +137,19 @@ public class PostFragment extends BaseFragment implements PostDelegate {
     }
 
     @Override
-    public void onSuccess(Post data) {
+    public void onSuccess(PostResponse data) {
         UiUtils.hideProgressBar(pbLoading);
         UiUtils.showView(imvSuccess);
 
-        EventBus.getDefault().post(new MessagePostSuccessfully(data));
-        super.onBackPressed();
+        if (data.isSchedule()) {
+            AlertUtils.showToast(mContext, String.format(getString(R.string.post_schedule_successfully), data.getTime()));
+        } else {
+            EventBus.getDefault().post(new MessagePostSuccessfully(data.getPost()));
+        }
+        new Handler().postDelayed(PostFragment.super::onBackPressed, 2000);
+    }
+
+    public void setTextTvPost(int resTvPost) {
+        tvPost.setText(resTvPost);
     }
 }

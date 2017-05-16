@@ -275,13 +275,20 @@ public class UiUtils {
                 listener);
     }
 
-    public static void showTimePickerDialog(Context mContext, TimePickerDialog.OnTimeSetListener listener) {
-        Calendar now = Calendar.getInstance();
-        TimePickerDialog dialog = new TimePickerDialog(mContext, listener,
-                now.get(Calendar.HOUR_OF_DAY),
-                now.get(Calendar.MINUTE),
-                true);
-        dialog.show();
+    public static void showTimePickerDialog(Context mContext, String time, TimePickerDialog.OnTimeSetListener listener) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateFormat.parse(time));
+
+            TimePickerDialog dialog = new TimePickerDialog(mContext, listener,
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true);
+            dialog.show();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 

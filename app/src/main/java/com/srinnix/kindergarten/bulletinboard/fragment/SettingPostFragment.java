@@ -11,6 +11,7 @@ import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageEnabledNotificationRange;
+import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,18 +66,16 @@ public class SettingPostFragment extends BaseFragment {
 
         rbNow.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                if (layoutSchedule.getVisibility() == View.VISIBLE) {
-                    layoutSchedule.setVisibility(View.GONE);
-                }
+                UiUtils.hideView(layoutSchedule);
+                ((PostFragment) getParentFragment()).setTextTvPost(R.string.post);
             } else {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy-kk:mm", Locale.getDefault());
-                String times[] = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
+                String times[] = dateFormat.format(new Date(System.currentTimeMillis() + 15 * StringUtil.MINUTE_MILLIS)).split("-");
                 tvScheduleDay.setText(times[0]);
                 tvScheduleHour.setText(times[1]);
 
-                if (layoutSchedule.getVisibility() != View.VISIBLE) {
-                    layoutSchedule.setVisibility(View.VISIBLE);
-                }
+                UiUtils.showView(layoutSchedule);
+                ((PostFragment) getParentFragment()).setTextTvPost(R.string.post_schedule);
             }
         });
     }
@@ -85,7 +84,7 @@ public class SettingPostFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.textview_schedule_day: {
-                UiUtils.showDatePickerDialog(mContext, (view1, year, month, dayOfMonth) -> {
+                UiUtils.showDatePickerDialog(mContext, tvScheduleDay.getText().toString(), (view1, year, month, dayOfMonth) -> {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     Calendar c = Calendar.getInstance();
                     c.set(year, month, dayOfMonth);
@@ -95,8 +94,11 @@ public class SettingPostFragment extends BaseFragment {
                 break;
             }
             case R.id.textview_schedule_hour: {
-                UiUtils.showTimePickerDialog(mContext, (view12, hourOfDay, minute) -> {
-                    tvScheduleHour.setText(String.format(Locale.getDefault(), "%d:%d", hourOfDay, minute));
+                UiUtils.showTimePickerDialog(mContext, tvScheduleHour.getText().toString(), (view12, hourOfDay, minute) -> {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
+                    Calendar c = Calendar.getInstance();
+                    c.set(2017, 5, 9, hourOfDay, minute);
+                    tvScheduleHour.setText(simpleDateFormat.format(c.getTime()));
                 });
                 break;
             }
@@ -109,7 +111,7 @@ public class SettingPostFragment extends BaseFragment {
     }
 
     public int getNotificationRange() {
-        if (rbNow.isChecked()) {
+        if (rbAll.isChecked()) {
             return AppConstant.NOTIFICATION_ALL;
         }
 
@@ -118,6 +120,28 @@ public class SettingPostFragment extends BaseFragment {
         }
 
         return AppConstant.NOTIFICATION_TEACHER;
+    }
+
+    public boolean getPostType() {
+        return rbNow.isChecked();
+    }
+
+    public int[] getSchedule() {
+        if (rbNow.isChecked()) {
+            return new int[]{
+                    0, 0, 0, 0, 0
+            };
+        }
+        String[] days = tvScheduleDay.getText().toString().split("/");
+        String[] hours = tvScheduleHour.getText().toString().split(":");
+
+        return new int[]{
+                Integer.parseInt(days[2]),
+                Integer.parseInt(days[1]),
+                Integer.parseInt(days[0]),
+                Integer.parseInt(hours[0]),
+                Integer.parseInt(hours[1]),
+        };
     }
 
     @Override

@@ -22,7 +22,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
-import com.srinnix.kindergarten.request.model.PostResponse;
+import com.srinnix.kindergarten.request.model.BulletinResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -258,7 +258,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void onRefreshResult(boolean result, PostResponse data) {
+    public void onRefreshResult(boolean result, BulletinResponse data) {
         if (!result) {
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);
@@ -308,7 +308,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void onGetImportantPost(boolean result, PostResponse data) {
+    public void onGetImportantPost(boolean result, BulletinResponse data) {
         if (!result) {
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);

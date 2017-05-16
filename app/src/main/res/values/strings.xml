@@ -109,6 +109,7 @@
     <string name="post_time">Thời gian post</string>
     <string name="now">Ngay bây giờ</string>
     <string name="schedule">Theo lịch</string>
+    <string name="post_schedule">Lên lịch</string>
     <string name="notification">Thông báo</string>
     <string name="all">Tất cả</string>
     <string name="parents">Phụ huynh</string>
@@ -144,4 +145,6 @@
     <string name="confirm_log_out">Bạn có thực sự muốn thoát?</string>
     <string name="update_successfully">Cập nhật thành công</string>
     <string name="children_info">Thông tin con trẻ</string>
+    <string name="schedule_is_not_valid">Hãy lên lịch trong ít nhất 10 phút nữa!</string>
+    <string name="post_schedule_successfully">Thông báo sẽ được đăng vào %s</string>
 </resources>

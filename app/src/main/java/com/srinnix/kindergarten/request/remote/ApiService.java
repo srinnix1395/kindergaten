@@ -14,6 +14,7 @@ import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.model.Timetable;
 import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.BulletinResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
@@ -86,9 +87,9 @@ public interface ApiService {
 
     //POST START
     @GET(AppConstant.API_GET_POST_MEMBER)
-    Single<ApiResponse<PostResponse>> getListPostMember(@Header("x-access-token") String token,
-                                                        @Query("_id_user") String idUser,
-                                                        @Query("time_prev_post") long time);
+    Single<ApiResponse<BulletinResponse>> getListPostMember(@Header("x-access-token") String token,
+                                                            @Query("_id_user") String idUser,
+                                                            @Query("time_prev_post") long time);
 
     @GET(AppConstant.API_GET_POST_GUEST)
     Single<ApiResponse<ArrayList<Post>>> getListPostGuest(@Query("time_prev_post") long time);
@@ -127,23 +128,29 @@ public interface ApiService {
                                                @Field("comment") String comment);
 
     @GET(AppConstant.API_GET_NEW_POST)
-    Single<ApiResponse<PostResponse>> getNewPost(@Header("x-access-token") String token,
-                                                 @Query("is_user_signed_in") boolean isUserSignIn,
-                                                 @Query("_id_user") String userId,
-                                                 @Query("time") long listId);
+    Single<ApiResponse<BulletinResponse>> getNewPost(@Header("x-access-token") String token,
+                                                     @Query("is_user_signed_in") boolean isUserSignIn,
+                                                     @Query("_id_user") String userId,
+                                                     @Query("time") long listId);
 
     @GET(AppConstant.API_GET_IMPORTANT_POST)
-    Single<ApiResponse<PostResponse>> getImportantPost(@Header("x-access-token") String token,
-                                                       @Query("_id_user") String userId,
-                                                       @Query("min_time") long minTime);
+    Single<ApiResponse<BulletinResponse>> getImportantPost(@Header("x-access-token") String token,
+                                                           @Query("_id_user") String userId,
+                                                           @Query("min_time") long minTime);
 
     @Multipart
     @POST(AppConstant.API_INSERT_POST)
-    Single<ApiResponse<Post>> insertPost(@Header("x-access-token") String token,
-                                         @Part("content") RequestBody content,
-                                         @Part List<MultipartBody.Part> listImage,
-                                         @Part("noti_type") RequestBody notiType,
-                                         @Part("noti_range") RequestBody notiRangeBody);
+    Single<ApiResponse<PostResponse>> insertPost(@Header("x-access-token") String token,
+                                                 @Part("content") RequestBody content,
+                                                 @Part List<MultipartBody.Part> listImage,
+                                                 @Part("notification_type") RequestBody notiType,
+                                                 @Part("notification_range") RequestBody notiRangeBody,
+                                                 @Part("is_now") RequestBody isScheduleBody,
+                                                 @Part("year") RequestBody yearBody,
+                                                 @Part("month") RequestBody monthBody,
+                                                 @Part("day") RequestBody dayBody,
+                                                 @Part("hour") RequestBody hourBody,
+                                                 @Part("minute") RequestBody minuteBody);
 
     @GET(AppConstant.API_GET_DETAIL_POST)
     Single<ApiResponse<Post>> getDetailPost(@Header("x-access-token") String token,

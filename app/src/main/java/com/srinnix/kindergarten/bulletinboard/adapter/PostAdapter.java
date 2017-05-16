@@ -19,8 +19,7 @@ import java.util.List;
  */
 
 public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int VIEW_TYPE_POST = 0;
-    public static final int VIEW_TYPE_POSTED = 1;
+    public static final int VIEW_TYPE_POST = 1;
     private static final int VIEW_TYPE_LOADING = 2;
 
     private ArrayList<Object> arrPost;
@@ -36,7 +35,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case VIEW_TYPE_POSTED: {
+            case VIEW_TYPE_POST: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted, parent, false);
                 return new PostedViewHolder(view, mPostListener, viewType);
             }
@@ -75,7 +74,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof LoadingViewHolder) {
+        if (getItemViewType(position) == VIEW_TYPE_LOADING) {
             ((LoadingViewHolder) holder).bindData(((LoadingItem) arrPost.get(position)));
         } else {
             ((PostedViewHolder) holder).bindData(((Post) arrPost.get(position)));
@@ -90,7 +89,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         if (arrPost.get(position) instanceof Post) {
-            return VIEW_TYPE_POSTED;
+            return VIEW_TYPE_POST;
         }
 
         return VIEW_TYPE_LOADING;

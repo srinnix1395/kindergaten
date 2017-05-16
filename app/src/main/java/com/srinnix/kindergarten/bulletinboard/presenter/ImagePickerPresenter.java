@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
@@ -29,9 +30,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import io.reactivex.Observable;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
 
 /**
  * Created by anhtu on 4/25/2017.
@@ -62,7 +60,7 @@ public class ImagePickerPresenter extends BasePresenter {
         numberImage = arrayList != null ? arrayList.size() : 0;
     }
 
-    public void checkPermissionStorage(FragmentActivity activity, ArrayList<Long> mListImageSelected) {
+    public void checkPermissionStorage(FragmentActivity activity, LongSparseArray<ImageLocal> mListImageSelected) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             boolean isHasPermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
@@ -78,7 +76,7 @@ public class ImagePickerPresenter extends BasePresenter {
         }
     }
 
-    public void getImage(ArrayList<Long> mListImageSelected) {
+    public void getImage(LongSparseArray<ImageLocal> mListImageSelected) {
         mDisposable.add(mHelper.getLocalImage(mContext)
                 .subscribe(imageLocals -> {
                     if (imageLocals == null) {
@@ -89,7 +87,7 @@ public class ImagePickerPresenter extends BasePresenter {
                             if (i == mListImageSelected.size()) {
                                 break;
                             }
-                            if (mListImageSelected.contains(imageLocal.getId())) {
+                            if (mListImageSelected.indexOfKey(imageLocal.getId()) >= 0) {
                                 i++;
                                 imageLocal.setSelected(true);
                             }
@@ -152,12 +150,11 @@ public class ImagePickerPresenter extends BasePresenter {
         }
     }
 
-    public void onClickImage(ArrayList<ImageLocal> mListImage, int position) {
-        ImageLocal imageLocal = mListImage.get(position);
-
+    public void onClickImage(ImageLocal imageLocal, int position, LongSparseArray<ImageLocal> mListImageSelected) {
         if (imageLocal.isSelected()) {
             numberImage--;
             imageLocal.setSelected(false);
+            mListImageSelected.remove(imageLocal.getId());
         } else {
             if (numberImage == 10) {
                 AlertUtils.showToast(mContext, "Số ảnh tối đa là 10 ảnh");
@@ -166,20 +163,20 @@ public class ImagePickerPresenter extends BasePresenter {
 
             numberImage++;
             imageLocal.setSelected(true);
+            mListImageSelected.put(imageLocal.getId(), imageLocal);
         }
 
         mImagePickerDelegate.updateStateImage(numberImage, position, imageLocal.isSelected());
     }
 
-    public void onClickAdd(ImagePickerFragment imagePickerFragment, ArrayList<ImageLocal> mListImage) {
-        if (!mListImage.isEmpty()) {
-            Observable.fromIterable(mListImage)
-                    .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<ImageLocal>) imageLocal -> imageLocal.isSelected())
-                    .toList()
-                    .subscribe(imageLocals -> {
-                        EventBus.getDefault().post(new MessageImageLocal((ArrayList<ImageLocal>) imageLocals));
-                        imagePickerFragment.onBackPressed();
-                    });
+    public void onClickAdd(ImagePickerFragment imagePickerFragment, LongSparseArray<ImageLocal> mListImage) {
+        if (mListImage.size() > 0) {
+            ArrayList<ImageLocal> arrayList = new ArrayList<>();
+            for (int i = mListImage.size() - 1; i >= 0; i--) {
+                arrayList.add(mListImage.valueAt(i));
+            }
+            EventBus.getDefault().post(new MessageImageLocal(arrayList));
+            imagePickerFragment.onBackPressed();
         }
     }
 }

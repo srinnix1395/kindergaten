@@ -11,6 +11,7 @@ import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.StringUtil;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,16 @@ public class PostPresenter extends BasePresenter {
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
-    public void onClickPost(String content, ArrayList<ImageLocal> mListImage, int notificationType, int notificationRange) {
+    public void onClickPost(String content, ArrayList<ImageLocal> mListImage,
+                            int notificationType, int notificationRange, boolean now,
+                            int[] schedule) {
+
+        if (!now && !StringUtil.isScheduleTimeValid(schedule)) {
+            AlertUtils.showToast(mContext, R.string.schedule_is_not_valid);
+            mPostDelegate.onFail();
+            return;
+        }
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             mPostDelegate.onFail();
@@ -38,7 +48,8 @@ public class PostPresenter extends BasePresenter {
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mDisposable.add(mHelper.post(token, content, mListImage, notificationType, notificationRange)
+        mDisposable.add(mHelper.post(token, content, mListImage, notificationType,
+                notificationRange, now, schedule)
                 .subscribe(response -> {
                     if (response == null) {
                         ErrorUtil.handleException(mContext, new NullPointerException());

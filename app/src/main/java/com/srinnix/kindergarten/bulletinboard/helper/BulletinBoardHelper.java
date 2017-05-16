@@ -7,6 +7,7 @@ import com.srinnix.kindergarten.model.LikeModel;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.BulletinResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
 
@@ -97,13 +98,13 @@ public class BulletinBoardHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<PostResponse>> getNewPost(boolean userSignedIn, String token, String userId, long timePrev) {
+    public Single<ApiResponse<BulletinResponse>> getNewPost(boolean userSignedIn, String token, String userId, long timePrev) {
         return mApiService.getNewPost(token, userSignedIn, userId, timePrev)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<PostResponse>> getImportantPost(String token, String userId, long minTime) {
+    public Single<ApiResponse<BulletinResponse>> getImportantPost(String token, String userId, long minTime) {
         return mApiService.getImportantPost(token, userId, minTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -128,7 +129,7 @@ public class BulletinBoardHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<Post>> post(String token, String content, ArrayList<ImageLocal> listImage, int notiType, int notificationRange) {
+    public Single<ApiResponse<PostResponse>> post(String token, String content, ArrayList<ImageLocal> listImage, int notiType, int notificationRange, boolean now, int[] schedule) {
         List<MultipartBody.Part> listFile = null;
         if (!listImage.isEmpty()) {
             listFile = new ArrayList<>();
@@ -143,8 +144,15 @@ public class BulletinBoardHelper extends BaseHelper {
         RequestBody contentBody = RequestBody.create(MediaType.parse("text/plain"), content.trim());
         RequestBody notiTypeBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(notiType));
         RequestBody notiRangeBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(notificationRange));
+        RequestBody isScheduleBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(now));
+        RequestBody yearBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[0]));
+        RequestBody monthBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[1]));
+        RequestBody dayBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[2]));
+        RequestBody hourBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[3]));
+        RequestBody minuteBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[4]));
 
-        return mApiService.insertPost(token, contentBody, listFile, notiTypeBody, notiRangeBody)
+        return mApiService.insertPost(token, contentBody, listFile, notiTypeBody, notiRangeBody,
+                isScheduleBody, yearBody, monthBody, dayBody, hourBody, minuteBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

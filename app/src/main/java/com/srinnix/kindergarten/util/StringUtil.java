@@ -222,4 +222,17 @@ public class StringUtil {
             return R.string.teacher;
         }
     }
+
+    public static boolean isScheduleTimeValid(int[] schedule) {
+        long now = System.currentTimeMillis();
+
+        Calendar c = Calendar.getInstance();
+        c.set(schedule[0],
+                schedule[1],
+                schedule[2],
+                schedule[3],
+                schedule[4]);
+
+        return (c.getTimeInMillis() - now) > (MINUTE_MILLIS * 2);
+    }
 }

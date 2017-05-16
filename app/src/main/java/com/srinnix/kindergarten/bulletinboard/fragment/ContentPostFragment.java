@@ -20,6 +20,7 @@ import com.srinnix.kindergarten.custom.SquareItemLayout;
 import com.srinnix.kindergarten.messageeventbus.MessageEnabledNotificationRange;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -114,6 +115,7 @@ public class ContentPostFragment extends BaseFragment {
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageview_image: {
+                UiUtils.hideKeyboard(getActivity());
                 mPresenter.onClickImage(mListImage);
                 break;
             }
