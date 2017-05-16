@@ -38,16 +38,16 @@ public class LikePresenter extends BasePresenter {
     @Override
     public void onStart() {
         super.onStart();
-        getListLike(System.currentTimeMillis());
+        getListLike(AppConstant.NOW);
     }
 
-    public void getListLike(long timePrevLike) {
+    public void getListLike(String prevId) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             mLikeDelegate.onLoadFail(R.string.cant_connect, isLoadFirst);
             return;
         }
 
-        mHelper.getListNumberLike(idPost, timePrevLike)
+        mHelper.getListNumberLike(idPost, prevId)
                 .subscribe(response -> {
                     if (response == null) {
                         ErrorUtil.handleException(new NullPointerException());

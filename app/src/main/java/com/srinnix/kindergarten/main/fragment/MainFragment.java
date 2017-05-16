@@ -153,8 +153,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     }
 
     public void closeDrawer() {
-        if (mDrawer.isDrawerOpen(Gravity.RIGHT)) {
-            mDrawer.closeDrawer(Gravity.RIGHT, false);
+        if (mDrawer.isDrawerOpen(Gravity.END)) {
+            mDrawer.closeDrawer(Gravity.END, false);
         }
     }
 

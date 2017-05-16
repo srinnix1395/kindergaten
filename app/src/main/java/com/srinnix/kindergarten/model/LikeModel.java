@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class LikeModel {
+    @SerializedName("_id")
+    @Expose
+    private String id;
+
     @SerializedName("_id_user")
     @Expose
     private String idUser;
@@ -28,11 +32,8 @@ public class LikeModel {
     @Expose
     private long createdAt;
 
-    public LikeModel(String name, String image, int accountType, long createdAt) {
-        this.name = name;
-        this.image = image;
-        this.accountType = accountType;
-        this.createdAt = createdAt;
+    public String getId() {
+        return id;
     }
 
     public String getIdUser() {

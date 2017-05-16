@@ -89,7 +89,7 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
                 ((LoadingItem3State) mListComment.get(0)).setLoadingState(LoadingItem3State.STATE_IDLE);
                 mAdapter.notifyItemChanged(0);
             }
-            mPresenter.getComment(((Comment) mListComment.get(1)).getCreatedAt());
+            mPresenter.getComment(((Comment) mListComment.get(1)).getId());
         }, new CommentViewHolder.CommentListener() {
             @Override
             public void onClickRetry(int position) {
@@ -128,7 +128,7 @@ public class CommentFragment extends BaseFragment implements CommentDelegate {
     public void onClickRetry() {
         mRelRetry.setVisibility(View.GONE);
         UiUtils.showProgressBar(mPbLoading);
-        mPresenter.getComment(System.currentTimeMillis());
+        mPresenter.getComment(AppConstant.NOW);
     }
 
     @Override

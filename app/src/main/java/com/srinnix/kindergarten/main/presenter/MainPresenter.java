@@ -176,6 +176,11 @@ public class MainPresenter extends BasePresenter {
             return;
         }
 
+        if (currentPosition != AppConstant.FRAGMENT_BULLETIN_BOARD) {
+            changeTabIcon(mainFragment.getChildFragmentManager(), R.id.menu_item_news);
+            return;
+        }
+
         mainFragment.getActivity().finish();
     }
 

@@ -55,11 +55,11 @@ public class BulletinBoardPresenter extends BasePresenter {
     public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
         int size = arrayList.size();
 
-        long timePrevPost;
-        if (arrayList.size() == 1) {
-            timePrevPost = System.currentTimeMillis();
+        String id;
+        if (arrayList.size() == 1 && arrayList.get(size - 1) instanceof LoadingItem) {
+            id = AppConstant.NOW;
         } else {
-            timePrevPost = ((Post) arrayList.get(size - 2)).getCreatedAt();
+            id = ((Post) arrayList.get(size - 2)).getId();
         }
 
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
@@ -81,14 +81,14 @@ public class BulletinBoardPresenter extends BasePresenter {
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             String idUser = SharedPreUtils.getInstance(mContext).getUserID();
             String token = SharedPreUtils.getInstance(mContext).getToken();
-            getPostSignIn(token, idUser, timePrevPost);
+            getPostSignIn(token, idUser, id);
         } else {
-            getPostUnsignIn(timePrevPost);
+            getPostUnsignIn(id);
         }
     }
 
-    private void getPostSignIn(String token, String idUser, long timePrevPost) {
-        mDisposable.add(mHelper.getPostSignIn(token, idUser, timePrevPost)
+    private void getPostSignIn(String token, String idUser, String lastId) {
+        mDisposable.add(mHelper.getPostSignIn(token, idUser, lastId)
                 .subscribe(o -> {
                             if (o instanceof Error) {
                                 ErrorUtil.handleErrorApi(mContext, (Error) o);
@@ -104,8 +104,8 @@ public class BulletinBoardPresenter extends BasePresenter {
                         , this::handleExceptionPost));
     }
 
-    private void getPostUnsignIn(long timePrevPost) {
-        mDisposable.add(mHelper.getPostUnsignIn(timePrevPost)
+    private void getPostUnsignIn(String lastId) {
+        mDisposable.add(mHelper.getPostUnsignIn(lastId)
                 .subscribe(o -> {
                     if (o instanceof Error) {
                         ErrorUtil.handleErrorApi(mContext, (Error) o);
@@ -230,9 +230,9 @@ public class BulletinBoardPresenter extends BasePresenter {
             userId = preUtils.getUserID();
         }
 
-        long timePrev = arrPost.get(0) instanceof LoadingItem ? System.currentTimeMillis() : ((Post) arrPost.get(0)).getCreatedAt();
+        String idLastPost = arrPost.get(0) instanceof LoadingItem ? AppConstant.NOW : ((Post) arrPost.get(0)).getId();
 
-        mDisposable.add(mHelper.getNewPost(userSignedIn, token, userId, timePrev)
+        mDisposable.add(mHelper.getNewPost(userSignedIn, token, userId, idLastPost)
                 .subscribe(response -> {
                     if (response == null) {
                         ErrorUtil.handleException(mContext, new NullPointerException());
@@ -254,6 +254,10 @@ public class BulletinBoardPresenter extends BasePresenter {
     }
 
     public void getPostAfterLogin(SwipeRefreshLayout refreshLayout, ArrayList<Object> mListPost) {
+        if (mListPost.isEmpty() || mListPost.get(0) instanceof LoadingItem) {
+            return;
+        }
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -267,11 +271,11 @@ public class BulletinBoardPresenter extends BasePresenter {
         String userId = SharedPreUtils.getInstance(mContext).getUserID();
 
         int size = mListPost.size();
-        long minTime = mListPost.get(size - 1) instanceof LoadingItem ?
-                ((Post) mListPost.get(size - 2)).getCreatedAt() :
-                ((Post) mListPost.get(size - 1)).getCreatedAt();
+        String minId = mListPost.get(size - 1) instanceof LoadingItem ?
+                ((Post) mListPost.get(size - 2)).getId() :
+                ((Post) mListPost.get(size - 1)).getId();
 
-        mDisposable.add(mHelper.getImportantPost(token, userId, minTime)
+        mDisposable.add(mHelper.getImportantPost(token, userId, minId)
                 .subscribe(response -> {
                     if (response == null) {
                         ErrorUtil.handleException(mContext, new NullPointerException());

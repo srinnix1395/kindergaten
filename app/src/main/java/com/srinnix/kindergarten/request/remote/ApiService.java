@@ -89,10 +89,10 @@ public interface ApiService {
     @GET(AppConstant.API_GET_POST_MEMBER)
     Single<ApiResponse<BulletinResponse>> getListPostMember(@Header("x-access-token") String token,
                                                             @Query("_id_user") String idUser,
-                                                            @Query("time_prev_post") long time);
+                                                            @Query("last_id") String id);
 
     @GET(AppConstant.API_GET_POST_GUEST)
-    Single<ApiResponse<ArrayList<Post>>> getListPostGuest(@Query("time_prev_post") long time);
+    Single<ApiResponse<ArrayList<Post>>> getListPostGuest(@Query("last_id") String id);
 
     @POST(AppConstant.API_LIKE_POST)
     @FormUrlEncoded
@@ -111,11 +111,11 @@ public interface ApiService {
 
     @GET(AppConstant.API_GET_LIST_NUMBER_LIKE)
     Single<ApiResponse<ArrayList<LikeModel>>> getListNumberLike(@Query("_id_post") String id,
-                                                                @Query("time_prev_like") long timePrevLike);
+                                                                @Query("id_prev_like") String timePrevLike);
 
     @GET(AppConstant.API_GET_COMMENT)
     Single<ApiResponse<ArrayList<Comment>>> getComment(@Query("_id_post") String idPost,
-                                                       @Query("time_prev_comment") long timeLastComment);
+                                                       @Query("id_last_comment") String timeLastComment);
 
     @POST(AppConstant.API_INSERT_COMMENT)
     @FormUrlEncoded
@@ -131,12 +131,12 @@ public interface ApiService {
     Single<ApiResponse<BulletinResponse>> getNewPost(@Header("x-access-token") String token,
                                                      @Query("is_user_signed_in") boolean isUserSignIn,
                                                      @Query("_id_user") String userId,
-                                                     @Query("time") long listId);
+                                                     @Query("prev_id") String idLastPost);
 
     @GET(AppConstant.API_GET_IMPORTANT_POST)
     Single<ApiResponse<BulletinResponse>> getImportantPost(@Header("x-access-token") String token,
                                                            @Query("_id_user") String userId,
-                                                           @Query("min_time") long minTime);
+                                                           @Query("min_id") String minId);
 
     @Multipart
     @POST(AppConstant.API_INSERT_POST)
@@ -209,5 +209,4 @@ public interface ApiService {
     Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
                                                                   @Query("conversation_id") String conversationID,
                                                                   @Query("time_first_message") long timeFirstMessage);
-
 }

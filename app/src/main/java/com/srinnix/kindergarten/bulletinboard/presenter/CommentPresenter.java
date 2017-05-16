@@ -42,16 +42,16 @@ public class CommentPresenter extends BasePresenter {
     @Override
     public void onStart() {
         super.onStart();
-        getComment(System.currentTimeMillis());
+        getComment(AppConstant.NOW);
     }
 
-    public void getComment(long time) {
+    public void getComment(String prevId) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             mCommentDelegate.onLoadCommentFail(R.string.cant_connect, isLoadFirst);
             return;
         }
 
-        mDisposable.add(mHelper.getComment(idPost, time)
+        mDisposable.add(mHelper.getComment(idPost, prevId)
                 .subscribe(response -> {
                     if (response == null) {
                         ErrorUtil.handleException(mContext, new NullPointerException());

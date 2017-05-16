@@ -45,8 +45,8 @@ public class BulletinBoardHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<Object> getPostSignIn(String token, String idUser, long timePrevPost) {
-        return mApiService.getListPostMember(token, idUser, timePrevPost)
+    public Single<Object> getPostSignIn(String token, String idUser, String id) {
+        return mApiService.getListPostMember(token, idUser, id)
                 .flatMap(response -> {
                     if (response == null) {
                         return Single.error(new NullPointerException());
@@ -75,8 +75,8 @@ public class BulletinBoardHelper extends BaseHelper {
 
     }
 
-    public Single<Object> getPostUnsignIn(long timePrevPost) {
-        return mApiService.getListPostGuest(timePrevPost)
+    public Single<Object> getPostUnsignIn(String lastId) {
+        return mApiService.getListPostGuest(lastId)
                 .flatMap(response -> {
                     if (response == null) {
                         return Single.error(new NullPointerException());
@@ -92,26 +92,26 @@ public class BulletinBoardHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<ArrayList<LikeModel>>> getListNumberLike(String idPost, long timePrevLike) {
-        return mApiService.getListNumberLike(idPost, timePrevLike)
+    public Single<ApiResponse<ArrayList<LikeModel>>> getListNumberLike(String idPost, String prevId) {
+        return mApiService.getListNumberLike(idPost, prevId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<BulletinResponse>> getNewPost(boolean userSignedIn, String token, String userId, long timePrev) {
-        return mApiService.getNewPost(token, userSignedIn, userId, timePrev)
+    public Single<ApiResponse<BulletinResponse>> getNewPost(boolean userSignedIn, String token, String userId, String idLastPost) {
+        return mApiService.getNewPost(token, userSignedIn, userId, idLastPost)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<BulletinResponse>> getImportantPost(String token, String userId, long minTime) {
-        return mApiService.getImportantPost(token, userId, minTime)
+    public Single<ApiResponse<BulletinResponse>> getImportantPost(String token, String userId, String minId) {
+        return mApiService.getImportantPost(token, userId, minId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<ArrayList<Comment>>> getComment(String idPost, long timeLastComment) {
-        return mApiService.getComment(idPost, timeLastComment)
+    public Single<ApiResponse<ArrayList<Comment>>> getComment(String idPost, String idLastComment) {
+        return mApiService.getComment(idPost, idLastComment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

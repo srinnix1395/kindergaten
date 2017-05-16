@@ -134,4 +134,6 @@ public class AppConstant {
     public static final String GROUP_BIG = "Mẫu giáo lớn";
 
     public static final String LANGUAGE = "LANGUAGE";
+
+    public static final String NOW = "now";
 }

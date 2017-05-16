@@ -109,7 +109,7 @@ public class LikeDialogFragment extends BottomSheetDialogFragment implements Lik
                 ((LoadingItem3State) mListLike.get(0)).setLoadingState(LoadingItem3State.STATE_LOADING);
                 mAdapter.notifyItemChanged(0);
             }
-            mPresenter.getListLike(((LikeModel) mListLike.get(1)).getCreatedAt());
+            mPresenter.getListLike(((LikeModel) mListLike.get(1)).getId());
         });
         mRvLike.setAdapter(mAdapter);
     }
@@ -119,7 +119,7 @@ public class LikeDialogFragment extends BottomSheetDialogFragment implements Lik
     public void onClickRetry() {
         mRelRetry.setVisibility(View.GONE);
         UiUtils.showProgressBar(mPbLoading);
-        mPresenter.getListLike(System.currentTimeMillis());
+        mPresenter.getListLike(AppConstant.NOW);
     }
 
     private void initPresenter() {

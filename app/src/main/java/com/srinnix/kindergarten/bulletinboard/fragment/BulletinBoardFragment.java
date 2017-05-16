@@ -180,9 +180,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
             UiUtils.showView(fabPost);
         }
-        if (!mListPost.isEmpty() && mListPost.get(0) instanceof Post) {
-            mPresenter.getPostAfterLogin(refreshLayout, mListPost);
-        }
+        mPresenter.getPostAfterLogin(refreshLayout, mListPost);
     }
 
     @Subscribe

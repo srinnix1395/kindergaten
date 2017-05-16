@@ -41,7 +41,7 @@
     <dimen name="size_image_avatar">124dp</dimen>
     <dimen name="radius_post">4dp</dimen>
     <dimen name="padding_horizontal_item_comment">14dp</dimen>
-    <dimen name="padding_vertical_item_comment">12dp</dimen>
+    <dimen name="padding_vertical_item_comment">14dp</dimen>
     <dimen name="padding_drawable_high">8dp</dimen>
     <dimen name="icon_small_size">16dp</dimen>
     <dimen name="icon_medium_size">20dp</dimen>

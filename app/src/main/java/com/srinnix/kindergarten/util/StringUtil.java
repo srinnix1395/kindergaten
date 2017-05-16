@@ -195,9 +195,9 @@ public class StringUtil {
 
     public static Spanned getComment(Comment comment) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return Html.fromHtml("<b>" + comment.getName() + "</b> " + comment.getComment());
+            return Html.fromHtml("<b><font face=\"sans-serif-light\">" + comment.getName() + "</font></b>  " + comment.getComment());
         } else {
-            return Html.fromHtml("<b>" + comment.getName() + "</b> " + comment.getComment(), Html.FROM_HTML_MODE_COMPACT);
+            return Html.fromHtml("<b><font face=\"sans-serif-light\">" + comment.getName() + "</font></b>  " + comment.getComment(), Html.FROM_HTML_MODE_COMPACT);
         }
     }
 
@@ -233,6 +233,6 @@ public class StringUtil {
                 schedule[3],
                 schedule[4]);
 
-        return (c.getTimeInMillis() - now) > (MINUTE_MILLIS * 2);
+        return (c.getTimeInMillis() - now) > (MINUTE_MILLIS * 10);
     }
 }
