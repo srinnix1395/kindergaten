@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/size_toast"
+    android:layout_height="@dimen/size_toast"
     android:background="@drawable/background_toast"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="@dimen/margin_horizontal">
 
     <ImageView
         android:id="@+id/imvIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         tools:src="@drawable/ic_account_check"/>
 
     <TextView
         android:id="@+id/tvMessage"
-        style="?android:attr/textAppearanceSmall"
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imvIcon"
         android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="@android:color/white"
-        tools:text="Đăng nhập thành công"/>
-</RelativeLayout>
+        android:textSize="16sp"
+        tools:text="@string/password_reset"/>
+</LinearLayout>

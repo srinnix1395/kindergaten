@@ -47,4 +47,5 @@
     <dimen name="icon_medium_size">20dp</dimen>
     <dimen name="radius_card_view">2dp</dimen>
     <dimen name="radius_card_view_high">4dp</dimen>
+    <dimen name="size_toast">148dp</dimen>
 </resources>

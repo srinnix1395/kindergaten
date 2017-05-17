@@ -39,7 +39,7 @@
     <string name="baby">Bé</string>
     <string name="error_msg_101">Email hoặc mật khẩu không chính xác</string>
     <string name="login_to_chat">Hãy đăng nhập để trò chuyện!</string>
-    <string name="login_successfully">Đăng nhập thành công</string>
+    <string name="login_successfully">Đăng nhập\nthành công</string>
     <string name="cant_connect">Không thể kết nối, chạm để thử lại</string>
     <string name="online">Đang hoạt động</string>
     <string name="offline">Không hoạt động</string>
@@ -80,7 +80,7 @@
     <string name="others">• Bệnh khác:</string>
     <string name="tooth">• Răng:</string>
     <string name="type_result">sức khỏe loại %d</string>
-    <string name="password_reset">Hãy kiểm tra email và\\nđăng nhập lại</string>
+    <string name="password_reset">Hãy kiểm tra email và đăng nhập lại</string>
     <string name="account_type">Tài khoản</string>
     <string name="learn_and_play_time">Lịch sinh hoạt</string>
     <string name="timetable">•  Thời gian biểu</string>
@@ -137,13 +137,13 @@
     <string name="new_password_again">Nhập lại mật khẩu mới</string>
     <string name="password_at_least_6_chars">Mật khẩu phải dài tối thiểu 6 ký tự</string>
     <string name="password_not_match">Mật khẩu mới không trùng khớp</string>
-    <string name="change_password_successfully">Đổi mật khẩu thành công</string>
+    <string name="change_password_successfully">Đổi mật khẩu\nthành công</string>
     <string name="wrong_password">Mật khẩu cũ không chính xác</string>
     <string name="language">Ngôn ngữ</string>
     <string name="message_cancel_edit_info">Thông tin sẽ không được sửa đổi?</string>
     <string name="edit">Chỉnh sửa</string>
     <string name="confirm_log_out">Bạn có thực sự muốn thoát?</string>
-    <string name="update_successfully">Cập nhật thành công</string>
+    <string name="update_successfully">Cập nhật\nthành công</string>
     <string name="children_info">Thông tin con trẻ</string>
     <string name="schedule_is_not_valid">Hãy lên lịch trong ít nhất 10 phút nữa!</string>
     <string name="post_schedule_successfully">Thông báo sẽ được đăng vào %s</string>
