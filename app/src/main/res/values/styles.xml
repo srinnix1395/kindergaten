@@ -18,13 +18,20 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
-
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash_activity</item>
     </style>
 
-    <style name="StyleEditText">
+    <style name="StyleEditTextFrmAccount" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_low</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ThemeEdittextFrmAccount" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
     <!--chat -->
@@ -58,6 +65,35 @@
 
     <style name="RadioButtonStyle" parent="AppTheme">
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TimeTableStyle" parent="AppTheme">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TitleStyleFrmAccount" parent="AppTheme">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ContentStyleFrmAccount">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_low</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="StyleSettingFragment" parent="AppTheme">
+        <item name="android:paddingStart">@dimen/margin_horizontal</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">?selectableItemBackground</item>
     </style>
 
     <!--chat-->

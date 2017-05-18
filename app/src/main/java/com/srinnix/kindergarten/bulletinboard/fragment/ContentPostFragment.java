@@ -16,9 +16,11 @@ import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
 import com.srinnix.kindergarten.bulletinboard.presenter.ContentPostPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
+import com.srinnix.kindergarten.custom.SquareItemLayout;
 import com.srinnix.kindergarten.messageeventbus.MessageEnabledNotificationRange;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +38,7 @@ public class ContentPostFragment extends BaseFragment {
     @BindView(R.id.edittext_content)
     EditText etContent;
 
-    @BindView(R.id.recycler_view_image)
+    @BindView(R.id.recyclerview_image)
     RecyclerView rvImages;
 
     @BindView(R.id.radio_normal)
@@ -66,7 +68,7 @@ public class ContentPostFragment extends BaseFragment {
 
                 ((PostFragment) getParentFragment()).setEnabledTvPost(false);
             }
-        });
+        }, SquareItemLayout.TYPE_HEIGHT);
     }
 
     @Override
@@ -108,10 +110,12 @@ public class ContentPostFragment extends BaseFragment {
         rvImages.addItemDecoration(new SpacesItemDecoration(mContext, mAdapter, 2, 1, true));
     }
 
-    @OnClick({R.id.imageview_image, R.id.imageview_setting})
+    @OnClick({R.id.imageview_image, R.id.imageview_video,
+            R.id.imageview_setting, R.id.imageview_facebook})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageview_image: {
+                UiUtils.hideKeyboard(getActivity());
                 mPresenter.onClickImage(mListImage);
                 break;
             }
@@ -173,11 +177,11 @@ public class ContentPostFragment extends BaseFragment {
         }
     }
 
-    public String getContentPost(){
+    public String getContentPost() {
         return etContent.getText().toString();
     }
 
-    public ArrayList<ImageLocal> getListImage(){
+    public ArrayList<ImageLocal> getListImage() {
         return mListImage;
     }
 

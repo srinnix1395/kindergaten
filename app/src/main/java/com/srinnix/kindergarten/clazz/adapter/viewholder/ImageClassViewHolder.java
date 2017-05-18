@@ -1,7 +1,6 @@
 package com.srinnix.kindergarten.clazz.adapter.viewholder;
 
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -35,7 +34,6 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
 
     private Disposable disposable;
     private ImageAdapter.OnClickImageListener listener;
-    private int position;
 
     public ImageClassViewHolder(View itemView, ImageAdapter.OnClickImageListener listener) {
         super(itemView);
@@ -43,9 +41,8 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
         this.listener = listener;
     }
 
-    public void bindData(Image image, int position) {
-        this.position = position;
-        ViewCompat.setTransitionName(imvImage, "image_" + position);
+    public void bindData(Image image) {
+        ViewCompat.setTransitionName(imvImage, "image_" + getAdapterPosition());
 
         if (image.isVideo()) {
             imvVideo.setVisibility(View.VISIBLE);
@@ -59,10 +56,14 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
-                return BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
+                return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_4444);
             }).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(bitmap -> imvImage.setImageBitmap(bitmap));
+                    .subscribe(bitmap -> {
+                        if (bitmap.getWidth() == 1) {
+                            imvImage.setImageResource(R.drawable.dummy_image);
+                        }
+                    });
         } else {
             Glide.with(itemView.getContext())
                     .load(image.getUrl())
@@ -77,7 +78,7 @@ public class ImageClassViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.imageview_image)
     void onClick() {
         if (listener != null) {
-            listener.onClick(position, imvImage);
+            listener.onClick(getAdapterPosition(), imvImage);
         }
     }
 

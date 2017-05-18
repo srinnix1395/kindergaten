@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.chat.presenter;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -41,12 +41,10 @@ import io.realm.RealmResults;
 public class ChatListPresenter extends BasePresenter {
 
     private ChatListDelegate mChatListDelegate;
-    private CompositeDisposable mDisposable;
 
     public ChatListPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mChatListDelegate = (ChatListDelegate) mDelegate;
-        mDisposable = new CompositeDisposable();
     }
 
     public void onClickItemChat(ChatListFragment fragment, Contact contact, String name, String urlImage) {
@@ -61,7 +59,7 @@ public class ChatListPresenter extends BasePresenter {
         ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
 
-        ((MainFragment) fragment.getParentFragment()).closeDrawer();
+        new Handler().postDelayed(() -> ((MainFragment) fragment.getParentFragment()).closeDrawer(), 300);
     }
 
     public void onDisconnect(ArrayList<Object> arrayList) {

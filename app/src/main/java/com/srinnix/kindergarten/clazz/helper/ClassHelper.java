@@ -1,49 +1,93 @@
 package com.srinnix.kindergarten.clazz.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
-import com.srinnix.kindergarten.request.RetrofitClient;
+import com.srinnix.kindergarten.base.helper.BaseHelper;
+import com.srinnix.kindergarten.model.Class;
+import com.srinnix.kindergarten.model.Image;
+import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.StudyTimetable;
+import com.srinnix.kindergarten.model.Timetable;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.ImageResponse;
-import com.srinnix.kindergarten.request.remote.ApiService;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by anhtu on 3/16/2017.
  */
 
-public class ClassHelper {
-    private CompositeDisposable mDisposable;
-    private ApiService mApi;
+public class ClassHelper extends BaseHelper {
 
     public ClassHelper(CompositeDisposable mDisposable) {
-        mApi = RetrofitClient.getApiService();
-        this.mDisposable = mDisposable;
+        super(mDisposable);
     }
 
-    public void getClassInfo(String classId, boolean isTeacher, ResponseListener<ClassResponse> listener) {
-        if (listener == null) {
-            return;
-        }
-        mDisposable.add(
-                mApi.getClassInfo(classId, isTeacher)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doFinally(listener::onFinally)
-                        .subscribe(listener::onSuccess, listener::onFail)
-        );
-    }
-
-    public void getClassImage(String classId, long time, ResponseListener<ImageResponse> listener) {
-        if (listener == null) {
-            return;
-        }
-        mDisposable.add(mApi.getImageClass(classId, time)
+    public Single<ApiResponse<ArrayList<Class>>> getListClass() {
+        return mApiService.getListClass()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<ApiResponse<ClassResponse>> getClassInfo(String classId, boolean isTeacher) {
+
+        return mApiService.getClassInfo(classId, isTeacher)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<ApiResponse<ArrayList<Image>>> getClassImage(String classId, long time) {
+        return mApiService.getImageClass(classId, time)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<ApiResponse<Timetable>> getTimeTable(String time) {
+        return mApiService.getTimeTable(time)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<ApiResponse<ArrayList<StudyTimetable>>> getStudyTimeTable(String time, String group) {
+        return mApiService.getStudyTimeTable(time, group)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<ApiResponse<ArrayList<Image>>> postImage(String token, String classId, ArrayList<ImageLocal> mListImage) {
+        List<MultipartBody.Part> listFile;
+        listFile = new ArrayList<>();
+        for (ImageLocal imageLocal : mListImage) {
+            MultipartBody.Part part = prepareFilePart(imageLocal);
+            if (part != null) {
+                listFile.add(part);
+            }
+        }
+
+        RequestBody bodyClassId = RequestBody.create(MediaType.parse("text/plain"), classId);
+
+        return mApiService.insertImages(token, bodyClassId, listFile)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    private MultipartBody.Part prepareFilePart(ImageLocal imageLocal) {
+        File file = new File(imageLocal.getPath());
+
+        if (!file.exists()) {
+            return null;
+        }
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        return MultipartBody.Part.createFormData("image", file.getName(), requestFile);
     }
 }

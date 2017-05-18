@@ -36,7 +36,12 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        super.getItemOffsets(outRect, view, parent, state);
+
         int position = parent.getChildAdapterPosition(view);
+        if (position < 0) {
+            return;
+        }
         if (adapter.getItemViewType(position) == ImageAdapter.VIEW_TYPE_LOADING) {
             return;
         }
@@ -58,7 +63,5 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
                 outRect.top = mSpace; // item top
             }
         }
-
-
     }
 }

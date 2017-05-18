@@ -48,7 +48,7 @@
         android:textSize="20sp"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_image"
+        android:id="@+id/recyclerview_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

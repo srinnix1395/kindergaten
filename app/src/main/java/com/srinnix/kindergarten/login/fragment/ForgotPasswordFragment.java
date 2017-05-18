@@ -79,7 +79,7 @@ public class ForgotPasswordFragment extends BaseFragment implements ForgotPasswo
 
     @Override
     public void onResetSuccess() {
-        AlertUtils.showToastSuccess(mContext, R.drawable.ic_lock_reset, R.string.password_reset);
+        AlertUtils.showToast(mContext, R.string.password_reset);
         onBackPressed();
     }
 }

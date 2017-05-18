@@ -1,7 +1,6 @@
 package com.srinnix.kindergarten.camera.fragment;
 
 import android.graphics.PorterDuff;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v4.content.ContextCompat;
 import android.view.SurfaceHolder;
@@ -18,6 +17,7 @@ import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.camera.presenter.CameraPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -68,6 +68,7 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
                     .load(R.drawable.kid_drawing_2)
                     .into(imvUnsignedIn);
 
+            mSurfaceView.setVisibility(View.GONE);
             relUnsignedIn.setVisibility(View.VISIBLE);
             return;
         }
@@ -115,6 +116,14 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
         initCamera();
     }
 
+    @Subscribe
+    public void onMessageLogout(MessageLogout message) {
+        UiUtils.hideProgressBar(pbLoading);
+        mSurfaceView.setVisibility(View.GONE);
+
+        releaseMediaPlayer();
+    }
+
     @OnClick(R.id.button_login)
     public void onClickLogin() {
         mPresenter.addFragmentLogin();
@@ -150,15 +159,17 @@ public class CameraFragment extends BaseFragment implements SurfaceHolder.Callba
             }
             UiUtils.hideProgressBar(pbLoading);
         });
-        mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+        mPlayer.setOnBufferingUpdateListener((mp, percent) -> {
+            Toast.makeText(mContext, String.valueOf(percent), Toast.LENGTH_SHORT).show();
+            UiUtils.showProgressBar(pbLoading);
+        });
+        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                Toast.makeText(mContext, String.valueOf(percent), Toast.LENGTH_SHORT).show();
-                UiUtils.showProgressBar(pbLoading);
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                return false;
             }
         });
         mPlayer.setScreenOnWhilePlaying(true);
-        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         try {
             mPlayer.setDataSource(url);

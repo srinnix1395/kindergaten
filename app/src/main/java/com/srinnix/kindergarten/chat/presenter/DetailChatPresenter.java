@@ -44,7 +44,6 @@ public class DetailChatPresenter extends BasePresenter {
 
     private DetailChatHelper mHelper;
     private Realm mRealm;
-    private CompositeDisposable mDisposable;
     private DetailChatDelegate mDetailChatDelegate;
     private boolean isLoadingDataFirst = true;
 
@@ -142,7 +141,7 @@ public class DetailChatPresenter extends BasePresenter {
             Object objectLast = listMessage.get(listMessage.size() - 1);
             if (objectLast instanceof Message && ((Message) objectLast).isTypingMessage()) {
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.addMessage(chatItem, listMessage.size() - 1);
+                    mDetailChatDelegate.addMessageWhileFriendTyping(chatItem);
                 }
             } else {
                 if (mDetailChatDelegate != null) {
@@ -151,8 +150,7 @@ public class DetailChatPresenter extends BasePresenter {
             }
         }
 
-
-        KinderApplication.getInstance().getSocketUtil().sendMessage(chatItem);
+        KinderApplication.getInstance().getSocketUtil().sendMessage(mContext, chatItem);
     }
 
     public void onMessage(Message message, ArrayList<Object> listMessage) {
@@ -252,7 +250,6 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onLoadMore(ArrayList<Object> listMessage) {
-        DebugLog.i("");
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
         mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token, new DetailChatHelper.DetailChatHelperListener() {
@@ -281,9 +278,7 @@ public class DetailChatPresenter extends BasePresenter {
 
     @Override
     public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
+        super.onDestroy();
 
         if (!mRealm.isClosed()) {
             mRealm.close();
@@ -298,9 +293,6 @@ public class DetailChatPresenter extends BasePresenter {
         if (tvStatus != null) {
             tvStatus.setText(StringUtil.getStatus(mContext,
                     message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE));
-
-            tvStatus.setCompoundDrawablesWithIntrinsicBounds(StringUtil.getDrawableState(
-                    message.isConnected ? ChatConstant.STATUS_ONLINE : ChatConstant.STATUS_OFFLINE), 0, 0, 0);
         }
 
         if (!listMessage.isEmpty()) {

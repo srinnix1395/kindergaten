@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.ImagePostViewHolder;
+import com.srinnix.kindergarten.custom.SquareItemLayout;
 import com.srinnix.kindergarten.model.ImageLocal;
 
 import java.util.ArrayList;
@@ -17,16 +18,27 @@ import java.util.ArrayList;
 
 public class ImagePostAdapter extends RecyclerView.Adapter<ImagePostViewHolder> {
     private ArrayList<ImageLocal> listImage;
-    private ImagePostViewHolder.OnClickViewHolderListener listener;
+    private ImagePostViewHolder.OnClickRemoveListener listener;
+    private int type;
 
-    public ImagePostAdapter(ArrayList<ImageLocal> listImage, ImagePostViewHolder.OnClickViewHolderListener listener) {
+    public ImagePostAdapter(ArrayList<ImageLocal> listImage, ImagePostViewHolder.OnClickRemoveListener listener, int type) {
         this.listImage = listImage;
         this.listener = listener;
+        this.type = type;
+    }
+
+    public ImagePostAdapter(ArrayList<ImageLocal> listImage, ImagePostViewHolder.OnClickRemoveListener listener) {
+        this.listImage = listImage;
+        this.listener = listener;
+        this.type = SquareItemLayout.TYPE_WIDTH;
     }
 
     @Override
     public ImagePostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_post, parent, false);
+        if (type == SquareItemLayout.TYPE_HEIGHT) {
+            ((SquareItemLayout) view).setMeasureType(SquareItemLayout.TYPE_HEIGHT);
+        }
         return new ImagePostViewHolder(view, listener);
     }
 

@@ -12,12 +12,14 @@ public class ImageLocal implements Parcelable{
     private long id;
     private String name;
     private String path;
+    private boolean isGIF;
     private boolean isSelected;
 
-    public ImageLocal(long id, String name, String path, boolean isSelected) {
+    public ImageLocal(long id, String name, String path, boolean isGIF, boolean isSelected) {
         this.id = id;
         this.name = name;
         this.path = path;
+        this.isGIF = isGIF;
         this.isSelected = isSelected;
     }
 
@@ -25,7 +27,22 @@ public class ImageLocal implements Parcelable{
         id = in.readLong();
         name = in.readString();
         path = in.readString();
+        isGIF = in.readByte() != 0;
         isSelected = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(path);
+        dest.writeByte((byte) (isGIF ? 1 : 0));
+        dest.writeByte((byte) (isSelected ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ImageLocal> CREATOR = new Creator<ImageLocal>() {
@@ -72,16 +89,7 @@ public class ImageLocal implements Parcelable{
         isSelected = selected;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(name);
-        dest.writeString(path);
-        dest.writeByte((byte) (isSelected ? 1 : 0));
+    public boolean isGIF() {
+        return isGIF;
     }
 }

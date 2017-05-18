@@ -63,7 +63,6 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindData(Post post) {
-
         switch (post.getType()) {
             case AppConstant.POST_NORMAL: {
                 tvTitle.setText("Thông báo thường");
@@ -77,8 +76,9 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
         tvContent.setText(post.getContent());
         tvCreatedAt.setText(StringUtil.getTimeAgo(itemView.getContext(), post.getCreatedAt()));
 
-        int size = post.getListImage().size();
-        if (size == 0) {
+        if (post.getListImage() == null) {
+            viewLine.setVisibility(View.VISIBLE);
+
             frameLayoutImage.setVisibility(View.GONE);
             imvFirstImage.setImageDrawable(null);
         } else {
@@ -88,23 +88,19 @@ public class PostedViewHolder extends RecyclerView.ViewHolder {
                     .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.dummy_image)
                     .into(imvFirstImage);
-        }
 
-        if (size <= 1) {
-            tvNumberImage.setVisibility(View.GONE);
-        } else {
-            tvNumberImage.setVisibility(View.VISIBLE);
-            tvNumberImage.setText(String.format(Locale.getDefault(), "%d ảnh", size));
+            if (post.getListImage().size() == 1) {
+                tvNumberImage.setVisibility(View.GONE);
+            } else {
+                tvNumberImage.setVisibility(View.VISIBLE);
+                tvNumberImage.setText(String.format(Locale.getDefault(), "%d ảnh", post.getListImage().size()));
+            }
+
+            viewLine.setVisibility(View.INVISIBLE);
         }
 
         bindImageLike(post.isUserLike(), post.getNumberOfLikes());
         bindComment(post.getNumberOfComments());
-
-        if (size == 0) {
-            viewLine.setVisibility(View.VISIBLE);
-        } else {
-            viewLine.setVisibility(View.INVISIBLE);
-        }
     }
 
     public void bindComment(int numberOfComments) {

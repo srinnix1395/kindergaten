@@ -4,27 +4,32 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.srinnix.kindergarten.model.Post;
 
-import java.util.ArrayList;
-
 /**
- * Created by anhtu on 2/28/2017.
+ * Created by anhtu on 5/15/2017.
  */
 
 public class PostResponse {
-
-    @SerializedName("posts")
+    @SerializedName("post")
     @Expose
-    private ArrayList<Post> listPost;
+    private Post post;
 
-    @SerializedName("likes")
+    @SerializedName("is_schedule")
     @Expose
-    private ArrayList<String> listLikes;
+    private boolean isSchedule;
 
-    public ArrayList<Post> getListPost() {
-        return listPost;
+    @SerializedName("time_schedule")
+    @Expose
+    private String time;
+
+    public Post getPost() {
+        return post;
     }
 
-    public ArrayList<String> getListLikes() {
-        return listLikes;
+    public boolean isSchedule() {
+        return isSchedule;
+    }
+
+    public String getTime() {
+        return time;
     }
 }

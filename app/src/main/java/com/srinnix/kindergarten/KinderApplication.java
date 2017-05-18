@@ -27,6 +27,7 @@ public class KinderApplication extends Application {
         initRealm();
     }
 
+
     private void initRealm() {
         Realm.init(this);
     }

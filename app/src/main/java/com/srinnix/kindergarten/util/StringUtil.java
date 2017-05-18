@@ -91,14 +91,18 @@ public class StringUtil {
             middleName = " " + namesParent[size - 2];
         }
 
-        if (contact.getGender().equals(AppConstant.MALE)) {
-            return String.format("%s%s %s - %s %s %s", context.getString(R.string.Mr),
-                    middleName, namesParent[size - 1], context.getString(R.string.baby),
-                    namesChild[sizeChild - 2], namesChild[sizeChild - 1]);
+        String nameChild;
+        if (namesChild[sizeChild - 2].equalsIgnoreCase("thị") ||
+                namesChild[sizeChild - 2].equalsIgnoreCase("văn")) {
+            nameChild = namesChild[sizeChild - 1];
         } else {
-            return String.format("%s%s %s - %s %s %s", context.getString(R.string.Ms),
-                    middleName, namesParent[size - 1], context.getString(R.string.baby),
-                    namesChild[sizeChild - 2], namesChild[sizeChild - 1]).trim();
+            nameChild = namesChild[sizeChild - 2] + " " + namesChild[sizeChild - 1];
+        }
+
+        if (contact.getGender().equals(AppConstant.MALE)) {
+            return String.format("%s%s %s - %s %s", context.getString(R.string.Mr), middleName, namesParent[size - 1], context.getString(R.string.baby), nameChild);
+        } else {
+            return String.format("%s%s %s - %s %s", context.getString(R.string.Ms), middleName, namesParent[size - 1], context.getString(R.string.baby), nameChild);
         }
 
     }
@@ -191,9 +195,9 @@ public class StringUtil {
 
     public static Spanned getComment(Comment comment) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return Html.fromHtml("<b>" + comment.getName() + "</b> " + comment.getComment());
+            return Html.fromHtml("<b><font face=\"sans-serif-light\">" + comment.getName() + "</font></b>  " + comment.getComment());
         } else {
-            return Html.fromHtml("<b>" + comment.getName() + "</b> " + comment.getComment(), Html.FROM_HTML_MODE_COMPACT);
+            return Html.fromHtml("<b><font face=\"sans-serif-light\">" + comment.getName() + "</font></b>  " + comment.getComment(), Html.FROM_HTML_MODE_COMPACT);
         }
     }
 
@@ -207,21 +211,28 @@ public class StringUtil {
         return sb.toString();
     }
 
-    public static int getDrawableState(int status) {
-        switch (status) {
-            case ChatConstant.STATUS_ONLINE: {
-                return R.drawable.ic_state_online;
-            }
-            case ChatConstant.STATUS_OFFLINE: {
-                return R.drawable.ic_state_offline;
-            }
-            default: {
-                return 0;
-            }
+    public static String getTimeHealthIndex(String measureTime) {
+        return measureTime.substring(measureTime.indexOf("/") + 1);
+    }
+
+    public static int getAccountType(int accountType) {
+        if (accountType == AppConstant.ACCOUNT_PARENTS) {
+            return R.string.parents;
+        } else {
+            return R.string.teacher;
         }
     }
 
-    public static String getTimeHealthIndex(String measureTime) {
-        return measureTime.substring(measureTime.indexOf("/") + 1);
+    public static boolean isScheduleTimeValid(int[] schedule) {
+        long now = System.currentTimeMillis();
+
+        Calendar c = Calendar.getInstance();
+        c.set(schedule[0],
+                schedule[1]-1,
+                schedule[2],
+                schedule[3],
+                schedule[4]);
+
+        return (c.getTimeInMillis() - now) >= (MINUTE_MILLIS * 10);
     }
 }

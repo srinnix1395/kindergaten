@@ -3,9 +3,11 @@ package com.srinnix.kindergarten.bulletinboard.adapter.viewholder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.model.ImageLocal;
 
 import butterknife.BindView;
@@ -22,6 +24,9 @@ public class ImageLocalViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.imageview_alpha)
     ImageView imvAlpha;
 
+    @BindView(R.id.textview_gif)
+    TextView tvGif;
+
     public ImageLocalViewHolder(View itemView, OnClickViewHolderListener listener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -33,11 +38,23 @@ public class ImageLocalViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindData(ImageLocal image) {
-        Glide.with(itemView.getContext())
-                .load(image.getPath())
-                .placeholder(R.drawable.dummy_image)
-                .error(R.drawable.image_error)
-                .into(imvImage);
+        if (image.isGIF()) {
+            Glide.with(itemView.getContext())
+                    .load(image.getPath())
+                    .asBitmap()
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_error)
+                    .into(imvImage);
+            tvGif.setVisibility(View.VISIBLE);
+        } else {
+            Glide.with(itemView.getContext())
+                    .load(image.getPath())
+                    .placeholder(R.drawable.dummy_image)
+                    .error(R.drawable.image_error)
+                    .into(imvImage);
+            tvGif.setVisibility(View.GONE);
+        }
+
         bindSelected(image.isSelected());
     }
 
@@ -47,9 +64,5 @@ public class ImageLocalViewHolder extends RecyclerView.ViewHolder {
         } else {
             imvAlpha.setImageDrawable(null);
         }
-    }
-
-    public interface OnClickViewHolderListener {
-        void onClick(int position);
     }
 }

@@ -7,13 +7,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.fragment.CommentFragment;
-import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.DetailImageFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.LikeDialogFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.PostFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
@@ -22,8 +21,8 @@ import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.request.model.Error;
 import com.srinnix.kindergarten.request.model.LikeResponse;
-import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -46,24 +44,22 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     private BulletinBoardDelegate mBoardDelegate;
     private BulletinBoardHelper mHelper;
-    private CompositeDisposable mDisposable;
     private boolean isLoadFirst = true;
 
     public BulletinBoardPresenter(BaseDelegate delegate) {
         super(delegate);
         mBoardDelegate = (BulletinBoardDelegate) delegate;
-        mDisposable = new CompositeDisposable();
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
     public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
         int size = arrayList.size();
 
-        long timePrevPost;
-        if (arrayList.size() == 1) {
-            timePrevPost = System.currentTimeMillis();
+        String id;
+        if (arrayList.size() == 1 && arrayList.get(size - 1) instanceof LoadingItem) {
+            id = AppConstant.NOW;
         } else {
-            timePrevPost = ((Post) arrayList.get(size - 2)).getCreatedAt();
+            id = ((Post) arrayList.get(size - 2)).getId();
         }
 
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
@@ -85,48 +81,43 @@ public class BulletinBoardPresenter extends BasePresenter {
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
             String idUser = SharedPreUtils.getInstance(mContext).getUserID();
             String token = SharedPreUtils.getInstance(mContext).getToken();
-            getPostSignIn(token, idUser, timePrevPost);
+            getPostSignIn(token, idUser, id);
         } else {
-            getPostUnsignIn(timePrevPost);
+            getPostUnsignIn(id);
         }
     }
 
-    private void getPostSignIn(String token, String idUser, long timePrevPost) {
-        mHelper.getPostSignIn(mContext, token, idUser, timePrevPost, new BulletinBoardHelper.PostListener() {
-            @Override
-            public void onSuccess(ArrayList<Post> arrayList) {
-                if (mBoardDelegate != null) {
-                    mBoardDelegate.updateSchoolBoard(arrayList, isLoadFirst);
-                }
-                if (isLoadFirst) {
-                    isLoadFirst = false;
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                handleExceptionPost(throwable);
-            }
-        });
+    private void getPostSignIn(String token, String idUser, String lastId) {
+        mDisposable.add(mHelper.getPostSignIn(token, idUser, lastId)
+                .subscribe(o -> {
+                            if (o instanceof Error) {
+                                ErrorUtil.handleErrorApi(mContext, (Error) o);
+                            } else {
+                                if (mBoardDelegate != null) {
+                                    mBoardDelegate.updateSchoolBoard((ArrayList<Post>) o, isLoadFirst);
+                                }
+                                if (isLoadFirst) {
+                                    isLoadFirst = false;
+                                }
+                            }
+                        }
+                        , this::handleExceptionPost));
     }
 
-    private void getPostUnsignIn(long timePrevPost) {
-        mHelper.getPostUnsignIn(mContext, timePrevPost, new BulletinBoardHelper.PostListener() {
-            @Override
-            public void onSuccess(ArrayList<Post> arrayList) {
-                if (mBoardDelegate != null) {
-                    mBoardDelegate.updateSchoolBoard(arrayList, isLoadFirst);
-                }
-                if (isLoadFirst) {
-                    isLoadFirst = false;
-                }
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                handleExceptionPost(throwable);
-            }
-        });
+    private void getPostUnsignIn(String lastId) {
+        mDisposable.add(mHelper.getPostUnsignIn(lastId)
+                .subscribe(o -> {
+                    if (o instanceof Error) {
+                        ErrorUtil.handleErrorApi(mContext, (Error) o);
+                    } else {
+                        if (mBoardDelegate != null) {
+                            mBoardDelegate.updateSchoolBoard((ArrayList<Post>) o, isLoadFirst);
+                        }
+                        if (isLoadFirst) {
+                            isLoadFirst = false;
+                        }
+                    }
+                }, this::handleExceptionPost));
     }
 
     private void handleExceptionPost(Throwable throwable) {
@@ -165,43 +156,14 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost,
                           String name, String image, int accountType) {
-        mHelper.likePost(token, idUser, idPost, name, image, accountType, new ResponseListener<LikeResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<LikeResponse> response) {
-                handleResponseLike(arrPost, response);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, new NullPointerException());
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+        mDisposable.add(mHelper.likePost(token, idUser, idPost, name, image, accountType)
+                .subscribe(likeResponseApiResponse -> handleResponseLike(arrPost, likeResponseApiResponse), throwable -> ErrorUtil.handleException(mContext, new NullPointerException())));
     }
 
     private void unlikePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
-        mHelper.unlikePost(token, idUser, idPost, new ResponseListener<LikeResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<LikeResponse> response) {
-                handleResponseLike(arrPost, response);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, new NullPointerException());
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+        mDisposable.add(mHelper.unlikePost(token, idUser, idPost)
+                .subscribe(likeResponseApiResponse -> handleResponseLike(arrPost, likeResponseApiResponse), throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
-
 
     private void handleResponseLike(ArrayList<Object> arrPost, ApiResponse<LikeResponse> response) {
         if (response == null) {
@@ -268,40 +230,34 @@ public class BulletinBoardPresenter extends BasePresenter {
             userId = preUtils.getUserID();
         }
 
-        long timePrev = arrPost.get(0) instanceof LoadingItem ? System.currentTimeMillis() : ((Post) arrPost.get(0)).getCreatedAt();
+        String idLastPost = arrPost.get(0) instanceof LoadingItem ? AppConstant.NOW : ((Post) arrPost.get(0)).getId();
 
-        mHelper.getNewPost(userSignedIn, token, userId, timePrev, new ResponseListener<PostResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<PostResponse> response) {
-                if (response == null) {
-                    ErrorUtil.handleException(mContext, new NullPointerException());
+        mDisposable.add(mHelper.getNewPost(userSignedIn, token, userId, idLastPost)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    mBoardDelegate.onRefreshResult(true, response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                mBoardDelegate.onRefreshResult(true, response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mBoardDelegate.onRefreshResult(false, null);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
 
     public void getPostAfterLogin(SwipeRefreshLayout refreshLayout, ArrayList<Object> mListPost) {
+        if (mListPost.isEmpty() || mListPost.get(0) instanceof LoadingItem) {
+            return;
+        }
+
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -315,46 +271,36 @@ public class BulletinBoardPresenter extends BasePresenter {
         String userId = SharedPreUtils.getInstance(mContext).getUserID();
 
         int size = mListPost.size();
-        long minTime = mListPost.get(size - 1) instanceof LoadingItem ?
-                ((Post) mListPost.get(size - 2)).getCreatedAt() :
-                ((Post) mListPost.get(size - 1)).getCreatedAt();
+        String minId = mListPost.get(size - 1) instanceof LoadingItem ?
+                ((Post) mListPost.get(size - 2)).getId() :
+                ((Post) mListPost.get(size - 1)).getId();
 
-        mHelper.getImportantPost(token, userId, minTime, new ResponseListener<PostResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<PostResponse> response) {
-                if (response == null) {
-                    ErrorUtil.handleException(mContext, new NullPointerException());
+        mDisposable.add(mHelper.getImportantPost(token, userId, minId)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mBoardDelegate.onRefreshResult(false, null);
+                        return;
+                    }
+
+                    mBoardDelegate.onGetImportantPost(true, response.getData());
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    mBoardDelegate.onRefreshResult(false, null);
-                    return;
-                }
-
-                mBoardDelegate.onGetImportantPost(true, response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mBoardDelegate.onRefreshResult(false, null);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
 
     public void onClickImages(Post post) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_IMAGE, post.getListImage());
 
-        ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle,
+        ViewManager.getInstance().addFragment(new DetailImageFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
@@ -409,13 +355,4 @@ public class BulletinBoardPresenter extends BasePresenter {
         ViewManager.getInstance().addFragment(new PostFragment(), null,
                 R.anim.translate_down_to_up, R.anim.translate_up_to_down);
     }
-
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
-
-
 }

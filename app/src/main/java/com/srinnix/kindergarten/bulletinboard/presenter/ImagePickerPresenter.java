@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.LongSparseArray;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
@@ -23,14 +24,12 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.util.AlertUtils;
-import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.util.ErrorUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by anhtu on 4/25/2017.
@@ -45,14 +44,12 @@ public class ImagePickerPresenter extends BasePresenter {
     private int numberImage = 0;
     private ImagePickerDelegate mImagePickerDelegate;
     private ImagePickerHelper mHelper;
-    private CompositeDisposable mDisposable;
     private File fileCapture;
 
     public ImagePickerPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mImagePickerDelegate = (ImagePickerDelegate) mDelegate;
 
-        mDisposable = new CompositeDisposable();
         mHelper = new ImagePickerHelper(mDisposable);
     }
 
@@ -63,7 +60,7 @@ public class ImagePickerPresenter extends BasePresenter {
         numberImage = arrayList != null ? arrayList.size() : 0;
     }
 
-    public void checkPermissionStorage(FragmentActivity activity, ArrayList<Long> mListImageSelected) {
+    public void checkPermissionStorage(FragmentActivity activity, LongSparseArray<ImageLocal> mListImageSelected) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             boolean isHasPermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
@@ -79,28 +76,28 @@ public class ImagePickerPresenter extends BasePresenter {
         }
     }
 
-    public void getImage(ArrayList<Long> mListImageSelected) {
-        mHelper.getLocalImage(mContext, new ImagePickerHelper.OnLoadImageLocalListener() {
-            @Override
-            public void onLoadSuccess(ArrayList<ImageLocal> imageLocals) {
-                int i = 0;
-                for (ImageLocal imageLocal : imageLocals) {
-                    if (i == mListImageSelected.size()) {
-                        break;
+    public void getImage(LongSparseArray<ImageLocal> mListImageSelected) {
+        mDisposable.add(mHelper.getLocalImage(mContext)
+                .subscribe(imageLocals -> {
+                    if (imageLocals == null) {
+                        mImagePickerDelegate.onLoadFail(R.string.error_common);
+                    } else {
+                        int i = 0;
+                        for (ImageLocal imageLocal : imageLocals) {
+                            if (i == mListImageSelected.size()) {
+                                break;
+                            }
+                            if (mListImageSelected.indexOfKey(imageLocal.getId()) >= 0) {
+                                i++;
+                                imageLocal.setSelected(true);
+                            }
+                        }
+                        mImagePickerDelegate.onLoadSuccess(imageLocals);
                     }
-                    if (mListImageSelected.contains(imageLocal.getId())) {
-                        i++;
-                        imageLocal.setSelected(true);
-                    }
-                }
-                mImagePickerDelegate.onLoadSuccess(imageLocals);
-            }
-
-            @Override
-            public void onLoadFail() {
-                mImagePickerDelegate.onLoadFail(R.string.error_common);
-            }
-        });
+                }, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mImagePickerDelegate.onLoadFail(R.string.error_common);
+                }));
     }
 
     public void onClickCamera(ImagePickerFragment imagePickerFragment) {
@@ -143,62 +140,43 @@ public class ImagePickerPresenter extends BasePresenter {
     public void displayImage(ArrayList<ImageLocal> mListImage) {
         Uri imageUri = Uri.fromFile(fileCapture);
         if (imageUri != null) {
-            MediaScannerConnection.scanFile(mContext, new String[]{imageUri.getPath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                @Override
-                public void onScanCompleted(String path, Uri uri) {
-                    mHelper.getImageCapture(mContext, fileCapture.getPath(), new ImagePickerHelper.OnGetImageCaptureListener() {
-                        @Override
-                        public void onLoadSuccess(ImageLocal imageLocal) {
+            MediaScannerConnection.scanFile(mContext, new String[]{imageUri.getPath()}, null, (path, uri) -> {
+                mHelper.getImageCapture(mContext, fileCapture.getPath())
+                        .subscribe(imageLocal -> {
                             mListImage.add(0, imageLocal);
                             mImagePickerDelegate.insertImageLocal(0);
-                        }
-
-                        @Override
-                        public void onLoadFail() {
-                            DebugLog.e("Loi get anh");
-                            AlertUtils.showToast(mContext, R.string.error_common);
-                        }
-                    });
-                }
+                        }, ErrorUtil::handleException);
             });
         }
     }
 
-    public void onClickImage(ArrayList<ImageLocal> mListImage, int position) {
-        ImageLocal imageLocal = mListImage.get(position);
-
+    public void onClickImage(ImageLocal imageLocal, int position, LongSparseArray<ImageLocal> mListImageSelected) {
         if (imageLocal.isSelected()) {
             numberImage--;
             imageLocal.setSelected(false);
+            mListImageSelected.remove(imageLocal.getId());
         } else {
+            if (numberImage == 10) {
+                AlertUtils.showToast(mContext, "Số ảnh tối đa là 10 ảnh");
+                return;
+            }
+
             numberImage++;
             imageLocal.setSelected(true);
+            mListImageSelected.put(imageLocal.getId(), imageLocal);
         }
 
         mImagePickerDelegate.updateStateImage(numberImage, position, imageLocal.isSelected());
     }
 
-    public void onClickAdd(ImagePickerFragment imagePickerFragment, ArrayList<ImageLocal> mListImage) {
-        if (!mListImage.isEmpty()) {
+    public void onClickAdd(ImagePickerFragment imagePickerFragment, LongSparseArray<ImageLocal> mListImage) {
+        if (mListImage.size() > 0) {
             ArrayList<ImageLocal> arrayList = new ArrayList<>();
-            for (ImageLocal imageLocal : mListImage) {
-                if (imageLocal.isSelected()) {
-                    arrayList.add(imageLocal);
-                }
+            for (int i = mListImage.size() - 1; i >= 0; i--) {
+                arrayList.add(mListImage.valueAt(i));
             }
-
             EventBus.getDefault().post(new MessageImageLocal(arrayList));
             imagePickerFragment.onBackPressed();
         }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
-
-
 }

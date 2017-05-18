@@ -1,6 +1,5 @@
 package com.srinnix.kindergarten.main.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +18,7 @@ import com.srinnix.kindergarten.main.delegate.MainDelegate;
 import com.srinnix.kindergarten.main.presenter.MainPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.messageeventbus.MessageLogout;
-import com.srinnix.kindergarten.service.MessagingService;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,6 +40,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
 
+    private MenuItem itemChat;
+
     private MainPresenter mPresenter;
 
     @Override
@@ -50,9 +51,6 @@ public class MainFragment extends BaseFragment implements MainDelegate {
 
     @Override
     protected void initChildView() {
-        Intent intent = new Intent(mContext, MessagingService.class);
-        mContext.startService(intent);
-
         mPresenter.updateRegId();
 
         mToolbar.setTitleTextColor(Color.WHITE);
@@ -62,6 +60,7 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         } else {
             mToolbar.inflateMenu(R.menu.main_menu_unsigned_in);
         }
+        itemChat = mToolbar.getMenu().findItem(R.id.menu_item_chat);
         mToolbar.setOnMenuItemClickListener(item -> {
             onMenuItemItemSelected(item);
             return false;
@@ -84,15 +83,11 @@ public class MainFragment extends BaseFragment implements MainDelegate {
                 break;
             }
             case R.id.menu_item_sign_out: {
-                LogoutHelper.signOut(mContext);
+                AlertUtils.showDialogConfirm(mContext, R.string.confirm_log_out, R.string.sign_out, (dialog, which) -> LogoutHelper.signOut(mContext));
                 break;
             }
-            case R.id.menu_item_account:{
+            case R.id.menu_item_account: {
                 mPresenter.onClickAccount();
-                break;
-            }
-            case R.id.menu_item_about: {
-
                 break;
             }
             case R.id.menu_item_chat: {
@@ -158,8 +153,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     }
 
     public void closeDrawer() {
-        if (mDrawer.isDrawerOpen(Gravity.RIGHT)) {
-            mDrawer.closeDrawer(Gravity.RIGHT, false);
+        if (mDrawer.isDrawerOpen(Gravity.END)) {
+            mDrawer.closeDrawer(Gravity.END, false);
         }
     }
 

@@ -20,6 +20,14 @@ public class MainActivity extends BaseActivity{
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!(ViewManager.getInstance().getActivity() instanceof MainActivity)) {
+            ViewManager.getInstance().setActivity(this);
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         BaseFragment currentFragment = ViewManager.getInstance().getCurrentFragment(this);

@@ -1,16 +1,13 @@
 package com.srinnix.kindergarten.children.presenter;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.ResponseListener;
-import com.srinnix.kindergarten.base.activity.ChartActivity;
+import com.srinnix.kindergarten.base.activity.HorizontalActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenDelegate;
-import com.srinnix.kindergarten.children.fragment.ChartFragment;
 import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
@@ -21,11 +18,8 @@ import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
-import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by anhtu on 2/21/2017.
@@ -33,17 +27,18 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class InfoChildrenPresenter extends BasePresenter {
 
-    private CompositeDisposable mDisposable;
     private ChildrenDelegate mChildrenDelegate;
     private ChildrenHelper mHelper;
     private String idChild;
     private boolean isLoadTimelineFirst = true;
     private Child infoChild;
 
+    private boolean isDisplayToolbar;
+
     public InfoChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
         this.mChildrenDelegate = (ChildrenDelegate) mChildrenDelegate;
-        mDisposable = new CompositeDisposable();
+
         mHelper = new ChildrenHelper(mDisposable);
     }
 
@@ -51,46 +46,37 @@ public class InfoChildrenPresenter extends BasePresenter {
     public void getData(Bundle bundle) {
         super.getData(bundle);
         idChild = bundle.getString(AppConstant.KEY_ID);
+        isDisplayToolbar = bundle.getBoolean(AppConstant.KEY_DISPLAY, false);
+
         getInfoChildren();
         getTimelineChildren(System.currentTimeMillis());
     }
 
     public void getInfoChildren() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mChildrenDelegate.onLoadFail(R.string.noInternetConnection);
+            mChildrenDelegate.onLoadFail(R.string.cant_connect);
             return;
         }
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mHelper.getInfoChildren(token, idChild, new ResponseListener<Child>() {
-            @Override
-            public void onSuccess(ApiResponse<Child> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
+        mDisposable.add(mHelper.getInfoChildren(token, idChild)
+                .subscribe(response -> {
+                    if (response == null) {
+                        throw new NullPointerException();
+                    }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-                infoChild = response.getData();
-                mChildrenDelegate.onLoadChildren(infoChild);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mChildrenDelegate.onLoadFail(R.string.error_common);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    infoChild = response.getData();
+                    mChildrenDelegate.onLoadChildren(infoChild);
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
+                    mChildrenDelegate.onLoadFail(R.string.error_common);
+                }));
     }
 
     public void getTimelineChildren(long time) {
@@ -100,41 +86,30 @@ public class InfoChildrenPresenter extends BasePresenter {
         }
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
-        mHelper.getTimelineChildren(token, idChild, time, new ResponseListener<ArrayList<HealthTotal>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<HealthTotal>> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
+        mDisposable.add(mHelper.getTimelineChildren(token, idChild, time)
+                .subscribe(response -> {
+                    if (response == null) {
+                        throw new NullPointerException();
+                    }
 
-                mChildrenDelegate.onLoadChildrenTimeLine(response.getData(), isLoadTimelineFirst);
-                if (isLoadTimelineFirst) {
-                    isLoadTimelineFirst = false;
-                }
-            }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    mChildrenDelegate.onLoadChildrenTimeLine(response.getData(), isLoadTimelineFirst);
+                    if (isLoadTimelineFirst) {
+                        isLoadTimelineFirst = false;
+                    }
+                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
     public void onClickIndex(ArrayList<Object> mListChildrenHealth, int type) {
         if (infoChild == null) {
             return;
         }
+
         ArrayList<HealthCompact> listHealth = new ArrayList<>();
 
         if (type == AppConstant.TYPE_HEIGHT) {
@@ -143,6 +118,7 @@ public class InfoChildrenPresenter extends BasePresenter {
                     listHealth.add(0, new HealthCompact(((HealthTotal) o).getHeight(),
                             ((HealthTotal) o).getHeightState(),
                             ((HealthTotal) o).getMeasureTime()));
+
                     if (listHealth.size() == 12) {
                         break;
                     }
@@ -161,28 +137,20 @@ public class InfoChildrenPresenter extends BasePresenter {
             }
         }
 
-        Intent myIntent = new Intent(mContext, ChartActivity.class);
-        ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext, R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        Intent intent = new Intent(mContext, HorizontalActivity.class);
+        intent.putExtra(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_HEALTH_INDEX);
 
-        Bundle bundle = options.toBundle();
+        Bundle bundle = new Bundle();
         bundle.putBoolean(AppConstant.KEY_GENDER, infoChild.getGender().equalsIgnoreCase("Nam"));
         bundle.putString(AppConstant.KEY_DOB, infoChild.getDOB());
         bundle.putParcelableArrayList(AppConstant.KEY_HEALTH, listHealth);
         bundle.putInt(AppConstant.KEY_HEALTH_TYPE, type);
 
-//        mContext.startActivity(myIntent, bundle);
-
-        ViewManager.getInstance().addFragment(new ChartFragment(), bundle,
-                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
+    public boolean isDisplayToolbar() {
+        return isDisplayToolbar;
     }
-
-
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorWhite"
                 android:clickable="true">
 
     <android.support.v7.widget.RecyclerView
@@ -17,7 +18,5 @@
         android:id="@+id/progressbar_loading"
         android:layout_width="@dimen/item_size"
         android:layout_height="@dimen/item_size"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="@dimen/margin_vertical"
-        android:layout_marginTop="@dimen/margin_vertical"/>
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

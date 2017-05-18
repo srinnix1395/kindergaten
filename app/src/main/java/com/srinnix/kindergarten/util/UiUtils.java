@@ -5,10 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,12 @@ import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by DELL on 2/3/2017.
@@ -29,18 +32,12 @@ import java.util.HashMap;
 
 public class UiUtils {
     public static int dpToPixel(Context context, float dp) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-//        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        metrics = context.getResources().getDisplayMetrics();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) ((dp * metrics.density) + 0.5);
     }
 
     public static int pixelsToDp(Context context, float px) {
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-//        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        metrics = context.getResources().getDisplayMetrics();
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) ((px / metrics.density) + 0.5);
     }
 
@@ -90,12 +87,20 @@ public class UiUtils {
             return;
         }
 
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
         progressBar.setEnabled(true);
         progressBar.setVisibility(View.VISIBLE);
     }
 
     public static void hideProgressBar(ProgressBar progressBar) {
         if (progressBar == null) {
+            return;
+        }
+
+        if (progressBar.getVisibility() != View.VISIBLE) {
             return;
         }
 
@@ -119,7 +124,7 @@ public class UiUtils {
             }
         }
         if (bitmap == null) {
-            bitmap = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.dummy_image);
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_4444);
         }
         return bitmap;
     }
@@ -145,7 +150,6 @@ public class UiUtils {
             }
         };
 
-//        Health.setDuration((int) (targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
         v.startAnimation(a);
     }
@@ -170,7 +174,6 @@ public class UiUtils {
             }
         };
 
-//        Health.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
 
         v.startAnimation(a);
@@ -239,23 +242,91 @@ public class UiUtils {
         v.startAnimation(a);
     }
 
+    public static void showDatePickerDialog(Context mContext, String source, DatePickerDialog.OnDateSetListener listener) {
+        if (TextUtils.isEmpty(source)) {
+            showDatePickerDialog(mContext, listener);
+            return;
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(simpleDateFormat.parse(source));
+
+            showDatePickerDialog(mContext, calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH), listener);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showDatePickerDialog(Context mContext, int year, int month, int date, DatePickerDialog.OnDateSetListener listener) {
+        DatePickerDialog dialog = new DatePickerDialog(mContext, listener, year, month, date);
+        dialog.show();
+    }
+
     public static void showDatePickerDialog(Context mContext, DatePickerDialog.OnDateSetListener listener) {
         Calendar now = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(mContext, listener,
+        showDatePickerDialog(mContext,
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH));
-        dialog.show();
+                now.get(Calendar.DAY_OF_MONTH),
+                listener);
     }
 
-    public static void showTimePickerDialog(Context mContext, TimePickerDialog.OnTimeSetListener listener) {
-        Calendar now = Calendar.getInstance();
-        TimePickerDialog dialog = new TimePickerDialog(mContext, listener,
-                now.get(Calendar.HOUR_OF_DAY),
-                now.get(Calendar.MINUTE),
-                true);
-        dialog.show();
+    public static void showTimePickerDialog(Context mContext, String time, TimePickerDialog.OnTimeSetListener listener) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateFormat.parse(time));
+
+            TimePickerDialog dialog = new TimePickerDialog(mContext, listener,
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true);
+            dialog.show();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 
+    public static int randomBackgroundActionTimeTable() {
+        Random random = new Random();
+
+        switch (random.nextInt(8)) {
+            case 2:
+            case 6: {
+                return R.drawable.background_state_weight;
+            }
+            case 3:
+            case 7: {
+                return R.drawable.background_action_green;
+            }
+            default: {
+                return R.drawable.background_state_height;
+            }
+        }
+    }
+
+    public static void hideView(View view) {
+        if (view == null) {
+            return;
+        }
+
+        if (view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    public static void showView(View view) {
+        if (view == null) {
+            return;
+        }
+
+        if (view.getVisibility() != View.VISIBLE) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
 }

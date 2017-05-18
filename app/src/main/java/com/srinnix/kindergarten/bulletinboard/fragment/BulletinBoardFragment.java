@@ -22,10 +22,11 @@ import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
 import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
-import com.srinnix.kindergarten.request.model.PostResponse;
+import com.srinnix.kindergarten.request.model.BulletinResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -96,11 +97,6 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Override
     protected void initChildView() {
-        if (SharedPreUtils.getInstance(mContext).isUserSignedIn() &&
-                SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
-            fabPost.setVisibility(View.VISIBLE);
-        }
-
         rvListPost.setAdapter(mPostAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -181,9 +177,8 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Subscribe
     public void onEventLoginSuccessfully(MessageLoginSuccessfully message) {
-        if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS
-                && fabPost.getVisibility() != View.VISIBLE) {
-            fabPost.setVisibility(View.VISIBLE);
+        if (SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
+            UiUtils.showView(fabPost);
         }
         mPresenter.getPostAfterLogin(refreshLayout, mListPost);
     }
@@ -203,9 +198,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Subscribe
     public void onEventLogout(MessageLogout message) {
-        if (fabPost.getVisibility() == View.VISIBLE) {
-            fabPost.setVisibility(View.GONE);
-        }
+        UiUtils.hideView(fabPost);
         mPresenter.logout(mListPost);
     }
 
@@ -228,6 +221,11 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
         } else {
             mListPost.addAll(sizeTotal - 1, data);
             mPostAdapter.notifyItemRangeInserted(sizeTotal - 1, data.size());
+        }
+
+        if (SharedPreUtils.getInstance(mContext).isUserSignedIn() &&
+                SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
+            UiUtils.showView(fabPost);
         }
 
         if (isLoadFirst && !mListPost.isEmpty()) {
@@ -258,7 +256,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void onRefreshResult(boolean result, PostResponse data) {
+    public void onRefreshResult(boolean result, BulletinResponse data) {
         if (!result) {
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);
@@ -308,7 +306,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     }
 
     @Override
-    public void onGetImportantPost(boolean result, PostResponse data) {
+    public void onGetImportantPost(boolean result, BulletinResponse data) {
         if (!result) {
             if (refreshLayout.isRefreshing()) {
                 refreshLayout.setRefreshing(false);

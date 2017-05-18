@@ -28,8 +28,6 @@ import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
-import io.reactivex.disposables.Disposable;
-
 /**
  * Created by DELL on 2/4/2017.
  */
@@ -37,7 +35,6 @@ import io.reactivex.disposables.Disposable;
 public class MainPresenter extends BasePresenter {
 
     private boolean isFirstOpenMenuChat = true;
-    private Disposable mDisposable;
     private int currentPosition = 5;
     private int accountType;
 
@@ -179,19 +176,24 @@ public class MainPresenter extends BasePresenter {
             return;
         }
 
+        if (currentPosition != AppConstant.FRAGMENT_BULLETIN_BOARD) {
+            changeTabIcon(mainFragment.getChildFragmentManager(), R.id.menu_item_news);
+            return;
+        }
+
         mainFragment.getActivity().finish();
     }
 
     public void updateRegId() {
         boolean isUserLoggedIn = SharedPreUtils.getInstance(mContext).isUserSignedIn();
-        boolean hasDeviceToken = SharedPreUtils.getInstance(mContext).getHasDeviceToken();
+        boolean hasDeviceToken = SharedPreUtils.getInstance(mContext).getServerHasDeviceToken();
 
         if (!hasDeviceToken && isUserLoggedIn && ServiceUtils.isNetworkAvailable(mContext)) {
             String token = SharedPreUtils.getInstance(mContext).getToken();
             String id = SharedPreUtils.getInstance(mContext).getUserID();
             String regID = FirebaseInstanceId.getInstance().getToken();
 
-            UpdateFirebaseRegId.updateRegId(mContext, mDisposable, token, id, regID);
+            UpdateFirebaseRegId.updateRegId(mContext, mDisposable, token, id, regID, null);
         }
     }
 
@@ -204,7 +206,7 @@ public class MainPresenter extends BasePresenter {
 
     public void removeUnUsedFragment(FragmentManager manager) {
         Fragment fragment = manager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CLASS));
-        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS ) {
+        if (fragment != null && currentPosition != AppConstant.FRAGMENT_CLASS) {
             manager.beginTransaction().remove(fragment).commit();
         }
     }
@@ -212,14 +214,6 @@ public class MainPresenter extends BasePresenter {
     public void onClickAccount() {
         ViewManager.getInstance().addFragment(new AccountFragment(), null,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-        }
     }
 
 }

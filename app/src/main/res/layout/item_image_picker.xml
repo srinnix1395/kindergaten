@@ -11,9 +11,28 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
+    <TextView
+        android:id="@+id/textview_gif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/margin_vertical_low"
+        android:background="@drawable/ic_gif_1"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:text="GIF"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"/>
+
     <ImageView
         android:id="@+id/imageview_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:src="@drawable/background_item_image_picker"/>
+
+
 </com.srinnix.kindergarten.custom.SquareItemLayout>

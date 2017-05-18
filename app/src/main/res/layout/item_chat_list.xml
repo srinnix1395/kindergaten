@@ -26,13 +26,12 @@
 
     <TextView
         android:id="@+id/text_view_name"
-        style="@style/StyleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="6dp"
-        android:layout_toLeftOf="@+id/image_view_status"
-        android:layout_toRightOf="@+id/cardview_icon"
+        android:layout_marginStart="6dp"
+        android:layout_toStartOf="@+id/image_view_status"
+        android:layout_toEndOf="@+id/cardview_icon"
         android:ellipsize="end"
         android:lines="1"
         android:textSize="12sp"
@@ -42,10 +41,10 @@
         android:id="@+id/image_view_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin_left_item"
-        android:layout_marginRight="@dimen/margin_right_item"
+        android:layout_marginStart="@dimen/margin_left_item"
+        android:layout_marginEnd="@dimen/margin_right_item"
         tools:src="@drawable/ic_state_online"/>
 
     <!--<View-->

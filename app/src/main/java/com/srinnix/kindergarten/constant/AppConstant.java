@@ -22,6 +22,8 @@ public class AppConstant {
     public static final String API_UPDATE_REG_ID = "user/updateRegID";
     public static final String API_RESET_PASSWORD = "user/requestResetPassword";
     public static final String API_GET_ACCOUNT_INFO = "user/getInfo";
+    public static final String API_CHANGE_PASSWORD = "user/changePassword";
+    public static final String API_UPDATE_INFO = "user/updateInfo";
 
     public static final String API_GET_POST_MEMBER = "post/get/member";
     public static final String API_GET_POST_GUEST = "post/get/guest";
@@ -33,11 +35,15 @@ public class AppConstant {
     public static final String API_INSERT_COMMENT = "post/insertComment";
     public static final String API_INSERT_POST = "post/insert";
     public static final String API_GET_IMPORTANT_POST = "post/getImportantPost";
+    public static final String API_GET_DETAIL_POST = "post/getDetail";
 
     public static final String API_GET_LIST_CLASS = "class/getList";
     public static final String API_GET_DETAIL_CLASS = "class/getDetail";
     public static final String API_GET_INFO_TEACHER = "class/getInfoTeacher";
     public static final String API_GET_IMAGE_CLASS = "class/getImage";
+    public static final String API_GET_TIMETABLE = "class/getTimetable";
+    public static final String API_GET_STUDY_TIMETABLE = "class/getStudyTimetable";
+    public static final String API_INSERT_IMAGE = "class/insertImage";
 
     public static final String API_GET_MESSAGE = "chat/message";
 
@@ -72,7 +78,7 @@ public class AppConstant {
     public static final int ACCOUNT_TEACHERS = 2;
     public static final int ACCOUNT_MANAGERS = 3;
 
-    public static final String HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
+    public static final String SERVER_HAS_DEVICE_TOKEN = "HAS_DEVICE_TOKEN";
     public static final String URL_CAMERA = "URL_CAMERA";
 
     public static final String MALE = "Nam";
@@ -84,15 +90,17 @@ public class AppConstant {
     public static final String KEY_IMAGE = "KEY_IMAGE";
     public static final String KEY_ACCOUNT_TYPE = "KEY_ACCOUNT_TYPE";
     public static final String KEY_CLASS = "KEY_CLASS";
-    public static final String KEY_MEMBER = "KEY_MEMBER";
     public static final String KEY_COMMENT = "KEY_COMMENT";
     public static final String KEY_LIKE = "KEY_LIKE";
-    public static final String KEY_TRANSITION = "KEY_TRANSITION";
     public static final String KEY_HEALTH = "KEY_HEALTH";
-    public static final String KEY_POSITION = "KEY_POSITION";
     public static final String KEY_HEALTH_TYPE = "KEY_HEALTH_TYPE";
     public static final String KEY_GENDER = "KEY_GENDER";
     public static final String KEY_DOB = "KEY_DOB";
+    public static final String KEY_GROUP = "KEY_GROUP";
+    public static final String KEY_TIME = "KEY_TIME";
+    public static final String KEY_FRAGMENT = "KEY_FRAGMENT";
+    public static final String KEY_RECEIVE_NOTIFICATION = "KEY_RECEIVE_NOTIFICATION";
+    public static final String KEY_DISPLAY = "KEY_DISPLAY";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -101,6 +109,8 @@ public class AppConstant {
     public static final int FRAGMENT_CAMERA = 7;
     public static final int FRAGMENT_CHILDREN = 8;
     public static final int FRAGMENT_INFO_CHILDREN = 9;
+    public static final int FRAGMENT_HEALTH_INDEX = 10;
+    public static final int FRAGMENT_STUDY_TIMETABLE = 11;
 
     public static final int STATE_WEIGHT_NORMAL = 1;
     public static final int STATE_WEIGHT_OBESE = 2;
@@ -117,5 +127,13 @@ public class AppConstant {
     public static final int NOTIFICATION_ALL = 1;
     public static final int NOTIFICATION_PARENT = 2;
     public static final int NOTIFICATION_TEACHER = 3;
-    public static final int ID_FOREGROUND = 1488935410;
+
+    public static final String GROUP_TINY = "Nhà trẻ";
+    public static final String GROUP_SMALL = "Mẫu giáo bé";
+    public static final String GROUP_MEDIUM = "Mẫu giáo nhỡ";
+    public static final String GROUP_BIG = "Mẫu giáo lớn";
+
+    public static final String LANGUAGE = "LANGUAGE";
+
+    public static final String NOW = "now";
 }

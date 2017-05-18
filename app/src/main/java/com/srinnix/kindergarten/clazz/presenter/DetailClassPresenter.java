@@ -1,11 +1,12 @@
 package com.srinnix.kindergarten.clazz.presenter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ImageView;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.activity.HorizontalActivity;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.fragment.PreviewImageFragment;
@@ -13,7 +14,9 @@ import com.srinnix.kindergarten.chat.fragment.DetailChatFragment;
 import com.srinnix.kindergarten.children.fragment.InfoChildrenFragment;
 import com.srinnix.kindergarten.clazz.delegate.ClassDelegate;
 import com.srinnix.kindergarten.clazz.fragment.DetailClassFragment;
+import com.srinnix.kindergarten.clazz.fragment.PostImageFragment;
 import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
+import com.srinnix.kindergarten.clazz.fragment.TimeTableFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
@@ -23,7 +26,6 @@ import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
-import com.srinnix.kindergarten.request.model.ImageResponse;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -33,8 +35,7 @@ import com.srinnix.kindergarten.util.ViewManager;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-
-import io.reactivex.disposables.CompositeDisposable;
+import java.util.Calendar;
 
 /**
  * Created by anhtu on 2/16/2017.
@@ -42,18 +43,17 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class DetailClassPresenter extends BasePresenter {
     private ClassDelegate mClassDelegate;
-    private CompositeDisposable mDisposable;
-    private boolean isTeacher;
-    private ClassResponse classResponse;
     private ClassHelper mHelper;
+
+    private ClassResponse classResponse;
     private String classId;
+    private boolean isTeacher;
     private boolean isLoadImageFirst = true;
 
     public DetailClassPresenter(BaseDelegate mClassDelegate) {
         super(mClassDelegate);
         this.mClassDelegate = (ClassDelegate) mClassDelegate;
 
-        mDisposable = new CompositeDisposable();
         mHelper = new ClassHelper(mDisposable);
         isTeacher = SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS;
     }
@@ -72,27 +72,15 @@ public class DetailClassPresenter extends BasePresenter {
 
     private void getClassInfo() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mClassDelegate.onLoadError(R.string.noInternetConnection);
+            mClassDelegate.onLoadError(R.string.cant_connect);
             return;
         }
 
-        mHelper.getClassInfo(classId, isTeacher, new ResponseListener<ClassResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<ClassResponse> response) {
-                handleResponseClassInfo(response);
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(throwable);
-                mClassDelegate.onLoadError(R.string.error_common);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+        mDisposable.add(mHelper.getClassInfo(classId, isTeacher)
+                .subscribe(this::handleResponseClassInfo, throwable -> {
+                    ErrorUtil.handleException(throwable);
+                    mClassDelegate.onLoadError(R.string.error_common);
+                }));
     }
 
     private void handleResponseClassInfo(ApiResponse<ClassResponse> response) {
@@ -156,6 +144,7 @@ public class DetailClassPresenter extends BasePresenter {
         InfoChildrenFragment childrenFragment = new InfoChildrenFragment();
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, id);
+        bundle.putBoolean(AppConstant.KEY_DISPLAY, true);
         childrenFragment.setArguments(bundle);
 
         ViewManager.getInstance().addFragment(childrenFragment, bundle,
@@ -169,37 +158,26 @@ public class DetailClassPresenter extends BasePresenter {
         } else {
             time = ((Image) arrayList.get(arrayList.size() - 2)).getCreatedAt();
         }
-        mHelper.getClassImage(classId, time, new ResponseListener<ImageResponse>() {
-            @Override
-            public void onSuccess(ApiResponse<ImageResponse> response) {
-                if (response == null) {
-                    onFail(new NullPointerException());
-                    return;
-                }
 
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    return;
-                }
-
-                if (response.getData() != null) {
-                    mClassDelegate.onLoadImage(response.getData().getArrayList(), isLoadImageFirst);
-                    if (isLoadImageFirst) {
-                        isLoadImageFirst = false;
+        mDisposable.add(mHelper.getClassImage(classId, time)
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        return;
                     }
-                }
-            }
 
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-            }
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
 
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                    if (response.getData() != null) {
+                        mClassDelegate.onLoadImage(response.getData(), isLoadImageFirst);
+                        if (isLoadImageFirst) {
+                            isLoadImageFirst = false;
+                        }
+                    }
+                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
     public boolean isTeacher() {
@@ -218,11 +196,11 @@ public class DetailClassPresenter extends BasePresenter {
 //                    .commit();
 //
 //        } else {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(AppConstant.KEY_IMAGE, image);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstant.KEY_IMAGE, image);
 
-            ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle,
-                    R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+        ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
 //        }
     }
 
@@ -230,20 +208,43 @@ public class DetailClassPresenter extends BasePresenter {
         getClassInfo();
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.clear();
-        }
-    }
-
     public void onClickTimeTable() {
+        Calendar calendar = Calendar.getInstance();
+
+        int month = calendar.get(Calendar.MONTH) + 1;
+        String time = month + "/" + calendar.get(Calendar.YEAR);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_TIME, time);
+
+        ViewManager.getInstance().addFragment(new TimeTableFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
+    }
+
+    public void onClickStudyTimeTable() {
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH) + 1;
+
+        String time = month + "/" + calendar.get(Calendar.YEAR);
+
+        Intent intent = new Intent(mContext, HorizontalActivity.class);
+        intent.putExtra(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_STUDY_TIMETABLE);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstant.KEY_GROUP, classResponse.getaClass().getGroup());
+        bundle.putString(AppConstant.KEY_TIME, time);
+
+        intent.putExtras(bundle);
+        mContext.startActivity(intent);
+    }
+
+    public void onClickLearnSchedule() {
+
 
     }
 
-    public void onClickPlaySchedule() {
-
+    public void onClickPost() {
+        ViewManager.getInstance().addFragment(new PostImageFragment(), null,
+                R.anim.translate_down_to_up, R.anim.translate_up_to_down);
     }
-
-
 }

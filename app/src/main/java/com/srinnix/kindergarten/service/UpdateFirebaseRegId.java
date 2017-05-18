@@ -19,7 +19,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class UpdateFirebaseRegId {
-    public static void updateRegId(Context context, Disposable disposable, String token, String id, String regID) {
+    public static void updateRegId(Context context, Disposable disposable, String token, String id,
+                                   String regID, OnUpdateRegIdListener listener) {
         ApiService apiService = RetrofitClient.getApiService();
 
         disposable = apiService.updateRegId(token, id, regID)
@@ -36,8 +37,15 @@ public class UpdateFirebaseRegId {
                         return;
                     }
 
-                    SharedPreUtils.getInstance(context).setHasDeviceToken(true);
+                    SharedPreUtils.getInstance(context).setServerHasDeviceToken(true);
                     DebugLog.i("Update regID successfully");
-                }, throwable -> DebugLog.e(throwable.getMessage()));
+                    if (listener != null) {
+                        listener.onFinally();
+                    }
+                }, ErrorUtil::handleException);
+    }
+
+    public interface OnUpdateRegIdListener{
+        void onFinally();
     }
 }

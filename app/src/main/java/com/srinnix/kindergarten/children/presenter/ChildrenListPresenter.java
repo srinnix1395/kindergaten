@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.ProgressBar;
 
 import com.srinnix.kindergarten.R;
-import com.srinnix.kindergarten.base.ResponseListener;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.children.delegate.ChildrenListDelegate;
@@ -15,7 +14,6 @@ import com.srinnix.kindergarten.children.helper.ChildrenHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.request.model.ApiResponse;
-import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
@@ -23,7 +21,6 @@ import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 
 /**
@@ -33,13 +30,12 @@ import io.realm.Realm;
 public class ChildrenListPresenter extends BasePresenter {
 
     private ChildrenHelper mHelper;
-    private CompositeDisposable mDisposable;
     private ChildrenListDelegate mChildrenDelegate;
 
     public ChildrenListPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
         mChildrenDelegate = (ChildrenListDelegate) mDelegate;
-        mDisposable = new CompositeDisposable();
+
         mHelper = new ChildrenHelper(mDisposable);
     }
 
@@ -84,7 +80,7 @@ public class ChildrenListPresenter extends BasePresenter {
 
     private void getListChildrenTeacher() {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
-            mChildrenDelegate.onLoadFail(R.string.noInternetConnection);
+            mChildrenDelegate.onLoadFail(R.string.cant_connect);
             return;
         }
 
@@ -94,44 +90,24 @@ public class ChildrenListPresenter extends BasePresenter {
         }
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
-        mHelper.getListChildrenTeacher(token, classId, new ResponseListener<ArrayList<Child>>() {
-            @Override
-            public void onSuccess(ApiResponse<ArrayList<Child>> response) {
-                if (response == null) {
-                    DebugLog.e("response is null");
+
+        mDisposable.add(mHelper.getListChildrenTeacher(token, classId)
+                .subscribe(response -> {
+                    if (response == null) {
+                        throw new NullPointerException();
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        mChildrenDelegate.onLoadFail(R.string.error_common);
+                        return;
+                    }
+
+                    mChildrenDelegate.onLoadListChildren(response.getData());
+
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
                     mChildrenDelegate.onLoadFail(R.string.error_common);
-                    return;
-                }
-
-                if (response.result == ApiResponse.RESULT_NG) {
-                    ErrorUtil.handleErrorApi(mContext, response.error);
-                    mChildrenDelegate.onLoadFail(R.string.error_common);
-                    return;
-                }
-
-                mChildrenDelegate.onLoadListChildren(response.getData());
-            }
-
-            @Override
-            public void onFail(Throwable throwable) {
-                ErrorUtil.handleException(mContext, throwable);
-                mChildrenDelegate.onLoadFail(R.string.error_common);
-            }
-
-            @Override
-            public void onFinally() {
-
-            }
-        });
+                }));
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
-        }
-    }
-
-
 }

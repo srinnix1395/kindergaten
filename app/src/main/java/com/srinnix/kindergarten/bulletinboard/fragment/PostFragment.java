@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +17,7 @@ import com.srinnix.kindergarten.bulletinboard.adapter.PostFragmentAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.PostPresenter;
 import com.srinnix.kindergarten.messageeventbus.MessagePostSuccessfully;
-import com.srinnix.kindergarten.model.Post;
+import com.srinnix.kindergarten.request.model.PostResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -87,10 +88,14 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         UiUtils.hideKeyboard(getActivity());
         tvPost.setVisibility(View.GONE);
         UiUtils.showProgressBar(pbLoading);
-        mPresenter.onClickPost(contentPostFragment.getContentPost(),
+
+        mPresenter.onClickPost(
+                contentPostFragment.getContentPost(),
                 contentPostFragment.getListImage(),
                 contentPostFragment.getNotificationType(),
-                settingPostFragment.getNotificationRange());
+                settingPostFragment.getNotificationRange(),
+                settingPostFragment.getPostType(),
+                settingPostFragment.getSchedule());
     }
 
     public void setEnabledTvPost(boolean enabled) {
@@ -103,36 +108,20 @@ public class PostFragment extends BaseFragment implements PostDelegate {
         }
     }
 
-    public void setVisibility(int resId, int visibility) {
-        switch (resId) {
-            case R.id.textview_post: {
-                tvPost.setVisibility(visibility);
-                break;
-            }
-            case R.id.progressbar_loading: {
-                if (visibility == View.VISIBLE) {
-                    UiUtils.showProgressBar(pbLoading);
-                } else {
-                    UiUtils.hideProgressBar(pbLoading);
-                }
-                break;
-            }
-            case R.id.imageview_success: {
-                imvSuccess.setVisibility(visibility);
-                break;
-            }
-        }
-    }
-
     public void gotoSettingFragment() {
         viewPager.setCurrentItem(1, true);
     }
 
     @Override
     public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 1) {
+            viewPager.setCurrentItem(0, true);
+            return;
+        }
+
         if (contentPostFragment.getContentPost().length() > 0 ||
                 !contentPostFragment.getListImage().isEmpty()) {
-            AlertUtils.showDialogCancelPost(mContext, (dialog, which) -> {
+            AlertUtils.showDialogConfirm(mContext, R.string.message_cancel_post, R.string.next, (dialog, which) -> {
                 PostFragment.super.onBackPressed();
             });
             return;
@@ -144,15 +133,23 @@ public class PostFragment extends BaseFragment implements PostDelegate {
     @Override
     public void onFail() {
         UiUtils.hideProgressBar(pbLoading);
-        tvPost.setVisibility(View.VISIBLE);
+        UiUtils.showView(tvPost);
     }
 
     @Override
-    public void onSuccess(Post data) {
+    public void onSuccess(PostResponse data) {
         UiUtils.hideProgressBar(pbLoading);
-        imvSuccess.setVisibility(View.VISIBLE);
+        UiUtils.showView(imvSuccess);
 
-        EventBus.getDefault().post(new MessagePostSuccessfully(data));
-        super.onBackPressed();
+        if (data.isSchedule()) {
+            AlertUtils.showToast(mContext, String.format(getString(R.string.post_schedule_successfully), data.getTime()));
+        } else {
+            EventBus.getDefault().post(new MessagePostSuccessfully(data.getPost()));
+        }
+        new Handler().postDelayed(PostFragment.super::onBackPressed, 2000);
+    }
+
+    public void setTextTvPost(int resTvPost) {
+        tvPost.setText(resTvPost);
     }
 }

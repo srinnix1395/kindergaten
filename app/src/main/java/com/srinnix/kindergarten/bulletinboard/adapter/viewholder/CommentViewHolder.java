@@ -32,11 +32,9 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     TextView tvFail;
 
     private int position;
-    private CommentViewHolder.CommentListener commentListener;
 
     public CommentViewHolder(View view, CommentViewHolder.CommentListener commentListener) {
         super(view);
-        this.commentListener = commentListener;
         ButterKnife.bind(this, view);
         itemView.setOnLongClickListener(v -> {
             commentListener.onLongClick(position);

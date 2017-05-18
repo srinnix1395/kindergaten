@@ -8,7 +8,7 @@
         title="@string/newFeed"/>
     <tab
         activeColor="@color/colorPrimary"
-        icon="@drawable/ic_class_selected"
+        icon="@drawable/ic_class_black"
         id="@+id/menu_item_class"
         inActiveColor="@color/colorGrayIconBottomBar"
         title="@string/aClass"/>

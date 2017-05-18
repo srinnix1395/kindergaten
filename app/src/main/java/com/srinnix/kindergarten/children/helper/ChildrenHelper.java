@@ -1,13 +1,13 @@
 package com.srinnix.kindergarten.children.helper;
 
-import com.srinnix.kindergarten.base.ResponseListener;
+import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.HealthTotal;
-import com.srinnix.kindergarten.request.RetrofitClient;
-import com.srinnix.kindergarten.request.remote.ApiService;
+import com.srinnix.kindergarten.request.model.ApiResponse;
 
 import java.util.ArrayList;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -16,50 +16,27 @@ import io.reactivex.schedulers.Schedulers;
  * Created by anhtu on 3/8/2017.
  */
 
-public class ChildrenHelper {
-    private CompositeDisposable mDisposable;
-    private ApiService mApi;
+public class ChildrenHelper extends BaseHelper {
 
-    public ChildrenHelper(CompositeDisposable compositeDisposable) {
-        mApi = RetrofitClient.getApiService();
-        mDisposable = compositeDisposable;
+    public ChildrenHelper(CompositeDisposable mDisposable) {
+        super(mDisposable);
     }
 
-    public void getInfoChildren(String token, String id, ResponseListener<Child> listener) {
-        if (listener == null) {
-            return;
-        }
-
-        mDisposable.add(mApi.getInfoChildren(token, id)
+    public Single<ApiResponse<Child>> getInfoChildren(String token, String id) {
+        return mApiService.getInfoChildren(token, id)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getListChildrenTeacher(String token, String idClass, ResponseListener<ArrayList<Child>> listener) {
-        if (listener == null) {
-            return;
-        }
-
-        mDisposable.add(
-                mApi.getListChildren(token, idClass)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doFinally(listener::onFinally)
-                        .subscribe(listener::onSuccess, listener::onFail));
-
-    }
-
-    public void getTimelineChildren(String token, String idChildren, long time, ResponseListener<ArrayList<HealthTotal>> listener) {
-        if (listener == null) {
-            return;
-        }
-
-        mDisposable.add(mApi.getTimelineChildren(token, idChildren, time)
+    public Single<ApiResponse<ArrayList<Child>>> getListChildrenTeacher(String token, String idClass) {
+        return mApiService.getListChildren(token, idClass)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(listener::onFinally)
-                .subscribe(listener::onSuccess, listener::onFail));
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(String token, String idChildren, long time) {
+        return mApiService.getTimelineChildren(token, idChildren, time)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

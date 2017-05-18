@@ -3,6 +3,61 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#fafafa"
+              android:clickable="true"
               android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
+
+    <!--<TextView-->
+    <!--style="@style/StyleSettingFragment"-->
+    <!--android:id="@+id/textview_language"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/height_item_high"-->
+    <!--android:text="@string/language"/>-->
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/spinner_language"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_item_high"
+        android:gravity="center_vertical"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginEnd="@dimen/margin_horizontal"
+        android:layout_marginStart="@dimen/margin_horizontal"
+        android:background="@color/colorDividerColor"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_noti"
+        style="@style/StyleSettingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_item_high"
+        android:paddingEnd="@dimen/margin_horizontal"
+        android:paddingStart="@dimen/margin_horizontal"
+        android:text="@string/receive_important_notification"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginEnd="@dimen/margin_horizontal"
+        android:layout_marginStart="@dimen/margin_horizontal"
+        android:background="@color/colorDividerColor"/>
+
+    <TextView
+        android:id="@+id/textview_about"
+        style="@style/StyleSettingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_item_high"
+        android:text="@string/about"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginEnd="@dimen/margin_horizontal"
+        android:layout_marginStart="@dimen/margin_horizontal"
+        android:background="@color/colorDividerColor"/>
 </LinearLayout>

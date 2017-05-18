@@ -20,6 +20,7 @@ import com.srinnix.kindergarten.children.delegate.ChildrenListDelegate;
 import com.srinnix.kindergarten.children.presenter.ChildrenListPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
+import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -139,6 +140,38 @@ public class ChildrenListFragment extends BaseFragment implements ChildrenListDe
 
             mPresenter.getListChildren(this, pbLoading);
         }
+    }
+
+    @Subscribe
+    public void onEventLogout(MessageLogout message) {
+        InfoChildrenFragment fragment = (InfoChildrenFragment) getChildFragmentManager().findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_INFO_CHILDREN));
+
+        if (fragment != null && !mListChildren.isEmpty()) {
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.remove(fragment);
+            transaction.commit();
+            fragment.onDestroy();
+        }
+
+        if (!mListChildren.isEmpty()) {
+            mListChildren.clear();
+            mChildrenAdapter.notifyDataSetChanged();
+        }
+        if (rvListChildren.getVisibility() == View.VISIBLE) {
+            rvListChildren.setVisibility(View.GONE);
+        }
+
+        if (relRetry.getVisibility() == View.VISIBLE) {
+            relRetry.setVisibility(View.GONE);
+        }
+
+        UiUtils.hideProgressBar(pbLoading);
+
+        Glide.with(mContext)
+                .load(R.drawable.kid_drawing)
+                .into(imvUnsignedIn);
+
+        relUnsignedIn.setVisibility(View.VISIBLE);
     }
 
     @Override

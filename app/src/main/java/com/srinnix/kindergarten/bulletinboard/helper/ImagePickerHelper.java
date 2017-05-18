@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.srinnix.kindergarten.model.ImageLocal;
-import com.srinnix.kindergarten.util.ErrorUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,16 +25,15 @@ public class ImagePickerHelper {
         this.mDisposable = mDisposable;
     }
 
-    public static final String[] projection = new String[]{
+    private static final String[] projection = new String[]{
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATA
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.MIME_TYPE
     };
 
-
-    public void getLocalImage(Context mContext, OnLoadImageLocalListener listener) {
-        mDisposable.add(Single.fromCallable(() -> {
-
+    public Single<ArrayList<ImageLocal>> getLocalImage(Context mContext) {
+        return Single.fromCallable(() -> {
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
                     null, null, MediaStore.Images.Media.DATE_ADDED);
 
@@ -51,10 +49,11 @@ public class ImagePickerHelper {
                     long id = cursor.getLong(0);
                     String name = cursor.getString(1);
                     String path = cursor.getString(2);
+                    boolean isGIF = cursor.getString(3).equalsIgnoreCase("image/gif");
 
                     file = new File(path);
                     if (file.exists()) {
-                        ImageLocal image = new ImageLocal(id, name, path, false);
+                        ImageLocal image = new ImageLocal(id, name, path, isGIF, false);
                         temp.add(image);
                     }
 
@@ -63,25 +62,20 @@ public class ImagePickerHelper {
             cursor.close();
 
             return temp;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(imageLocals -> {
-                    if (imageLocals == null) {
-                        listener.onLoadFail();
-                    } else {
-                        listener.onLoadSuccess(imageLocals);
-                    }
-                }, ErrorUtil::handleException));
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void getImageCapture(Context mContext, String path, OnGetImageCaptureListener listener) {
-        mDisposable.add(Single.fromCallable(() -> {
+    public Single<ImageLocal> getImageCapture(Context mContext, String path) {
+        return Single.fromCallable(() -> {
             ImageLocal image = null;
 
             Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Images.Media._ID,
-                            MediaStore.Images.Media.DISPLAY_NAME
+                            MediaStore.Images.Media.DISPLAY_NAME,
+                            MediaStore.Images.Media.MIME_TYPE
                     },
                     "_data = '" + path + "'", null, MediaStore.Images.Media.DATE_ADDED);
 
@@ -94,35 +88,18 @@ public class ImagePickerHelper {
             if (cursor.moveToNext()) {
                 long id = cursor.getLong(0);
                 String name = cursor.getString(1);
+                boolean isGIF = cursor.getString(2).equalsIgnoreCase("image/gif");
 
                 file = new File(path);
                 if (file.exists()) {
-                    image = new ImageLocal(id, name, path, false);
+                    image = new ImageLocal(id, name, path, isGIF, false);
                 }
             }
             cursor.close();
 
             return image;
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(imageLocal -> {
-                    if (imageLocal == null) {
-                        listener.onLoadFail();
-                    } else {
-                        listener.onLoadSuccess(imageLocal);
-                    }
-                }, ErrorUtil::handleException));
-    }
-
-    public interface OnLoadImageLocalListener {
-        void onLoadSuccess(ArrayList<ImageLocal> imageLocals);
-
-        void onLoadFail();
-    }
-
-    public interface OnGetImageCaptureListener {
-        void onLoadSuccess(ImageLocal imageLocal);
-
-        void onLoadFail();
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
