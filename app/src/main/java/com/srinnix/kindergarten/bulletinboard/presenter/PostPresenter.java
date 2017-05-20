@@ -5,7 +5,7 @@ import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.delegate.PostDelegate;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -30,7 +30,7 @@ public class PostPresenter extends BasePresenter {
         mHelper = new BulletinBoardHelper(mDisposable);
     }
 
-    public void onClickPost(String content, ArrayList<ImageLocal> mListImage,
+    public void onClickPost(String content, ArrayList<MediaLocal> mListImage,
                             int notificationType, int notificationRange, boolean now,
                             int[] schedule) {
 

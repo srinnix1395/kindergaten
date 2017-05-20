@@ -161,9 +161,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
 
         if (!SharedPreUtils.getInstance(mContext).isUserSignedIn() ||
                 SharedPreUtils.getInstance(mContext).getAccountType() != AppConstant.ACCOUNT_PARENTS) {
-            imvChat1.setVisibility(View.GONE);
-            imvChat2.setVisibility(View.GONE);
-            imvChat3.setVisibility(View.GONE);
+            UiUtils.hideView(imvChat1);
+            UiUtils.hideView(imvChat2);
+            UiUtils.hideView(imvChat3);
         }
 
         if (SharedPreUtils.getInstance(mContext).isUserSignedIn()) {
@@ -396,6 +396,10 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
                     .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.image_teacher)
                     .into(imvIcon3);
+        } else {
+            UiUtils.hideView(imvChat1);
+            UiUtils.hideView(imvChat2);
+            UiUtils.hideView(imvChat3);
         }
 
         if (mPresenter.isTeacher()) {

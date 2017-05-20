@@ -2,6 +2,7 @@
 <com.srinnix.kindergarten.custom.SquareItemLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,14 +25,36 @@
 
     <TextView
         android:id="@+id/textview_gif"
-        android:layout_width="@dimen/item_size"
-        android:layout_height="@dimen/item_size"
-        android:layout_gravity="center"
-        android:background="@drawable/ic_gif_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/margin_vertical_low"
+        android:background="@drawable/ic_gif_1"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
         android:text="GIF"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textview_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/margin_vertical_low"
+        android:background="@drawable/ic_gif_1"
+        android:drawablePadding="@dimen/padding_drawable"
+        android:drawableStart="@drawable/ic_camera_20dp"
+        android:gravity="center"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/colorWhite"
+        tools:text="8:52"/>
 
 </com.srinnix.kindergarten.custom.SquareItemLayout>

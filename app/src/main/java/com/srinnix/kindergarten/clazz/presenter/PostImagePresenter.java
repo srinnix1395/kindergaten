@@ -5,11 +5,11 @@ import android.os.Bundle;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.fragment.ImagePickerFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.MediaPickerFragment;
 import com.srinnix.kindergarten.clazz.delegate.PostImageDelegate;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.ErrorUtil;
@@ -34,7 +34,7 @@ public class PostImagePresenter extends BasePresenter {
         mHelper = new ClassHelper(mDisposable);
     }
 
-    public void onClickPost(ArrayList<ImageLocal> mListImage) {
+    public void onClickPost(ArrayList<MediaLocal> mListImage) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             mPostImageDelegate.onFail();
@@ -64,11 +64,11 @@ public class PostImagePresenter extends BasePresenter {
                 }));
     }
 
-    public void onClickImage(ArrayList<ImageLocal> mListImage) {
+    public void onClickImage(ArrayList<MediaLocal> mListImage) {
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(AppConstant.KEY_IMAGE, mListImage);
+        bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, mListImage);
 
-        ViewManager.getInstance().addFragment(new ImagePickerFragment(), bundle,
+        ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 

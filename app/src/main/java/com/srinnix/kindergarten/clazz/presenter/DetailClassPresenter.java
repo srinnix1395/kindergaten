@@ -118,7 +118,7 @@ public class DetailClassPresenter extends BasePresenter {
                 }
             }
             bundle.putInt(AppConstant.KEY_STATUS, status);
-            bundle.putString(AppConstant.KEY_IMAGE, teacher.getImage());
+            bundle.putString(AppConstant.KEY_MEDIA, teacher.getImage());
             bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, AppConstant.ACCOUNT_TEACHERS);
 
             ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,
@@ -127,7 +127,7 @@ public class DetailClassPresenter extends BasePresenter {
     }
 
     public void onClickTeacher(FragmentManager fragmentManager, int position) {
-        if (classResponse == null) {
+        if (classResponse.getTeacherArrayList().isEmpty()) {
             return;
         }
 
@@ -197,7 +197,7 @@ public class DetailClassPresenter extends BasePresenter {
 //
 //        } else {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(AppConstant.KEY_IMAGE, image);
+        bundle.putParcelable(AppConstant.KEY_MEDIA, image);
 
         ViewManager.getInstance().addFragment(new PreviewImageFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);

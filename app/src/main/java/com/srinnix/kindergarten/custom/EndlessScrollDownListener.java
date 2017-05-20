@@ -34,15 +34,6 @@ public abstract class EndlessScrollDownListener extends RecyclerView.OnScrollLis
             lastVisibleItemCount = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
         }
 
-        // If the total item count is zero and the previous isn't, assume the
-        // list is invalidated and should be reset back to initial state
-        if (totalItemCount < previousTotalItemCount) {
-            this.previousTotalItemCount = totalItemCount;
-            if (totalItemCount == 0) {
-                isLoading = true;
-            }
-        }
-
         //if it's still loading and current total item > previous total item -> disable loading
         if (isLoading && (totalItemCount > previousTotalItemCount)) {
             isLoading = false;

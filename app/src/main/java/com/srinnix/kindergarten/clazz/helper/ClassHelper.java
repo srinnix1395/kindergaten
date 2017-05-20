@@ -3,7 +3,7 @@ package com.srinnix.kindergarten.clazz.helper;
 import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.model.Class;
 import com.srinnix.kindergarten.model.Image;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.model.StudyTimetable;
 import com.srinnix.kindergarten.model.Timetable;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -62,11 +62,11 @@ public class ClassHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<ArrayList<Image>>> postImage(String token, String classId, ArrayList<ImageLocal> mListImage) {
+    public Single<ApiResponse<ArrayList<Image>>> postImage(String token, String classId, ArrayList<MediaLocal> mListImage) {
         List<MultipartBody.Part> listFile;
         listFile = new ArrayList<>();
-        for (ImageLocal imageLocal : mListImage) {
-            MultipartBody.Part part = prepareFilePart(imageLocal);
+        for (MediaLocal mediaLocal : mListImage) {
+            MultipartBody.Part part = prepareFilePart(mediaLocal);
             if (part != null) {
                 listFile.add(part);
             }
@@ -80,8 +80,8 @@ public class ClassHelper extends BaseHelper {
 
     }
 
-    private MultipartBody.Part prepareFilePart(ImageLocal imageLocal) {
-        File file = new File(imageLocal.getPath());
+    private MultipartBody.Part prepareFilePart(MediaLocal mediaLocal) {
+        File file = new File(mediaLocal.getPath());
 
         if (!file.exists()) {
             return null;

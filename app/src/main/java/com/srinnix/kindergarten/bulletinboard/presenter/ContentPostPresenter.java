@@ -5,9 +5,9 @@ import android.os.Bundle;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.fragment.ImagePickerFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.MediaPickerFragment;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
@@ -22,16 +22,21 @@ public class ContentPostPresenter extends BasePresenter {
         super(mDelegate);
     }
 
-    public void onClickImage(ArrayList<ImageLocal> mListImage) {
+    public void onClickImage(ArrayList<MediaLocal> mListMedia) {
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(AppConstant.KEY_IMAGE, mListImage);
+        bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, mListMedia);
 
-        ViewManager.getInstance().addFragment(new ImagePickerFragment(), bundle,
+        ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
-    public void onClickVideo() {
+    public void onClickVideo(ArrayList<MediaLocal> mListMedia) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, mListMedia);
+        bundle.putInt(AppConstant.KEY_MEDIA_TYPE, AppConstant.TYPE_VIDEO);
 
+        ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
+                R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 
     public void onClickFacebook() {

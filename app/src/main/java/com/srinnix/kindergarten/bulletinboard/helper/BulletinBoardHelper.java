@@ -2,8 +2,8 @@ package com.srinnix.kindergarten.bulletinboard.helper;
 
 import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.model.Comment;
-import com.srinnix.kindergarten.model.ImageLocal;
 import com.srinnix.kindergarten.model.LikeModel;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -129,12 +129,12 @@ public class BulletinBoardHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<PostResponse>> post(String token, String content, ArrayList<ImageLocal> listImage, int notiType, int notificationRange, boolean now, int[] schedule) {
+    public Single<ApiResponse<PostResponse>> post(String token, String content, ArrayList<MediaLocal> listImage, int notiType, int notificationRange, boolean now, int[] schedule) {
         List<MultipartBody.Part> listFile = null;
         if (!listImage.isEmpty()) {
             listFile = new ArrayList<>();
-            for (ImageLocal imageLocal : listImage) {
-                MultipartBody.Part part = RetrofitClient.prepareFilePart(imageLocal.getPath());
+            for (MediaLocal mediaLocal : listImage) {
+                MultipartBody.Part part = RetrofitClient.prepareFilePart(mediaLocal.getPath());
                 if (part != null) {
                     listFile.add(part);
                 }

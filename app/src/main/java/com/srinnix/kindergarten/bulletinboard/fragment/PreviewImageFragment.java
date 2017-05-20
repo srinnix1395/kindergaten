@@ -77,7 +77,7 @@ public class PreviewImageFragment extends BaseFragment {
     @Override
     protected void getData() {
         super.getData();
-        image = getArguments().getParcelable(AppConstant.KEY_IMAGE);
+        image = getArguments().getParcelable(AppConstant.KEY_MEDIA);
     }
 
     @Override

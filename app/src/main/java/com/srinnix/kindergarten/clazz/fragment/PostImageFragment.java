@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
+import com.srinnix.kindergarten.bulletinboard.adapter.MediaPostAdapter;
 import com.srinnix.kindergarten.clazz.delegate.PostImageDelegate;
 import com.srinnix.kindergarten.clazz.presenter.PostImagePresenter;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.model.Image;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.model.MessageImagePostSuccessfully;
 import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -53,8 +53,8 @@ public class PostImageFragment extends BaseFragment implements PostImageDelegate
     @BindView(R.id.recyclerview_image)
     RecyclerView rvImages;
 
-    private ArrayList<ImageLocal> mListImage;
-    private ImagePostAdapter mAdapter;
+    private ArrayList<MediaLocal> mListImage;
+    private MediaPostAdapter mAdapter;
 
     private PostImagePresenter mPresenter;
 
@@ -67,7 +67,7 @@ public class PostImageFragment extends BaseFragment implements PostImageDelegate
     protected void initData() {
         super.initData();
         mListImage = new ArrayList<>();
-        mAdapter = new ImagePostAdapter(mListImage, position -> {
+        mAdapter = new MediaPostAdapter(mListImage, position -> {
             mListImage.remove(position);
             mAdapter.notifyItemRemoved(position);
 

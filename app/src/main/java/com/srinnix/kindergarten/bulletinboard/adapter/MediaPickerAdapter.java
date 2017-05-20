@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
-import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.ImageLocalViewHolder;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.MediaLocalViewHolder;
+import com.srinnix.kindergarten.model.MediaLocal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,23 +17,23 @@ import java.util.List;
  * Created by anhtu on 4/24/2017.
  */
 
-public class ImagePickerAdapter extends RecyclerView.Adapter<ImageLocalViewHolder> {
-    private ArrayList<ImageLocal> arrayList;
+public class MediaPickerAdapter extends RecyclerView.Adapter<MediaLocalViewHolder> {
+    private ArrayList<MediaLocal> arrayList;
     private OnClickViewHolderListener listener;
 
-    public ImagePickerAdapter(ArrayList<ImageLocal> arrayList, OnClickViewHolderListener listener) {
+    public MediaPickerAdapter(ArrayList<MediaLocal> arrayList, OnClickViewHolderListener listener) {
         this.arrayList = arrayList;
         this.listener = listener;
     }
 
     @Override
-    public ImageLocalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MediaLocalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_picker, parent, false);
-        return new ImageLocalViewHolder(view, listener);
+        return new MediaLocalViewHolder(view, listener);
     }
 
     @Override
-    public void onBindViewHolder(ImageLocalViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(MediaLocalViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
         int size = payloads.size();
 
@@ -48,7 +48,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImageLocalViewHolde
     }
 
     @Override
-    public void onBindViewHolder(ImageLocalViewHolder holder, int position) {
+    public void onBindViewHolder(MediaLocalViewHolder holder, int position) {
         holder.bindData(arrayList.get(position));
     }
 

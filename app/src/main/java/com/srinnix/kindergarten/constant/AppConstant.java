@@ -87,7 +87,7 @@ public class AppConstant {
     public static final String KEY_ID = "KEY_ID";
     public static final String KEY_NAME = "KEY_NAME";
     public static final String KEY_STATUS = "KEY_STATUS";
-    public static final String KEY_IMAGE = "KEY_IMAGE";
+    public static final String KEY_MEDIA = "KEY_MEDIA";
     public static final String KEY_ACCOUNT_TYPE = "KEY_ACCOUNT_TYPE";
     public static final String KEY_CLASS = "KEY_CLASS";
     public static final String KEY_COMMENT = "KEY_COMMENT";
@@ -101,6 +101,7 @@ public class AppConstant {
     public static final String KEY_FRAGMENT = "KEY_FRAGMENT";
     public static final String KEY_RECEIVE_NOTIFICATION = "KEY_RECEIVE_NOTIFICATION";
     public static final String KEY_DISPLAY = "KEY_DISPLAY";
+    public static final String KEY_MEDIA_TYPE = "KEY_MEDIA_TYPE";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -136,4 +137,7 @@ public class AppConstant {
     public static final String LANGUAGE = "LANGUAGE";
 
     public static final String NOW = "now";
+
+    public static final int TYPE_IMAGE = 1;
+    public static final int TYPE_VIDEO = 2;
 }

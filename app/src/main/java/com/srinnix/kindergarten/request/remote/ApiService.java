@@ -196,7 +196,7 @@ public interface ApiService {
     @GET(AppConstant.API_GET_HEALTH_INDEX_CHILDREN)
     Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(@Header("x-access-token") String token,
                                                                     @Query("_id_child") String childId,
-                                                                    @Query("time_prev") long time);
+                                                                    @Query("time_prev") long timePrev);
 
 
     @GET(AppConstant.API_GET_LIST_CHILDREN)

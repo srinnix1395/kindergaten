@@ -1,6 +1,6 @@
 package com.srinnix.kindergarten.messageeventbus;
 
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 
 import java.util.ArrayList;
 
@@ -9,9 +9,9 @@ import java.util.ArrayList;
  */
 
 public class MessageImageLocal {
-    public final ArrayList<ImageLocal> mListImage;
+    public final ArrayList<MediaLocal> mListImage;
 
-    public MessageImageLocal(ArrayList<ImageLocal> mListImage) {
+    public MessageImageLocal(ArrayList<MediaLocal> mListImage) {
         this.mListImage = mListImage;
     }
 }

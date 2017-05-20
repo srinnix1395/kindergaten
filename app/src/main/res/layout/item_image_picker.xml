@@ -28,6 +28,23 @@
         android:textColor="@color/colorWhite"
         android:textStyle="bold"/>
 
+    <TextView
+        android:id="@+id/textview_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/margin_vertical_low"
+        android:background="@drawable/ic_gif_1"
+        android:drawablePadding="@dimen/padding_drawable"
+        android:drawableStart="@drawable/ic_camera_20dp"
+        android:gravity="center"
+        android:paddingBottom="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/colorWhite"
+        tools:text="8:52"/>
+
     <ImageView
         android:id="@+id/imageview_alpha"
         android:layout_width="match_parent"

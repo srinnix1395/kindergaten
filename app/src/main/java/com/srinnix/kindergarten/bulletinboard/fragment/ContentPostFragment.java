@@ -12,14 +12,14 @@ import android.widget.RadioButton;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.adapter.ImagePostAdapter;
+import com.srinnix.kindergarten.bulletinboard.adapter.MediaPostAdapter;
 import com.srinnix.kindergarten.bulletinboard.presenter.ContentPostPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
 import com.srinnix.kindergarten.custom.SquareItemLayout;
 import com.srinnix.kindergarten.messageeventbus.MessageEnabledNotificationRange;
 import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,8 +44,8 @@ public class ContentPostFragment extends BaseFragment {
     @BindView(R.id.radio_normal)
     RadioButton radioNormal;
 
-    private ArrayList<ImageLocal> mListImage;
-    private ImagePostAdapter mAdapter;
+    private ArrayList<MediaLocal> mListMedia;
+    private MediaPostAdapter mAdapter;
     private ContentPostPresenter mPresenter;
 
     @Override
@@ -56,12 +56,12 @@ public class ContentPostFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        mListImage = new ArrayList<>();
-        mAdapter = new ImagePostAdapter(mListImage, position -> {
-            mListImage.remove(position);
+        mListMedia = new ArrayList<>();
+        mAdapter = new MediaPostAdapter(mListMedia, position -> {
+            mListMedia.remove(position);
             mAdapter.notifyItemRemoved(position);
 
-            if (!mListImage.isEmpty()) {
+            if (!mListMedia.isEmpty()) {
                 ((PostFragment) getParentFragment()).setEnabledTvPost(true);
             } else {
                 rvImages.setVisibility(View.GONE);
@@ -81,7 +81,7 @@ public class ContentPostFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0 || !mListImage.isEmpty()) {
+                if (s.length() > 0 || !mListMedia.isEmpty()) {
                     ((PostFragment) getParentFragment()).setEnabledTvPost(true);
                 } else {
                     ((PostFragment) getParentFragment()).setEnabledTvPost(false);
@@ -116,11 +116,11 @@ public class ContentPostFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.imageview_image: {
                 UiUtils.hideKeyboard(getActivity());
-                mPresenter.onClickImage(mListImage);
+                mPresenter.onClickImage(mListMedia);
                 break;
             }
             case R.id.imageview_video: {
-                mPresenter.onClickVideo();
+                mPresenter.onClickVideo(mListMedia);
                 break;
             }
             case R.id.imageview_facebook: {
@@ -162,15 +162,15 @@ public class ContentPostFragment extends BaseFragment {
             rvImages.setVisibility(View.VISIBLE);
         }
 
-        int sizeTotal = mListImage.size();
+        int sizeTotal = mListMedia.size();
         if (sizeTotal > 0) {
-            mListImage.clear();
+            mListMedia.clear();
             mAdapter.notifyItemRangeRemoved(0, sizeTotal);
         }
-        mListImage.addAll(message.mListImage);
+        mListMedia.addAll(message.mListImage);
         mAdapter.notifyItemRangeInserted(0, message.mListImage.size());
 
-        if (!mListImage.isEmpty()) {
+        if (!mListMedia.isEmpty()) {
             ((PostFragment) getParentFragment()).setEnabledTvPost(true);
         } else {
             ((PostFragment) getParentFragment()).setEnabledTvPost(false);
@@ -181,8 +181,8 @@ public class ContentPostFragment extends BaseFragment {
         return etContent.getText().toString();
     }
 
-    public ArrayList<ImageLocal> getListImage() {
-        return mListImage;
+    public ArrayList<MediaLocal> getListImage() {
+        return mListMedia;
     }
 
     public int getNotificationType() {

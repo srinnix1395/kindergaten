@@ -98,7 +98,7 @@
     <string name="confirm">Xác nhận</string>
     <string name="next">Tiếp tục</string>
     <string name="message_cancel_post">Bạn sẽ từ bỏ những thông tin vừa định đăng?</string>
-    <string name="tap_to_select_image">Chạm để chọn ảnh</string>
+    <string name="tap_to_select_media">Chạm để chọn ảnh/video</string>
     <string name="image">ảnh</string>
     <string name="photo_camera">Máy ảnh</string>
     <string name="add">Thêm</string>
@@ -147,4 +147,5 @@
     <string name="children_info">Thông tin con trẻ</string>
     <string name="schedule_is_not_valid">Hãy lên lịch trong ít nhất 10 phút nữa!</string>
     <string name="post_schedule_successfully">Thông báo sẽ được đăng vào %s</string>
+    <string name="video">video</string>
 </resources>

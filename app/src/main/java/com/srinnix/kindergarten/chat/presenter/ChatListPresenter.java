@@ -52,7 +52,7 @@ public class ChatListPresenter extends BasePresenter {
         bundle.putString(AppConstant.KEY_ID, contact.getId());
         bundle.putString(AppConstant.KEY_NAME, name);
         bundle.putInt(AppConstant.KEY_STATUS, contact.getStatus());
-        bundle.putString(AppConstant.KEY_IMAGE, urlImage);
+        bundle.putString(AppConstant.KEY_MEDIA, urlImage);
         bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, contact instanceof ContactParent ?
                 AppConstant.ACCOUNT_PARENTS : AppConstant.ACCOUNT_TEACHERS);
 

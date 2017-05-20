@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,12 +19,12 @@ import android.widget.TextView;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
-import com.srinnix.kindergarten.bulletinboard.adapter.ImagePickerAdapter;
-import com.srinnix.kindergarten.bulletinboard.delegate.ImagePickerDelegate;
-import com.srinnix.kindergarten.bulletinboard.presenter.ImagePickerPresenter;
+import com.srinnix.kindergarten.bulletinboard.adapter.MediaPickerAdapter;
+import com.srinnix.kindergarten.bulletinboard.delegate.MediaPickerDelegate;
+import com.srinnix.kindergarten.bulletinboard.presenter.MediaPickerPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.SpacesItemDecoration;
-import com.srinnix.kindergarten.model.ImageLocal;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
@@ -37,13 +36,13 @@ import butterknife.BindView;
  * Created by anhtu on 4/24/2017.
  */
 
-public class ImagePickerFragment extends BaseFragment implements ImagePickerDelegate {
+public class MediaPickerFragment extends BaseFragment implements MediaPickerDelegate {
 
     @BindView(R.id.toolbar_image_picker)
     Toolbar toolbar;
 
     @BindView(R.id.recyclerview_image)
-    RecyclerView rvListImage;
+    RecyclerView rvListMedia;
 
     @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
@@ -56,11 +55,9 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
 
     private MenuItem menuItemAdd;
 
-    private ImagePickerAdapter mImageAdapter;
-    private ArrayList<ImageLocal> mListImage;
-    private ImagePickerPresenter mPresenter;
-
-    private LongSparseArray<ImageLocal> mListImageSelected = new LongSparseArray<>();
+    private MediaPickerAdapter mMediaAdapter;
+    private ArrayList<MediaLocal> mListMedia;
+    private MediaPickerPresenter mPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -68,47 +65,44 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     }
 
     @Override
-    protected void getData() {
-        super.getData();
-        ArrayList<ImageLocal> arrayList = getArguments().getParcelableArrayList(AppConstant.KEY_IMAGE);
-        if (arrayList != null) {
-            for (ImageLocal imageLocal : arrayList) {
-                mListImageSelected.put(imageLocal.getId(), imageLocal);
-            }
-        }
-    }
-
-    @Override
     protected void initData() {
         super.initData();
-        mListImage = new ArrayList<>();
-        mImageAdapter = new ImagePickerAdapter(mListImage, position -> {
-            mPresenter.onClickImage(mListImage.get(position), position, mListImageSelected);
+        mListMedia = new ArrayList<>();
+        mMediaAdapter = new MediaPickerAdapter(mListMedia, position -> {
+            mPresenter.onClickMedia(mListMedia.get(position), position);
         });
-        mPresenter.checkPermissionStorage(getActivity(), mListImageSelected);
+        mPresenter.checkPermissionStorage(getActivity());
     }
 
     @Override
     protected void initChildView() {
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle(R.string.tap_to_select_image);
+        toolbar.setTitle(R.string.tap_to_select_media);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
         toolbar.inflateMenu(R.menu.menu_image_picker_fragment);
         menuItemAdd = toolbar.getMenu().findItem(R.id.menu_item_add);
-        if (mListImageSelected.size() == 0) {
+        if (mPresenter.getListImageSelected().size() == 0) {
             menuItemAdd.setVisible(false);
         } else {
             menuItemAdd.setVisible(true);
         }
+
+        MenuItem menuItemCamera = toolbar.getMenu().findItem(R.id.menu_item_camera);
+        if (mPresenter.getMediaType() == AppConstant.TYPE_IMAGE) {
+            menuItemCamera.setIcon(R.drawable.ic_photo_camera);
+        } else {
+            menuItemCamera.setIcon(R.drawable.ic_camera);
+        }
+
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_camera: {
-                    mPresenter.onClickCamera(ImagePickerFragment.this);
+                    mPresenter.onClickCamera(MediaPickerFragment.this);
                     break;
                 }
                 case R.id.menu_item_add: {
-                    mPresenter.onClickAdd(ImagePickerFragment.this, mListImageSelected);
+                    mPresenter.onClickAdd(MediaPickerFragment.this);
                     break;
                 }
             }
@@ -118,16 +112,16 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         pbLoading.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(mContext, R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
 
-        rvListImage.setAdapter(mImageAdapter);
+        rvListMedia.setAdapter(mMediaAdapter);
 
-        rvListImage.setLayoutManager(new GridLayoutManager(mContext, 3));
-        SpacesItemDecoration decoration = new SpacesItemDecoration(mContext, mImageAdapter, 2, 3, false);
-        rvListImage.addItemDecoration(decoration);
+        rvListMedia.setLayoutManager(new GridLayoutManager(mContext, 3));
+        SpacesItemDecoration decoration = new SpacesItemDecoration(mContext, mMediaAdapter, 2, 3, false);
+        rvListMedia.addItemDecoration(decoration);
     }
 
     @Override
     protected BasePresenter initPresenter() {
-        mPresenter = new ImagePickerPresenter(this);
+        mPresenter = new MediaPickerPresenter(this);
         return mPresenter;
     }
 
@@ -137,11 +131,11 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             switch (requestCode) {
-                case ImagePickerPresenter.PERMISSIONS_REQUEST_READ_EXTERNAL: {
-                    mPresenter.getImage(mListImageSelected);
+                case MediaPickerPresenter.PERMISSIONS_REQUEST_READ_EXTERNAL: {
+                    mPresenter.getMedia();
                     break;
                 }
-                case ImagePickerPresenter.PERMISSIONS_REQUEST_CAMERA: {
+                case MediaPickerPresenter.PERMISSIONS_REQUEST_CAMERA: {
                     mPresenter.openCamera(this);
                     break;
                 }
@@ -153,21 +147,25 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImagePickerPresenter.REQUEST_CODE_TAKE_PICTURE && resultCode == Activity.RESULT_OK) {
-            mPresenter.displayImage(mListImage);
+        if ((requestCode == MediaPickerPresenter.REQUEST_CODE_TAKE_PICTURE || requestCode == MediaPickerPresenter.REQUEST_CODE_TAKE_VIDEO) && resultCode == Activity.RESULT_OK) {
+            mPresenter.displayMedia(mListMedia);
         }
     }
 
     @Override
-    public void updateStateImage(int numberImage, int position, boolean selected) {
-        mImageAdapter.notifyItemChanged(position, selected);
-        if (numberImage == 0) {
-            toolbar.setTitle(R.string.tap_to_select_image);
+    public void updateStateMedia(int numberImage, int numberVideo, int position, boolean selected) {
+        mMediaAdapter.notifyItemChanged(position, selected);
+        if (numberVideo + numberImage == 0) {
+            toolbar.setTitle(R.string.tap_to_select_media);
+
             if (menuItemAdd.isVisible()) {
                 menuItemAdd.setVisible(false);
             }
         } else {
-            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s", numberImage, mContext.getString(R.string.image)));
+            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s và %d %s",
+                    numberImage, mContext.getString(R.string.image),
+                    numberVideo, mContext.getString(R.string.video)));
+
             if (!menuItemAdd.isVisible()) {
                 menuItemAdd.setVisible(true);
             }
@@ -183,29 +181,31 @@ public class ImagePickerFragment extends BaseFragment implements ImagePickerDele
     }
 
     @Override
-    public void onLoadSuccess(ArrayList<ImageLocal> imageLocals) {
+    public void onLoadSuccess(ArrayList<MediaLocal> mediaLocals) {
         UiUtils.hideProgressBar(pbLoading);
 
-        if (imageLocals.isEmpty()) {
+        if (mediaLocals.isEmpty()) {
             return;
         }
 
-        rvListImage.setVisibility(View.VISIBLE);
-        mListImage.addAll(imageLocals);
-        mImageAdapter.notifyItemRangeInserted(0, imageLocals.size());
+        rvListMedia.setVisibility(View.VISIBLE);
+        mListMedia.addAll(mediaLocals);
+        mMediaAdapter.notifyItemRangeInserted(0, mediaLocals.size());
 
-        rvListImage.scrollToPosition(0);
+        rvListMedia.scrollToPosition(0);
 
-        if (mListImageSelected.size() == 0) {
-            toolbar.setTitle(R.string.tap_to_select_image);
+        if (mPresenter.getListImageSelected().size() == 0) {
+            toolbar.setTitle(R.string.tap_to_select_media);
         } else {
-            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s", mListImageSelected.size(), mContext.getString(R.string.image)));
+            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s và %d %s",
+                    mPresenter.getNumberImage(), mContext.getString(R.string.image),
+                    mPresenter.getNumberVideo(), mContext.getString(R.string.video)));
         }
     }
 
     @Override
-    public void insertImageLocal(int position) {
-        mImageAdapter.notifyItemInserted(position);
-        rvListImage.scrollToPosition(0);
+    public void insertMediaLocal() {
+        mMediaAdapter.notifyItemInserted(0);
+        rvListMedia.scrollToPosition(0);
     }
 }

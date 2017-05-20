@@ -126,8 +126,8 @@ public class LoginFragment extends BaseFragment implements LoginDelegate {
     }
 
     @Override
-    public void onDestroy() {
+    public void onBackPressed() {
+        super.onBackPressed();
         mPresenter.handleDestroy(etEmail.getText().toString());
-        super.onDestroy();
     }
 }

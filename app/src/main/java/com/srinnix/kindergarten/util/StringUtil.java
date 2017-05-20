@@ -235,4 +235,19 @@ public class StringUtil {
 
         return (c.getTimeInMillis() - now) >= (MINUTE_MILLIS * 10);
     }
+
+    public static String getDurationVideo(int duration) {
+        int totalSecond = duration / 1000;
+        String minute = String.valueOf(totalSecond / 60);
+        if (minute.length() == 1) {
+            minute = "0" + minute;
+        }
+
+        String seconds = String.valueOf(totalSecond % 60);
+        if (seconds.length() == 1) {
+            seconds = "0" + seconds;
+        }
+        return minute + ":" + seconds;
+
+    }
 }

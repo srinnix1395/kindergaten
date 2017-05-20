@@ -38,7 +38,7 @@ public class DetailImageFragment extends BaseFragment {
     @Override
     protected void getData() {
         super.getData();
-        mListImage = getArguments().getParcelableArrayList(AppConstant.KEY_IMAGE);
+        mListImage = getArguments().getParcelableArrayList(AppConstant.KEY_MEDIA);
     }
 
     @Override

@@ -7,27 +7,46 @@ import android.os.Parcelable;
  * Created by anhtu on 4/25/2017.
  */
 
-public class ImageLocal implements Parcelable{
-
+public class MediaLocal implements Parcelable {
     private long id;
     private String name;
     private String path;
     private boolean isGIF;
-    private boolean isSelected;
 
-    public ImageLocal(long id, String name, String path, boolean isGIF, boolean isSelected) {
+    private boolean isVideo;
+    private int duration;
+    private String urlThumbnail;
+    private int size;
+
+    private boolean isSelected = false;
+
+    public MediaLocal(long id, String name, String path, boolean isGIF) {
         this.id = id;
         this.name = name;
         this.path = path;
+        this.isVideo = false;
         this.isGIF = isGIF;
-        this.isSelected = isSelected;
     }
 
-    protected ImageLocal(Parcel in) {
+    public MediaLocal(long id, String name, String path, boolean isVideo, int duration, String urlThumbnail, int size) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.isVideo = isVideo;
+        this.duration = duration;
+        this.urlThumbnail = urlThumbnail;
+        this.size = size;
+    }
+
+    protected MediaLocal(Parcel in) {
         id = in.readLong();
         name = in.readString();
         path = in.readString();
         isGIF = in.readByte() != 0;
+        isVideo = in.readByte() != 0;
+        duration = in.readInt();
+        urlThumbnail = in.readString();
+        size = in.readInt();
         isSelected = in.readByte() != 0;
     }
 
@@ -37,6 +56,10 @@ public class ImageLocal implements Parcelable{
         dest.writeString(name);
         dest.writeString(path);
         dest.writeByte((byte) (isGIF ? 1 : 0));
+        dest.writeByte((byte) (isVideo ? 1 : 0));
+        dest.writeInt(duration);
+        dest.writeString(urlThumbnail);
+        dest.writeInt(size);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 
@@ -45,15 +68,15 @@ public class ImageLocal implements Parcelable{
         return 0;
     }
 
-    public static final Creator<ImageLocal> CREATOR = new Creator<ImageLocal>() {
+    public static final Creator<MediaLocal> CREATOR = new Creator<MediaLocal>() {
         @Override
-        public ImageLocal createFromParcel(Parcel in) {
-            return new ImageLocal(in);
+        public MediaLocal createFromParcel(Parcel in) {
+            return new MediaLocal(in);
         }
 
         @Override
-        public ImageLocal[] newArray(int size) {
-            return new ImageLocal[size];
+        public MediaLocal[] newArray(int size) {
+            return new MediaLocal[size];
         }
     };
 
@@ -91,5 +114,21 @@ public class ImageLocal implements Parcelable{
 
     public boolean isGIF() {
         return isGIF;
+    }
+
+    public boolean isVideo() {
+        return isVideo;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public String getUrlThumbnail() {
+        return urlThumbnail;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

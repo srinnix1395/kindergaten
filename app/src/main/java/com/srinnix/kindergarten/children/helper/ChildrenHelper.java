@@ -34,8 +34,8 @@ public class ChildrenHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(String token, String idChildren, long time) {
-        return mApiService.getTimelineChildren(token, idChildren, time)
+    public Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(String token, String idChildren, long timePrev) {
+        return mApiService.getTimelineChildren(token, idChildren, timePrev)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

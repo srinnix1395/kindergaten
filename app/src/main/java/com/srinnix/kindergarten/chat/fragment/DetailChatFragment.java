@@ -96,7 +96,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         Bundle bundle = getArguments();
         name = bundle.getString(AppConstant.KEY_NAME);
         status = bundle.getInt(AppConstant.KEY_STATUS);
-        urlImage = bundle.getString(AppConstant.KEY_IMAGE);
+        urlImage = bundle.getString(AppConstant.KEY_MEDIA);
         accountType = bundle.getInt(AppConstant.KEY_ACCOUNT_TYPE);
     }
 

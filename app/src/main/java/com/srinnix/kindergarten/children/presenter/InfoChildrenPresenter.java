@@ -79,7 +79,7 @@ public class InfoChildrenPresenter extends BasePresenter {
                 }));
     }
 
-    public void getTimelineChildren(long time) {
+    public void getTimelineChildren(long timePrev) {
         if (!ServiceUtils.isNetworkAvailable(mContext)) {
             AlertUtils.showToast(mContext, R.string.noInternetConnection);
             return;
@@ -87,7 +87,7 @@ public class InfoChildrenPresenter extends BasePresenter {
 
         String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mDisposable.add(mHelper.getTimelineChildren(token, idChild, time)
+        mDisposable.add(mHelper.getTimelineChildren(token, idChild, timePrev)
                 .subscribe(response -> {
                     if (response == null) {
                         throw new NullPointerException();
