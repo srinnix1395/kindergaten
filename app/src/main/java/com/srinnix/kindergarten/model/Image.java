@@ -23,8 +23,6 @@ public class Image implements Parcelable {
     @Expose
     private String url;
 
-    @SerializedName("thumbnail_video")
-    @Expose
     private String urlThumbnail;
 
     @SerializedName("is_video")

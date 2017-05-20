@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.LoadingViewHolder;
-import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.PostedViewHolder;
+import com.srinnix.kindergarten.bulletinboard.adapter.viewholder.PostViewHolder;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 
@@ -37,7 +37,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (viewType) {
             case VIEW_TYPE_POST: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_posted, parent, false);
-                return new PostedViewHolder(view, mPostListener, viewType);
+                return new PostViewHolder(view, mPostListener);
             }
             case VIEW_TYPE_LOADING: {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
@@ -57,18 +57,18 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         if (payloads.get(size - 1) instanceof Boolean) {
-            ((PostedViewHolder) holder).bindImageLike((Boolean) payloads.get(size-1));
+            ((PostViewHolder) holder).bindImageLike((Boolean) payloads.get(size-1));
             return;
         }
 
         if (payloads.get(size - 1) instanceof ArrayList) {
             ArrayList arrayListPayloads = (ArrayList) payloads.get(size-1);
-            ((PostedViewHolder) holder).bindImageLike((Boolean) arrayListPayloads.get(0), (Integer) arrayListPayloads.get(1));
+            ((PostViewHolder) holder).bindImageLike((Boolean) arrayListPayloads.get(0), (Integer) arrayListPayloads.get(1));
             return;
         }
 
         if (payloads.get(size - 1) instanceof Integer) {
-            ((PostedViewHolder) holder).bindComment((Integer) payloads.get(size-1));
+            ((PostViewHolder) holder).bindComment((Integer) payloads.get(size-1));
         }
     }
 
@@ -77,7 +77,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (getItemViewType(position) == VIEW_TYPE_LOADING) {
             ((LoadingViewHolder) holder).bindData(((LoadingItem) arrPost.get(position)));
         } else {
-            ((PostedViewHolder) holder).bindData(((Post) arrPost.get(position)));
+            ((PostViewHolder) holder).bindData(((Post) arrPost.get(position)));
         }
     }
 

@@ -106,7 +106,7 @@
     <string name="normal_notification">Thông báo thường</string>
     <string name="important_notification">Thông báo quan trọng</string>
     <string name="signed_out">Đã đăng xuất</string>
-    <string name="post_time">Thời gian post</string>
+    <string name="post_time">Thời gian đăng</string>
     <string name="now">Ngay bây giờ</string>
     <string name="schedule">Theo lịch</string>
     <string name="post_schedule">Lên lịch</string>

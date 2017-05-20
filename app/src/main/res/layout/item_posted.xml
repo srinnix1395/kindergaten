@@ -54,8 +54,8 @@
             android:id="@+id/imageview_first_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="300dp"
             android:minHeight="260dp"
-            android:maxHeight="320dp"
             android:scaleType="fitXY"/>
 
         <TextView
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/margin_horizontal"
+            android:layout_margin="@dimen/margin_horizontal_low"
             android:background="@drawable/background_number_image"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_images"
@@ -75,6 +75,15 @@
             android:paddingTop="8dp"
             android:textColor="@android:color/white"
             android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/imageview_video"
+            android:layout_width="@dimen/size_item_chat"
+            android:layout_height="@dimen/size_item_chat"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_horizontal_low"
+            android:layout_marginTop="@dimen/margin_horizontal_low"
+            app:srcCompat="@drawable/ic_camera"/>
     </FrameLayout>
 
     <ImageView
