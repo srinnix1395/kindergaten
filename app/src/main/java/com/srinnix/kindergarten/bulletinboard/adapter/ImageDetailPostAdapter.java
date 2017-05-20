@@ -26,12 +26,6 @@ public class ImageDetailPostAdapter extends RecyclerView.Adapter<ImageDetailPost
     }
 
     @Override
-    public void onViewDetachedFromWindow(ImageDetailPostViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        holder.onDestroy();
-    }
-
-    @Override
     public ImageDetailPostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_detail_post, parent, false);
         return new ImageDetailPostViewHolder(view, listener);

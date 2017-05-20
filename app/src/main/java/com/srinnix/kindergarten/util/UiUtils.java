@@ -5,8 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -22,7 +20,6 @@ import com.srinnix.kindergarten.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
@@ -106,27 +103,6 @@ public class UiUtils {
 
         progressBar.setVisibility(View.GONE);
         progressBar.setEnabled(false);
-    }
-
-    public static Bitmap retrieveVideoFrameFromVideo(String videoPath) throws Throwable {
-        Bitmap bitmap = null;
-        MediaMetadataRetriever mediaMetadataRetriever = null;
-        try {
-            mediaMetadataRetriever = new MediaMetadataRetriever();
-            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<>());
-
-            bitmap = mediaMetadataRetriever.getFrameAtTime();
-        } catch (Exception e) {
-            ErrorUtil.handleException(e);
-        } finally {
-            if (mediaMetadataRetriever != null) {
-                mediaMetadataRetriever.release();
-            }
-        }
-        if (bitmap == null) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_4444);
-        }
-        return bitmap;
     }
 
     public static void expand(final View v) {

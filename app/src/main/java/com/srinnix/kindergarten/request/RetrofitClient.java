@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.model.Contact;
+import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.request.converter.ContactDeserializer;
+import com.srinnix.kindergarten.request.converter.ImageDeserializer;
 import com.srinnix.kindergarten.request.remote.ApiService;
 
 import java.io.File;
@@ -29,6 +31,7 @@ public class RetrofitClient {
         if (sRetrofit == null) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Contact.class, new ContactDeserializer())
+                    .registerTypeAdapter(Image.class, new ImageDeserializer())
                     .create();
 
             final OkHttpClient okHttpClient = new OkHttpClient.Builder()

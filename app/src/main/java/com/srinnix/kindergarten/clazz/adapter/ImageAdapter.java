@@ -45,14 +45,6 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        if (holder instanceof ImageClassViewHolder) {
-            ((ImageClassViewHolder) holder).onDestroy();
-        }
-    }
-
-    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == VIEW_TYPE_LOADING) {
             ((LoadingViewHolder) holder).bindData((LoadingItem) arrayList.get(position));

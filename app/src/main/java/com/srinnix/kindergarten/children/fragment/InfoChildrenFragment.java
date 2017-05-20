@@ -154,7 +154,7 @@ public class InfoChildrenFragment extends BaseFragment implements ChildrenDelega
         UiUtils.hideProgressBar(pbLoading);
         UiUtils.showView(layoutProfile);
         UiUtils.showView(rvHealthChildren);
-        
+
         Glide.with(mContext)
                 .load(child.getImage())
                 .thumbnail(0.5f)

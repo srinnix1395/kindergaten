@@ -2,12 +2,7 @@ package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.transition.TransitionInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -15,9 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -73,14 +65,14 @@ public class PreviewImageFragment extends BaseFragment {
         this.transition = transition;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        postponeEnterTransition();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.transition_image_class));
-        }
-    }
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        postponeEnterTransition();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.transition_image_class));
+//        }
+//    }
 
     @Override
     protected void getData() {
@@ -99,13 +91,17 @@ public class PreviewImageFragment extends BaseFragment {
                 PorterDuff.Mode.SRC_ATOP);
 
         if (image.isVideo()) {
-            imvImage.setVisibility(View.GONE);
             videoView.setVisibility(View.VISIBLE);
+            Glide.with(mContext)
+                    .load(image.getThumbnailUrl())
+                    .dontAnimate()
+                    .into(imvImage);
+
             initVideo();
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ViewCompat.setTransitionName(imvImage, transition);
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                ViewCompat.setTransitionName(imvImage, transition);
+//            }
 
             videoView.setVisibility(View.GONE);
             imvImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
@@ -113,19 +109,19 @@ public class PreviewImageFragment extends BaseFragment {
                     .load(image.getUrl())
                     .dontAnimate()
                     .error(R.drawable.dummy_image)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            startPostponedEnterTransition();
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            startPostponedEnterTransition();
-                            return false;
-                        }
-                    })
+//                    .listener(new RequestListener<String, GlideDrawable>() {
+//                        @Override
+//                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                            startPostponedEnterTransition();
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                            startPostponedEnterTransition();
+//                            return false;
+//                        }
+//                    })
                     .into(imvImage);
         }
 
@@ -141,17 +137,23 @@ public class PreviewImageFragment extends BaseFragment {
 
     private void playVideo() {
         try {
-            imvPlay.setVisibility(View.GONE);
+            UiUtils.hideView(imvImage);
+            UiUtils.hideView(imvPlay);
 
             UiUtils.showProgressBar(pbLoading);
 
-            Uri video = Uri.parse(image.getUrl());
+            Uri videoUri = Uri.parse(image.getUrl());
             videoView.setMediaController(mediaController);
-            videoView.setVideoURI(video);
+            videoView.setVideoURI(videoUri);
             videoView.requestFocus();
             videoView.setOnPreparedListener(mp -> {
                 UiUtils.hideProgressBar(pbLoading);
                 videoView.start();
+            });
+            videoView.setOnCompletionListener(mp -> {
+                mp.stop();
+                UiUtils.showView(imvImage);
+                UiUtils.showView(imvPlay);
             });
 
         } catch (Exception e) {

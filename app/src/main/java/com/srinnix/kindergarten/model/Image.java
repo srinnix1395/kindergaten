@@ -23,22 +23,37 @@ public class Image implements Parcelable {
     @Expose
     private String url;
 
+    @SerializedName("thumbnail_video")
+    @Expose
+    private String urlThumbnail;
+
     @SerializedName("is_video")
     @Expose
     private boolean isVideo;
 
-    public Image(String caption, long createdAt, String url, boolean isVideo) {
-        this.caption = caption;
-        this.createdAt = createdAt;
-        this.url = url;
-        this.isVideo = isVideo;
-    }
-
-    protected Image(Parcel in) {
+    public Image(Parcel in) {
         caption = in.readString();
         createdAt = in.readLong();
         url = in.readString();
+        urlThumbnail = in.readString();
         isVideo = in.readByte() != 0;
+    }
+
+    public Image(String caption, long createdAt, String url, String urlThumbnail, boolean isVideo) {
+        this.caption = caption;
+        this.createdAt = createdAt;
+        this.url = url;
+        this.urlThumbnail = urlThumbnail;
+        this.isVideo = isVideo;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(caption);
+        dest.writeLong(createdAt);
+        dest.writeString(url);
+        dest.writeString(urlThumbnail);
+        dest.writeByte((byte) (isVideo ? 1 : 0));
     }
 
     public static final Creator<Image> CREATOR = new Creator<Image>() {
@@ -69,16 +84,14 @@ public class Image implements Parcelable {
         return isVideo;
     }
 
+    public String getThumbnailUrl() {
+        return urlThumbnail;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(caption);
-        dest.writeLong(createdAt);
-        dest.writeString(url);
-        dest.writeByte((byte) (isVideo ? 1 : 0));
-    }
+
 }
