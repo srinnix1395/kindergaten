@@ -70,11 +70,11 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     public void bindData(Post post) {
         switch (post.getType()) {
             case AppConstant.POST_NORMAL: {
-                tvTitle.setText(R.string.normal_notification);
+                tvTitle.setText(R.string.normal_post);
                 break;
             }
             case AppConstant.POST_IMPORTANT: {
-                tvTitle.setText(R.string.important_notification);
+                tvTitle.setText(R.string.important_post);
                 break;
             }
         }

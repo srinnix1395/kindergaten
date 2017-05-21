@@ -103,8 +103,7 @@
     <string name="photo_camera">Máy ảnh</string>
     <string name="add">Thêm</string>
     <string name="error_no_camera">Không có camera</string>
-    <string name="normal_notification">Thông báo thường</string>
-    <string name="important_notification">Thông báo quan trọng</string>
+    <string name="normal_post">Thông báo thường</string>
     <string name="signed_out">Đã đăng xuất</string>
     <string name="post_time">Thời gian đăng</string>
     <string name="now">Ngay bây giờ</string>

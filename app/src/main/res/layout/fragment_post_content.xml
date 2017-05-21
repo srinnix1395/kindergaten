@@ -19,13 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="true"
-            android:text="@string/normal_notification"/>
+            android:text="@string/normal_post"/>
 
         <RadioButton
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/important_notification"/>
+            android:text="@string/important_post"/>
     </RadioGroup>
 
     <View
