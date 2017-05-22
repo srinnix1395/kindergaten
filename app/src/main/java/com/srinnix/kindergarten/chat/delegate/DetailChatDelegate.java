@@ -16,13 +16,13 @@ public interface DetailChatDelegate extends BaseDelegate{
 
     void loadMessageSuccess(ArrayList<Object> arrayList, boolean isLoadingDataFirst);
 
-    void loadMessageFail(boolean isLoadingDataFirst);
+    void loadMessageFail(boolean isLoadingDataFirst, String message);
 
     void removeMessage(int position);
 
     void changeDataMessage(int position, int statusMessagePayload);
 
-    void setStatus(String status, int ic_state_online);
+    void setStatus(String status);
 
     void addMessageWhileFriendTyping(Message chatItem);
 }

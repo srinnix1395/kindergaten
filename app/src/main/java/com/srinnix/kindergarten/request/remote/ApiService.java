@@ -209,4 +209,9 @@ public interface ApiService {
     Observable<ApiResponse<ArrayList<Message>>> getHistoryMessage(@Header("x-access-token") String token,
                                                                   @Query("conversation_id") String conversationID,
                                                                   @Query("time_first_message") long timeFirstMessage);
+
+    @Multipart
+    @POST(AppConstant.API_UPLOAD_MESSAGE_IMAGE)
+    Single<ApiResponse<Message>> uploadMessageImage(@Header("x-access-token") String token,
+                                                    @Part List<MultipartBody.Part> listFile);
 }

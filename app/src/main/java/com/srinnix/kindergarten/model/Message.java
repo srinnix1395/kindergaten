@@ -2,6 +2,7 @@ package com.srinnix.kindergarten.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.srinnix.kindergarten.constant.ChatConstant;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -34,6 +35,10 @@ public class Message extends RealmObject {
     @Expose
     private String message;
 
+    @SerializedName("message_type")
+    @Expose
+    private int messageType;
+
     @SerializedName("created_at")
     @Expose
     private long createdAt;
@@ -54,19 +59,9 @@ public class Message extends RealmObject {
 
 
     public Message() {
+        messageType = ChatConstant.MSG_TYPE_TEXT;
     }
 
-//    public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status
-//            , boolean isTypingMessage, boolean isDisplayIcon) {
-//        this.id = id;
-//        this.idSender = idSender;
-//        this.idReceiver = idReceiver;
-//        this.message = message;
-//        this.createdAt = createdAt;
-//        this.status = status;
-//        this.isTypingMessage = isTypingMessage;
-//        this.isDisplayIcon = isDisplayIcon;
-//    }
     public Message(String id, String idSender, String idReceiver, String message, long createdAt, int status
             , boolean isTypingMessage) {
         this.id = id;
@@ -159,6 +154,15 @@ public class Message extends RealmObject {
 //    public void setDisplayIcon(boolean displayIcon) {
 //        isDisplayIcon = displayIcon;
 //    }
+
+
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int type) {
+        this.messageType = type;
+    }
 
     public boolean isSeen() {
         return isSeen;

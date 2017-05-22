@@ -45,7 +45,8 @@ public class AppConstant {
     public static final String API_GET_STUDY_TIMETABLE = "class/getStudyTimetable";
     public static final String API_INSERT_IMAGE = "class/insertImage";
 
-    public static final String API_GET_MESSAGE = "chat/message";
+    public static final String API_GET_MESSAGE = "chat/getMessage";
+    public static final String API_UPLOAD_MESSAGE_IMAGE = "chat/uploadImages";
 
     public static final String API_GET_INFO_CHILDREN = "children/getInfo";
     public static final String API_GET_HEALTH_INDEX_CHILDREN = "children/getHealthIndex";

@@ -40,8 +40,6 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
 
-    private MenuItem itemChat;
-
     private MainPresenter mPresenter;
 
     @Override
@@ -60,7 +58,6 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         } else {
             mToolbar.inflateMenu(R.menu.main_menu_unsigned_in);
         }
-        itemChat = mToolbar.getMenu().findItem(R.id.menu_item_chat);
         mToolbar.setOnMenuItemClickListener(item -> {
             onMenuItemItemSelected(item);
             return false;

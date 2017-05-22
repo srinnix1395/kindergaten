@@ -24,7 +24,7 @@ import java.util.List;
  * Created by DELL on 2/9/2017.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemChatLeftViewHolder.AdapterListener{
 
     private static final int ITEM_LOADING = 0;
     private static final int ITEM_LEFT = 1;
@@ -53,12 +53,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case ITEM_LEFT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_left, parent, false);
-                return new ItemChatLeftViewHolder(view, urlImage, accountType);
+                return new ItemChatLeftViewHolder(view, urlImage, accountType, this);
             }
             case ITEM_RIGHT: {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_chat_right, parent, false);
-                return new ItemChatRightViewHolder(view);
+                return new ItemChatRightViewHolder(view, this);
             }
             case ITEM_TIME: {
                 View view = LayoutInflater.from(parent.getContext())
@@ -143,4 +143,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         return ITEM_TIME;
     }
+
+    @Override
+    public boolean isValidToShowTime(int position) {
+        if (position == 0) {
+            return true;
+        }
+        return !(arrayList.get(position - 1) instanceof Long);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.srinnix.kindergarten.chat.presenter;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -8,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.KinderApplication;
-import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
@@ -39,7 +39,8 @@ public class DetailChatPresenter extends BasePresenter {
     private String mMyId;
     private String mFriendId;
     private String mConversationID;
-    private PublishSubject<Boolean> mSubject;
+    private PublishSubject<Boolean> mSubjectTyping;
+    private PublishSubject<ArrayList<Object>> mSubjectLoadMore;
     private boolean mIsUserTyping;
 
     private DetailChatHelper mHelper;
@@ -53,13 +54,38 @@ public class DetailChatPresenter extends BasePresenter {
         mSocketUtil = KinderApplication.getInstance().getSocketUtil();
         mDisposable = new CompositeDisposable();
 
-        mSubject = PublishSubject.create();
-        mDisposable.add(mSubject.doOnNext(aBoolean -> mIsUserTyping = false)
+        mHelper = new DetailChatHelper(mDisposable);
+        mRealm = Realm.getDefaultInstance();
+
+        mSubjectTyping = PublishSubject.create();
+        mDisposable.add(mSubjectTyping.doOnNext(aBoolean -> mIsUserTyping = false)
                 .debounce(5, TimeUnit.SECONDS)
                 .subscribe(o -> mSocketUtil.sendStatusTyping(mMyId, mFriendId, false)));
 
-        mHelper = new DetailChatHelper(mDisposable);
-        mRealm = Realm.getDefaultInstance();
+        mSubjectLoadMore = PublishSubject.create();
+        mDisposable.add(
+                mSubjectLoadMore
+                        .debounce(1, TimeUnit.SECONDS)
+                        .flatMap(listMessage -> {
+                            String token = SharedPreUtils.getInstance(mContext).getToken();
+                            return mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token);
+                        })
+                        .subscribe(messageArrayList -> {
+                            if (mDetailChatDelegate != null) {
+                                mDetailChatDelegate.loadMessageSuccess(messageArrayList, isLoadingDataFirst);
+                            }
+                            if (isLoadingDataFirst) {
+                                isLoadingDataFirst = false;
+                            }
+                        }, throwable -> {
+                            DebugLog.i(throwable.getMessage());
+                            if (mDetailChatDelegate != null) {
+                                mDetailChatDelegate.loadMessageFail(isLoadingDataFirst, throwable.getMessage());
+                            }
+                            if (isLoadingDataFirst) {
+                                isLoadingDataFirst = false;
+                            }
+                        }));
     }
 
     @Override
@@ -98,11 +124,10 @@ public class DetailChatPresenter extends BasePresenter {
                     mIsUserTyping = true;
                     mSocketUtil.sendStatusTyping(mMyId, mFriendId, true);
                 }
-                mSubject.onNext(false);
+                mSubjectTyping.onNext(false);
             }
         });
     }
-
 
     private void enableOrDisableBtnSend(CharSequence message, ImageView imvSend) {
         if (message.length() > 0) {
@@ -113,44 +138,41 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onClickSend(ArrayList<Object> listMessage, EditText editText, int level) {
-        String message;
-        if (level == 1 || level == 0) {
-            message = ChatConstant.ICON_HEART;
-        } else {
-            message = editText.getText().toString().trim();
-            editText.setText("");
-        }
-
         mRealm.beginTransaction();
         long l = System.currentTimeMillis();
-        Message chatItem = mRealm.createObject(Message.class);
-        chatItem.setId(String.valueOf(l));
-        chatItem.setIdSender(mMyId);
-        chatItem.setIdReceiver(mFriendId);
-        chatItem.setConversationId(mConversationID);
-        chatItem.setMessage(message);
-        chatItem.setStatus(ChatConstant.PENDING);
-        chatItem.setCreatedAt(l);
+        Message message = mRealm.createObject(Message.class);
+        message.setId(String.valueOf(l));
+        message.setIdSender(mMyId);
+        message.setIdReceiver(mFriendId);
+        message.setConversationId(mConversationID);
+        if (level == 1 || level == 0) {
+            message.setMessageType(ChatConstant.MSG_TYPE_ICON_HEART);
+        } else {
+            message.setMessage(editText.getText().toString().trim());
+            editText.setText("");
+        }
+        message.setStatus(ChatConstant.PENDING);
+        message.setCreatedAt(l);
         mRealm.commitTransaction();
 
         if (listMessage.isEmpty()) {
             if (mDetailChatDelegate != null) {
-                mDetailChatDelegate.addMessage(chatItem, 0);
+                mDetailChatDelegate.addMessage(message, 0);
             }
         } else {
             Object objectLast = listMessage.get(listMessage.size() - 1);
             if (objectLast instanceof Message && ((Message) objectLast).isTypingMessage()) {
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.addMessageWhileFriendTyping(chatItem);
+                    mDetailChatDelegate.addMessageWhileFriendTyping(message);
                 }
             } else {
                 if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.addMessage(chatItem, listMessage.size());
+                    mDetailChatDelegate.addMessage(message, listMessage.size());
                 }
             }
         }
 
-        KinderApplication.getInstance().getSocketUtil().sendMessage(mContext, chatItem);
+        KinderApplication.getInstance().getSocketUtil().sendMessage(mContext, message);
     }
 
     public void onMessage(Message message, ArrayList<Object> listMessage) {
@@ -179,6 +201,7 @@ public class DetailChatPresenter extends BasePresenter {
             m.setIdReceiver(message.getIdReceiver());
             m.setConversationId(message.getConversationId());
             m.setMessage(message.getMessage());
+            m.setMessageType(message.getMessageType());
             m.setCreatedAt(message.getCreatedAt());
             m.setTypingMessage(false);
 //            m.setDisplayIcon(true);
@@ -250,30 +273,28 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onLoadMore(ArrayList<Object> listMessage) {
-        String token = SharedPreUtils.getInstance(mContext).getToken();
 
-        mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token, new DetailChatHelper.DetailChatHelperListener() {
-            @Override
-            public void onLoadMessageSuccessfully(ArrayList<Object> arrayList) {
-                if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.loadMessageSuccess(arrayList, isLoadingDataFirst);
-                }
-                if (isLoadingDataFirst) {
-                    isLoadingDataFirst = false;
-                }
-            }
+        mSubjectLoadMore.onNext(listMessage);
 
-            @Override
-            public void onLoadMessageFail(Throwable throwable) {
-                DebugLog.i(throwable.getMessage());
-                if (mDetailChatDelegate != null) {
-                    mDetailChatDelegate.loadMessageFail(isLoadingDataFirst);
-                }
-                if (isLoadingDataFirst) {
-                    isLoadingDataFirst = false;
-                }
-            }
-        });
+//        String token = SharedPreUtils.getInstance(mContext).getToken();
+//        mDisposable.add(mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token)
+//                .debounce(1, TimeUnit.SECONDS)
+//                .subscribe(messageArrayList -> {
+//                    if (mDetailChatDelegate != null) {
+//                        mDetailChatDelegate.loadMessageSuccess(messageArrayList, isLoadingDataFirst);
+//                    }
+//                    if (isLoadingDataFirst) {
+//                        isLoadingDataFirst = false;
+//                    }
+//                }, throwable -> {
+//                    DebugLog.i(throwable.getMessage());
+//                    if (mDetailChatDelegate != null) {
+//                        mDetailChatDelegate.loadMessageFail(isLoadingDataFirst, throwable.getMessage());
+//                    }
+//                    if (isLoadingDataFirst) {
+//                        isLoadingDataFirst = false;
+//                    }
+//                }));
     }
 
     @Override
@@ -331,12 +352,14 @@ public class DetailChatPresenter extends BasePresenter {
         }
 
         if (arrayList.contains(mFriendId)) {
-            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_ONLINE)
-                    , R.drawable.ic_state_online);
+            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_ONLINE));
         } else {
             mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_OFFLINE)
-                    , R.drawable.ic_state_offline);
+            );
         }
     }
 
+    public boolean isRecyclerScrollable(RecyclerView recyclerView) {
+        return recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
+    }
 }

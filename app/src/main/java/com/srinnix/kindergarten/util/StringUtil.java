@@ -228,7 +228,7 @@ public class StringUtil {
 
         Calendar c = Calendar.getInstance();
         c.set(schedule[0],
-                schedule[1]-1,
+                schedule[1] - 1,
                 schedule[2],
                 schedule[3],
                 schedule[4]);
@@ -249,5 +249,20 @@ public class StringUtil {
         }
         return minute + ":" + seconds;
 
+    }
+
+    public static String getTimeAgoMessage(long time) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        calendar.setTimeInMillis(time);
+        if (calendar.get(Calendar.YEAR) == currentYear && calendar.get(Calendar.DAY_OF_YEAR) == currentDay) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
+            return dateFormat.format(new Date(time));
+        } else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE - kk:mm", Locale.getDefault());
+            return dateFormat.format(new Date(time)).replace("-", "LÚC");
+        }
     }
 }

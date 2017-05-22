@@ -34,6 +34,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageTyping;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
@@ -110,10 +111,8 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         rvChat.addOnScrollListener(new EndlessScrollUpListener(layoutManager) {
             @Override
             public void onLoadMore() {
-                DebugLog.e("on load more");
-//                if (isRecyclerScrollable(rvChat)) {
+                DebugLog.e("on load more:");
                 mPresenter.onLoadMore(listMessage);
-//                }
             }
         });
         rvChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
@@ -123,8 +122,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         });
         rvChat.setLayoutManager(layoutManager);
 //        rvChat.setItemAnimator(new ItemChatAnimator());
-        adapter = new ChatAdapter(mContext, listMessage, urlImage, accountType,
-                () -> mPresenter.onLoadMore(listMessage));
+        adapter = new ChatAdapter(mContext, listMessage, urlImage, accountType, () -> {
+            mPresenter.onLoadMore(listMessage);
+        });
         rvChat.setAdapter(adapter);
 
         mPresenter.setupTextChange(etMessage, imvSend);
@@ -248,7 +248,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
                 rvChat.smoothScrollToPosition(listMessage.size() - 1);
             }
 
-            if (isRecyclerScrollable(rvChat)) {
+            if (mPresenter.isRecyclerScrollable(rvChat)) {
                 listMessage.add(0, new LoadingItem());
                 adapter.notifyItemInserted(0);
             }
@@ -257,19 +257,36 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
         int size = arrayList.size();
 
-        if (!listMessage.isEmpty() && listMessage.get(1) instanceof Long) {
+        if (!listMessage.isEmpty() && !arrayList.isEmpty() && listMessage.get(0) instanceof Long) {
+            if (((Long) listMessage.get(0)) - ((Message) arrayList.get(size - 1)).getCreatedAt() <= AppConstant.TIME_BETWEEN_2_MESSAGE) {
+                listMessage.remove(0);
+                adapter.notifyItemRemoved(0);
+            }
+        } else if (!listMessage.isEmpty() && !arrayList.isEmpty() && listMessage.get(0) instanceof LoadingItem &&
+                listMessage.get(1) instanceof Long) {
             if (((Long) listMessage.get(1)) - ((Message) arrayList.get(size - 1)).getCreatedAt() <= AppConstant.TIME_BETWEEN_2_MESSAGE) {
                 listMessage.remove(1);
                 adapter.notifyItemRemoved(1);
             }
         }
 
-        listMessage.addAll(2, arrayList);
-        adapter.notifyItemRangeInserted(1, arrayList.size());
+        if (!listMessage.isEmpty()) {
+            if (listMessage.get(0) instanceof LoadingItem) {
+                listMessage.addAll(1, arrayList);
+                adapter.notifyItemRangeInserted(1, arrayList.size());
+            } else {
+                listMessage.add(0, new LoadingItem());
+                listMessage.addAll(1, arrayList);
+                adapter.notifyItemRangeInserted(0, arrayList.size() + 1);
+            }
+        }
     }
 
     @Override
-    public void loadMessageFail(boolean isLoadingDataFirst) {
+    public void loadMessageFail(boolean isLoadingDataFirst, String message) {
+        if (!message.isEmpty()) {
+            AlertUtils.showToast(mContext, message);
+        }
         if (isLoadingDataFirst) {
             UiUtils.hideProgressBar(pbLoading);
             tvError.setVisibility(View.VISIBLE);
@@ -334,12 +351,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     }
 
     @Override
-    public void setStatus(String status, int resState) {
+    public void setStatus(String status) {
         tvStatus.setText(status);
-        tvStatus.setCompoundDrawablesWithIntrinsicBounds(resState, 0, 0, 0);
-    }
-
-    public boolean isRecyclerScrollable(RecyclerView recyclerView) {
-        return recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
     }
 }

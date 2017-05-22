@@ -44,8 +44,8 @@ public abstract class EndlessScrollDownListener extends RecyclerView.OnScrollLis
         boolean isReachThreshold = (lastVisibleItemCount + visibleThreshold) >= totalItemCount;
 
         if (!isLoading && isReachThreshold) {
-            isLoading = true;
             onLoadMore();
+            isLoading = true;
         }
     }
 

@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
@@ -94,7 +94,7 @@ public class SocketUtil {
     private void onSetupContactStatus(Object[] args) {
         DebugLog.i("onSetupContactStatus");
 
-        Observable.just(((JSONArray) args[0]))
+        Single.just(((JSONArray) args[0]))
                 .map(jsonArray -> {
                     ArrayList<String> arrayList = JsonUtil.parseListContactOnline(args[0]);
                     return new MessageContactStatus(arrayList);
@@ -109,6 +109,7 @@ public class SocketUtil {
             AlertUtils.showToast(mContext, R.string.please_check_connection);
             return;
         }
+
         JSONObject jsonMessage = JsonUtil.getJsonMessage(message);
         mSocket.emit(Socket.EVENT_MESSAGE, jsonMessage
                 , (Ack) args -> onServerReceived(args[0]));
@@ -192,6 +193,9 @@ public class SocketUtil {
                 message.setIdReceiver(jsonObject.getString(ChatConstant._ID_RECEIVER));
                 message.setConversationId(jsonObject.getString(ChatConstant._ID_CONVERSATION));
                 message.setMessage(jsonObject.getString(ChatConstant.MESSAGE));
+                if (jsonObject.has(ChatConstant.MESSAGE_TYPE)) {
+                    message.setMessageType(jsonObject.getInt(ChatConstant.MESSAGE_TYPE));
+                }
                 message.setCreatedAt(jsonObject.getLong(ChatConstant.CREATED_AT));
                 message.setStatus(ChatConstant.FRIEND_RECEIVED);
 //                message.setDisplayIcon(true);

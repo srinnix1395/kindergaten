@@ -20,7 +20,6 @@ import butterknife.OnClick;
  */
 
 public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
-
     @BindView(R.id.textview_itemchatright_message)
     TextView tvMessage;
 
@@ -34,26 +33,37 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
     ImageView imvHeart;
 
     private boolean isShowTime;
+    private final ItemChatLeftViewHolder.AdapterListener adapterListener;
 
-    public ItemChatRightViewHolder(View itemView) {
+    public ItemChatRightViewHolder(View itemView, ItemChatLeftViewHolder.AdapterListener chatAdapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        this.adapterListener = chatAdapter;
     }
 
     public void bindData(Message message) {
+        tvTime.setText(StringUtil.getTimeAgoMessage(message.getCreatedAt()));
 
-        if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
-            tvMessage.setText("");
+        switch (message.getMessageType()) {
+            case ChatConstant.MSG_TYPE_TEXT:{
+                tvMessage.setText(message.getMessage());
 
-            tvMessage.setVisibility(View.INVISIBLE);
-            imvHeart.setVisibility(View.VISIBLE);
-        } else {
-            tvMessage.setText(message.getMessage());
+                UiUtils.showView(tvMessage);
+                UiUtils.hideView(imvHeart);
+                break;
+            }
+            case ChatConstant.MSG_TYPE_ICON_HEART:{
+                tvMessage.setText("");
 
-            tvMessage.setVisibility(View.VISIBLE);
-            imvHeart.setVisibility(View.INVISIBLE);
+                tvMessage.setVisibility(View.INVISIBLE);
+                UiUtils.showView(imvHeart);
+                break;
+            }
+            case ChatConstant.MSG_TYPE_MEDIA:{
+
+                break;
+            }
         }
-        tvTime.setText(StringUtil.getTimeAgoComment(itemView.getContext(), message.getCreatedAt()));
 
         bindStatusMessage(message.getStatus());
     }
@@ -83,6 +93,9 @@ public class ItemChatRightViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.textview_itemchatright_message)
     void onClickMessage() {
+        if (adapterListener != null && !adapterListener.isValidToShowTime(getAdapterPosition())) {
+            return;
+        }
         if (isShowTime) {
             UiUtils.collapse(tvTime);
             isShowTime = false;

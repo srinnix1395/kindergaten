@@ -23,13 +23,14 @@ public abstract class EndlessScrollUpListener extends RecyclerView.OnScrollListe
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
+        if (dy >= 0) {
+            return;
+        }
         int totalItemCount = layoutManager.getItemCount();
         int firstVisibleItemCount;
 
         firstVisibleItemCount = layoutManager.findFirstVisibleItemPosition();
 
-        // If the total item count is zero and the previous isn't, assume the
-        // list is invalidated and should be reset back to initial state
         if (totalItemCount < previousTotalItemCount) {
             this.previousTotalItemCount = totalItemCount;
             if (totalItemCount == 0) {

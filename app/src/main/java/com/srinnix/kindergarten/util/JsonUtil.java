@@ -33,6 +33,7 @@ public class JsonUtil {
             jsonObject.put(ChatConstant._ID_RECEIVER, message.getIdReceiver());
             jsonObject.put(ChatConstant._ID_CONVERSATION, message.getConversationId());
             jsonObject.put(ChatConstant.MESSAGE, message.getMessage());
+            jsonObject.put(ChatConstant.MESSAGE_TYPE, message.getMessageType());
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -40,13 +40,16 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     ImageView imvHeart;
 
     private boolean isShowTime;
+    private final AdapterListener adapterListener;
 
 //    private final String urlImage;
 //    private final int accountType;
 
-    public ItemChatLeftViewHolder(View itemView, String urlImage, int accountType) {
+    public ItemChatLeftViewHolder(View itemView, String urlImage, int accountType,
+                                  AdapterListener adapterListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        this.adapterListener = adapterListener;
 
 //        this.urlImage = urlImage;
 //        this.accountType = accountType;
@@ -64,31 +67,38 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void bindDataMessage(Message message) {
-        tvTime.setText(StringUtil.getTimeAgoComment(itemView.getContext(), message.getCreatedAt()));
+        tvTime.setText(StringUtil.getTimeAgoMessage(message.getCreatedAt()));
+        UiUtils.hideView(imvTyping);
 
-        if (message.getMessage().equals(ChatConstant.ICON_HEART)) {
-            tvMessage.setText("");
+        switch (message.getMessageType()) {
+            case ChatConstant.MSG_TYPE_TEXT: {
+                tvMessage.setText(message.getMessage());
 
-            tvMessage.setVisibility(View.GONE);
-            imvHeart.setVisibility(View.VISIBLE);
-        } else {
-            tvMessage.setText(message.getMessage());
+                UiUtils.showView(tvMessage);
+                UiUtils.hideView(imvHeart);
+                break;
+            }
+            case ChatConstant.MSG_TYPE_ICON_HEART: {
+                tvMessage.setText("");
 
-            tvMessage.setVisibility(View.VISIBLE);
-            imvHeart.setVisibility(View.GONE);
+                UiUtils.hideView(tvMessage);
+                UiUtils.showView(imvHeart);
+                break;
+            }
+            case ChatConstant.MSG_TYPE_MEDIA: {
+
+                break;
+            }
         }
-
-        imvTyping.setVisibility(View.GONE);
-
     }
 
     private void bindDataMessageTyping() {
         tvMessage.setText("");
         tvTime.setText("");
 
-        imvTyping.setVisibility(View.VISIBLE);
-        tvMessage.setVisibility(View.GONE);
-        imvHeart.setVisibility(View.GONE);
+        UiUtils.showView(imvTyping);
+        UiUtils.hideView(tvMessage);
+        UiUtils.hideView(imvHeart);
     }
 
 //    public void bindImage(boolean isDisplayIcon) {
@@ -115,6 +125,9 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.textview_itemchatleft_message)
     void onClickMessage() {
+        if (adapterListener != null && !adapterListener.isValidToShowTime(getAdapterPosition())) {
+            return;
+        }
         if (isShowTime) {
             UiUtils.collapse(tvTime);
             isShowTime = false;
@@ -122,5 +135,10 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
             UiUtils.expand(tvTime);
             isShowTime = true;
         }
+    }
+
+    public interface AdapterListener {
+
+        boolean isValidToShowTime(int position);
     }
 }

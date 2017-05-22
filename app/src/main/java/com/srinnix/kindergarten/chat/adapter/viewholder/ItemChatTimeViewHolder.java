@@ -24,6 +24,6 @@ public class ItemChatTimeViewHolder extends RecyclerView.ViewHolder {
 	}
 	
 	public void bindData(long time) {
-		tvTime.setText(StringUtil.getTimeAgo(itemView.getContext(),time));
+		tvTime.setText(StringUtil.getTimeAgoMessage(time));
 	}
 }

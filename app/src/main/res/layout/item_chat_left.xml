@@ -22,7 +22,7 @@
     <!--android:layout_width="@dimen/size_item_chat"-->
     <!--android:layout_height="@dimen/size_item_chat"-->
     <!--android:layout_below="@+id/textview_chatleft_time"-->
-    <!--android:layout_marginLeft="@dimen/margin_horizontal_icon_itemchat"-->
+    <!--android:layout_marginStart="@dimen/margin_horizontal_icon_itemchat"-->
     <!--android:layout_marginRight="@dimen/margin_horizontal_icon_itemchat"-->
     <!--app:cardElevation="0dp">-->
 
@@ -40,12 +40,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textview_chatleft_time"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/background_itemchatleft"
         android:gravity="center_vertical"
         android:paddingBottom="@dimen/padding_vertical_item_chat"
-        android:paddingLeft="@dimen/padding_horizontal_item_chat"
-        android:paddingRight="@dimen/padding_horizontal_item_chat"
+        android:paddingStart="@dimen/padding_horizontal_item_chat"
+        android:paddingEnd="@dimen/padding_horizontal_item_chat"
         android:paddingTop="@dimen/padding_vertical_item_chat"
         android:visibility="visible"
         tools:text="xin chaof"/>
@@ -55,11 +55,11 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_item_chat"
         android:layout_below="@+id/textview_chatleft_time"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/cardview_icon"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/cardview_icon"
         android:background="@drawable/background_itemchatleft"
-        android:paddingLeft="@dimen/padding_horizontal_item_chat"
-        android:paddingRight="@dimen/padding_horizontal_item_chat"
+        android:paddingStart="@dimen/padding_horizontal_item_chat"
+        android:paddingEnd="@dimen/padding_horizontal_item_chat"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_dot_horizontal"/>
 
@@ -68,8 +68,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/size_item_chat"
         android:layout_below="@+id/textview_chatleft_time"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/cardview_icon"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/cardview_icon"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_heart_fill"/>
 

@@ -6,8 +6,8 @@ package com.srinnix.kindergarten.constant;
 
 public class ChatConstant {
 
-//    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-        public static final String SERVER_URL = "http://192.168.137.1:3000/";
+    //    public static final String SERVER_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+    public static final String SERVER_URL = "http://192.168.137.1:3000/";
 
     //Event START
     public static final String EVENT_SETUP_CONTACT = "setup_contacts";
@@ -27,6 +27,7 @@ public class ChatConstant {
     public static final String CREATED_AT = "created_at";
     public static final String IS_TYPING = "is_typing";
     public static final String _ID_CONVERSATION = "_id_conversation";
+    public static final String MESSAGE_TYPE = "message_type";
 
     //Key data END
 
@@ -49,4 +50,9 @@ public class ChatConstant {
     public static final int ITEM_MESSAGE_PER_PAGE = 30;
     public static final long TIME_DISTANCE = 300000;
     public static final String ICON_HEART = "\\xE2\\heart\\xA5\\";
+
+    public static final int MSG_TYPE_TEXT = 1;
+    public static final int MSG_TYPE_ICON_HEART = 2;
+    public static final int MSG_TYPE_MEDIA = 3;
+
 }
