@@ -2,7 +2,6 @@ package com.srinnix.kindergarten.chat.fragment;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,24 +80,9 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
     private ChatAdapter adapter;
     private ArrayList<Object> listMessage;
 
-    private String name;
-    private int status;
-    private String urlImage;
-    private int accountType;
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_detail_chat;
-    }
-
-    @Override
-    protected void getData() {
-        super.getData();
-        Bundle bundle = getArguments();
-        name = bundle.getString(AppConstant.KEY_NAME);
-        status = bundle.getInt(AppConstant.KEY_STATUS);
-        urlImage = bundle.getString(AppConstant.KEY_MEDIA);
-        accountType = bundle.getInt(AppConstant.KEY_ACCOUNT_TYPE);
     }
 
     @Override
@@ -122,7 +106,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         });
         rvChat.setLayoutManager(layoutManager);
 //        rvChat.setItemAnimator(new ItemChatAnimator());
-        adapter = new ChatAdapter(mContext, listMessage, urlImage, accountType, () -> {
+        adapter = new ChatAdapter(mContext, listMessage, mPresenter.getUrlImage(), mPresenter.getAccountType(), () -> {
             mPresenter.onLoadMore(listMessage);
         });
         rvChat.setAdapter(adapter);
@@ -138,7 +122,7 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
 
     private void setupToolbar() {
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle(name);
+        toolbar.setTitle(mPresenter.getName());
         toolbar.inflateMenu(R.menu.menu_detail_chat);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> {
@@ -146,8 +130,8 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
             onBackPressed();
         });
 
-        tvName.setText(name);
-        tvStatus.setText(StringUtil.getStatus(mContext, status));
+        tvName.setText(mPresenter.getName());
+        tvStatus.setText(StringUtil.getStatus(mContext, mPresenter.getStatus()));
     }
 
     @Override

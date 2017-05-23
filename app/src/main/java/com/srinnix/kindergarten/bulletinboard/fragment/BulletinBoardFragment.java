@@ -145,7 +145,13 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
             }
         });
 
-        refreshLayout.setOnRefreshListener(() -> mPresenter.refresh(refreshLayout, mListPost));
+        refreshLayout.setOnRefreshListener(() ->{
+            if (!mListPost.isEmpty() && mListPost.get(0) instanceof LoadingItem) {
+                mPresenter.onLoadMore(rvListPost, mListPost, mPostAdapter);
+            } else {
+                mPresenter.refresh(refreshLayout, mListPost);
+            }
+        });
     }
 
     @Override
@@ -204,6 +210,10 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
     @Override
     public void updateSchoolBoard(ArrayList<Post> data, boolean isLoadFirst) {
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(false);
+        }
+
         int sizeNewData = data.size();
         int sizeTotal = mListPost.size();
 

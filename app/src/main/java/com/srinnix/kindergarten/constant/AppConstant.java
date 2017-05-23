@@ -64,8 +64,9 @@ public class AppConstant {
     public static final String USER_TYPE = "USER_TYPE";
     public static final String TOKEN = "TOKEN";
     public static final String _ID_CLASS = "_ID_CLASS";
-    public static final String _ID_SCHOOL = "_ID_SCHOOL";
     public static final String IMAGE = "IMAGE";
+    public static final String GENDER = "GENDER";
+    public static final String CLASS_NAME = "CLASS_NAME";
 
     public static final String LAST_EMAIL_FRAGMENT_LOGIN = "LAST_EMAIL_FRAGMENT_LOGIN";
 
@@ -89,6 +90,7 @@ public class AppConstant {
     public static final String KEY_NAME = "KEY_NAME";
     public static final String KEY_STATUS = "KEY_STATUS";
     public static final String KEY_MEDIA = "KEY_MEDIA";
+    public static final String KEY_ICON = "KEY_ICON";
     public static final String KEY_ACCOUNT_TYPE = "KEY_ACCOUNT_TYPE";
     public static final String KEY_CLASS = "KEY_CLASS";
     public static final String KEY_COMMENT = "KEY_COMMENT";
@@ -103,6 +105,7 @@ public class AppConstant {
     public static final String KEY_RECEIVE_NOTIFICATION = "KEY_RECEIVE_NOTIFICATION";
     public static final String KEY_DISPLAY = "KEY_DISPLAY";
     public static final String KEY_MEDIA_TYPE = "KEY_MEDIA_TYPE";
+    public static final String KEY_CONVERSATION_ID = "KEY_CONVERSATION_ID";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 

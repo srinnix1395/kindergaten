@@ -19,9 +19,6 @@ import com.srinnix.kindergarten.clazz.fragment.TeacherInfoDialogFragment;
 import com.srinnix.kindergarten.clazz.fragment.TimeTableFragment;
 import com.srinnix.kindergarten.clazz.helper.ClassHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
-import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
-import com.srinnix.kindergarten.model.ContactTeacher;
 import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.Teacher;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -31,8 +28,6 @@ import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.ViewManager;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,18 +131,8 @@ public class DetailClassPresenter extends BasePresenter {
             Bundle bundle = new Bundle();
             bundle.putString(AppConstant.KEY_ID, teacher.getId());
             bundle.putString(AppConstant.KEY_NAME,
-                    StringUtil.getNameContactTeacher(mContext, new ContactTeacher(teacher.getName(), teacher.getGender(), teacher.getClassName())));
-            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
-            int status = ChatConstant.STATUS_UNDEFINED;
-            if (message != null) {
-                if (message.arrayList.contains(teacher.getId())) {
-                    status = ChatConstant.STATUS_ONLINE;
-                } else {
-                    status = ChatConstant.STATUS_OFFLINE;
-                }
-            }
-            bundle.putInt(AppConstant.KEY_STATUS, status);
-            bundle.putString(AppConstant.KEY_MEDIA, teacher.getImage());
+                    StringUtil.getNameContactTeacher(mContext, teacher.getName(), teacher.getGender(), teacher.getClassName()));
+            bundle.putString(AppConstant.KEY_ICON, teacher.getImage());
             bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, AppConstant.ACCOUNT_TEACHERS);
 
             ViewManager.getInstance().addFragment(new DetailChatFragment(), bundle,

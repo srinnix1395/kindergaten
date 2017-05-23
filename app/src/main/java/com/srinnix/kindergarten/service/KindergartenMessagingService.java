@@ -25,6 +25,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.SharedPreUtils;
+import com.srinnix.kindergarten.util.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,6 +124,7 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
         JSONObject jsonObject = new JSONObject(data);
 
         String name = jsonObject.getString("name");
+
         int accountType = jsonObject.getInt("account_type");
         String account;
         if (accountType == AppConstant.ACCOUNT_PARENTS) {
@@ -148,6 +150,15 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
             message = "Đã gửi 1 ảnh";
         }
 
+        String gender = jsonObject.getString("gender");
+        String nameConversation;
+        if (accountType == AppConstant.ACCOUNT_PARENTS) {
+            String childName = jsonObject.getString("child_name");
+            nameConversation = StringUtil.getNameContactParent(this, name, gender, childName);
+        } else {
+            String className = jsonObject.getString("class_name");
+            nameConversation = StringUtil.getNameContactTeacher(this, name, gender, className);
+        }
         String contentText = String.format("%s %s: %s", account, name, message);
 
         String id = jsonObject.getString("_id");
@@ -165,7 +176,12 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
                 .subscribe(bitmap -> {
                     Intent intent = new Intent(this, DetailActivity.class);
                     intent.putExtra(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_DETAIL_CHAT);
+
                     Bundle bundle = new Bundle();
+                    bundle.putString(AppConstant.KEY_ID, idSender);
+                    bundle.putString(AppConstant.KEY_NAME, nameConversation);
+                    bundle.putInt(AppConstant.KEY_ACCOUNT_TYPE, accountType);
+                    bundle.putString(AppConstant.KEY_ICON, image);
 
                     intent.putExtras(bundle);
 

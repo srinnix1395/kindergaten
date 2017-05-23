@@ -102,9 +102,11 @@ public class SharedPreUtils {
         editor.putString(AppConstant.USER_ID, user.getId());
         editor.putString(AppConstant.EMAIL, user.getEmail());
         editor.putString(AppConstant.NAME, user.getName());
+        editor.putString(AppConstant.GENDER, user.getGender());
         editor.putInt(AppConstant.USER_TYPE, user.getAccountType());
         if (user.getAccountType() == AppConstant.ACCOUNT_TEACHERS) {
             editor.putString(AppConstant._ID_CLASS, user.getIdClass());
+            editor.putString(AppConstant.CLASS_NAME, user.getClassName());
             editor.putString(AppConstant.IMAGE, user.getImage());
         } else {
             editor.putString(AppConstant.IMAGE, !children.isEmpty() ? children.get(0).getImage() : "");
@@ -160,5 +162,13 @@ public class SharedPreUtils {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(AppConstant.LANGUAGE, language);
         editor.apply();
+    }
+
+    public String getGender() {
+        return sharedPreferences.getString(AppConstant.GENDER, AppConstant.FEMALE);
+    }
+
+    public String getClassName() {
+        return sharedPreferences.getString(AppConstant.CLASS_NAME, "");
     }
 }

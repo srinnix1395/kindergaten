@@ -15,12 +15,15 @@ import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.helper.DetailChatHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
+import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 import com.srinnix.kindergarten.util.StringUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +42,11 @@ public class DetailChatPresenter extends BasePresenter {
     private String mMyId;
     private String mFriendId;
     private String mConversationID;
+    private String name;
+    private int status;
+    private String urlImage;
+    private int accountType;
+
     private PublishSubject<Boolean> mSubjectTyping;
     private PublishSubject<ArrayList<Object>> mSubjectLoadMore;
     private boolean mIsUserTyping;
@@ -94,11 +102,30 @@ public class DetailChatPresenter extends BasePresenter {
 
         mFriendId = bundle.getString(AppConstant.KEY_ID);
         mMyId = SharedPreUtils.getInstance(mContext).getUserID();
-
-        if (mMyId.compareTo(mFriendId) > 0) {
-            mConversationID = mMyId + mFriendId;
+        name = bundle.getString(AppConstant.KEY_NAME);
+        if (bundle.containsKey(AppConstant.KEY_STATUS)) {
+            status = bundle.getInt(AppConstant.KEY_STATUS);
         } else {
-            mConversationID = mFriendId + mMyId;
+            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
+            if (message != null) {
+                if (message.arrayList.contains(mFriendId)) {
+                    status = ChatConstant.STATUS_ONLINE;
+                } else {
+                    status = ChatConstant.STATUS_OFFLINE;
+                }
+            }
+        }
+        urlImage = bundle.getString(AppConstant.KEY_ICON);
+        accountType = bundle.getInt(AppConstant.KEY_ACCOUNT_TYPE);
+
+        if (bundle.containsKey(AppConstant.KEY_CONVERSATION_ID)) {
+            mConversationID = bundle.getString(AppConstant.KEY_CONVERSATION_ID);
+        } else {
+            if (mMyId.compareTo(mFriendId) > 0) {
+                mConversationID = mMyId + mFriendId;
+            } else {
+                mConversationID = mFriendId + mMyId;
+            }
         }
     }
 
@@ -338,5 +365,21 @@ public class DetailChatPresenter extends BasePresenter {
 
     public boolean isRecyclerScrollable(RecyclerView recyclerView) {
         return recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

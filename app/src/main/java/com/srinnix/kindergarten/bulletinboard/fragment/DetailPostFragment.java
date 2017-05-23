@@ -132,7 +132,7 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     @Override
     public void onFail(int resError) {
         UiUtils.hideProgressBar(pbLoading);
-        tvRetry.setTextColor(resError);
+        tvRetry.setText(resError);
 
         layoutRetry.setVisibility(View.VISIBLE);
     }

@@ -23,8 +23,8 @@ public class KinderApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        connect();
         initRealm();
+        connect();
     }
 
 

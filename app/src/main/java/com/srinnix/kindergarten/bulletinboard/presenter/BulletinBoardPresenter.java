@@ -128,7 +128,6 @@ public class BulletinBoardPresenter extends BasePresenter {
         }
     }
 
-
     public void onClickLike(ArrayList<Object> arrPost, Post post) {
         SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(mContext);
 

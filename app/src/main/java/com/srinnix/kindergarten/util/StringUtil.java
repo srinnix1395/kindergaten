@@ -8,7 +8,6 @@ import android.text.Spanned;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
-import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Comment;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactParent;
@@ -63,24 +62,31 @@ public class StringUtil {
     }
 
     public static String getNameContactTeacher(Context context, ContactTeacher contact) {
-        String[] names = contact.getName().split(" ");
+        return getNameContactTeacher(context, contact.getName(), contact.getGender(), contact.getClassName());
+    }
+
+    public static String getNameContactTeacher(Context context, String name, String gender, String className) {
+        String[] names = name.split(" ");
         int size = names.length;
 
-        if (contact.getGender().equals(AppConstant.MALE)) {
+        if (gender.equals(AppConstant.MALE)) {
             return String.format("%s %s %s - %s", context.getString(R.string.MrTeacher),
-                    names[size - 2], names[size - 1], contact.getClassName());
+                    names[size - 2], names[size - 1], className);
         } else {
             return String.format("%s %s %s - %s", context.getString(R.string.MsTeacher),
-                    names[size - 2], names[size - 1], contact.getClassName());
+                    names[size - 2], names[size - 1], className);
         }
     }
 
-    private static String getNameContactParent(Context context, ContactParent contact) {
-        String[] namesParent = contact.getName().split(" ");
+    public static String getNameContactParent(Context context, ContactParent contact) {
+        return getNameContactParent(context, contact.getName(), contact.getGender(), contact.getChildren().get(0).getName());
+    }
+
+    public static String getNameContactParent(Context context, String name, String gender, String fullNameChild) {
+        String[] namesParent = name.split(" ");
         int size = namesParent.length;
 
-        Child children = contact.getChildren().get(0);
-        String[] namesChild = children.getName().split(" ");
+        String[] namesChild = fullNameChild.split(" ");
         int sizeChild = namesChild.length;
 
         String middleName;
@@ -99,12 +105,11 @@ public class StringUtil {
             nameChild = namesChild[sizeChild - 2] + " " + namesChild[sizeChild - 1];
         }
 
-        if (contact.getGender().equals(AppConstant.MALE)) {
+        if (gender.equals(AppConstant.MALE)) {
             return String.format("%s%s %s - %s %s", context.getString(R.string.Mr), middleName, namesParent[size - 1], context.getString(R.string.baby), nameChild);
         } else {
             return String.format("%s%s %s - %s %s", context.getString(R.string.Ms), middleName, namesParent[size - 1], context.getString(R.string.baby), nameChild);
         }
-
     }
 
     public static String getTimeAgo(Context context, long time) {

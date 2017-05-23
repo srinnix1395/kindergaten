@@ -3,6 +3,7 @@ package com.srinnix.kindergarten.util;
 import android.content.Context;
 
 import com.srinnix.kindergarten.R;
+import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
@@ -11,6 +12,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageTyping;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
+import com.srinnix.kindergarten.model.Child;
 import com.srinnix.kindergarten.model.Message;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,9 +47,19 @@ public class SocketUtil {
                 String query = "token=" + sharedPreUtils.getToken() +
                         "&id=" + sharedPreUtils.getUserID() +
                         "&account_type=" + sharedPreUtils.getAccountType() +
-                        "&name=" + sharedPreUtils.getAccountName();
+                        "&name=" + sharedPreUtils.getAccountName() +
+                        "&gender="+ sharedPreUtils.getGender();
                 if (!sharedPreUtils.getImage().isEmpty()) {
                     query += "&image=" + sharedPreUtils.getImage();
+                }
+
+                if (!sharedPreUtils.getClassName().isEmpty()) {
+                    query += "&class_name=" + sharedPreUtils.getClassName();
+                }
+                if (sharedPreUtils.getAccountType() == AppConstant.ACCOUNT_PARENTS) {
+                    Realm realm = Realm.getDefaultInstance();
+                    String childName = realm.where(Child.class).findFirst().getName();
+                    query += "&child_name=" + childName;
                 }
                 options.query = query;
 
