@@ -71,7 +71,7 @@ public class LoginHelper extends BaseHelper {
 
     public void updateRegId(Context mContext, User user, LoginDelegate loginDelegate) {
         String regID = FirebaseInstanceId.getInstance().getToken();
-        UpdateFirebaseRegId.updateRegId(mContext, mDisposable, user.getToken(), user.getId(), regID, new UpdateFirebaseRegId.OnUpdateRegIdListener() {
+        UpdateFirebaseRegId.updateRegId(mContext, user.getToken(), user.getId(), regID, new UpdateFirebaseRegId.OnUpdateRegIdListener() {
             @Override
             public void onFinally() {
                 if (loginDelegate != null) {

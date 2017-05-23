@@ -148,4 +148,5 @@
     <string name="schedule_is_not_valid">Hãy lên lịch trong ít nhất 10 phút nữa!</string>
     <string name="post_schedule_successfully">Thông báo sẽ được đăng vào %s</string>
     <string name="video">video</string>
+    <string name="message">Tin nhắn</string>
 </resources>

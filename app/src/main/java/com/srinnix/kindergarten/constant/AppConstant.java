@@ -113,6 +113,8 @@ public class AppConstant {
     public static final int FRAGMENT_INFO_CHILDREN = 9;
     public static final int FRAGMENT_HEALTH_INDEX = 10;
     public static final int FRAGMENT_STUDY_TIMETABLE = 11;
+    public static final int FRAGMENT_DETAIL_POST = 12;
+    public static final int FRAGMENT_DETAIL_CHAT = 13;
 
     public static final int STATE_WEIGHT_NORMAL = 1;
     public static final int STATE_WEIGHT_OBESE = 2;
@@ -136,9 +138,11 @@ public class AppConstant {
     public static final String GROUP_BIG = "Mẫu giáo lớn";
 
     public static final String LANGUAGE = "LANGUAGE";
+    public static final String REG_ID = "REG_ID";
 
     public static final String NOW = "now";
 
     public static final int TYPE_IMAGE = 1;
     public static final int TYPE_VIDEO = 2;
+    public static final int NOTIFICATION_ID = 16516;
 }

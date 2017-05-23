@@ -36,6 +36,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by anhtu on 2/16/2017.
@@ -50,12 +53,38 @@ public class DetailClassPresenter extends BasePresenter {
     private boolean isTeacher;
     private boolean isLoadImageFirst = true;
 
+    private PublishSubject<Long> subjectImage;
+
     public DetailClassPresenter(BaseDelegate mClassDelegate) {
         super(mClassDelegate);
         this.mClassDelegate = (ClassDelegate) mClassDelegate;
 
         mHelper = new ClassHelper(mDisposable);
         isTeacher = SharedPreUtils.getInstance(mContext).getAccountType() == AppConstant.ACCOUNT_TEACHERS;
+
+        subjectImage = PublishSubject.create();
+        mDisposable.add(subjectImage
+                .debounce(1, TimeUnit.SECONDS)
+                .flatMap(time -> mHelper.getClassImage(classId, time))
+                .subscribe(response -> {
+                    if (response == null) {
+                        ErrorUtil.handleException(mContext, new NullPointerException());
+                        return;
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
+
+                    if (response.getData() != null) {
+                        ((ClassDelegate) mClassDelegate).onLoadImage(response.getData(), isLoadImageFirst);
+                        if (isLoadImageFirst) {
+                            isLoadImageFirst = false;
+                        }
+                    }
+                }, throwable -> ErrorUtil.handleException(mContext, throwable))
+        );
     }
 
     @Override
@@ -159,25 +188,7 @@ public class DetailClassPresenter extends BasePresenter {
             time = ((Image) arrayList.get(arrayList.size() - 2)).getCreatedAt();
         }
 
-        mDisposable.add(mHelper.getClassImage(classId, time)
-                .subscribe(response -> {
-                    if (response == null) {
-                        ErrorUtil.handleException(mContext, new NullPointerException());
-                        return;
-                    }
-
-                    if (response.result == ApiResponse.RESULT_NG) {
-                        ErrorUtil.handleErrorApi(mContext, response.error);
-                        return;
-                    }
-
-                    if (response.getData() != null) {
-                        mClassDelegate.onLoadImage(response.getData(), isLoadImageFirst);
-                        if (isLoadImageFirst) {
-                            isLoadImageFirst = false;
-                        }
-                    }
-                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
+        subjectImage.onNext(time);
     }
 
     public boolean isTeacher() {

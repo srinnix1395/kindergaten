@@ -273,28 +273,7 @@ public class DetailChatPresenter extends BasePresenter {
     }
 
     public void onLoadMore(ArrayList<Object> listMessage) {
-
         mSubjectLoadMore.onNext(listMessage);
-
-//        String token = SharedPreUtils.getInstance(mContext).getToken();
-//        mDisposable.add(mHelper.getPreviousMessage(mContext, mConversationID, listMessage, token)
-//                .debounce(1, TimeUnit.SECONDS)
-//                .subscribe(messageArrayList -> {
-//                    if (mDetailChatDelegate != null) {
-//                        mDetailChatDelegate.loadMessageSuccess(messageArrayList, isLoadingDataFirst);
-//                    }
-//                    if (isLoadingDataFirst) {
-//                        isLoadingDataFirst = false;
-//                    }
-//                }, throwable -> {
-//                    DebugLog.i(throwable.getMessage());
-//                    if (mDetailChatDelegate != null) {
-//                        mDetailChatDelegate.loadMessageFail(isLoadingDataFirst, throwable.getMessage());
-//                    }
-//                    if (isLoadingDataFirst) {
-//                        isLoadingDataFirst = false;
-//                    }
-//                }));
     }
 
     @Override
@@ -333,7 +312,6 @@ public class DetailChatPresenter extends BasePresenter {
 
         if (tvStatus != null) {
             tvStatus.setText(StringUtil.getStatus(mContext, ChatConstant.STATUS_UNDEFINED));
-            tvStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         if (!listMessage.isEmpty()) {
@@ -354,8 +332,7 @@ public class DetailChatPresenter extends BasePresenter {
         if (arrayList.contains(mFriendId)) {
             mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_ONLINE));
         } else {
-            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_OFFLINE)
-            );
+            mDetailChatDelegate.setStatus(StringUtil.getStatus(mContext, ChatConstant.STATUS_OFFLINE));
         }
     }
 

@@ -7,6 +7,7 @@ import com.srinnix.kindergarten.request.model.ApiResponse;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,7 +35,7 @@ public class ChildrenHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(String token, String idChildren, long timePrev) {
+    public Observable<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(String token, String idChildren, long timePrev) {
         return mApiService.getTimelineChildren(token, idChildren, timePrev)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

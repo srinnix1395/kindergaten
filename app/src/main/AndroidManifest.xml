@@ -38,7 +38,7 @@
             android:name=".base.activity.HorizontalActivity"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".bulletinboard.activity.DetailPostActivity"
+            android:name=".bulletinboard.activity.DetailActivity"
             android:parentActivityName=".main.activity.MainActivity">
 
             <meta-data
@@ -62,14 +62,14 @@
             android:resource="@color/colorAccent"/>
 
         <!--facebook-->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <!--<meta-data-->
+            <!--android:name="com.facebook.sdk.ApplicationId"-->
+            <!--android:value="@string/facebook_app_id"/>-->
 
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider149297532267274"
-            android:exported="true"/>
+        <!--<provider-->
+            <!--android:name="com.facebook.FacebookContentProvider"-->
+            <!--android:authorities="com.facebook.app.FacebookContentProvider149297532267274"-->
+            <!--android:exported="true"/>-->
 
     </application>
 

@@ -44,7 +44,7 @@ public class ClassHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<ArrayList<Image>>> getClassImage(String classId, long time) {
+    public io.reactivex.Observable<ApiResponse<ArrayList<Image>>> getClassImage(String classId, long time) {
         return mApiService.getImageClass(classId, time)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

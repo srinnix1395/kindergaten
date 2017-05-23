@@ -11,7 +11,6 @@ import com.srinnix.kindergarten.util.ErrorUtil;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -19,11 +18,11 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class UpdateFirebaseRegId {
-    public static void updateRegId(Context context, Disposable disposable, String token, String id,
+    public static void updateRegId(Context context, String token, String id,
                                    String regID, OnUpdateRegIdListener listener) {
         ApiService apiService = RetrofitClient.getApiService();
 
-        disposable = apiService.updateRegId(token, id, regID)
+        apiService.updateRegId(token, id, regID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {

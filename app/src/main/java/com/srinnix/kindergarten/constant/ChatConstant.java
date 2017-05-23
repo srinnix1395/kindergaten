@@ -49,10 +49,10 @@ public class ChatConstant {
 
     public static final int ITEM_MESSAGE_PER_PAGE = 30;
     public static final long TIME_DISTANCE = 300000;
-    public static final String ICON_HEART = "\\xE2\\heart\\xA5\\";
 
     public static final int MSG_TYPE_TEXT = 1;
     public static final int MSG_TYPE_ICON_HEART = 2;
     public static final int MSG_TYPE_MEDIA = 3;
 
+    public static final int NOTIFICATION_ID = 125812;
 }

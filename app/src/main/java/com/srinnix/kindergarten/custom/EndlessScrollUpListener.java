@@ -23,20 +23,13 @@ public abstract class EndlessScrollUpListener extends RecyclerView.OnScrollListe
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        if (dy >= 0) {
+        if (dy > 0) {
             return;
         }
         int totalItemCount = layoutManager.getItemCount();
         int firstVisibleItemCount;
 
         firstVisibleItemCount = layoutManager.findFirstVisibleItemPosition();
-
-        if (totalItemCount < previousTotalItemCount) {
-            this.previousTotalItemCount = totalItemCount;
-            if (totalItemCount == 0) {
-                isLoading = true;
-            }
-        }
 
         //if it's still loading and current total item > previous total item -> disable loading
         if (isLoading && (totalItemCount > previousTotalItemCount)) {

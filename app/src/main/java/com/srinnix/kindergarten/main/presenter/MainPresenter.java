@@ -193,7 +193,9 @@ public class MainPresenter extends BasePresenter {
             String id = SharedPreUtils.getInstance(mContext).getUserID();
             String regID = FirebaseInstanceId.getInstance().getToken();
 
-            UpdateFirebaseRegId.updateRegId(mContext, mDisposable, token, id, regID, null);
+            if (regID != null && !regID.isEmpty()) {
+                UpdateFirebaseRegId.updateRegId(mContext, token, id, regID, null);
+            }
         }
     }
 

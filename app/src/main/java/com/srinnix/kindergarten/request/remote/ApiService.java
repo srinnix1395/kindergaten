@@ -171,8 +171,8 @@ public interface ApiService {
     Single<ApiResponse<Teacher>> getTeacherInfo(@Query("_id_teacher") String teacherId);
 
     @GET(AppConstant.API_GET_IMAGE_CLASS)
-    Single<ApiResponse<ArrayList<Image>>> getImageClass(@Query("_id_class") String classId,
-                                                        @Query("time_prev_image") long timePrevImage);
+    Observable<ApiResponse<ArrayList<Image>>> getImageClass(@Query("_id_class") String classId,
+                                                            @Query("time_prev_image") long timePrevImage);
 
     @GET(AppConstant.API_GET_TIMETABLE)
     Single<ApiResponse<Timetable>> getTimeTable(@Query("time") String time);
@@ -194,9 +194,9 @@ public interface ApiService {
                                                @Query("_id_child") String id);
 
     @GET(AppConstant.API_GET_HEALTH_INDEX_CHILDREN)
-    Single<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(@Header("x-access-token") String token,
-                                                                    @Query("_id_child") String childId,
-                                                                    @Query("time_prev") long timePrev);
+    Observable<ApiResponse<ArrayList<HealthTotal>>> getTimelineChildren(@Header("x-access-token") String token,
+                                                                        @Query("_id_child") String childId,
+                                                                        @Query("time_prev") long timePrev);
 
 
     @GET(AppConstant.API_GET_LIST_CHILDREN)

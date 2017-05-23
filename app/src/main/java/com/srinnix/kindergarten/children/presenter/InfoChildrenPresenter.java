@@ -20,6 +20,9 @@ import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by anhtu on 2/21/2017.
@@ -34,12 +37,37 @@ public class InfoChildrenPresenter extends BasePresenter {
     private Child infoChild;
 
     private boolean isDisplayToolbar;
+    private PublishSubject<Long> subjectHealth;
 
     public InfoChildrenPresenter(BaseDelegate mChildrenDelegate) {
         super(mChildrenDelegate);
         this.mChildrenDelegate = (ChildrenDelegate) mChildrenDelegate;
 
         mHelper = new ChildrenHelper(mDisposable);
+
+        subjectHealth = PublishSubject.create();
+        mDisposable.add(subjectHealth
+                .debounce(1, TimeUnit.SECONDS)
+                .flatMap(timePrev -> {
+                    String token = SharedPreUtils.getInstance(mContext).getToken();
+                    return mHelper.getTimelineChildren(token, idChild, timePrev);
+                })
+                .subscribe(response -> {
+                    if (response == null) {
+                        throw new NullPointerException();
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        return;
+                    }
+
+                    ((ChildrenDelegate) mChildrenDelegate).onLoadChildrenTimeLine(response.getData(), isLoadTimelineFirst);
+                    if (isLoadTimelineFirst) {
+                        isLoadTimelineFirst = false;
+                    }
+                }, throwable -> ErrorUtil.handleException(mContext, throwable))
+        );
     }
 
     @Override
@@ -85,24 +113,7 @@ public class InfoChildrenPresenter extends BasePresenter {
             return;
         }
 
-        String token = SharedPreUtils.getInstance(mContext).getToken();
-
-        mDisposable.add(mHelper.getTimelineChildren(token, idChild, timePrev)
-                .subscribe(response -> {
-                    if (response == null) {
-                        throw new NullPointerException();
-                    }
-
-                    if (response.result == ApiResponse.RESULT_NG) {
-                        ErrorUtil.handleErrorApi(mContext, response.error);
-                        return;
-                    }
-
-                    mChildrenDelegate.onLoadChildrenTimeLine(response.getData(), isLoadTimelineFirst);
-                    if (isLoadTimelineFirst) {
-                        isLoadTimelineFirst = false;
-                    }
-                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
+        subjectHealth.onNext(timePrev);
     }
 
     public void onClickIndex(ArrayList<Object> mListChildrenHealth, int type) {

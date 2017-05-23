@@ -42,9 +42,14 @@ public class SocketUtil {
                 IO.Options options = new IO.Options();
 
                 SharedPreUtils sharedPreUtils = SharedPreUtils.getInstance(context);
-                options.query = "token=" + sharedPreUtils.getToken() +
+                String query = "token=" + sharedPreUtils.getToken() +
                         "&id=" + sharedPreUtils.getUserID() +
-                        "&account_type=" + sharedPreUtils.getAccountType();
+                        "&account_type=" + sharedPreUtils.getAccountType() +
+                        "&name=" + sharedPreUtils.getAccountName();
+                if (!sharedPreUtils.getImage().isEmpty()) {
+                    query += "&image=" + sharedPreUtils.getImage();
+                }
+                options.query = query;
 
                 mSocket = IO.socket(ChatConstant.SERVER_URL, options);
             } catch (URISyntaxException e) {

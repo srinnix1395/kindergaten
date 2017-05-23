@@ -41,7 +41,7 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     @BindView(R.id.textview_retry)
     TextView tvRetry;
 
-    @BindView(R.id.progress_bar)
+    @BindView(R.id.progressbar_loading)
     ProgressBar pbLoading;
 
     @BindView(R.id.textview_created_at)
