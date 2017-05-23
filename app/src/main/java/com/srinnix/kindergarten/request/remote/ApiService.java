@@ -212,6 +212,6 @@ public interface ApiService {
 
     @Multipart
     @POST(AppConstant.API_UPLOAD_MESSAGE_IMAGE)
-    Single<ApiResponse<Message>> uploadMessageImage(@Header("x-access-token") String token,
-                                                    @Part List<MultipartBody.Part> listFile);
+    Single<ApiResponse<Image>> uploadMessageImage(@Header("x-access-token") String token,
+                                                   @Part List<MultipartBody.Part> listFile);
 }

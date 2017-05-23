@@ -149,4 +149,8 @@
     <string name="post_schedule_successfully">Thông báo sẽ được đăng vào %s</string>
     <string name="video">video</string>
     <string name="message">Tin nhắn</string>
+    <string name="tap_to_select_image">Chạm để chọn ảnh</string>
+    <string name="error_upload">Upload lỗi, hãy thử lại!</string>
+    <string name="uploading">Đang upload ảnh...</string>
+    <string name="sending">Đang gửi ảnh...</string>
 </resources>

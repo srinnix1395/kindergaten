@@ -18,6 +18,7 @@ import com.srinnix.kindergarten.bulletinboard.fragment.PostFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
+import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.LoadingItem;
 import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.model.ApiResponse;
@@ -315,10 +316,18 @@ public class BulletinBoardPresenter extends BasePresenter {
     public void onClickShare(Post post) {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        String shareBody = "Here is the share content body";
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        mContext.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        StringBuilder builder = new StringBuilder("");
+        if (post.getContent() != null && !post.getContent().isEmpty()) {
+            builder.append(post.getContent());
+        }
+        if (post.getListImage() != null) {
+            for (Image image : post.getListImage()) {
+                builder.append(image.getUrl()).append("\n");
+            }
+        }
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Thông báo trường mầm non Kid's home");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, builder.toString());
+        mContext.startActivity(Intent.createChooser(sharingIntent, "Chia sẻ thông qua"));
     }
 
     public void updateNumberComment(MessageNumberComment message, ArrayList<Object> arrPost) {

@@ -67,6 +67,8 @@ public class PostImagePresenter extends BasePresenter {
     public void onClickImage(ArrayList<MediaLocal> mListImage) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, mListImage);
+        bundle.putInt(AppConstant.KEY_LIMIT, 10);
+        bundle.putInt(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_POST_IMAGE);
 
         ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);

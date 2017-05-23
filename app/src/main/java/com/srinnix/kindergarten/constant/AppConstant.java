@@ -106,6 +106,7 @@ public class AppConstant {
     public static final String KEY_DISPLAY = "KEY_DISPLAY";
     public static final String KEY_MEDIA_TYPE = "KEY_MEDIA_TYPE";
     public static final String KEY_CONVERSATION_ID = "KEY_CONVERSATION_ID";
+    public static final String KEY_LIMIT = "KEY_LIMIT";
 
     public static final int UPDATE_ALL_VIEW_HOLDER = 1;
 
@@ -118,6 +119,8 @@ public class AppConstant {
     public static final int FRAGMENT_STUDY_TIMETABLE = 11;
     public static final int FRAGMENT_DETAIL_POST = 12;
     public static final int FRAGMENT_DETAIL_CHAT = 13;
+    public static final int FRAGMENT_POST = 14;
+    public static final int FRAGMENT_POST_IMAGE = 15;
 
     public static final int STATE_WEIGHT_NORMAL = 1;
     public static final int STATE_WEIGHT_OBESE = 2;

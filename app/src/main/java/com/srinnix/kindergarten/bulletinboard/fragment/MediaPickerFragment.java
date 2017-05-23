@@ -37,7 +37,6 @@ import butterknife.BindView;
  */
 
 public class MediaPickerFragment extends BaseFragment implements MediaPickerDelegate {
-
     @BindView(R.id.toolbar_image_picker)
     Toolbar toolbar;
 
@@ -77,7 +76,11 @@ public class MediaPickerFragment extends BaseFragment implements MediaPickerDele
     @Override
     protected void initChildView() {
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle(R.string.tap_to_select_media);
+        if (mPresenter.getTypeFragment() == AppConstant.FRAGMENT_DETAIL_CHAT) {
+            toolbar.setTitle(R.string.tap_to_select_image);
+        } else {
+            toolbar.setTitle(R.string.tap_to_select_media);
+        }
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
         toolbar.inflateMenu(R.menu.menu_image_picker_fragment);
@@ -156,15 +159,23 @@ public class MediaPickerFragment extends BaseFragment implements MediaPickerDele
     public void updateStateMedia(int numberImage, int numberVideo, int position, boolean selected) {
         mMediaAdapter.notifyItemChanged(position, selected);
         if (numberVideo + numberImage == 0) {
-            toolbar.setTitle(R.string.tap_to_select_media);
-
+            if (mPresenter.getTypeFragment() == AppConstant.FRAGMENT_DETAIL_CHAT) {
+                toolbar.setTitle(R.string.tap_to_select_image);
+            } else {
+                toolbar.setTitle(R.string.tap_to_select_media);
+            }
             if (menuItemAdd.isVisible()) {
                 menuItemAdd.setVisible(false);
             }
         } else {
-            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s và %d %s",
-                    numberImage, mContext.getString(R.string.image),
-                    numberVideo, mContext.getString(R.string.video)));
+            if (mPresenter.getTypeFragment() == AppConstant.FRAGMENT_DETAIL_CHAT) {
+                toolbar.setTitle(String.format(Locale.getDefault(), "%d %s",
+                        mPresenter.getNumberImage(), mContext.getString(R.string.image)));
+            } else {
+                toolbar.setTitle(String.format(Locale.getDefault(), "%d %s và %d %s",
+                        mPresenter.getNumberImage(), mContext.getString(R.string.image),
+                        mPresenter.getNumberVideo(), mContext.getString(R.string.video)));
+            }
 
             if (!menuItemAdd.isVisible()) {
                 menuItemAdd.setVisible(true);
@@ -195,11 +206,20 @@ public class MediaPickerFragment extends BaseFragment implements MediaPickerDele
         rvListMedia.scrollToPosition(0);
 
         if (mPresenter.getListImageSelected().size() == 0) {
-            toolbar.setTitle(R.string.tap_to_select_media);
+            if (mPresenter.getTypeFragment() == AppConstant.FRAGMENT_DETAIL_CHAT) {
+                toolbar.setTitle(R.string.tap_to_select_image);
+            } else {
+                toolbar.setTitle(R.string.tap_to_select_media);
+            }
         } else {
-            toolbar.setTitle(String.format(Locale.getDefault(), "%d %s và %d %s",
-                    mPresenter.getNumberImage(), mContext.getString(R.string.image),
-                    mPresenter.getNumberVideo(), mContext.getString(R.string.video)));
+            if (mPresenter.getTypeFragment() == AppConstant.FRAGMENT_DETAIL_CHAT) {
+                toolbar.setTitle(String.format(Locale.getDefault(), "%d %s",
+                        mPresenter.getNumberImage(), mContext.getString(R.string.image)));
+            } else {
+                toolbar.setTitle(String.format(Locale.getDefault(), "%d %s và %d %s",
+                        mPresenter.getNumberImage(), mContext.getString(R.string.image),
+                        mPresenter.getNumberVideo(), mContext.getString(R.string.video)));
+            }
         }
     }
 

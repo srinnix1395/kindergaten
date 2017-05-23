@@ -252,9 +252,8 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setColor(ContextCompat.getColor(KindergartenMessagingService.this, R.color.colorPrimary));
         }
-        builder.setVibrate(new long[]{
-                0, 200, 200, 600, 600
-        });
+        builder.setVibrate(new long[]{0, 1000, 1000, 1000, 1000});
+        builder.setLights(Color.GREEN, 3000, 3000);
         builder.mNotification.flags = Notification.FLAG_AUTO_CANCEL;
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

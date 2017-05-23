@@ -209,7 +209,9 @@ public class SocketUtil {
                 message.setIdSender(jsonObject.getString(ChatConstant._ID_SENDER));
                 message.setIdReceiver(jsonObject.getString(ChatConstant._ID_RECEIVER));
                 message.setConversationId(jsonObject.getString(ChatConstant._ID_CONVERSATION));
-                message.setMessage(jsonObject.getString(ChatConstant.MESSAGE));
+                if (jsonObject.has(ChatConstant.MESSAGE)) {
+                    message.setMessage(jsonObject.getString(ChatConstant.MESSAGE));
+                }
                 if (jsonObject.has(ChatConstant.MESSAGE_TYPE)) {
                     message.setMessageType(jsonObject.getInt(ChatConstant.MESSAGE_TYPE));
                 }

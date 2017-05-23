@@ -145,7 +145,7 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
             }
         });
 
-        refreshLayout.setOnRefreshListener(() ->{
+        refreshLayout.setOnRefreshListener(() -> {
             if (!mListPost.isEmpty() && mListPost.get(0) instanceof LoadingItem) {
                 mPresenter.onLoadMore(rvListPost, mListPost, mPostAdapter);
             } else {
@@ -357,6 +357,12 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
 
         if (refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(false);
+        }
+    }
+
+    public void onReselect() {
+        if (((LinearLayoutManager) rvListPost.getLayoutManager()).findFirstVisibleItemPosition() > 0) {
+            rvListPost.smoothScrollToPosition(0);
         }
     }
 }

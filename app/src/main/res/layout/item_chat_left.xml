@@ -44,8 +44,8 @@
         android:background="@drawable/background_itemchatleft"
         android:gravity="center_vertical"
         android:paddingBottom="@dimen/padding_vertical_item_chat"
-        android:paddingStart="@dimen/padding_horizontal_item_chat"
         android:paddingEnd="@dimen/padding_horizontal_item_chat"
+        android:paddingStart="@dimen/padding_horizontal_item_chat"
         android:paddingTop="@dimen/padding_vertical_item_chat"
         android:visibility="visible"
         tools:text="xin chaof"/>
@@ -58,10 +58,28 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/cardview_icon"
         android:background="@drawable/background_itemchatleft"
-        android:paddingStart="@dimen/padding_horizontal_item_chat"
         android:paddingEnd="@dimen/padding_horizontal_item_chat"
+        android:paddingStart="@dimen/padding_horizontal_item_chat"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_dot_horizontal"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_chatleft_time"
+        android:layout_marginStart="10dp"
+        android:maxWidth="250dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/radius_card_view_high">
+
+        <ImageView
+            android:id="@+id/imageview_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+    </android.support.v7.widget.CardView>
+
 
     <ImageView
         android:id="@+id/imageview_heart"

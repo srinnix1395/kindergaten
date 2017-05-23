@@ -10,10 +10,12 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.roughike.bottombar.BottomBar;
 import com.srinnix.kindergarten.KinderApplication;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.fragment.BulletinBoardFragment;
 import com.srinnix.kindergarten.camera.fragment.CameraFragment;
 import com.srinnix.kindergarten.chat.fragment.ChatListFragment;
 import com.srinnix.kindergarten.children.fragment.ChildrenListFragment;
@@ -132,6 +134,15 @@ public class MainPresenter extends BasePresenter {
         transaction.commit();
     }
 
+    public void onReselectTab(FragmentManager fragmentManager, int tabId) {
+        if (tabId == R.id.menu_item_news) {
+            Fragment fragment = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
+            if (fragment instanceof BulletinBoardFragment) {
+                ((BulletinBoardFragment)fragment).onReselect();
+            }
+        }
+    }
+
     private Fragment initClassFragment() {
         if (accountType == AppConstant.ACCOUNT_TEACHERS) {
             String classId = SharedPreUtils.getInstance(mContext).getClassId();
@@ -163,7 +174,7 @@ public class MainPresenter extends BasePresenter {
         }
     }
 
-    public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout) {
+    public void onBackPressed(MainFragment mainFragment, DrawerLayout drawerLayout, BottomBar mBottomBar) {
         if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             drawerLayout.closeDrawer(Gravity.RIGHT);
             return;
@@ -177,6 +188,7 @@ public class MainPresenter extends BasePresenter {
         }
 
         if (currentPosition != AppConstant.FRAGMENT_BULLETIN_BOARD) {
+            mBottomBar.selectTabAtPosition(0, true);
             changeTabIcon(mainFragment.getChildFragmentManager(), R.id.menu_item_news);
             return;
         }
@@ -217,5 +229,6 @@ public class MainPresenter extends BasePresenter {
         ViewManager.getInstance().addFragment(new AccountFragment(), null,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
+
 
 }

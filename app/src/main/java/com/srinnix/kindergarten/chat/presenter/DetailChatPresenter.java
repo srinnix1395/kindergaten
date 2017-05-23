@@ -9,19 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.srinnix.kindergarten.KinderApplication;
+import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.delegate.BaseDelegate;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.fragment.MediaPickerFragment;
 import com.srinnix.kindergarten.chat.delegate.DetailChatDelegate;
 import com.srinnix.kindergarten.chat.helper.DetailChatHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
+import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.model.Message;
+import com.srinnix.kindergarten.request.model.ApiResponse;
+import com.srinnix.kindergarten.util.AlertUtils;
 import com.srinnix.kindergarten.util.DebugLog;
+import com.srinnix.kindergarten.util.ErrorUtil;
+import com.srinnix.kindergarten.util.ServiceUtils;
 import com.srinnix.kindergarten.util.SharedPreUtils;
 import com.srinnix.kindergarten.util.SocketUtil;
 import com.srinnix.kindergarten.util.StringUtil;
+import com.srinnix.kindergarten.util.ViewManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -103,16 +111,12 @@ public class DetailChatPresenter extends BasePresenter {
         mFriendId = bundle.getString(AppConstant.KEY_ID);
         mMyId = SharedPreUtils.getInstance(mContext).getUserID();
         name = bundle.getString(AppConstant.KEY_NAME);
-        if (bundle.containsKey(AppConstant.KEY_STATUS)) {
-            status = bundle.getInt(AppConstant.KEY_STATUS);
-        } else {
-            MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
-            if (message != null) {
-                if (message.arrayList.contains(mFriendId)) {
-                    status = ChatConstant.STATUS_ONLINE;
-                } else {
-                    status = ChatConstant.STATUS_OFFLINE;
-                }
+        MessageContactStatus message = EventBus.getDefault().getStickyEvent(MessageContactStatus.class);
+        if (message != null) {
+            if (message.arrayList.contains(mFriendId)) {
+                status = ChatConstant.STATUS_ONLINE;
+            } else {
+                status = ChatConstant.STATUS_OFFLINE;
             }
         }
         urlImage = bundle.getString(AppConstant.KEY_ICON);
@@ -182,6 +186,10 @@ public class DetailChatPresenter extends BasePresenter {
         message.setCreatedAt(l);
         mRealm.commitTransaction();
 
+        sendImage(listMessage, message);
+    }
+
+    private void sendImage(ArrayList<Object> listMessage, Message message) {
         if (listMessage.isEmpty()) {
             if (mDetailChatDelegate != null) {
                 mDetailChatDelegate.addMessage(message, 0);
@@ -365,6 +373,61 @@ public class DetailChatPresenter extends BasePresenter {
 
     public boolean isRecyclerScrollable(RecyclerView recyclerView) {
         return recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
+    }
+
+    public void onClickImage() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, null);
+        bundle.putInt(AppConstant.KEY_MEDIA_TYPE, AppConstant.TYPE_IMAGE);
+        bundle.putInt(AppConstant.KEY_LIMIT, 1);
+        bundle.putInt(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_DETAIL_CHAT);
+
+        ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
+                R.anim.translate_down_to_up, R.anim.translate_up_to_down);
+    }
+
+    public void onSendImage(ArrayList<Object> listMessage, ArrayList<MediaLocal> mListImage) {
+        if (!ServiceUtils.isNetworkAvailable(mContext)) {
+            AlertUtils.showToast(mContext, R.string.noInternetConnection);
+            return;
+        }
+
+        String token = SharedPreUtils.getInstance(mContext).getToken();
+
+        mDisposable.add(mHelper.uploadImage(token, mListImage)
+                .doOnSubscribe(disposable -> AlertUtils.showToast(mContext, R.string.uploading))
+                .subscribe(response -> {
+                    if (response == null) {
+                        throw new NullPointerException();
+                    }
+
+                    if (response.result == ApiResponse.RESULT_NG) {
+                        ErrorUtil.handleErrorApi(mContext, response.error);
+                        AlertUtils.showToast(mContext, R.string.error_common);
+                        return;
+                    }
+
+                    if (response.getData().getUrl().equals("null")) {
+                        AlertUtils.showToast(mContext, R.string.error_upload);
+                        return;
+                    }
+
+                    mRealm.beginTransaction();
+                    long l = System.currentTimeMillis();
+                    Message message = mRealm.createObject(Message.class);
+                    message.setId(String.valueOf(l));
+                    message.setIdSender(mMyId);
+                    message.setIdReceiver(mFriendId);
+                    message.setConversationId(mConversationID);
+                    message.setMessageType(ChatConstant.MSG_TYPE_MEDIA);
+                    message.setMessage(response.getData().getUrl());
+                    message.setStatus(ChatConstant.PENDING);
+                    message.setCreatedAt(l);
+                    mRealm.commitTransaction();
+
+                    AlertUtils.showToast(mContext, mContext.getString(R.string.sending));
+                    sendImage(listMessage, message);
+                }, throwable -> ErrorUtil.handleException(mContext, throwable)));
     }
 
     public String getUrlImage() {

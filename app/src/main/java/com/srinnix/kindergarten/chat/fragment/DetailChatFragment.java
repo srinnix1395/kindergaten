@@ -28,6 +28,7 @@ import com.srinnix.kindergarten.messageeventbus.MessageChat;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
 import com.srinnix.kindergarten.messageeventbus.MessageFriendReceived;
+import com.srinnix.kindergarten.messageeventbus.MessageImageLocal;
 import com.srinnix.kindergarten.messageeventbus.MessageServerReceived;
 import com.srinnix.kindergarten.messageeventbus.MessageTyping;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
@@ -157,6 +158,11 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onClickSend(listMessage, etMessage, imvSend.getDrawable().getLevel());
     }
 
+    @OnClick(R.id.imageview_icon)
+    void onClickImage() {
+        mPresenter.onClickImage();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -171,6 +177,11 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Subscribe
+    public void onEventPickImageLocal(MessageImageLocal message) {
+        mPresenter.onSendImage(listMessage, message.mListImage);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

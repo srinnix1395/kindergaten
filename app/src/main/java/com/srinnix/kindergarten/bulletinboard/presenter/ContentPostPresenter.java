@@ -25,6 +25,8 @@ public class ContentPostPresenter extends BasePresenter {
     public void onClickImage(ArrayList<MediaLocal> mListMedia) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, mListMedia);
+        bundle.putInt(AppConstant.KEY_LIMIT, 10);
+        bundle.putInt(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_POST);
 
         ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
@@ -34,6 +36,8 @@ public class ContentPostPresenter extends BasePresenter {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, mListMedia);
         bundle.putInt(AppConstant.KEY_MEDIA_TYPE, AppConstant.TYPE_VIDEO);
+        bundle.putInt(AppConstant.KEY_LIMIT, 10);
+        bundle.putInt(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_POST);
 
         ViewManager.getInstance().addFragment(new MediaPickerFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);

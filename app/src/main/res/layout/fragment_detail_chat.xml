@@ -67,23 +67,23 @@
             android:layout_height="0.5dp"
             android:background="@color/colorDividerColor"/>
 
-        <!--<ImageView-->
-        <!--android:id="@+id/imageview_icon"-->
-        <!--android:layout_width="@dimen/width_icon_fragment_chat"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:foreground="?selectableItemBackgroundBorderless"-->
-        <!--android:scaleType="center"-->
-        <!--app:srcCompat="@drawable/ic_icon"/>-->
+        <ImageView
+            android:id="@+id/imageview_icon"
+            android:layout_width="@dimen/item_size"
+            android:layout_height="match_parent"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_image"/>
 
         <EditText
             android:id="@+id/edittext_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageview_icon"
             android:layout_toStartOf="@+id/imageview_send"
             android:background="@null"
             android:hint="@string/writeMessage"
-            android:paddingStart="@dimen/padding_horizontal_edittext"
             android:paddingEnd="@dimen/padding_horizontal_edittext"
             android:textColor="@color/colorBlack"
             android:textColorHighlight="@color/colorPrimary"

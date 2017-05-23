@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
@@ -70,6 +71,12 @@ public class MainFragment extends BaseFragment implements MainDelegate {
         }
 
         mBottomBar.setOnTabSelectListener(tabId -> mPresenter.changeTabIcon(getChildFragmentManager(), tabId), false);
+        mBottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(int i) {
+                mPresenter.onReselectTab(getChildFragmentManager(), i);
+            }
+        });
         mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
@@ -156,7 +163,7 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     }
 
     public void onBackPressed() {
-        mPresenter.onBackPressed(this, mDrawer);
+        mPresenter.onBackPressed(this, mDrawer, mBottomBar);
     }
 
 }

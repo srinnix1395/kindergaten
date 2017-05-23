@@ -7,6 +7,7 @@ import com.srinnix.kindergarten.base.helper.BaseHelper;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.constant.ErrorConstant;
+import com.srinnix.kindergarten.model.Image;
 import com.srinnix.kindergarten.model.MediaLocal;
 import com.srinnix.kindergarten.model.Message;
 import com.srinnix.kindergarten.request.RetrofitClient;
@@ -117,7 +118,7 @@ public class DetailChatHelper extends BaseHelper {
                 .subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<Message>> uploadImage(String token, ArrayList<MediaLocal> listMedia) {
+    public Single<ApiResponse<Image>> uploadImage(String token, ArrayList<MediaLocal> listMedia) {
         List<MultipartBody.Part> listFile = null;
         if (!listMedia.isEmpty()) {
             listFile = new ArrayList<>();

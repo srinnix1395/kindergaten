@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -30,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import io.reactivex.Single;
 
@@ -52,6 +54,8 @@ public class MediaPickerPresenter extends BasePresenter {
     private MediaPickerHelper mHelper;
     private File fileCapture;
     private int mediaType;
+    private int limit;
+    private int type;
 
     public MediaPickerPresenter(BaseDelegate mDelegate) {
         super(mDelegate);
@@ -64,6 +68,8 @@ public class MediaPickerPresenter extends BasePresenter {
     public void getData(Bundle bundle) {
         super.getData(bundle);
         mediaType = bundle.getInt(AppConstant.KEY_MEDIA_TYPE, AppConstant.TYPE_IMAGE);
+        limit = bundle.getInt(AppConstant.KEY_LIMIT, 1);
+        type = bundle.getInt(AppConstant.KEY_FRAGMENT);
 
         ArrayList<MediaLocal> arrayList = bundle.getParcelableArrayList(AppConstant.KEY_MEDIA);
         if (arrayList != null) {
@@ -86,11 +92,10 @@ public class MediaPickerPresenter extends BasePresenter {
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         PERMISSIONS_REQUEST_READ_EXTERNAL);
             } else {
-                getMedia();
+                new Handler().postDelayed(this::getMedia, 300);
             }
         } else {
-            getMedia();
-
+            new Handler().postDelayed(this::getMedia, 300);
         }
     }
 
@@ -230,8 +235,8 @@ public class MediaPickerPresenter extends BasePresenter {
             mediaLocal.setSelected(false);
             mListMediaSelected.remove(mediaLocal.getId());
         } else {
-            if (numberImage + numberVideo == 10) {
-                AlertUtils.showToast(mContext, "Số ảnh tối đa là 10 ảnh");
+            if (numberImage + numberVideo == limit) {
+                AlertUtils.showToast(mContext, String.format(Locale.getDefault(), "Số ảnh tối đa là %d ảnh", limit));
                 return;
             }
 
@@ -273,5 +278,9 @@ public class MediaPickerPresenter extends BasePresenter {
 
     public int getNumberVideo() {
         return numberVideo;
+    }
+
+    public int getTypeFragment() {
+        return type;
     }
 }
