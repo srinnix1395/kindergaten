@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.model.MediaLocal;
-import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.StringUtil;
 import com.srinnix.kindergarten.util.UiUtils;
 
@@ -55,7 +54,6 @@ public class MediaLocalViewHolder extends RecyclerView.ViewHolder {
 
             UiUtils.showView(tvVideo);
             UiUtils.hideView(tvGif);
-            DebugLog.e(String.valueOf(media.getSize()));
         } else {
             UiUtils.hideView(tvVideo);
 

@@ -143,6 +143,7 @@ public interface ApiService {
     Single<ApiResponse<PostResponse>> insertPost(@Header("x-access-token") String token,
                                                  @Part("content") RequestBody content,
                                                  @Part List<MultipartBody.Part> listImage,
+                                                 @Part("type_media") ArrayList<Integer> listTypeMedia,
                                                  @Part("notification_type") RequestBody notiType,
                                                  @Part("notification_range") RequestBody notiRangeBody,
                                                  @Part("is_now") RequestBody isScheduleBody,
@@ -185,7 +186,8 @@ public interface ApiService {
     @POST(AppConstant.API_INSERT_IMAGE)
     Single<ApiResponse<ArrayList<Image>>> insertImages(@Header("x-access-token") String token,
                                                        @Part("_id_class") RequestBody classID,
-                                                       @Part List<MultipartBody.Part> listImage);
+                                                       @Part List<MultipartBody.Part> listImage,
+                                                       @Part("type_media") ArrayList<Integer> listTypeMedia);
     //CLASS END
 
     //CHILDREN START
@@ -213,5 +215,6 @@ public interface ApiService {
     @Multipart
     @POST(AppConstant.API_UPLOAD_MESSAGE_IMAGE)
     Single<ApiResponse<Image>> uploadMessageImage(@Header("x-access-token") String token,
-                                                   @Part List<MultipartBody.Part> listFile);
+                                                  @Part List<MultipartBody.Part> listFile,
+                                                  @Part("type_media") ArrayList<Integer> listTypeMedia);
 }

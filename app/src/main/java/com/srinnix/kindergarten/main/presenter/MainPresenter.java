@@ -138,7 +138,7 @@ public class MainPresenter extends BasePresenter {
         if (tabId == R.id.menu_item_news) {
             Fragment fragment = fragmentManager.findFragmentByTag(String.valueOf(currentPosition));
             if (fragment instanceof BulletinBoardFragment) {
-                ((BulletinBoardFragment)fragment).onReselect();
+                ((BulletinBoardFragment) fragment).onReselect();
             }
         }
     }
@@ -164,7 +164,7 @@ public class MainPresenter extends BasePresenter {
             if (isFirstOpenMenuChat) {
                 ChatListFragment chatListFragment = new ChatListFragment();
                 FragmentTransaction transaction = mainFragment.getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.layout_menu, chatListFragment);
+                transaction.replace(R.id.layout_menu, chatListFragment, String.valueOf(AppConstant.FRAGMENT_CHAT_LIST));
                 transaction.commit();
 
                 isFirstOpenMenuChat = false;
@@ -231,4 +231,16 @@ public class MainPresenter extends BasePresenter {
     }
 
 
+    public void removeFragmentChat(FragmentManager fragmentManager) {
+        Fragment fragment = fragmentManager.findFragmentByTag(String.valueOf(AppConstant.FRAGMENT_CHAT_LIST));
+
+        if (fragment != null) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.remove(fragment);
+            transaction.commit();
+            isFirstOpenMenuChat = true;
+        }
+
+
+    }
 }

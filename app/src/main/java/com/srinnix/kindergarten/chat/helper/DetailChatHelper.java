@@ -120,17 +120,19 @@ public class DetailChatHelper extends BaseHelper {
 
     public Single<ApiResponse<Image>> uploadImage(String token, ArrayList<MediaLocal> listMedia) {
         List<MultipartBody.Part> listFile = null;
+        ArrayList<Integer> listTypeMedia = new ArrayList<>();
         if (!listMedia.isEmpty()) {
             listFile = new ArrayList<>();
             for (MediaLocal mediaLocal : listMedia) {
                 MultipartBody.Part part = RetrofitClient.prepareFilePart(mediaLocal.getPath());
                 if (part != null) {
                     listFile.add(part);
+                    listTypeMedia.add(mediaLocal.isVideo() ? 1 : 2);
                 }
             }
         }
 
-        return mApiService.uploadMessageImage(token, listFile)
+        return mApiService.uploadMessageImage(token, listFile, listTypeMedia)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

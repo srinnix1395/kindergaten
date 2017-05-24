@@ -154,6 +154,8 @@ public class MainFragment extends BaseFragment implements MainDelegate {
     public void onEventLogout(MessageLogout message) {
         mToolbar.getMenu().clear();
         mToolbar.inflateMenu(R.menu.main_menu_unsigned_in);
+        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        mPresenter.removeFragmentChat(getChildFragmentManager());
     }
 
     public void closeDrawer() {

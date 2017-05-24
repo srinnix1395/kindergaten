@@ -425,7 +425,7 @@ public class DetailChatPresenter extends BasePresenter {
                     message.setCreatedAt(l);
                     mRealm.commitTransaction();
 
-                    AlertUtils.showToast(mContext, mContext.getString(R.string.sending));
+                    AlertUtils.showToast(mContext, mContext.getString(R.string.sending) );
                     sendImage(listMessage, message);
                 }, throwable -> ErrorUtil.handleException(mContext, throwable)));
     }

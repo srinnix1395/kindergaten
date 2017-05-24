@@ -65,16 +65,18 @@ public class ClassHelper extends BaseHelper {
     public Single<ApiResponse<ArrayList<Image>>> postImage(String token, String classId, ArrayList<MediaLocal> mListImage) {
         List<MultipartBody.Part> listFile;
         listFile = new ArrayList<>();
+        ArrayList<Integer> listTypeMedia = new ArrayList<>();
         for (MediaLocal mediaLocal : mListImage) {
             MultipartBody.Part part = prepareFilePart(mediaLocal);
             if (part != null) {
                 listFile.add(part);
+                listTypeMedia.add(mediaLocal.isVideo() ? 1 : 2);
             }
         }
 
         RequestBody bodyClassId = RequestBody.create(MediaType.parse("text/plain"), classId);
 
-        return mApiService.insertImages(token, bodyClassId, listFile)
+        return mApiService.insertImages(token, bodyClassId, listFile, listTypeMedia)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 

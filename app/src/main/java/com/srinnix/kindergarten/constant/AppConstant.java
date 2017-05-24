@@ -121,6 +121,7 @@ public class AppConstant {
     public static final int FRAGMENT_DETAIL_CHAT = 13;
     public static final int FRAGMENT_POST = 14;
     public static final int FRAGMENT_POST_IMAGE = 15;
+    public static final int FRAGMENT_CHAT_LIST = 16;
 
     public static final int STATE_WEIGHT_NORMAL = 1;
     public static final int STATE_WEIGHT_OBESE = 2;

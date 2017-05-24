@@ -63,23 +63,21 @@
         android:visibility="gone"
         app:srcCompat="@drawable/ic_dot_horizontal"/>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardview_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textview_chatleft_time"
-        android:layout_marginStart="10dp"
-        android:maxWidth="250dp"
-        android:visibility="gone"
-        app:cardCornerRadius="@dimen/radius_card_view_high">
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/cardview_image"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/textview_chatleft_time"-->
+        <!--android:layout_marginStart="10dp"-->
+        <!--android:visibility="gone"-->
+        <!--app:cardCornerRadius="@dimen/radius_card_view_high">-->
 
-        <ImageView
-            android:id="@+id/imageview_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
-    </android.support.v7.widget.CardView>
-
+        <!--<ImageView-->
+            <!--android:id="@+id/imageview_image"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/kid_drawing"/>-->
+    <!--</android.support.v7.widget.CardView>-->
 
     <ImageView
         android:id="@+id/imageview_heart"

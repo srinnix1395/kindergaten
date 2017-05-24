@@ -14,6 +14,7 @@ import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.messageeventbus.MessageContactStatus;
 import com.srinnix.kindergarten.messageeventbus.MessageDisconnect;
+import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.messageeventbus.MessageUserConnect;
 import com.srinnix.kindergarten.model.Contact;
 import com.srinnix.kindergarten.model.ContactTeacher;
@@ -85,6 +86,11 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogout(MessageLogout message) {
+        onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

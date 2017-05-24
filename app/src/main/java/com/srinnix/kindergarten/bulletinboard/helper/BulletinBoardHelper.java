@@ -131,12 +131,14 @@ public class BulletinBoardHelper extends BaseHelper {
 
     public Single<ApiResponse<PostResponse>> post(String token, String content, ArrayList<MediaLocal> listImage, int notiType, int notificationRange, boolean now, int[] schedule) {
         List<MultipartBody.Part> listFile = null;
+        ArrayList<Integer> listType = new ArrayList<>();
         if (!listImage.isEmpty()) {
             listFile = new ArrayList<>();
             for (MediaLocal mediaLocal : listImage) {
                 MultipartBody.Part part = RetrofitClient.prepareFilePart(mediaLocal.getPath());
                 if (part != null) {
                     listFile.add(part);
+                    listType.add(mediaLocal.isVideo() ? 1 : 2);
                 }
             }
         }
@@ -151,7 +153,7 @@ public class BulletinBoardHelper extends BaseHelper {
         RequestBody hourBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[3]));
         RequestBody minuteBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(schedule[4]));
 
-        return mApiService.insertPost(token, contentBody, listFile, notiTypeBody, notiRangeBody,
+        return mApiService.insertPost(token, contentBody, listFile, listType, notiTypeBody, notiRangeBody,
                 isScheduleBody, yearBody, monthBody, dayBody, hourBody, minuteBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

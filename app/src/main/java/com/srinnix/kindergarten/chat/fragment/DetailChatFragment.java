@@ -158,10 +158,10 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onClickSend(listMessage, etMessage, imvSend.getDrawable().getLevel());
     }
 
-    @OnClick(R.id.imageview_icon)
-    void onClickImage() {
-        mPresenter.onClickImage();
-    }
+//    @OnClick(R.id.imageview_icon)
+//    void onClickImage() {
+//        mPresenter.onClickImage();
+//    }
 
     @Override
     public void onStart() {

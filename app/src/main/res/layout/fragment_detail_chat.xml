@@ -67,13 +67,13 @@
             android:layout_height="0.5dp"
             android:background="@color/colorDividerColor"/>
 
-        <ImageView
-            android:id="@+id/imageview_icon"
-            android:layout_width="@dimen/item_size"
-            android:layout_height="match_parent"
-            android:foreground="?selectableItemBackgroundBorderless"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_image"/>
+        <!--<ImageView-->
+        <!--android:id="@+id/imageview_icon"-->
+        <!--android:layout_width="@dimen/item_size"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:foreground="?selectableItemBackgroundBorderless"-->
+        <!--android:scaleType="center"-->
+        <!--app:srcCompat="@drawable/ic_image"/>-->
 
         <EditText
             android:id="@+id/edittext_message"
@@ -85,6 +85,7 @@
             android:background="@null"
             android:hint="@string/writeMessage"
             android:paddingEnd="@dimen/padding_horizontal_edittext"
+            android:paddingStart="@dimen/padding_horizontal_edittext"
             android:textColor="@color/colorBlack"
             android:textColorHighlight="@color/colorPrimary"
             android:textColorHint="@color/colorSecondaryText"

@@ -1,12 +1,10 @@
 package com.srinnix.kindergarten.chat.adapter.viewholder;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.constant.ChatConstant;
 import com.srinnix.kindergarten.model.Message;
@@ -38,11 +36,11 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 //    @BindView(R.id.cardview_icon)
 //    CardView cardViewIcon;
 
-    @BindView(R.id.imageview_image)
-    ImageView imvImage;
-
-    @BindView(R.id.cardview_image)
-    CardView cardViewImage;
+//    @BindView(R.id.imageview_image)
+//    ImageView imvImage;
+//
+//    @BindView(R.id.cardview_image)
+//    CardView cardViewImage;
 
     @BindView(R.id.imageview_heart)
     ImageView imvHeart;
@@ -84,8 +82,8 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
                 UiUtils.showView(tvMessage);
                 UiUtils.hideView(imvHeart);
-                UiUtils.hideView(cardViewImage);
-                imvImage.setImageDrawable(null);
+//                UiUtils.hideView(cardViewImage);
+//                imvImage.setImageDrawable(null);
                 break;
             }
             case ChatConstant.MSG_TYPE_ICON_HEART: {
@@ -93,23 +91,23 @@ public class ItemChatLeftViewHolder extends RecyclerView.ViewHolder {
 
                 UiUtils.hideView(tvMessage);
                 UiUtils.showView(imvHeart);
-                UiUtils.hideView(cardViewImage);
-                imvImage.setImageDrawable(null);
+//                UiUtils.hideView(cardViewImage);
+//                imvImage.setImageDrawable(null);
                 break;
             }
-            case ChatConstant.MSG_TYPE_MEDIA: {
-                tvMessage.setText("");
-                tvMessage.setVisibility(View.INVISIBLE);
-                UiUtils.hideView(imvHeart);
-
-                UiUtils.showView(cardViewImage);
-                Glide.with(itemView.getContext())
-                        .load(message.getMessage())
-                        .placeholder(R.drawable.dummy_image)
-                        .error(R.drawable.dummy_image)
-                        .into(imvImage);
-                break;
-            }
+//            case ChatConstant.MSG_TYPE_MEDIA: {
+//                tvMessage.setText("");
+//                tvMessage.setVisibility(View.INVISIBLE);
+//                UiUtils.hideView(imvHeart);
+//
+//                UiUtils.showView(cardViewImage);
+//                Glide.with(itemView.getContext())
+//                        .load(message.getMessage())
+//                        .placeholder(R.drawable.dummy_image)
+//                        .error(R.drawable.dummy_image)
+//                        .into(imvImage);
+//                break;
+//            }
         }
     }
 
