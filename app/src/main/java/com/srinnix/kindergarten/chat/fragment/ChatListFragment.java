@@ -1,5 +1,6 @@
 package com.srinnix.kindergarten.chat.fragment;
 
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -62,7 +63,7 @@ public class ChatListFragment extends BaseFragment implements ChatListDelegate {
         recyclerView.setAdapter(mAdapter);
 
         if (isFirst) {
-            mPresenter.getContactFromDatabase();
+            new Handler().postDelayed(() -> mPresenter.getContactFromDatabase(), 300);
         }
     }
 

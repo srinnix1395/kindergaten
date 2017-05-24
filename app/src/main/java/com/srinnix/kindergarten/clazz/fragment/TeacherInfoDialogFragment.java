@@ -2,9 +2,8 @@ package com.srinnix.kindergarten.clazz.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -69,26 +68,10 @@ public class TeacherInfoDialogFragment extends BottomSheetDialogFragment {
     private String teacherId;
     private Disposable mDisposable;
 
-    private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
-
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                dismiss();
-            }
-
-        }
-
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-        }
-    };
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_teacher_info, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_teacher_info, container, false);
     }
 
     @Override
@@ -111,7 +94,12 @@ public class TeacherInfoDialogFragment extends BottomSheetDialogFragment {
 
         if (bundle != null) {
             teacherId = bundle.getString(AppConstant.KEY_ID);
-            getTeacherInfo();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getTeacherInfo();
+                }
+            }, 300);
         }
     }
 

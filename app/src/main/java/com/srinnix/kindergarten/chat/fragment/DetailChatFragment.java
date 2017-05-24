@@ -158,10 +158,10 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
         mPresenter.onClickSend(listMessage, etMessage, imvSend.getDrawable().getLevel());
     }
 
-//    @OnClick(R.id.imageview_icon)
-//    void onClickImage() {
-//        mPresenter.onClickImage();
-//    }
+    @OnClick(R.id.imageview_image)
+    void onClickImage() {
+        mPresenter.onClickImage();
+    }
 
     @Override
     public void onStart() {
@@ -275,6 +275,8 @@ public class DetailChatFragment extends BaseFragment implements DetailChatDelega
                 adapter.notifyItemRangeInserted(0, arrayList.size() + 1);
             }
         }
+        rvChat.scrollToPosition(size + 2);
+
     }
 
     @Override

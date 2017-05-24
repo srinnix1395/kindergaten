@@ -21,7 +21,7 @@
         android:id="@+id/imageview_seen"
         android:layout_width="@dimen/size_item_seen"
         android:layout_height="@dimen/size_item_seen"
-        android:layout_alignBottom="@+id/textview_itemchatright_message"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_horizontal_right_chat_item"
         android:layout_marginStart="@dimen/margin_horizontal_left_chat_item"
@@ -41,25 +41,25 @@
         android:paddingStart="@dimen/padding_horizontal_item_chat"
         android:paddingTop="@dimen/padding_vertical_item_chat"
         android:visibility="invisible"
-        tools:text="xin chaof"/>
+        tools:text="xin chao"/>
 
-    <!--<android.support.v7.widget.CardView-->
-        <!--android:id="@+id/cardview_image"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/textview_chatright_time"-->
-        <!--android:layout_toStartOf="@+id/imageview_seen"-->
-        <!--android:visibility="gone"-->
-        <!--app:cardCornerRadius="@dimen/radius_card_view_high">-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_chatright_time"
+        android:layout_toStartOf="@+id/imageview_seen"
+        android:visibility="visible"
+        app:cardCornerRadius="@dimen/radius_card_view_high"
+        app:cardElevation="1dp">
 
-        <!--<ImageView-->
-            <!--android:id="@+id/imageview_image"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:maxWidth="250dp"-->
-            <!--android:src="@drawable/kid_drawing"/>-->
-    <!--</android.support.v7.widget.CardView>-->
+        <ImageView
+            android:id="@+id/imageview_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxWidth="200dp"/>
+    </android.support.v7.widget.CardView>
 
     <ImageView
         android:id="@+id/imageview_heart"
