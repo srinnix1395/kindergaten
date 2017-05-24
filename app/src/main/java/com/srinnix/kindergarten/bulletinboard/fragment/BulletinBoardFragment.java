@@ -16,6 +16,7 @@ import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.presenter.BulletinBoardPresenter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.custom.EndlessScrollDownListener;
+import com.srinnix.kindergarten.messageeventbus.MessageLikePost;
 import com.srinnix.kindergarten.messageeventbus.MessageLoginSuccessfully;
 import com.srinnix.kindergarten.messageeventbus.MessageLogout;
 import com.srinnix.kindergarten.messageeventbus.MessageNumberComment;
@@ -206,6 +207,25 @@ public class BulletinBoardFragment extends BaseFragment implements BulletinBoard
     public void onEventLogout(MessageLogout message) {
         UiUtils.hideView(fabPost);
         mPresenter.logout(mListPost);
+    }
+
+    @Subscribe
+    public void onEventLikeInDetailFragment(MessageLikePost message) {
+        int position = -1;
+        for (int i = 0; i < mListPost.size(); i++) {
+            if (mListPost.get(i) instanceof Post && ((Post) mListPost.get(i)).getId().equals(message.idPost)) {
+                position = i;
+                break;
+            }
+        }
+        if (position == -1) {
+            return;
+        }
+
+        ArrayList<Object> payloads = new ArrayList<>();
+        payloads.add(message.isLike);
+        payloads.add(message.numberOfLikes);
+        mPostAdapter.notifyItemChanged(position, payloads);
     }
 
     @Override

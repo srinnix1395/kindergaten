@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.callback.OnClickViewHolderListener;
 import com.srinnix.kindergarten.model.Image;
+import com.srinnix.kindergarten.util.UiUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +36,7 @@ public class ImageDetailPostViewHolder extends RecyclerView.ViewHolder{
 
     public void bindData(Image image) {
         if (image.isVideo()) {
-            imvPlay.setVisibility(View.VISIBLE);
+            UiUtils.showView(imvPlay);
 
             Glide.with(itemView.getContext())
                     .load(image.getThumbnailUrl())
@@ -49,7 +50,7 @@ public class ImageDetailPostViewHolder extends RecyclerView.ViewHolder{
                     .error(R.drawable.dummy_image)
                     .into(imvImage);
 
-            imvPlay.setVisibility(View.GONE);
+            UiUtils.hideView(imvPlay);
         }
     }
 }

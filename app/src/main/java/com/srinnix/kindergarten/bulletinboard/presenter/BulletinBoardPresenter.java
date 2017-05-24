@@ -12,7 +12,7 @@ import com.srinnix.kindergarten.base.presenter.BasePresenter;
 import com.srinnix.kindergarten.bulletinboard.adapter.PostAdapter;
 import com.srinnix.kindergarten.bulletinboard.delegate.BulletinBoardDelegate;
 import com.srinnix.kindergarten.bulletinboard.fragment.CommentFragment;
-import com.srinnix.kindergarten.bulletinboard.fragment.DetailImageFragment;
+import com.srinnix.kindergarten.bulletinboard.fragment.DetailPostFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.LikeDialogFragment;
 import com.srinnix.kindergarten.bulletinboard.fragment.PostFragment;
 import com.srinnix.kindergarten.bulletinboard.helper.BulletinBoardHelper;
@@ -43,13 +43,18 @@ import io.reactivex.schedulers.Schedulers;
 public class BulletinBoardPresenter extends BasePresenter {
 
     private BulletinBoardDelegate mBoardDelegate;
-    private BulletinBoardHelper mHelper;
+    protected BulletinBoardHelper mHelper;
     private boolean isLoadFirst = true;
 
     public BulletinBoardPresenter(BaseDelegate delegate) {
         super(delegate);
-        mBoardDelegate = (BulletinBoardDelegate) delegate;
+
+        initDelegate(delegate);
         mHelper = new BulletinBoardHelper(mDisposable);
+    }
+
+    protected void initDelegate(BaseDelegate delegate) {
+        mBoardDelegate = (BulletinBoardDelegate) delegate;
     }
 
     public void onLoadMore(RecyclerView rvListPost, ArrayList<Object> arrayList, PostAdapter postAdapter) {
@@ -156,12 +161,20 @@ public class BulletinBoardPresenter extends BasePresenter {
     private void likePost(ArrayList<Object> arrPost, String token, String idUser, String idPost,
                           String name, String image, int accountType) {
         mDisposable.add(mHelper.likePost(token, idUser, idPost, name, image, accountType)
-                .subscribe(likeResponseApiResponse -> handleResponseLike(arrPost, likeResponseApiResponse), throwable -> ErrorUtil.handleException(mContext, new NullPointerException())));
+                .subscribe(likeResponseApiResponse -> {
+                    handleResponseLike(arrPost, likeResponseApiResponse);
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, new NullPointerException());
+                }));
     }
 
     private void unlikePost(ArrayList<Object> arrPost, String token, String idUser, String idPost) {
         mDisposable.add(mHelper.unlikePost(token, idUser, idPost)
-                .subscribe(likeResponseApiResponse -> handleResponseLike(arrPost, likeResponseApiResponse), throwable -> ErrorUtil.handleException(mContext, throwable)));
+                .subscribe(likeResponseApiResponse -> {
+                    handleResponseLike(arrPost, likeResponseApiResponse);
+                }, throwable -> {
+                    ErrorUtil.handleException(mContext, throwable);
+                }));
     }
 
     private void handleResponseLike(ArrayList<Object> arrPost, ApiResponse<LikeResponse> response) {
@@ -191,7 +204,6 @@ public class BulletinBoardPresenter extends BasePresenter {
                     .subscribe(integer -> {
                         if (mBoardDelegate != null) {
                             mBoardDelegate.handleLikePost(integer, response.getData().isLike(), ((Post) arrPost.get(integer)).getNumberOfLikes());
-
                         }
                     });
         } else {
@@ -297,9 +309,10 @@ public class BulletinBoardPresenter extends BasePresenter {
 
     public void onClickImages(Post post) {
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(AppConstant.KEY_MEDIA, post.getListImage());
+        bundle.putParcelable(AppConstant.KEY_POST, post);
+        bundle.putInt(AppConstant.KEY_FRAGMENT, AppConstant.FRAGMENT_BULLETIN_BOARD);
 
-        ViewManager.getInstance().addFragment(new DetailImageFragment(), bundle,
+        ViewManager.getInstance().addFragment(new DetailPostFragment(), bundle,
                 R.anim.translate_right_to_left, R.anim.translate_left_to_right);
     }
 

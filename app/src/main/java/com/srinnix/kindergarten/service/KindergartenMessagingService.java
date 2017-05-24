@@ -83,6 +83,7 @@ public class KindergartenMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(AppConstant.KEY_ID, idPost);
+        bundle.putInt(AppConstant.KEY_FRAGMENT, AppConstant.NOTIFICATION);
         intent.putExtras(bundle);
 
         NotificationCompat.Builder builder = getNotificationBuilder(intent, getString(R.string.important_post));

@@ -16,6 +16,7 @@ import com.srinnix.kindergarten.model.User;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.BulletinResponse;
 import com.srinnix.kindergarten.request.model.ClassResponse;
+import com.srinnix.kindergarten.request.model.DetailPostResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.LoginResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
@@ -154,9 +155,9 @@ public interface ApiService {
                                                  @Part("minute") RequestBody minuteBody);
 
     @GET(AppConstant.API_GET_DETAIL_POST)
-    Single<ApiResponse<Post>> getDetailPost(@Header("x-access-token") String token,
-                                            @Query("_id_post") String idPost,
-                                            @Query("_id_user") String idUser);
+    Single<ApiResponse<DetailPostResponse>> getDetailPost(@Header("x-access-token") String token,
+                                                          @Query("_id_post") String idPost,
+                                                          @Query("_id_user") String idUser);
 
     //POST END
 

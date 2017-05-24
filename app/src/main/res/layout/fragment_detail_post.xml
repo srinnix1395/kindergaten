@@ -4,6 +4,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorBackground"
+                android:clickable="true"
                 android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -17,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        android:paddingBottom="6dp"
         android:visibility="gone">
 
         <RelativeLayout
@@ -133,7 +136,7 @@
                 android:id="@+id/view_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_below="@+id/recyclerview_image"
+                android:layout_below="@+id/textview_content"
                 android:layout_marginTop="@dimen/margin_vertical_post"
                 android:background="@color/colorDividerColor"/>
 
@@ -141,7 +144,8 @@
                 android:id="@+id/recyclerview_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/textview_content"/>
+                android:layout_below="@+id/textview_number_like"
+                android:background="@color/colorBackground"/>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 

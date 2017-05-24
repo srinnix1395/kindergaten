@@ -8,6 +8,7 @@ import com.srinnix.kindergarten.model.Post;
 import com.srinnix.kindergarten.request.RetrofitClient;
 import com.srinnix.kindergarten.request.model.ApiResponse;
 import com.srinnix.kindergarten.request.model.BulletinResponse;
+import com.srinnix.kindergarten.request.model.DetailPostResponse;
 import com.srinnix.kindergarten.request.model.LikeResponse;
 import com.srinnix.kindergarten.request.model.PostResponse;
 
@@ -123,7 +124,7 @@ public class BulletinBoardHelper extends BaseHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<ApiResponse<Post>> getDetailPost(String token, String idPost, String idUser) {
+    public Single<ApiResponse<DetailPostResponse>> getDetailPost(String token, String idPost, String idUser) {
         return mApiService.getDetailPost(token, idPost, idUser)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

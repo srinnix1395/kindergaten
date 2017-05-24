@@ -1,5 +1,8 @@
 package com.srinnix.kindergarten.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +12,7 @@ import java.util.ArrayList;
  * Created by DELL on 2/9/2017.
  */
 
-public class Post {
+public class Post implements Parcelable{
     @SerializedName("_id")
     @Expose
     private String id;
@@ -39,6 +42,29 @@ public class Post {
     private int numberOfComments;
 
     private boolean isUserLike;
+
+    protected Post(Parcel in) {
+        id = in.readString();
+        content = in.readString();
+        listImage = in.createTypedArrayList(Image.CREATOR);
+        type = in.readInt();
+        createdAt = in.readLong();
+        numberOfLikes = in.readInt();
+        numberOfComments = in.readInt();
+        isUserLike = in.readByte() != 0;
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -82,5 +108,22 @@ public class Post {
 
     public void setNumberOfComments(int numberOfComments) {
         this.numberOfComments = numberOfComments;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(content);
+        dest.writeTypedList(listImage);
+        dest.writeInt(type);
+        dest.writeLong(createdAt);
+        dest.writeInt(numberOfLikes);
+        dest.writeInt(numberOfComments);
+        dest.writeByte((byte) (isUserLike ? 1 : 0));
     }
 }
