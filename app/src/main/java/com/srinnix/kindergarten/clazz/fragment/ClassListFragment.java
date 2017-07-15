@@ -53,7 +53,6 @@ public class ClassListFragment extends BaseFragment implements ClassListDelegate
     @Override
     protected void initChildView() {
         mRvListClass.setLayoutManager(new LinearLayoutManager(mContext));
-        mRvListClass.setAdapter(mAdapter);
 
         pbLoading.getIndeterminateDrawable().setColorFilter(
                 ContextCompat.getColor(mContext, R.color.colorPrimary),
@@ -70,6 +69,13 @@ public class ClassListFragment extends BaseFragment implements ClassListDelegate
         super.initData();
         mListClass = new ArrayList<>();
         mAdapter = new ClassAdapter(mListClass, position -> mPresenter.onClickClass((Class) mListClass.get(position)));
+        mRvListClass.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void setData() {
+        super.setData();
+        mRvListClass.setAdapter(mAdapter);
     }
 
     @Override

@@ -5,5 +5,5 @@ package com.srinnix.kindergarten.base.delegate;
  */
 
 public interface BaseDelegate {
-	
+	void setData();
 }

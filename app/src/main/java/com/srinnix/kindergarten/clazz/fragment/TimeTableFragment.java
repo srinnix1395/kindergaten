@@ -20,6 +20,7 @@ import com.srinnix.kindergarten.clazz.delegate.TimeTableDelegate;
 import com.srinnix.kindergarten.clazz.presenter.TimeTablePresenter;
 import com.srinnix.kindergarten.model.ActionTimetable;
 import com.srinnix.kindergarten.model.Timetable;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
@@ -117,6 +118,12 @@ public class TimeTableFragment extends BaseFragment implements TimeTableDelegate
     @Override
     public void onSuccessTimetable(Timetable data) {
         UiUtils.hideProgressBar(pbLoading);
+
+        if (data.getEvent() == null || data.getSubject() == null || data.getActionTimeTable() == null) {
+            DebugLog.e("data is null");
+            onFail(R.string.error_common);
+            return;
+        }
 
         layoutSubject.setVisibility(View.VISIBLE);
         tvSubject.setText(data.getSubject());

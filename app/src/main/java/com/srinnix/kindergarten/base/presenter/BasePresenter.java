@@ -14,23 +14,23 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by DELL on 2/3/2017.
  */
 
-public class BasePresenter {
-	protected Context mContext;
-	protected BaseDelegate mDelegate;
-	protected CompositeDisposable mDisposable;
+public class BasePresenter<D extends BaseDelegate> {
+    protected Context mContext;
+    protected D mDelegate;
+    protected CompositeDisposable mDisposable;
 
-	public BasePresenter(BaseDelegate mDelegate) {
+    public BasePresenter(D mDelegate) {
         this.mDelegate = mDelegate;
         mDisposable = new CompositeDisposable();
     }
-	
-	public void setContext(Context mContext) {
-		this.mContext = mContext;
-	}
-	
-	public void getData(Bundle bundle) {
-		
-	}
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public void getData(Bundle bundle) {
+
+    }
 
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
@@ -43,7 +43,7 @@ public class BasePresenter {
     }
 
     public void onResume() {
-
+        mDelegate.setData();
     }
 
     public void addFragmentLogin() {

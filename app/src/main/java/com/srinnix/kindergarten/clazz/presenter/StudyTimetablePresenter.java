@@ -48,7 +48,7 @@ public class StudyTimetablePresenter extends TimeTablePresenter {
             return;
         }
 
-        mDisposable.add(mHelper.getStudyTimeTable(time, group)
+        mDisposable.add(mHelper.getStudyTimeTable("3/2017", group)
                 .subscribe(response -> {
                     if (response == null) {
                         hasError = true;

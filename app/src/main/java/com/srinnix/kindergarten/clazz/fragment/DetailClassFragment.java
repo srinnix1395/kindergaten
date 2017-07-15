@@ -369,6 +369,9 @@ public class DetailClassFragment extends BaseFragment implements ClassDelegate, 
                 .error(R.drawable.dummy_image)
                 .into(imvIconClass);
 
+        if (data.getaClass() == null) {
+            return;
+        }
         tvClassName.setText(data.getaClass().getName());
 
         ArrayList<Teacher> teacherArrayList = data.getTeacherArrayList();

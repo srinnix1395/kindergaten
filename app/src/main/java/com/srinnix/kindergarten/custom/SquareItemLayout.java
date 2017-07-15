@@ -39,8 +39,7 @@ public class SquareItemLayout extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(getDefaultSize(0, widthMeasureSpec),
-                getDefaultSize(0, heightMeasureSpec));
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
 
         int childSize;
         if (measureType == TYPE_WIDTH) {

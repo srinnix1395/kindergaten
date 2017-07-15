@@ -1,10 +1,15 @@
 package com.srinnix.kindergarten.setting.presenter;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -31,6 +36,8 @@ import com.srinnix.kindergarten.util.UiUtils;
 import com.srinnix.kindergarten.util.ViewManager;
 
 import java.util.ArrayList;
+
+import static com.srinnix.kindergarten.bulletinboard.presenter.MediaPickerPresenter.PERMISSIONS_REQUEST_READ_EXTERNAL;
 
 /**
  * Created by anhtu on 5/11/2017.
@@ -106,11 +113,29 @@ public class AccountPresenter extends BasePresenter {
     }
 
     public void onClickIcon(Fragment accountFragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            boolean isHasPermission = ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
+            if (!isHasPermission) {
+                ActivityCompat.requestPermissions(accountFragment.getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSIONS_REQUEST_READ_EXTERNAL);
+            } else {
+                chooseImage(accountFragment);
+            }
+        } else {
+            chooseImage(accountFragment);
+        }
+    }
+
+    public void chooseImage(Fragment accountFragment) {
         if (state == STATE_EDIT) {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            accountFragment.startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE);
+
+            if (intent.resolveActivity(accountFragment.getActivity().getPackageManager()) != null) {
+                accountFragment.startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE);
+            }
         }
     }
 

@@ -2,9 +2,11 @@ package com.srinnix.kindergarten.setting.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
@@ -23,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.srinnix.kindergarten.R;
 import com.srinnix.kindergarten.base.fragment.BaseFragment;
 import com.srinnix.kindergarten.base.presenter.BasePresenter;
+import com.srinnix.kindergarten.bulletinboard.presenter.MediaPickerPresenter;
 import com.srinnix.kindergarten.children.adapter.ChildrenAdapter;
 import com.srinnix.kindergarten.constant.AppConstant;
 import com.srinnix.kindergarten.login.helper.LogoutHelper;
@@ -222,6 +225,21 @@ public class AccountFragment extends BaseFragment implements AccountDelegate {
                     .placeholder(R.drawable.dummy_image)
                     .error(R.drawable.ic_user_gray)
                     .into(imvIcon);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case MediaPickerPresenter.PERMISSIONS_REQUEST_READ_EXTERNAL: {
+                    mPresenter.chooseImage(this);
+                    break;
+                }
+            }
         }
     }
 

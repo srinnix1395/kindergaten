@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by DELL on 2/3/2017.
  */
 
-public class BulletinBoardPresenter extends BasePresenter {
+public class BulletinBoardPresenter extends BasePresenter<BaseDelegate> {
 
     private BulletinBoardDelegate mBoardDelegate;
     protected BulletinBoardHelper mHelper;
@@ -337,7 +337,11 @@ public class BulletinBoardPresenter extends BasePresenter {
         }
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Thông báo trường mầm non Kid's home");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, builder.toString());
-        mContext.startActivity(Intent.createChooser(sharingIntent, "Chia sẻ thông qua"));
+
+        Intent chooser = Intent.createChooser(sharingIntent, "Chia sẻ thông qua");
+        if (chooser.resolveActivity(mContext.getPackageManager()) != null) {
+            mContext.startActivity(chooser);
+        }
     }
 
     public void updateNumberComment(MessageNumberComment message, ArrayList<Object> arrPost) {

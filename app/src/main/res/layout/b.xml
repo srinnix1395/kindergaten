@@ -35,7 +35,7 @@
                 android:layout_marginTop="@dimen/margin_vertical_post"
                 android:background="@color/colorWhite"
                 android:paddingTop="@dimen/padding_post"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <TextView
                     android:id="@+id/textview_type_noti"

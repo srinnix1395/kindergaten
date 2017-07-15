@@ -52,7 +52,7 @@ public class TimeTablePresenter extends BasePresenter {
             return;
         }
 
-        mDisposable.add(mHelper.getTimeTable(time)
+        mDisposable.add(mHelper.getTimeTable("3/2017")
                 .subscribe(response -> {
                     if (response == null) {
                         ErrorUtil.handleException(new NullPointerException());

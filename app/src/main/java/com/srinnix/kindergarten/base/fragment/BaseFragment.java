@@ -21,13 +21,13 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment implements BaseDelegate {
     protected Context mContext;
     protected View mView;
-    protected BasePresenter mBasePresenter;
+    protected BasePresenter<BaseDelegate> mBasePresenter;
     protected boolean isFirst;
 
     public BaseFragment() {
         mBasePresenter = initPresenter();
         if (mBasePresenter == null) {
-            mBasePresenter = new BasePresenter(this);
+            mBasePresenter = new BasePresenter<BaseDelegate>(this);
         }
     }
 
@@ -101,9 +101,14 @@ public abstract class BaseFragment extends Fragment implements BaseDelegate {
 
     }
 
+    @Override
+    public void setData() {
+
+    }
+
     protected abstract void initChildView();
 
-    protected abstract BasePresenter initPresenter();
+    protected abstract BasePresenter<BaseDelegate> initPresenter();
 
     protected void getData() {
 

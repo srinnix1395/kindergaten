@@ -1,7 +1,7 @@
 package com.srinnix.kindergarten.bulletinboard.fragment;
 
 import android.graphics.Color;
-import android.support.v4.widget.NestedScrollView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -70,8 +70,8 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     @BindView(R.id.recyclerview_image)
     RecyclerView rvImage;
 
-    @BindView(R.id.scrollView)
-    NestedScrollView scrollView;
+    @BindView(R.id.layout_content)
+    CoordinatorLayout layoutContent;
 
     private ImageDetailPostAdapter mAdapter;
     private ArrayList<Image> mListImage;
@@ -189,7 +189,7 @@ public class DetailPostFragment extends BaseFragment implements DetailPostDelega
     public void onSuccess(Post post) {
         UiUtils.hideProgressBar(pbLoading);
 
-        UiUtils.showView(scrollView);
+        UiUtils.showView(layoutContent);
 
         tvContent.setText(post.getContent());
         tvCreatedAt.setText(StringUtil.getTimeAgo(mContext, post.getCreatedAt()));

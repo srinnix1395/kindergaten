@@ -21,6 +21,7 @@ import com.srinnix.kindergarten.custom.GridDividerDecoration;
 import com.srinnix.kindergarten.model.HeaderTimetable;
 import com.srinnix.kindergarten.model.StudySchedule;
 import com.srinnix.kindergarten.model.StudyTimetable;
+import com.srinnix.kindergarten.util.DebugLog;
 import com.srinnix.kindergarten.util.UiUtils;
 
 import java.util.ArrayList;
@@ -127,6 +128,12 @@ public class StudyTimetableFragment extends BaseFragment implements StudyTimetab
     @Override
     public void onSuccessStudyTimetable(ArrayList<StudyTimetable> data) {
         UiUtils.hideProgressBar(pbLoading);
+
+        if (data == null) {
+            DebugLog.e("data is null");
+            onFail(R.string.error_common);
+            return;
+        }
 
         if (data.isEmpty()) {
             UiUtils.showView(tvNoContent);

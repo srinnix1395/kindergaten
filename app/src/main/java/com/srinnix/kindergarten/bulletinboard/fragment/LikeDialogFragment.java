@@ -114,6 +114,10 @@ public class LikeDialogFragment extends BottomSheetDialogFragment implements Lik
         mRvLike.setAdapter(mAdapter);
     }
 
+    @Override
+    public void setData() {
+        //do nothing
+    }
 
     @OnClick(R.id.layout_retry)
     public void onClickRetry() {

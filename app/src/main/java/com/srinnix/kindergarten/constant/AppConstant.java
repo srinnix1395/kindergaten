@@ -15,8 +15,8 @@ public class AppConstant {
     public static final int ITEM_IMAGE_PER_PAGE = 1;
 
     //API START
-//    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
-    public static final String BASE_URL = "http://192.168.137.1:8080/";
+    public static final String BASE_URL = "http://prevalentaugustus-31067.rhcloud.com/";
+//    public static final String BASE_URL = "http://192.168.24.108:8080/";
 
     public static final String API_LOGIN = "user/login";
     public static final String API_UPDATE_REG_ID = "user/updateRegID";

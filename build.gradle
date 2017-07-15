@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha1'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha4'
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
         classpath "io.realm:realm-gradle-plugin:3.1.2"
         classpath 'com.google.gms:google-services:3.0.0'
